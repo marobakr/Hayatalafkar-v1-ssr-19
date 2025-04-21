@@ -6,8 +6,20 @@
 @import "../public/typography/typography.css";
 
 @theme {
-  --color-main: #F82BA9;
+   /* Lightest to darkest shades - Adjusted for better contrast */
+   --color-main-50: #FDF2F8;   /* Lightest - for backgrounds */
+   --color-main-100: #FCE7F3;  /* Light backgrounds */
+   --color-main-200: #FBCFE8;  /* Subtle backgrounds */
+   --color-main-300: #F9A8D4;  /* Subtle borders */
+   --color-main-400: #F472B6;  /* Decorative elements */
+   --color-main-500: #DB2777;  /* Primary actions - WCAG AA compliant */
+   --color-main-600: #BE185D;  /* Hover states */
+   --color-main-700: #9D174D;  /* Active states */
+   --color-main-800: #831843;  /* Text on light backgrounds */
+   --color-main-900: #500724;  /* High contrast text */
+   --color-main-950: #3D0A1F;  /* Maximum contrast */
   --color-secondary: #8C52FF;
   --color-third: #39D8A3;
   --color-fourth: #160E4B;
 }
+
