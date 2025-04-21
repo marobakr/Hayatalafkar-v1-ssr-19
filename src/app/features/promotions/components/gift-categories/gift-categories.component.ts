@@ -16,35 +16,35 @@ export class GiftCategoriesComponent {
       id: 'awesome-gifts',
       title: 'Awesome Gifts Box Collections',
       tag: 'Gifts Box',
-      image: '/images/promotions/4.png',
+      image: '/images/promotions/4.webp',
       buttonText: 'Shop Now',
-      buttonLink: '/products/gifts'
+      buttonLink: '/products/gifts',
     },
     {
       id: 'occasion-gifts',
       title: 'Best Occasion Gifts Collections',
       tag: 'Occasion Gifts',
-      image: '/images/promotions/3.png',
+      image: '/images/promotions/3.webp',
       buttonText: 'Discover Now',
-      buttonLink: '/products/occasion'
+      buttonLink: '/products/occasion',
     },
     {
       id: 'combo-sets',
       title: 'Combo Sets Gift Box',
       tag: 'Occasion Gifts',
       discount: 'Up To 50% Off',
-      image: '/images/promotions/4.png',
+      image: '/images/promotions/4.webp',
       buttonText: 'Discover Now',
-      buttonLink: '/products/combo-sets'
+      buttonLink: '/products/combo-sets',
     },
     {
       id: 'combo-sets',
       title: 'Combo Sets Gift Box',
       tag: 'Occasion Gifts',
       discount: 'Up To 50% Off',
-      image: '/images/promotions/1.png',
+      image: '/images/promotions/1.webp',
       buttonText: 'Discover Now',
-      buttonLink: '/products/combo-sets'
-    }
+      buttonLink: '/products/combo-sets',
+    },
   ]);
 }

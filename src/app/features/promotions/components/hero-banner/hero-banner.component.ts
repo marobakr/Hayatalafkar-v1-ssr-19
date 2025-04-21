@@ -21,7 +21,7 @@ export class HeroBannerComponent {
       startPrice: 'START $10.99',
       buttonText: 'Shop Now',
       buttonLink: '/products/gifts',
-      image: '/images/promotions/2.png',
+      image: '/images/promotions/2.webp',
     },
     {
       id: 'perfect-gifts',
@@ -33,7 +33,7 @@ export class HeroBannerComponent {
         'Culpa ducimus nesciunt aliquam non rerum esse recusandae omnis. Rerum optio dolores et.',
       buttonText: 'Shop Now',
       buttonLink: '/products/all',
-      image: '/images/promotions/2.png',
+      image: '/images/promotions/2.webp',
     },
   ]);
 
