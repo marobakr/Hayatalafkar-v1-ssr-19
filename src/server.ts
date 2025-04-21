@@ -7,12 +7,15 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CommonEngine } from "@angular/ssr/node";
+import { render } from "@netlify/angular-runtime/common-engine";
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+const commonEngine = new CommonEngine();
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -64,3 +67,15 @@ app.use('/**', (req, res, next) => {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
+  // Example API endpoints can be defined here if needed
+  const pathname = new URL(request.url).pathname;
+
+  // Add your API endpoints here if needed
+  // if (pathname === '/api/something') {
+  //   return Response.json({ data: 'your data' });
+  // }
+
+  return await render(commonEngine);
+}

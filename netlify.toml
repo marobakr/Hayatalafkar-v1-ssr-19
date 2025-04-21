@@ -1,0 +1,14 @@
+[build]
+  command = "ng build"
+  publish = "dist/e-commerce-rose/browser"
+
+[[plugins]]
+  package = "@netlify/plugin-angular"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/render"
+  status = 200
