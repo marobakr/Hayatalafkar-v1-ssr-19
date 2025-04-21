@@ -1,0 +1,55 @@
+:root {
+  /* Primary Colors */
+  --color-pink-500: #ec4899; /* Original pink */
+  --color-pink-600: #db2777; /* Darker pink for better contrast */
+  --color-pink-700: #be185d; /* Even darker pink for maximum contrast */
+
+  /* Background Colors */
+  --bg-white: #ffffff;
+  --bg-black-80: rgba(0, 0, 0, 0.8);
+  --bg-transparent: transparent;
+
+  /* Text Colors */
+  --text-white: #ffffff;
+  --text-black: #000000;
+  --text-gray-700: #374151; /* For better contrast on light backgrounds */
+  --text-gray-200: #e5e7eb; /* For better contrast on dark backgrounds */
+
+  /* Overlay Colors */
+  --overlay-dark: rgba(0, 0, 0, 0.5);
+  --overlay-light: rgba(255, 255, 255, 0.9);
+
+  /* Interactive States */
+  --hover-pink: #be185d;
+  --focus-ring: rgba(236, 72, 153, 0.5);
+
+  /* Gradient */
+  --gradient-dark: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+
+/* Utility classes for contrast-safe combinations */
+.text-on-dark {
+  color: var(--text-white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.text-on-light {
+  color: var(--text-gray-700);
+}
+
+.bg-with-overlay {
+  position: relative;
+}
+
+.bg-with-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-dark);
+  z-index: 1;
+}
+
+.bg-with-overlay > * {
+  position: relative;
+  z-index: 2;
+}

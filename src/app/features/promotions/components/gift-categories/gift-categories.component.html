@@ -1,10 +1,10 @@
 <section class="max-w-screen-xl mx-auto px-4 py-12">
-  <div class="grid grid-cols-12 gap-6 " dir="rtl">
+  <div class="md:grid grid-cols-12 gap-6 " dir="rtl">
     <div class="col-span-9">
       <app-hero-banner />
     </div>
     @for (category of categories(); track category.id) {
-      <div [class]="{'md:col-span-3':$first,'md:col-span-4':!$first}" class=" relative overflow-hidden rounded-2xl group">
+      <div [class]="{'md:col-span-3':$first,'md:col-span-4':!$first}" class=" my-4 md:my-0 relative overflow-hidden rounded-2xl group">
         <!-- Background Image -->
         <img
           [ngSrc]="category.image"

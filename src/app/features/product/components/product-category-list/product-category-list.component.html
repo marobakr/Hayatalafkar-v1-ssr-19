@@ -1,7 +1,7 @@
 <section class="max-w-screen-xl mx-auto   py-8">
   <div class="relative w-full">
     <div class="carousel w-full justify-between rounded-box snap-x snap-mandatory overflow-x-auto  no-scrollbar">
-      @for (category of categories(); track category.id) {
+      @for (category of categories(); track category.id; let i = $index) {
         <div class="carousel-item  min-w-[217px] max-w-[217px] snap-start px-2 first:pl-4 last:pr-4">
           <a
             [routerLink]="category.route"
@@ -14,9 +14,9 @@
                 <img
                   [ngSrc]="category.icon"
                   [alt]="category.name"
-                  width="50"
-                  height="50"
-                  class="w-12 h-12"
+                  width="48"
+                  height="48"
+                  class="w-12 h-12 object-contain"
                 />
               </div>
               <div>
