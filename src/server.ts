@@ -1,3 +1,6 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -5,44 +8,21 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { CommonEngine } from "@angular/ssr/node";
-import { render } from "@netlify/angular-runtime/common-engine";
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const commonEngine = new CommonEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
-/**
- * Serve static files from /browser
- */
 app.use(
   express.static(browserDistFolder, {
-    maxAge: '1y',
     index: false,
+    maxAge: '1y',
     redirect: false,
   }),
 );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
 app.use('/**', (req, res, next) => {
   angularApp
     .handle(req)
@@ -52,30 +32,10 @@ app.use('/**', (req, res, next) => {
     .catch(next);
 });
 
-/**
- * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
-// if (isMainModule(import.meta.url)) {
-//   const port = process.env['PORT'] || 4000;
-//   app.listen(port, () => {
-//     console.log(`Node Express server listening on http://localhost:${port}`);
-//   });
-// }
-
-/**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
- */
-export const reqHandler = createNodeRequestHandler(app);
-
-export async function netlifyCommonEngineHandler(request: Request, context: any): Promise<Response> {
-  // Example API endpoints can be defined here if needed
-  const pathname = new URL(request.url).pathname;
-
-  // Add your API endpoints here if needed
-  // if (pathname === '/api/something') {
-  //   return Response.json({ data: 'your data' });
-  // }
-
-  return await render(commonEngine);
+if (isMainModule(import.meta.url)) {
+  const port = process.env['PORT'] || 4200;
+  app.listen(port, () => {
+    console.log(`Node Express server listening on http://localhost:${port}`);
+  });
 }
+export const reqHandler = createNodeRequestHandler(app);
