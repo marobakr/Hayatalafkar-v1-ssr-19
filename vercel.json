@@ -1,36 +1,16 @@
 {
   "version": 2,
   "public": true,
-  "builds": [
+  "name": "e-commerce-rose",
+  "rewrites": [
     {
-      "src": "dist/e-commerce-rose/server/main.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/e-commerce-rose/browser/**",
-      "use": "@vercel/static"
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ],
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "dest": "/dist/e-commerce-rose/browser/assets/$1"
-    },
-    {
-      "src": "/favicon/(.*)",
-      "dest": "/dist/e-commerce-rose/browser/favicon/$1"
-    },
-    {
-      "src": "/images/(.*)",
-      "dest": "/dist/e-commerce-rose/browser/images/$1"
-    },
-    {
-      "src": "/(.+\\.[a-z0-9]+$)",
-      "dest": "/dist/e-commerce-rose/browser/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/dist/e-commerce-rose/server/main.js"
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/e-commerce-rose/**"
     }
-  ]
+  }
 }
