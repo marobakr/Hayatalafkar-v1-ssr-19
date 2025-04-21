@@ -1,9 +1,8 @@
-import { NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-app-search',
-  imports: [FormsModule, NgIf],
+  imports: [FormsModule],
   templateUrl: './app-search.component.html',
   styleUrl: './app-search.component.css',
 })
