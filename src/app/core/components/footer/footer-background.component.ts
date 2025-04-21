@@ -10,6 +10,7 @@ import { NgOptimizedImage } from '@angular/common';
       ngSrc="/images/footer/1.webp"
       width="1920"
       height="400"
+      alt="Decorative footer background"
       class="absolute inset-0 w-full h-full object-cover -z-10"
       [priority]="false"
       loading="lazy"
