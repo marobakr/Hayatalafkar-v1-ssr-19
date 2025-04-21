@@ -1,2 +1,3 @@
-export default import('../dist/e-commerce-rose/server/server.mjs')
-  .then(module => module.app());
+export default import("../dist/e-commerce-rose/server/server.mjs").then(
+  (module) => module.reqHandler
+);

@@ -1,9 +1,0 @@
-[build]
-  command = "yarn build"
-  functions = "netlify/functions"
-  publish = "dist/jobs-marketplace/browser"
-
-[[redirects]]
-  from = "/*"
-  status = 200
-  to = "/index.csr.html"
