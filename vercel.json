@@ -3,7 +3,7 @@
   "public": true,
   "builds": [
     {
-      "src": "dist/e-commerce-rose/server/server.mjs",
+      "src": "dist/e-commerce-rose/server/main.js",
       "use": "@vercel/node"
     },
     {
@@ -30,7 +30,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/dist/e-commerce-rose/server/server.mjs"
+      "dest": "/dist/e-commerce-rose/server/main.js"
     }
   ]
 }
