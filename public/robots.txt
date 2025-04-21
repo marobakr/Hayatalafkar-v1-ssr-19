@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /products/
+Allow: /categories/
+Allow: /blog/
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /account/
+Disallow: /*?*
+
+# Sitemaps
+Sitemap: https://e-commerce-rose-five-liart.vercel.app/sitemap.xml

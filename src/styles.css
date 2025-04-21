@@ -3,3 +3,11 @@
 @plugin "daisyui" {
   themes: light --default;
 };
+@import "../public/typography/typography.css";
+
+@theme {
+  --color-main: #F82BA9;
+  --color-secondary: #8C52FF;
+  --color-third: #39D8A3;
+  --color-fourth: #160E4B;
+}
