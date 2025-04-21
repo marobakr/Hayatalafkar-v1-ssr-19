@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FooterBackgroundComponent } from './footer-background.component';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FooterBackgroundComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
