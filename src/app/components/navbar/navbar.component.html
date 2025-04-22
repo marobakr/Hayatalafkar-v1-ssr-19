@@ -61,27 +61,22 @@
       </li>
     </ul>
     <button
-      data-collapse-toggle="navbar-default"
-      type="button"
-      class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-      aria-controls="navbar-default"
-      [attr.aria-expanded]="isMenuOpen"
       (click)="toggleMobileMenu()"
+      class="cursor-pointer capitalize text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 md:hidden"
     >
       <span class="sr-only">Open main menu</span>
       <svg
+        class="w-6 h-6"
         aria-hidden="true"
+        fill="currentColor"
+        viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 17 14"
       >
         <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M1 1h15M1 7h15M1 13h15"
-        />
+          fill-rule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+          clip-rule="evenodd"
+        ></path>
       </svg>
     </button>
     <div
@@ -169,7 +164,9 @@
         </ul>
         <!-- Ul Icons -->
         <ul
-          class="flex flex-row md:space-x-[5px] rtl:space-x rtl:ml-[35px] ltr:mr-[35px]"
+          id="langDropdownButton"
+          (click)="toggleMenu()"
+          class="flex flex-row md:space-x-[5px] rtl:space-x rtl:ml-[35px] ltr:mr-[35px] cursor-pointer"
         >
           <li>
             <a
@@ -191,8 +188,6 @@
 
           <li class="relative cursor-pointer group">
             <button
-              id="langDropdownButton"
-              (click)="toggleMenu()"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
               type="button"
             >
@@ -202,7 +197,6 @@
             </button>
             <!-- Dropdown -->
             @if (showMenu) {
-
             <div
               id="langDropdown"
               [class.hidden]="!showMenu"

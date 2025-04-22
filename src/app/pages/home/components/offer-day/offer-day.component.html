@@ -1,4 +1,4 @@
-<section class="px-4 text-center">
+<section class="px-4">
   <div class="container mx-auto">
     <p class="text-black text-subtitle-size mb-6">
       {{ "offer-day.title" | translate }}
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Content -->
-        <div class="flex flex-col justify-between text-right flex-shrink-10">
+        <div class="flex flex-col justify-between flex-shrink-10">
           <div>
             <p class="text-[#333] text-category-size mb-[15px]">
               {{ "bestSelling.heading" | translate }}
@@ -90,7 +90,7 @@
         </div>
 
         <!-- Content -->
-        <div class="flex flex-col justify-between text-right flex-shrink-10">
+        <div class="flex flex-col justify-between flex-shrink-10">
           <div>
             <p class="text-[#333] text-category-size mb-[15px]">
               {{ "bestSelling.heading" | translate }}
@@ -136,8 +136,7 @@
       <div class="w-full lg:w-1/2 relative z-10">
         <!-- Background Image -->
         @if (_languageService.getIsArabic()) {
-
-        <div class="absolute top-[10px] left-0">
+        <div class="absolute top-[10px] ltr:right-[10px] rtl:left-[10px]">
           <figure>
             <img
               loading="lazy"
@@ -147,21 +146,12 @@
             />
           </figure>
         </div>
-        } @else {
-        <div class="absolute top-[10px] right-0">
-          <figure>
-            <img
-              loading="lazy"
-              src="/images/offer-day/5-left.png"
-              alt="خلفية"
-              class="max-w-[346px]"
-            />
-          </figure>
-        </div>
         }
 
         <!-- Foreground Image -->
-        <div class="relative z-10 md:right-[110px]">
+        <div
+          class="relative z-10 ltr:rotate-y-180 ltr:right-[110px] xl:right-[115px]"
+        >
           <figure>
             <img
               loading="lazy"
