@@ -2,8 +2,10 @@
   [ngClass]="{ 'bg-[#d7bba5]': mainColor, 'bg-white': !mainColor }"
   class="relative flex flex-col md:flex-row text-right rounded-lg shadow-md max-w-xl w-full"
 >
-  <div class="btns absolute top-[30px] left-[20px] z-1 flex flex-col">
-    <button class="mb-[10px]">
+  <div
+    class="btns absolute top-[30px] rtl:left-[20px] ltr:right-[20px] z-1 flex flex-col"
+  >
+    <button class="mb-[10px] cursor-pointer">
       <figure>
         <img
           loading="lazy"
@@ -12,7 +14,7 @@
         />
       </figure>
     </button>
-    <button>
+    <button class="cursor-pointer">
       <figure>
         <img loading="lazy" src="/images/common/cart.svg" alt="add to cart" />
       </figure>

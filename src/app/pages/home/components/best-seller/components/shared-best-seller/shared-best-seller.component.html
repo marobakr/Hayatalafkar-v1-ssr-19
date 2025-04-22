@@ -2,7 +2,7 @@
   class="card-wrapper bg-white border border-gray-200 overflow-hidden relative"
 >
   <div class="btns absolute top-[30px] right-[25px] z-1 flex flex-col">
-    <button class="mb-[10px]">
+    <button class="mb-[10px] cursor-pointer">
       <figure>
         <img
           loading="lazy"
@@ -11,13 +11,13 @@
         />
       </figure>
     </button>
-    <button>
+    <button class="cursor-pointer">
       <figure>
         <img loading="lazy" src="/images/common/cart.svg" alt="add to cart" />
       </figure>
     </button>
   </div>
-  <div class="img relative">
+  <div class="img relative cursor-pointer">
     <figure class="h-[386px] md:h-[334px]">
       <img class="w-full h-full" [src]="imgPath" alt="product image" />
     </figure>

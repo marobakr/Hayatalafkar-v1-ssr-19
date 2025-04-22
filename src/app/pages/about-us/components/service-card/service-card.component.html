@@ -8,12 +8,8 @@
 >
   <figure class="mb-6 w-full">
     <img
-      [ngClass]="{
-        'rtl:mx-auto ltr:mx-auto md:ltr:mr-auto md:rtl:ml-auto': isCenter,
-        'mx-auto': !isCenter
-      }"
       loading="lazy"
-      class="max-w-[80px] h-auto"
+      class="max-w-[80px] h-auto mx-auto md:mx-0"
       [src]="cardImagePath"
       alt="Support Icon"
     />
