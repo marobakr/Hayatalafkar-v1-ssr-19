@@ -558,5 +558,101 @@
     "total": "total",
     "summary": "summary",
     "complete-the-order": "complete the order"
+  },
+  "mega_menu": {
+    "dietary_supplements": {
+      "title": "Dietary Supplements",
+      "items": {
+        "hair_supplements": "vitamins and dietary supplements for hair",
+        "skin_supplements": "vitamins and dietary supplements for skin"
+      }
+    },
+    "perfumes": {
+      "title": "Perfumes",
+      "items": {
+        "perfume": "Perfume",
+        "eau_de_perfume": "Eau De Perfume",
+        "eau_de_toilette": "Eau De Toilette"
+      }
+    },
+    "skin_care": {
+      "title": "Skin Care",
+      "items": {
+        "sunscreens": "Sunscreens",
+        "facial_moisturisation": "Facial Moisturisation",
+        "facial_whitening": "Facial Whitening"
+      }
+    },
+    "hair_care": {
+      "title": "Hair Care",
+      "items": {
+        "antihair_loss": "Antihair Loss",
+        "antidandruff": "Antidandruff",
+        "antilice": "Antilice"
+      }
+    },
+    "hair_styling": {
+      "title": "Hair Styling",
+      "items": {
+        "hair_colors": "Hair Colors",
+        "hair_frizing": "Hair Frizing",
+        "hair_straightening": "Hair Straightening"
+      }
+    },
+    "men_care": {
+      "title": "Men Care",
+      "items": {
+        "men_special_care": "Men Special Care",
+        "condoms": "Condoms",
+        "lubricants": "Lubricants"
+      }
+    },
+    "women_care": {
+      "title": "Women Care",
+      "items": {
+        "vaginal_washes": "Vaginal Washes",
+        "women_special_care": "Women Special Care",
+        "hair_removal": "Hair Removal"
+      }
+    },
+    "medical_equipments": {
+      "title": "Medical Equipments",
+      "items": {
+        "face_masks": "Face Masks",
+        "hand_sanitizers": "Hand Sanitizers"
+      }
+    },
+    "dental_care": {
+      "title": "Dental Care",
+      "items": {
+        "dental_care_accessories": "Dental Care Accessories",
+        "tooth_brushes": "Tooth Brushes",
+        "breath_freshners": "Breath Freshners"
+      }
+    },
+    "makeup": {
+      "title": "Makeup",
+      "items": {
+        "face_makeup": "Face Makeup",
+        "primers": "Primers",
+        "foundations": "Foundations"
+      }
+    },
+    "beauty_accessories": {
+      "title": "Beauty Accessories",
+      "items": {
+        "artificial_nails": "Artificial Nails",
+        "false_eyelashes": "False Eyelashes",
+        "eyelashes_adhesive": "Eyelashes Adhesive"
+      }
+    },
+    "beauty_devices": {
+      "title": "Beauty Devices",
+      "items": {
+        "nail_art": "Nail Art",
+        "facial_hair_removal": "Facial Hair Removal",
+        "body_hair_removal": "Body Hair Removal"
+      }
+    }
   }
 }
