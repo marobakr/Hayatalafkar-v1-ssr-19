@@ -11,12 +11,7 @@ import { provideTranslation } from "./core/i18n/i18n.config";
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(
-      routes,
-      withInMemoryScrolling({ scrollPositionRestoration: "top" }),
-      withViewTransitions(),
-      withHashLocation()
-    ),
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: "top" }), withViewTransitions()),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
     provideHttpClient(withFetch()),
