@@ -1,0 +1,48 @@
+<div class="bg-white">
+  <div class="relative mb-[13px]">
+    <!-- ArticleImage -->
+    <figure>
+      <img
+        loading="lazy"
+        [src]="articleImage"
+        alt="article"
+        class="w-full object-cover"
+      />
+    </figure>
+  </div>
+
+  <div class="p-4">
+    <!-- ArticleDate -->
+
+    <div class="built relative">
+      <div class="classs text-[14px] text-[#333] mb-[13px]">
+        {{ articleDate }}
+      </div>
+      <div
+        class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"
+      ></div>
+    </div>
+    <!-- ArticleTitle -->
+
+    @if (articleTitle !=='') {
+    <h1 class="text-subtitle-size text-black mb-[15px] font-semibold">
+      {{ articleTitle }}
+    </h1>
+    }
+    <!-- ArticleDescription -->
+    <h3
+      [ngClass]="{
+        'mb-[23px]': haveMoreMarginBottom,
+        'mb-[10px]': !haveMoreMarginBottom
+      }"
+      class="text-description-size"
+    >
+      {{ articleDescription }}
+    </h3>
+
+    <!-- Read More -->
+    <a href="#" class="text-muted-rose text-[14px] font-bold underline">
+      {{ "shared.readMore" | translate }}
+    </a>
+  </div>
+</div>

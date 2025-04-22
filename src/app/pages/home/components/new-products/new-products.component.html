@@ -1,0 +1,50 @@
+<section>
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        @if (_languageService.getIsArabic() | async) {
+        <h2 class="text-title-size font-bold">
+          <span class="text-muted-rose">
+            {{ "newProducts.title" | translate }}
+          </span>
+          {{ "newProducts.subtitle" | translate }}
+        </h2>
+
+        } @else {
+        <h2 class="text-title-size text-[#333] font-light">
+          {{ "newProducts.title" | translate }}
+        </h2>
+        }
+      </div>
+      <p class="title">
+        {{ "newProducts.description" | translate }}
+        <br class="hidden lg:block" />
+
+        {{ "newProducts.alt-description" | translate }}
+      </p>
+    </div>
+    <div class="wrapper">
+      <div class="grid grid-cols-1 lg:grid-cols-6 gap-6">
+        <!-- Talent-image-card -->
+        <app-talent-image-card
+          class="items-stretch"
+          [imagePath]="'/images/best-Seller/7.png'"
+        ></app-talent-image-card>
+        <!-- Product Cards -->
+        <div
+          class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 content-between"
+        >
+          @for (bestSeller of imageSrc; track $index) {
+
+          <app-shared-best-seller
+            [isOffer]="bestSeller.offer"
+            [imgPath]="bestSeller.image"
+            [description]="descriptions[$index]"
+            [title]="'bestSelling.heading' | translate"
+          ></app-shared-best-seller>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

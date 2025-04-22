@@ -1,0 +1,216 @@
+<app-articles-header
+  [title]="'wishlist.header.title' | translate"
+  [subTitle]="'wishlist.header.subtitle' | translate"
+  [showRotateImage]="false"
+  [marginBottom]="'15'"
+></app-articles-header>
+<!-- Items  -->
+<section class="mb-[64px]">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-15">
+      <div class="col-span-15 lg:col-span-11">
+        <!-- Wishlist Items Header -->
+        @if (productsItem.length > 0) {
+        <div
+          class="header hidden md:flex items-center justify-between rounded-[15px] bg-warm-tan py-6 px-12 text-white text-description-size"
+        >
+          <span class="capitalize">
+            {{ "wishlist.orderList.product" | translate }}
+          </span>
+          <span class="capitalize">
+            {{ "wishlist.orderList.price" | translate }}
+          </span>
+          <span class="capitalize">
+            {{ "wishlist.orderList.quantity" | translate }}
+          </span>
+
+          <span class="capitalize">
+            {{ "wishlist.orderList.addToCart" | translate }}
+          </span>
+        </div>
+
+        <!-- Wishlist Items -->
+        @for (item of productsItem; track $index) {
+        <div
+          [@itemAnimation]
+          class="block md:flex items-center justify-between flex-wrap mb-8 py-6 px-[23px] pb-6 border-b-1 border-[#8D8D8D]"
+        >
+          <!-- Image && Product Name -->
+          <div
+            class="flex justify-start md:ltr:pr-15 md:rtl:pl-15 md:justify-between items-center capitalize gap-[10px] mb-5 md:mb-0"
+          >
+            <!-- Remove Item -->
+            <div class="close cursor-pointer" (click)="removeItem($index)">
+              <figure class="mx-0 remove-icon">
+                <img src="/images/wishlist/remove.svg" alt="remove item" />
+              </figure>
+            </div>
+
+            <figure class="max-w-[80px] relative">
+              <img class="w-full" src="/images/wishlist/3.png" alt="" />
+              <!-- Cart Animation Icon -->
+              @if (cartAnimationStates[$index]) {
+
+              <img
+                src="/images/common/cart.svg"
+                class="absolute top-0 left-0 w-full h-full animate-cart"
+                alt="cart"
+              />
+              }
+            </figure>
+            <div class="details">
+              <h3
+                [title]="'item' | translate"
+                class="text-category-size text-black font-bold mb-[15px] line-clamp-1"
+              >
+                {{ item }}
+              </h3>
+              <p class="text-[#333] text-[14px]">
+                {{ "wishlist.productsItem.item-1.subtitle" | translate }}
+              </p>
+            </div>
+          </div>
+          <!-- Price & Quantity -->
+
+          <div
+            class="flex justify-between items-center flex-grow-1 flex-row-reverse md:flex-row mb-5 md:mb-0"
+          >
+            <!-- Price -->
+            <div class="text-[#333] text-category-size font-bold flex-grow-1">
+              200
+
+              {{ "wishlist.productsItem.item-1.price" | translate }}
+            </div>
+            <!-- Quantity -->
+
+            <form class="max-w-xs flex-grow-1">
+              <div class="relative flex items-center gap-0 max-w-[8rem]">
+                <button
+                  type="button"
+                  id="decrement-button"
+                  data-input-counter-decrement="quantity-input"
+                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-l-2xl rtl:rounded-r-2xl px-[13px] h-[42px] flex items-center justify-center"
+                >
+                  <span class="text-xl font-medium">−</span>
+                </button>
+                <input
+                  type="text"
+                  id="quantity-input"
+                  data-input-counter
+                  data-input-counter-min="1"
+                  data-input-counter-max="100000"
+                  aria-describedby="helper-text-explanation"
+                  class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
+                  placeholder="999"
+                  value="5"
+                  required
+                />
+                <button
+                  type="button"
+                  id="increment-button"
+                  data-input-counter-increment="quantity-input"
+                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-r-2xl rtl:rounded-l-2xl px-[13px] h-[42px] flex items-center justify-center"
+                >
+                  <span class="text-xl font-medium">+</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Add To Cart -->
+          <button
+            type="button"
+            class="text-white block md:inline bg-warm-tan font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none capitalize"
+            (click)="showCartAnimation($index)"
+          >
+            {{ "add_to_cart" | translate }}
+          </button>
+        </div>
+        }
+        <!-- Wishlist Items Footer -->
+        <div class="flex items-center justify-between">
+          <div
+            class="btns flex items-center justify-start rtl:justify-end gap-3"
+          >
+            <button
+              class="text-[#333] text-category-size py-[9px] px-[11px] rounded-[50px] capitalize"
+            >
+              {{ "wishlist.wishlist-footer.add-new" | translate }}
+            </button>
+
+            <app-button
+              [px]="'px-[31px]'"
+              [py]="'py-[4px]'"
+              [title]="'wishlist.wishlist-footer.add-all' | translate"
+              [type]="'button'"
+            ></app-button>
+          </div>
+
+          <span
+            (click)="removeAllItems()"
+            class="text-muted-rose text-description-size font-bold capitalize underline"
+          >
+            {{ "wishlist.wishlist-footer.delete-all" | translate }}
+          </span>
+        </div>
+        }@else {
+        <div
+          class="flex items-center justify-end min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
+          [@emptyWishlistAnimation]
+        >
+          <div class="text-center py-12">
+            <svg
+              class="mx-auto mb-6 w-[200px] h-[200px]"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2 3H4.5L6.5 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM6.07142 14H18L21 5H4.78571M11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"
+                stroke="#A4907C"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle cx="9" cy="19" r="2" fill="#A4907C" opacity="0.3" />
+              <circle cx="17" cy="19" r="2" fill="#A4907C" opacity="0.3" />
+              <path
+                d="M4 5H21L18 14H6.07142L4 5Z"
+                fill="#A4907C"
+                opacity="0.3"
+              />
+              <path
+                d="M7 8L8 12M11 8L11.5 12M15 8L14 12"
+                stroke="white"
+                stroke-linecap="round"
+              />
+            </svg>
+            <h3 class="text-2xl font-bold text-[#333] mb-4">
+              {{ "cart.empty.title" | translate }}
+            </h3>
+            <p class="text-[#666] mb-6">
+              {{ "cart.empty.message" | translate }}
+            </p>
+            <button
+              routerLink="/shopping"
+              class="bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+            >
+              {{ "cart.empty.shop-now" | translate }}
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+      <!-- this acts as an offset -->
+      <div class="hidden lg:block lg:col-span-1"></div>
+      @if (productsItem.length > 0) {
+
+      <div class="hidden lg:block lg:col-span-3">
+        <app-talent-image-card
+          [imagePath]="'/images/news/13.png'"
+        ></app-talent-image-card>
+      </div>
+      }
+    </div>
+  </div>
+</section>

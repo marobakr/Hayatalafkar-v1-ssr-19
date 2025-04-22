@@ -1,0 +1,64 @@
+<div
+  class="card-wrapper bg-white border border-gray-200 overflow-hidden relative"
+>
+  <div class="btns absolute top-[30px] right-[25px] z-1 flex flex-col">
+    <button class="mb-[10px]">
+      <figure>
+        <img
+          loading="lazy"
+          src="/images/common/wishlist.svg"
+          alt="add in wishlist"
+        />
+      </figure>
+    </button>
+    <button>
+      <figure>
+        <img loading="lazy" src="/images/common/cart.svg" alt="add to cart" />
+      </figure>
+    </button>
+  </div>
+  <div class="img relative">
+    <figure class="h-[386px] md:h-[334px]">
+      <img class="w-full h-full" [src]="imgPath" alt="product image" />
+    </figure>
+    <!-- Offer Title -->
+    @if (isOffer) {
+    <div
+      class="absolute top-3 left-3 bg-[#000000b3] text-white py-4 px-8 rounded-full text-category-size font-bold"
+    >
+      {{ "shared.offer" | translate }}
+    </div>
+    }
+  </div>
+
+  <div
+    class="flex flex-row rtl:flex-row-reverse justify-between items-center mt-[26px] mb-4"
+  >
+    <a
+      href="#"
+      class="text-muted-rose hover:underline text-category-size underline font-bold"
+    >
+      {{ "shared.show-products" | translate }}
+    </a>
+
+    <p class="text-black mb-3 text-category-size">{{ title }}</p>
+  </div>
+  <h3
+    [title]="description"
+    class="text-description-size font-bold text-black mb-8 line-clamp-1"
+  >
+    {{ description }}
+  </h3>
+  <div class="text-subtitle-size mb-[13px]">
+    <span class="text-warm-tan font-bold rtl:mr-[28px] ltr:mr-[28px]"
+      >200
+      {{ "shared.currency" | translate }}
+    </span>
+    <!-- prev Price Based on Offer -->
+    @if ( isOffer) {
+    <span class="line-through text-black"
+      >250 {{ "shared.currency" | translate }}</span
+    >
+    }
+  </div>
+</div>

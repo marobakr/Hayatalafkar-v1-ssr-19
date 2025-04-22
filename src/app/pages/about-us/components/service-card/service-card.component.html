@@ -1,0 +1,27 @@
+<div
+  [ngClass]="{
+    'rtl:text-center ltr:text-center md:ltr:text-left md:rtl:text-right':
+      isCenter,
+    'text-center': !isCenter
+  }"
+  class="flex flex-col items-center text-center p-4"
+>
+  <figure class="mb-6 w-full">
+    <img
+      [ngClass]="{
+        'rtl:mx-auto ltr:mx-auto md:ltr:mr-auto md:rtl:ml-auto': isCenter,
+        'mx-auto': !isCenter
+      }"
+      loading="lazy"
+      class="max-w-[80px] h-auto"
+      [src]="cardImagePath"
+      alt="Support Icon"
+    />
+  </figure>
+  <h3 class="text-category-size font-semibold mb-[10px] w-full">
+    {{ cardTitle }}
+  </h3>
+  <p class="text-[#333] text-category-size w-full">
+    {{ cardDescription }}
+  </p>
+</div>

@@ -1,0 +1,81 @@
+<form [formGroup]="loginForm" (ngSubmit)="submition()">
+  <figure class="mb-[30px] block">
+    <img loading="lazy" src="/images/common/username.svg" alt="" />
+  </figure>
+
+  <!-- Full Name  -->
+  <div class="flex justify-between items-center gap-x-[23px] mb-[44px]">
+    <!-- First Name  -->
+    <div class="flex-grow-1">
+      <label
+        for="firstName"
+        class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+      >
+        {{ "contact-us.form.first-name" | translate }}
+      </label>
+      <input
+        type="text"
+        id="firstName"
+        class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+        [placeholder]="'contact-us.form.placeholder-first-name' | translate"
+      />
+    </div>
+    <!-- Last Name  -->
+    <div class="flex-grow-1">
+      <label
+        for="last-name"
+        class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+      >
+        {{ "contact-us.form.last-name" | translate }}
+      </label>
+      <input
+        type="text"
+        id="last-name"
+        class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+        [placeholder]="'contact-us.form.placeholder-last-name' | translate"
+      />
+    </div>
+  </div>
+
+  <!-- Phone Number -->
+  <div class="mb-[41px]">
+    <label
+      for="phone-number"
+      class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+    >
+      {{ "contact-us.form.phone-number" | translate }}
+    </label>
+    <input
+      type="text"
+      id="phone-number"
+      class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full rtl:text-right ltr:text-left"
+      [placeholder]="'contact-us.form.placeholder-phone-number' | translate"
+    />
+  </div>
+
+  <!-- Email -->
+  <div class="mb-[41px]">
+    <label
+      for="email"
+      class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+    >
+      {{ "contact-us.form.email" | translate }}
+    </label>
+    <input
+      type="email"
+      id="firstName"
+      class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+      [placeholder]="'contact-us.form.placeholder-email' | translate"
+    />
+  </div>
+
+  <div class="flex justify-between items-center">
+    <app-button
+      [px]="'px-[58px]'"
+      [py]="'py-[9px]'"
+      [title]="'save_changes' | translate"
+      type="'submit'"
+    >
+    </app-button>
+  </div>
+</form>

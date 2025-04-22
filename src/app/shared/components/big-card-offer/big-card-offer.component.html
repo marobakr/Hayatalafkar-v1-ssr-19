@@ -1,0 +1,77 @@
+<div
+  [ngClass]="{ 'bg-[#d7bba5]': mainColor, 'bg-white': !mainColor }"
+  class="relative flex flex-col md:flex-row text-right rounded-lg shadow-md max-w-xl w-full"
+>
+  <div class="btns absolute top-[30px] left-[20px] z-1 flex flex-col">
+    <button class="mb-[10px]">
+      <figure>
+        <img
+          loading="lazy"
+          src="/images/common/wishlist.svg"
+          alt="add in wishlist"
+        />
+      </figure>
+    </button>
+    <button>
+      <figure>
+        <img loading="lazy" src="/images/common/cart.svg" alt="add to cart" />
+      </figure>
+    </button>
+  </div>
+  <div class="flex flex-col justify-between p-6 md:w-1/2">
+    <span
+      [ngClass]="{ 'bg-[#d7bba5]': !mainColor, 'bg-white': mainColor, 'text-[#d7bba5]': mainColor, 'text-white': !mainColor, }"
+      class="inline-block text-black text-subtitle-size px-9 py-4 rounded-full my-3 w-fit"
+    >
+      {{ "shared.offer" | translate }}
+    </span>
+    <h2 class="text-title-size font-bold text-black mb-2">
+      {{ title }} <br /><span
+        [ngClass]="{ 'text-[#d7bba5]': !mainColor, 'text-white': mainColor }"
+        >{{ subtitle }}</span
+      >
+    </h2>
+    <p class="text-description-size text-black mb-4">
+      {{ description }}
+    </p>
+
+    <app-arrow-button
+      [gap]="'5px'"
+      [px]="'4'"
+      [py]="'2'"
+      [title]="'show.product' | translate"
+      [type]="'button'"
+      [bg]="'white'"
+      [border]="'black'"
+      [color]="'black'"
+      [image]="'/images/navbar/9.webp'"
+    >
+    </app-arrow-button>
+  </div>
+
+  <div class="md:w-1/2 flex items-end">
+    <figure>
+      <img
+        loading="lazy"
+        [src]="imgPath"
+        [alt]="alt"
+        class="w-full min-h-full"
+      />
+    </figure>
+    @if (!mainColor ) {
+
+    <div
+      class="image-rotate top-0 rtl:left-0 ltr:right-0 absolute z-1 rtl:-translate-x-1/2 ltr:translate-x-1/2 -translate-y-1/2"
+    >
+      <figure>
+        <img
+          loading="lazy"
+          class="w-[73px]"
+          src="/images/common/rotate.gif"
+          alt="logo"
+        />
+      </figure>
+    </div>
+    }
+  </div>
+</div>

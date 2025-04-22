@@ -1,0 +1,59 @@
+<section class="mt-[7px]">
+  <div
+    class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between ltr:flex-row-reverse gap-12 rtl:md:flex-row-reverse bg-[#CBAC8D] [border-radius:23px] relative"
+  >
+    <!-- Text Column -->
+    <div
+      class="w-full md:w-full lg:w-1/2 text-center rtl:text-right ltr:text-left py-12"
+    >
+      <app-slogan
+        [haveBg]="true"
+        [sloganImage]="'/images/navbar/8.webp'"
+        [sloganTitle]="'hero.title' | translate"
+      >
+        <!-- title -->
+      </app-slogan>
+
+      <h1
+        class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
+      >
+        {{ "hero.heading" | translate }}
+      </h1>
+
+      <p class="text-[#F5F5F5] leading-relaxed mb-8">
+        {{ "hero.description" | translate }}
+      </p>
+      <div class="flex flex-col md:flex-row gap-4 items-center justify-start">
+        <button
+          class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
+        >
+          <span>{{ "hero.title-btn" | translate }}</span>
+          <figure class="direction-aware-rotate max-w-[24px] max-h-[24px]">
+            <img
+              class="w-full h-auto"
+              loading="lazy"
+              [src]="'/images/navbar/9.webp'"
+              alt="arrow"
+            />
+          </figure>
+        </button>
+      </div>
+    </div>
+    <!-- Image Column -->
+    <div class="hidden md:block md:w-full lg:w-1/2">
+      <img
+        src="images/hero/1.png"
+        alt="منتجات تجميل"
+        class="w-full max-w-md mx-auto"
+      />
+    </div>
+
+    <div
+      class="hidden md:block image-rotate absolute z-1 top-[14px] left-[14px]"
+    >
+      <figure>
+        <img class="w-[73px]" src="/images/common/rotate.gif" alt="logo" />
+      </figure>
+    </div>
+  </div>
+</section>

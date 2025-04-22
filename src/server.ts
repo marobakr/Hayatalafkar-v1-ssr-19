@@ -1,20 +1,37 @@
-import { AngularAppEngine, createRequestHandler } from '@angular/ssr'
-import { getContext } from '@netlify/angular-runtime/context.mjs'
+import { AngularAppEngine, createRequestHandler } from '@angular/ssr';
+import { getContext } from '@netlify/angular-runtime/context.mjs';
 
-const angularAppEngine = new AngularAppEngine()
+const angularAppEngine = new AngularAppEngine();
 
-export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
-  const context = getContext()
+export async function netlifyAppEngineHandler(
+  request: Request
+): Promise<Response> {
+  const context = getContext();
+  const url = new URL(request.url);
+  const pathname = url.pathname;
 
-  // Example API endpoints can be defined here.
-  // Uncomment and define endpoints as necessary.
-  // const pathname = new URL(request.url).pathname;
-  // if (pathname === '/api/hello') {
-  //   return Response.json({ message: 'Hello from the API' });
-  // }
+  // Log incoming requests
+  console.log(`[SSR] Handling request for: ${pathname}`);
 
-  const result = await angularAppEngine.handle(request, context)
-  return result || new Response('Not found', { status: 404 })
+  // Handle root redirect
+  if (pathname === '/') {
+    return Response.redirect(`${url.origin}/ar`, 302);
+  }
+
+  // Handle language routes
+  const langMatch = pathname.match(/^\/(ar|en)/);
+  if (!langMatch) {
+    console.log(`[SSR] No language prefix found in: ${pathname}`);
+    return Response.redirect(`${url.origin}/ar${pathname}`, 302);
+  }
+
+  const result = await angularAppEngine.handle(request, context);
+  if (!result) {
+    console.log(`[SSR] No result for: ${pathname}`);
+    return new Response('Not found', { status: 404 });
+  }
+
+  return result;
 }
 
 /**

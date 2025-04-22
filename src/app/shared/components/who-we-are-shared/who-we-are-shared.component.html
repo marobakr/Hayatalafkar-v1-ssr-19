@@ -1,0 +1,123 @@
+<section
+  [ngClass]="{ showBgImage: showBgImage }"
+  class="container mx-auto px-4 pt-[60px] pb-[76px] relative"
+>
+  <div
+    class="flex flex-col lg:flex-row items-start justify-between gap-10 relative z-10"
+  >
+    <!-- Image Column -->
+    <!-- it will be replaced with the image get from backend 🔻🔻🔻🔻🔻🔻🔻🔻  -->
+    <div class="hidden lg:flex flex-col justify-between flex-grow-1">
+      <div class="flex gap-6 mb-3">
+        <div class="main-image relative">
+          <figure>
+            <img
+              loading="lazy"
+              src="/images/whoWeAre/4.webp"
+              class="max-w-[357px] max-h-[325px]"
+              alt="img"
+            />
+          </figure>
+        </div>
+        <figure>
+          <img
+            loading="lazy"
+            src="/images/whoWeAre/1.webp"
+            class="w-[175px] max-w-[357px] max-h-[325px]"
+            alt="img"
+          />
+        </figure>
+      </div>
+
+      <div class="flex gap-3">
+        <figure>
+          <img
+            loading="lazy"
+            src="/images/whoWeAre/3.webp"
+            class="min-w-[237px] max-h-[226px]"
+            alt="img"
+          />
+        </figure>
+
+        <div class="alt-image relative">
+          <figure>
+            <img
+              loading="lazy"
+              src="/images/whoWeAre/2.webp"
+              class="max-w-[294px] max-h-[226px]"
+              alt="img"
+            />
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Column -->
+    <div class="lg:w-1/2 text-center md:text-right space-y-6">
+      <h1 class="text-black font-bold text-title-size mb-6 mt-8">
+        {{ "hero.about-us.title" | translate }}
+      </h1>
+      <h2 class="text-[2.8125rem] font-medium text-black mb-[35px]">
+        {{ "hero.about-us.journey" | translate }}
+        <span class="text-muted-rose">
+          {{ "hero.about-us.elegance" | translate }}
+        </span>
+      </h2>
+      <p class="text-[#474747] text-description-size leading-relaxed mb-[50px]">
+        {{ "hero.about-us.description" | translate }}
+      </p>
+
+      <!-- Stats -->
+      <div
+        class="flex flex-col sm:flex-row justify-evenly items-center gap-4 bg-warm-tan rounded-2xl p-4 text-white font-bold mb-[60px]"
+      >
+        <div class="text-center">
+          <div class="text-black mb-[10px]">
+            {{ "hero.about-us.stats-values.clients" | translate }}
+          </div>
+          <div class="text-sm text-white">
+            {{ "hero.about-us.stats.clients" | translate }}
+          </div>
+        </div>
+        <span
+          class="hidden sm:inline-block h-10 border-l border-[#D7D7D7] rtl:border-r rtl:border-l-0"
+        ></span>
+
+        <div class="text-center">
+          <div class="text-black mb-[10px]">
+            {{ "hero.about-us.stats-values.products" | translate }}
+          </div>
+          <div class="text-sm text-white">
+            {{ "hero.about-us.stats.products" | translate }}
+          </div>
+        </div>
+        <span
+          class="hidden sm:inline-block h-10 border-l border-[#D7D7D7] rtl:border-r rtl:border-l-0"
+        ></span>
+
+        <div class="text-center px-4">
+          <div class="text-black mb-[10px]">
+            {{ "hero.about-us.stats-values.partners" | translate }}
+          </div>
+          <div class="text-sm text-white">
+            {{ "hero.about-us.stats.partners" | translate }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Slogan -->
+      @if (showSloganText) {
+      <app-slogan
+        [haveBg]="false"
+        [sloganImage]="'/images/navbar/8.webp'"
+        [sloganTitle]="sloganText"
+      ></app-slogan>
+      } @else {
+      <button class="text-muted-rose text-description-size underline">
+        {{ "shared.readMore" | translate }}
+      </button>
+      }
+    </div>
+  </div>
+  <div class="absolute top-0 left-0 w-full h-full bg-white opacity-95"></div>
+</section>

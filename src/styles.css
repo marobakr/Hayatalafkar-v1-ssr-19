@@ -1,25 +1,91 @@
-/* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default;
-};
-@import "../public/typography/typography.css";
+@plugin 'tailwind-scrollbar';
 
 @theme {
-   /* Lightest to darkest shades - Adjusted for better contrast */
-   --color-main-50: #FDF2F8;   /* Lightest - for backgrounds */
-   --color-main-100: #FCE7F3;  /* Light backgrounds */
-   --color-main-200: #FBCFE8;  /* Subtle backgrounds */
-   --color-main-300: #F9A8D4;  /* Subtle borders */
-   --color-main-400: #F472B6;  /* Decorative elements */
-   --color-main-500: #DB2777;  /* Primary actions - WCAG AA compliant */
-   --color-main-600: #BE185D;  /* Hover states */
-   --color-main-700: #9D174D;  /* Active states */
-   --color-main-800: #831843;  /* Text on light backgrounds */
-   --color-main-900: #500724;  /* High contrast text */
-   --color-main-950: #3D0A1F;  /* Maximum contrast */
-  --color-secondary: #8C52FF;
-  --color-third: #39D8A3;
-  --color-fourth: #160E4B;
+  --color-black: #000000;
+  --color-dark-brown: #7a7066;
+  --color-muted-rose: #a48374;
+  --color-warm-tan: #cbac8d;
+  --color-white: #ffffff;
+  --color-light-gray: #f5f5f5;
+  --color-footer-color: #505050;
+  --text-title-size: calc(2.1875rem * 1); /* 35px */
+  --text-subtitle-size: calc(1.4375rem * 1); /* 23px */
+  --text-category-size: calc(1rem * 1); /* 16px */
+  --text-description-size: calc(1.125rem * 1); /* 18px */
+  --text-price-size: calc(1.4375rem * 1); /* 23px */
+  --text-start-size: calc(1.875rem * 1); /* 30px */
 }
 
+@layer utilities {
+  @media (max-width: 1330px) and (min-width: 1280px) {
+    .container {
+      zoom: 95%;
+    }
+  }
+  @media (max-width: 660px) {
+    .container {
+      /* overflow-x: hidden; */
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  body {
+    font-family: "Almarai", sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    padding-top: 78px;
+  }
+}
+
+.direction-aware-rotate {
+  @apply ltr:rotate-180 rtl:rotate-0;
+}
+
+@layer base {
+  :root {
+    font-size: 16px;
+  }
+
+  @media (max-width: 499px) {
+    :root {
+      font-size: 10px;
+    }
+  }
+}
+/* Fonts */
+/* Almarai Regular - 400 */
+@font-face {
+  font-family: "Almarai";
+  src: url("/fonts/Almarai/Almarai-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Almarai Light - 300 */
+@font-face {
+  font-family: "Almarai";
+  src: url("/fonts/Almarai/Almarai-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Almarai Bold - 700 */
+@font-face {
+  font-family: "Almarai";
+  src: url("/fonts/Almarai/Almarai-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Almarai ExtraBold - 800 */
+@font-face {
+  font-family: "Almarai";
+  src: url("/fonts/Almarai/Almarai-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}

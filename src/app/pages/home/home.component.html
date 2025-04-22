@@ -1,10 +1,43 @@
-<main>
-  <!-- Hero section or other content -->
-  <app-product-category-list />
-  <app-gift-categories />
-  <app-product-category-list />
-  <app-gift-categories />
-  <app-product-category-list />
-  <app-gift-categories />
-  <app-product-category-list />
-</main>
+<app-hero></app-hero>
+
+<app-who-we-are-shared
+  [showSloganText]="false"
+  [showBgImage]="true"
+  [sloganText]="'hero.title' | translate"
+>
+</app-who-we-are-shared>
+
+<app-sections></app-sections>
+
+<app-banner
+  [showLeftSideImage]="true"
+  [showRightSideImage]="true"
+  [bannerText]="'banner.title-1' | translate"
+></app-banner>
+
+<app-offer-card></app-offer-card>
+
+<app-best-seller></app-best-seller>
+
+<app-banner
+  [showLeftSideImage]="true"
+  [showRightSideImage]="true"
+  [bannerText]="'banner.title-2' | translate"
+></app-banner>
+
+<app-offer-day></app-offer-day>
+
+<app-banner
+  [showLeftSideImage]="true"
+  [showRightSideImage]="true"
+  [bannerText]="'banner.title-3' | translate"
+></app-banner>
+
+<app-new-products> </app-new-products>
+<app-banner
+  [showLeftSideImage]="true"
+  [showRightSideImage]="true"
+  [bannerText]="'banner.title-4' | translate"
+></app-banner>
+
+<app-new-articls></app-new-articls>

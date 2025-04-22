@@ -1,0 +1,255 @@
+<section>
+  <div class="container mx-auto">
+    <h1 class="hidden">{{ "contact-us.heading" | translate }}</h1>
+
+    <!-- Header Image -->
+    <figure class="mb-[60px]">
+      <img
+        class="w-full"
+        loading="lazy"
+        src="/images/contact-us/map.webp"
+        alt="map"
+      />
+    </figure>
+
+    <!-- Contact Us Form -->
+    <div class="mb-15">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 lg:col-span-8">
+          <!-- Left Section: Form -->
+
+          <form>
+            <!-- Full Name  -->
+            <div
+              class="flex justify-between items-center gap-x-[23px] mb-[44px]"
+            >
+              <!-- First Name  -->
+              <div class="flex-grow-1">
+                <label
+                  for="firstName"
+                  class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+                >
+                  {{ "contact-us.form.first-name" | translate }}
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+                  [placeholder]="
+                    'contact-us.form.placeholder-first-name' | translate
+                  "
+                />
+              </div>
+
+              <!-- Last Name  -->
+              <div class="flex-grow-1">
+                <label
+                  for="last-name"
+                  class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+                >
+                  {{ "contact-us.form.last-name" | translate }}
+                </label>
+                <input
+                  type="text"
+                  id="last-name"
+                  class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+                  [placeholder]="
+                    'contact-us.form.placeholder-last-name' | translate
+                  "
+                />
+              </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-[41px]">
+              <label
+                for="phone-number"
+                class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+              >
+                {{ "contact-us.form.phone-number" | translate }}
+              </label>
+              <input
+                type="text"
+                id="phone-number"
+                class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full rtl:text-right ltr:text-left"
+                [placeholder]="
+                  'contact-us.form.placeholder-phone-number' | translate
+                "
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="mb-[41px]">
+              <label
+                for="email"
+                class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+              >
+                {{ "contact-us.form.email" | translate }}
+              </label>
+              <input
+                type="email"
+                id="firstName"
+                class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+                [placeholder]="'contact-us.form.placeholder-email' | translate"
+              />
+            </div>
+
+            <!-- Your Msg -->
+            <div class="mb-[41px]">
+              <label
+                for="message"
+                class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+              >
+                {{ "contact-us.form.your-msg" | translate }}
+              </label>
+
+              <textarea
+                id="message"
+                rows="4"
+                class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full min-h-[250px]"
+                [placeholder]="
+                  'contact-us.form.placeholder-your-msg' | translate
+                "
+              ></textarea>
+            </div>
+
+            <app-arrow-button
+              [gap]="'5px'"
+              [px]="'4'"
+              [py]="'2'"
+              [title]="'form.send' | translate"
+              [type]="'submit'"
+              [bg]="'[#C9A888]'"
+              [border]="'[#C9A888]'"
+              [color]="'white'"
+              [image]="'/images/common/white-arrow.svg'"
+            >
+            </app-arrow-button>
+          </form>
+        </div>
+        <div class="hidden lg:block lg:col-span-4">
+          <figure>
+            <img loading="lazy" src="/images/contact-us/1.webp" alt="" />
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Cards Details -->
+
+    <div class="grid md:grid-cols-12 gap-[30px]">
+      <!-- Maps Cards -->
+      <div class="md:col-span-6 lg:col-span-4">
+        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
+          <figure
+            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
+          >
+            <img
+              loading="lazy"
+              class="max-w-[30px]"
+              src="/images/contact-us/maps.webp"
+              alt="send msg"
+            />
+          </figure>
+
+          <h3
+            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+          >
+            {{ "contact-us.cards.maps-card.title" | translate }}
+          </h3>
+
+          <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
+            {{ "contact-us.cards.maps-card.subTitle" | translate }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Call Cards -->
+      <div class="md:col-span-6 lg:col-span-4">
+        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
+          <figure
+            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
+          >
+            <img
+              loading="lazy"
+              class="max-w-[30px]"
+              src="/images/contact-us/call.webp"
+              alt="send msg"
+            />
+          </figure>
+
+          <h3
+            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+          >
+            {{ "contact-us.cards.call-card.title" | translate }}
+          </h3>
+
+          <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
+            {{ "contact-us.cards.call-card.subTitle" | translate }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Msg Cards -->
+      <div class="md:col-span-6 lg:col-span-4">
+        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
+          <figure
+            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
+          >
+            <img
+              loading="lazy"
+              class="max-w-[30px]"
+              src="/images/contact-us/msg.webp"
+              alt="send msg"
+            />
+          </figure>
+
+          <h3
+            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+          >
+            {{ "contact-us.cards.msg-card.title" | translate }}
+          </h3>
+
+          <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
+            {{ "example@gmail.com" }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-banner
+    [showLeftSideImage]="true"
+    [showRightSideImage]="true"
+    [bannerText]="'banner.banner-contact-us-4' | translate"
+  ></app-banner>
+  <div class="container mx-auto">
+    <!-- Card Service  -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-15">
+      <app-service-card
+        [cardDescription]="
+          'about-us.service-card.card-3.description' | translate
+        "
+        [cardImagePath]="'/images/whoWeAre/8.webp'"
+        [cardTitle]="'about-us.service-card.card-3.title' | translate"
+        [isCenter]="true"
+      ></app-service-card>
+      <app-service-card
+        [cardDescription]="
+          'about-us.service-card.card-2.description' | translate
+        "
+        [cardImagePath]="'/images/whoWeAre/7.webp'"
+        [cardTitle]="'about-us.service-card.card-2.title' | translate"
+        [isCenter]="true"
+      ></app-service-card>
+      <app-service-card
+        [cardDescription]="
+          'about-us.service-card.card-1.description' | translate
+        "
+        [cardImagePath]="'/images/whoWeAre/9.webp'"
+        [cardTitle]="'about-us.service-card.card-1.title' | translate"
+        [isCenter]="true"
+      ></app-service-card>
+    </div>
+  </div>
+</section>

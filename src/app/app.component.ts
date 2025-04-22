@@ -1,13 +1,25 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
-import { NavbarComponent } from "./core/components/navbar/navbar.component";
-import { FooterComponent } from "./core/components/footer/footer.component";
+import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { Footer } from "./components/footer/footer";
+import { Navbar } from "./components/navbar/navbar";
+import { AlertComponent } from "./shared/alert/alert.component";
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet,  FooterComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  selector: "app-root",
+  imports: [RouterOutlet, Navbar, Footer, AlertComponent],
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.css",
 })
 export class AppComponent {
+  constructor(private translate: TranslateService) {
+    translate.setDefaultLang("en");
+    translate.use("en");
+  }
+
+  switchLanguage(lang: string) {
+    this.translate.use(lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  }
 }

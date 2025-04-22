@@ -1,0 +1,36 @@
+<section class="min-w-[60%] mx-auto">
+  <div class="container">
+    <div
+      class="wrapper relative z-10 flex flex-col items-center justify-center py-[40px] px-15"
+    >
+      <figure class="flex justify-center items-center mb-[35px]">
+        <img
+          loading="lazy"
+          src="/images/common/before-remove.png"
+          alt="Alert"
+          class="max-w-[150px] max-h-[150px]"
+        />
+      </figure>
+      <h3 class="text-title-size text-black mb">
+        {{ (alertConfig$ | async)?.title }}
+      </h3>
+      <p>{{ (alertConfig$ | async)?.message }}</p>
+      <div
+        class="flex justify-between items-center mb-[30px] gap-4 flex-wrap mt-[45px]"
+      >
+        <button
+          class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#CBAC8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
+          (click)="onConfirm()"
+        >
+          {{ (alertConfig$ | async)?.confirmText }}
+        </button>
+        <button
+          class="block w-full md:w-auto md:inline bg-white text-black cursor-pointer border border-[#8D8D8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
+          (click)="onCancel()"
+        >
+          {{ (alertConfig$ | async)?.cancelText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

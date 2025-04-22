@@ -1,0 +1,562 @@
+{
+  "FAQ": {
+    "Accordions": {
+      "Accordion-1": "What departments do you offer?",
+      "Accordion-2": "Are there any offers?",
+      "Accordion-3": "What are the payment methods?"
+    },
+    "alt-title": "with us",
+    "card": {
+      "description": "You can contact us and write any question you want and we will definitely contact you.",
+      "title": "Do you have any other questions?"
+    },
+    "main-title": "follow along",
+    "title": "do you have any questions !?"
+  },
+  "about-us": {
+    "cards": {
+      "card-1": {
+        "description": "To be the leading brand in the cosmetics field by offering high-quality products that enhance natural beauty and meet the needs of all skin types, with a commitment to sustainability and continuous innovation.",
+        "title": "Our Vision"
+      },
+      "card-2": {
+        "description": "We aim to provide safe and effective beauty products using the finest natural ingredients and modern technologies. We believe in diverse and inclusive beauty and strive to empower our customers to express themselves confidently through products that meet their aspirations.",
+        "title": "Our Mission"
+      }
+    },
+    "service-card": {
+      "card-1": {
+        "description": "We guarantee the protection of products from damage or harm, ensuring their complete preservation.",
+        "title": "24x7 Support"
+      },
+      "card-2": {
+        "description": "We guarantee the protection of products from damage or harm, ensuring their complete preservation.",
+        "title": "Product Protection"
+      },
+      "card-3": {
+        "description": "We guarantee the protection of products from damage or harm, ensuring their complete preservation.",
+        "title": "Fast Delivery"
+      }
+    },
+    "slogan-text": "Shine with confidence, shop with care and safety"
+  },
+  "add": {
+    "address": "add address",
+    "new": {
+      "address": "Add New Address"
+    }
+  },
+  "add_to_cart": "add to cart",
+  "all-total-price": "all total price",
+  "articles": {
+    "blogs": {
+      "blog-1": {
+        "descriptions": "Skin care is an important and essential thing to keep it healthy, fresh, and full of vitality and beauty over the years. Not taking care of it causes many problems.",
+        "title": "Top 10 Skin Care Products to Look After Over the Years"
+      },
+      "blog-2": {
+        "descriptions": "It is a wide range of products that are taken to support health and supplement the diet. It is not considered a substitute for food or a substitute for medications, but it helps reduce the risk of ...",
+        "title": "the right nutritional supplements and the most important basic rules..."
+      },
+      "blog-3": {
+        "descriptions": "Dry skin needs extra care because of the problems it can actually face if it is not moisturized and cared for specifically.",
+        "title": "The basic daily routine for dry skin that the skin needs to maintain its ..."
+      },
+      "blog-4": {
+        "descriptions": "A term that describes preparations that fall between topical medications and cosmetics. There are formulations to improve the appearance of skin affected by sun rays.",
+        "title": "What are cosmeceuticals?"
+      },
+      "blog-5": {
+        "descriptions": "Having good-looking hair isn't enough! Our goal is to have beautiful, attractive hair, so we're always looking for the best hair care tips ever to achieve healthy, great-looking hair..",
+        "title": "Very important steps and tips for hair care?"
+      }
+    },
+    "header": {
+      "subtitle": "our latest news and articles",
+      "title": "News & blogs"
+    },
+    "sidebar": {
+      "new-products": "best selling",
+      "newProducts": {
+        "product-1": {
+          "dates": "23 , jan 2025",
+          "description": "Hair Care Set",
+          "title": "Hair Care"
+        },
+        "product-2": {
+          "dates": "23 , jan 2025",
+          "description": "Vitamin C Facial Serum",
+          "title": "hair care"
+        },
+        "product-3": {
+          "dates": "23 , jan 2025",
+          "description": "Moisturizing body lotion",
+          "title": "skin care"
+        }
+      },
+      "popular-articles": [
+        "Hair Care",
+        "Hair Styling",
+        "Perfumes",
+        "Skin Care",
+        "nutritional supplements"
+      ],
+      "popular-section": "read more"
+    }
+  },
+  "auth": {
+    "login": {
+      "header": {
+        "subtitle": "login with us easily",
+        "title": "profile"
+      },
+      "login-form": {
+        "haveAccount": "don't have an account !?",
+        "password": "password",
+        "password-placeholder": "type your password",
+        "phone-number": "phone number or e-mail",
+        "phone-number-placeholder": "please enter your phone number or e-mail address correctly"
+      }
+    },
+    "register": {
+      "register-form": {
+        "address": {
+          "fields": {
+            "address": {
+              "label": "Address ",
+              "placeholder": "Write Your Address Carefully And Correctly"
+            },
+            "city": {
+              "label": "City ",
+              "placeholder": "Choose Your City"
+            },
+            "country": {
+              "label": "State ",
+              "placeholder": "Choose Your State"
+            },
+            "email": {
+              "label": "E-Mail ",
+              "placeholder": "Write Your E-Mail"
+            },
+            "firstName": {
+              "label": "First Name ",
+              "placeholder": "Write Your First Name"
+            },
+            "lastName": {
+              "label": "Last Name ",
+              "placeholder": "Write Your Last Name"
+            },
+            "phoneNumber": {
+              "label": "Phone Number ",
+              "placeholder": "You Must Enter The Correct Phone Number"
+            },
+            "postalCode": {
+              "label": "Zip Code ",
+              "placeholder": "Enter Your Country's Postal Code"
+            }
+          },
+          "title": "Add Address"
+        },
+        "password": {
+          "button": "add password",
+          "confirmPassword": {
+            "label": "confirmation password ",
+            "placeholder": "confirmation your password"
+          },
+          "newPassword": {
+            "label": "password",
+            "placeholder": "write password "
+          }
+        },
+        "personal": {
+          "genders": {
+            "female": "female",
+            "gender": "gender",
+            "haveAccount": "do you already have an account!?",
+            "male": "male"
+          }
+        }
+      }
+    },
+    "taps": {
+      "address": "Address",
+      "password": "Password",
+      "personal": "Personal"
+    }
+  },
+  "availability": "availability",
+  "banner": {
+    "banner-about-us-1": "We believe that beauty begins with care, which is why we offer products designed to enhance your natural glow with confidence.",
+    "banner-about-us-2": "Because your beauty is unique, we provide cosmetics that combine luxury and quality to give you lasting radiance.",
+    "banner-about-us-3": "Pamper your skin with natural ingredients and innovative products, because true beauty starts with proper care.",
+    "banner-contact-us-4": "We believe that beauty begins with care, which is why we offer products designed to enhance your natural radiance with confidence.",
+    "title-1": "We believe that beauty begins with care, which is why we offer you products designed to enhance your natural glow with confidence.",
+    "title-2": "Because your beauty is unique, we provide you with cosmetics that combine luxury and quality to give you lasting radiance.",
+    "title-3": "Pamper your skin with natural ingredients and innovative products, because true beauty starts with proper care.",
+    "title-4": "Give your skin the shine and radiance it deserves, with cosmetics designed to suit your lifestyle."
+  },
+  "bestSelling": {
+    "bestSelling": "selling products",
+    "descriptions": [
+      "Collagen face glow cream",
+      "Floral perfume for women with rose and musk scent",
+      "Hair care set",
+      "Hand moisturizer rich in vitamins",
+      "Moisturizing body lotion",
+      "Vitamin C serum suitable for dry skin"
+    ],
+    "heading": "Skin Care",
+    "title": "our best",
+    "viewAllProducts": "View All Products"
+  },
+  "cancel-order": "cancel order",
+  "cart": {
+    "cart-footer": {
+      "active-the-code": "active the code",
+      "delete-all": "delete all items",
+      "discount-code": "discount code"
+    },
+    "header": {
+      "subtitle": "view all the products you need and would like to order and complete your order with us",
+      "title": "shopping cart"
+    },
+    "empty": {
+      "title": "Your Cart is Empty",
+      "message": "Looks like you haven't added any items to your cart yet",
+      "shop-now": "Shop Now"
+    }
+  },
+  "change": {
+    "address": "change address",
+    "password": "change password"
+  },
+  "contact-us": {
+    "cards": {
+      "call-card": {
+        "subTitle": "+966 984858584949949",
+        "title": "phone number"
+      },
+      "maps-card": {
+        "subTitle": "riyadh 12244. saudi arabia 256777, riyadh as sulaymaniyah",
+        "title": "address"
+      },
+      "msg-card": {
+        "subTitle": "example@gmail.com",
+        "title": "e-mail"
+      }
+    },
+    "form": {
+      "email": "E-Mail",
+      "first-name": "First Name",
+      "last-name": "Last Name",
+      "phone-number": "Phone Number",
+      "placeholder-email": "write your e-mail",
+      "placeholder-first-name": "write your first name",
+      "placeholder-last-name": "write your last name",
+      "placeholder-phone-number": "you must enter the correct phone number",
+      "placeholder-your-msg": "write your message here...",
+      "submit": "Submit",
+      "your-msg": "Your Message"
+    },
+    "heading": "Contact Us"
+  },
+  "deleted-address": "delete address",
+  "footer": {
+    "by": "DIGITAL BOND",
+    "contact": {
+      "address": "Address:",
+      "phone": "Phone Number:",
+      "title": "Contact Us"
+    },
+    "description": "Enjoy cosmetic products curated for you across various categories, including skincare, haircare, dietary supplements, and everything related to beauty, health, and skin vitality.",
+    "info": {
+      "items": {
+        "about_us": "About Us",
+        "news_articles": "News and Articles",
+        "privacy_policy": "Privacy Policy"
+      },
+      "title": "Our Information"
+    },
+    "rights": "All rights reserved © 2025",
+    "sections": {
+      "items": {
+        "beauty_accessories": "Beauty Accessories",
+        "beauty_devices": "Beauty Devices",
+        "dental_care": "Dental Care",
+        "hair_styling": "Hair Styling",
+        "haircare": "Haircare",
+        "makeup": "Makeup",
+        "mens_care": "Men's Care",
+        "perfumes": "Perfumes",
+        "skincare": "Skincare",
+        "supplements": "Dietary Supplements",
+        "womens-equipment": "Women's Equipment",
+        "womens_care": "Women's Care"
+      },
+      "title": "Sections"
+    }
+  },
+  "form": {
+    "send": "send"
+  },
+  "hero": {
+    "about-us": {
+      "description": "Your unique journey in the world of beauty and distinction, expressing your personality through products that care for you with refined touches. It's more than just appearance; it's an experience that reflects your confidence and beauty in a renewed and distinctive style.",
+      "elegance": "Elegance",
+      "journey": "Your journey to",
+      "slogan": "Beauty begins with an idea",
+      "stats": {
+        "clients": "Clients",
+        "partners": "Partners",
+        "products": "Products"
+      },
+      "stats-values": {
+        "clients": "300+",
+        "partners": "4000+",
+        "products": "1200+"
+      },
+      "title": "Who We Are"
+    },
+    "anchorTag-go": "View All Products",
+    "description": "Welcome to COSMETICS, your number one destination for everything related to beauty and skincare! We offer you the latest cosmetics from the best global brands, along with exclusive tips for skincare and makeup.",
+    "heading": "Your ultimate destination for beauty and cosmetics",
+    "title": "Beauty begins with an idea",
+    "title-btn": "Shop Now"
+  },
+  "invoice": "invoice",
+  "maps-subtitle": "riyadh 12244, saudi arabia 2567777, riyadh as aulaymaniyah",
+  "my": {
+    "requests": "my requests"
+  },
+  "navbar": {
+    "languages": {
+      "ar": "Arabic",
+      "en": "English",
+      "lang": "Language"
+    },
+    "pages_Title": {
+      "articles": {
+        "title": "Articles"
+      },
+      "contact_Us": {
+        "title": "Contact Us"
+      },
+      "home": {
+        "title": "Home"
+      },
+      "products": {
+        "title": "Products"
+      },
+      "shopping_now": {
+        "title": "Shop Now"
+      },
+      "who_we_are": {
+        "title": "about us"
+      }
+    }
+  },
+  "newProducts": {
+    "alt-description": "Radiant skin and exceptional freshness.",
+    "description": "Enjoy with us the new products that care for your skin's freshness and health, and help you achieve",
+    "subtitle": "",
+    "title": "New Products"
+  },
+  "news-articles": {
+    "card-1": {
+      "date": "March 19, 2025",
+      "title": "The Essential Daily Skincare Routine Your Skin Needs for Freshness and Preventing Excessive Dryness"
+    },
+    "main-title": "Latest",
+    "subtitle": "View All News",
+    "title": "News and Articles"
+  },
+  "offer-day": {
+    "altTitle": "Special Offers",
+    "card-1": {
+      "description": "Serum and moisturizing body lotion with shea butter, glycerin, and vitamins that hydrate and brighten the skin",
+      "title": "Vitamin C-rich Face Serum"
+    },
+    "card-2": {
+      "description": "Serum and moisturizing body lotion with shea butter, glycerin, and vitamins that hydrate and brighten the skin",
+      "title": "Moisturizing Body Lotion"
+    },
+    "subtitle": "Daily",
+    "text-content": {
+      "altDesc": "For Women's Care",
+      "description": "Essential Cosmetics",
+      "paragraph": "Get amazing offers that suit your daily use.",
+      "title": "Amazing Savings"
+    },
+    "title": "Today's Offers"
+  },
+  "offers": {
+    "bigCard": [
+      {
+        "imgDescription": "Enjoy with us very special offers for hair care and discounts up to 25%.",
+        "imgSubtitle": "Skincare",
+        "imgTitle": "Save Big With"
+      },
+      {
+        "imgDescription": "Enjoy with us very special offers for hair care and discounts up to 25%.",
+        "imgSubtitle": "For Haircare",
+        "imgTitle": "Special Offers"
+      }
+    ]
+  },
+  "order": {
+    "date": {
+      "date": "order request date",
+      "value": "20 march, 2025"
+    },
+    "delivered": "the order has been delivered",
+    "request-accepted": " the request has been accepted"
+  },
+  "order-number": "order number",
+  "order-number-value": "#5DGTIOPLKNBFD",
+  "order-status": {
+    "order-status": "order status",
+    "value": "pending"
+  },
+  "profile.password": {
+    "confirm-password": "Confirm Password",
+    "current-password": "Current Password",
+    "new-password": "New Password",
+    "placeholder-confirm-password": "Confirm your new password",
+    "placeholder-current-password": "Enter your current password",
+    "placeholder-new-password": "Enter your new password",
+    "update": "Update Password"
+  },
+  "profile.subtitle": "follow your profile and register your data",
+  "reorder": "reorder",
+  "routes": {
+    "about": "about",
+    "blog": "blog",
+    "cart": "cart",
+    "contact": "contact",
+    "home": "Home",
+    "login": "Login",
+    "register": "Register",
+    "shopping": "shopping",
+    "wishlist": "wishlist"
+  },
+  "saudi_arabia": "saudi arabia",
+  "save_changes": "save changes",
+  "section": {
+    "heading": {
+      "subtitle": "Shop by Category",
+      "title": "Sections"
+    },
+    "titles": [
+      "Beauty Accessories",
+      "Beauty Devices",
+      "Dental Care",
+      "Dietary Supplements",
+      "Hair Styling",
+      "Haircare",
+      "Makeup",
+      "Medical Equipment",
+      "Men's Care",
+      "Perfumes",
+      "Skincare",
+      "Women's Care"
+    ]
+  },
+  "shared": {
+    "currency": "SAR",
+    "offer": "25% Discount",
+    "readMore": "Read More",
+    "shopping_now": "shopping now",
+    "show-products": "buying the product "
+  },
+  "shopping": {
+    "filter": {
+      "filter-type": {
+        "all": "all",
+        "categories": "BEST-SELLING PRODUCTS",
+        "clear-all": "delete all",
+        "in-stock": "in stock",
+        "price": "price: 200 SAR - 1000 SAR"
+      },
+      "price": {
+        "currency": "SAR",
+        "title": "price"
+      },
+      "products-counts": "view 1-15 products from 3440",
+      "selected-filter": "filter options"
+    },
+    "filter-box": {
+      "filterItems": [
+        "All",
+        "Anti Aging",
+        "Anti Dandruff",
+        "Anti Dandruff",
+        "Anti Frizz",
+        "Anti Grease",
+        "Anti Hair Loss",
+        "Anti Lice",
+        "Anti Wrinkles",
+        "Hair Moisturizer",
+        "Hair Nutrition"
+      ],
+      "title": "Hair Care"
+    },
+    "header": {
+      "subtitle": "Shop with us now effortlessly with the products you need",
+      "title": "Shop Now"
+    }
+  },
+  "show": {
+    "product": "show product"
+  },
+  "signOut": "sign Out",
+  "total-price": {
+    "total-price": "total price",
+    "value": "2000 SAR"
+  },
+  "track-order": " track order",
+  "wishlist": {
+    "header": {
+      "subtitle": "show your favorite products",
+      "title": "favourite"
+    },
+    "orderList": {
+      "addToCart": "add to cart",
+      "price": "Price",
+      "product": "Product",
+      "quantity": "Quantity"
+    },
+    "productsItem": {
+      "commonItems": [
+        "facial freshness cream...",
+        "hand moisturizing cream...",
+        "hand moisturizing cream...",
+        "moisturizing body lotion",
+        "vitamin c serum..."
+      ],
+      "item-1": {
+        "price": "SAR",
+        "subtitle": "skin care"
+      }
+    },
+    "wishlist-footer": {
+      "add-all": "add all",
+      "add-new": "do you want to put all in cart !?",
+      "delete-all": "delete all items"
+    },
+    "empty": {
+      "title": "Your Wishlist is Empty",
+      "message": "Looks like you haven't added any items to your wishlist yet",
+      "shop-now": "Start Shopping"
+    }
+  },
+  "summary": {
+    "items": "items",
+    "subtotal": "subtotal",
+    "delivery": "delivery",
+    "tax": "tax",
+    "discount-coupon": "discount coupon",
+    "total": "total",
+    "summary": "summary",
+    "complete-the-order": "complete the order"
+  }
+}

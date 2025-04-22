@@ -1,0 +1,218 @@
+<section class="px-4 text-center">
+  <div class="container mx-auto">
+    <p class="text-black text-subtitle-size mb-6">
+      {{ "offer-day.title" | translate }}
+    </p>
+    <h2 class="text-title-size font-bold mb-9">
+      {{ "offer-day.altTitle" | translate }}
+      <span class="text-muted-rose">
+        {{ "offer-day.subtitle" | translate }}
+      </span>
+    </h2>
+    <!-- Cards Container -->
+    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mb-[45px]">
+      <!-- Card 1 -->
+      <div
+        class="flex flex-col md:flex-row bg-white rounded-2xl shadow-md overflow-hidden p-4 gap-4"
+      >
+        <!-- Image with discount badge -->
+        <div class="relative rounded-2xl overflow-hidden">
+          <img
+            loading="lazy"
+            src="/images/offer-day/2.png"
+            alt="product"
+            class="w-full md:max-w-[220px] h-full"
+          />
+          <span
+            class="absolute top-[7px] right-[7px] bg-[#434645] text-white py-4 px-8 rounded-full text-category-size"
+          >
+            {{ "shared.offer" | translate }}
+          </span>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col justify-between text-right flex-shrink-10">
+          <div>
+            <p class="text-[#333] text-category-size mb-[15px]">
+              {{ "bestSelling.heading" | translate }}
+            </p>
+            <h3 class="text-[18px] font-bold mb-[15px]">
+              {{ "offer-day.card-1.title" | translate }}
+            </h3>
+            <div class="flex items-center text-subtitle-size gap-7 mb-[20px]">
+              <span class="text-muted-rose"
+                >200 {{ "shared.currency" | translate }}</span
+              >
+              <span class="line-through text-black"
+                >250 {{ "shared.currency" | translate }}</span
+              >
+            </div>
+            <p class="text-category-size text-[#333] mt-5 leading-5">
+              {{ "offer-day.card-1.description" | translate }}
+            </p>
+          </div>
+          <a
+            href="#"
+            class="text-muted-rose text-description-size font-bold mt-4 flex items-center gap-[1px]"
+          >
+            <span>
+              {{ "shared.shopping_now" | translate }}
+            </span>
+            <figure>
+              <img
+                loading="lazy"
+                class="ltr:rotate-180 rtl:rotate-0"
+                src="/images/offer-day/4.svg"
+                alt=""
+              />
+            </figure>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div
+        class="flex flex-col md:flex-row bg-white rounded-2xl shadow-md overflow-hidden p-4 gap-4"
+      >
+        <!-- Image with discount badge -->
+        <div class="relative rounded-2xl overflow-hidden">
+          <img
+            loading="lazy"
+            src="/images/offer-day/3.png"
+            alt="product"
+            class="w-full md:max-w-[220px] h-full"
+          />
+          <span
+            class="absolute top-[7px] right-[7px] bg-[#434645] text-white py-4 px-8 rounded-full text-category-size"
+          >
+            {{ "shared.offer" | translate }}
+          </span>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col justify-between text-right flex-shrink-10">
+          <div>
+            <p class="text-[#333] text-category-size mb-[15px]">
+              {{ "bestSelling.heading" | translate }}
+            </p>
+            <h3 class="text-[18px] font-bold mb-[15px]">
+              {{ "offer-day.card-2.title" | translate }}
+            </h3>
+            <div class="flex items-center text-subtitle-size gap-7 mb-[20px]">
+              <span class="text-muted-rose"
+                >200 {{ "shared.currency" | translate }}</span
+              >
+              <span class="line-through text-black"
+                >250 {{ "shared.currency" | translate }}</span
+              >
+            </div>
+            <p class="text-category-size text-[#333] mt-5 leading-5">
+              {{ "offer-day.card-2.description" | translate }}
+            </p>
+          </div>
+          <a
+            href="#"
+            class="text-muted-rose text-description-size font-bold mt-4 flex items-center gap-[1px]"
+          >
+            <span>{{ "shared.shopping_now" | translate }}</span>
+            <figure>
+              <img
+                loading="lazy"
+                class="ltr:rotate-180 rtl:rotate-0"
+                src="/images/offer-day/4.svg"
+                alt=""
+              />
+            </figure>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- banner Container -->
+    <div
+      class="relative bg-warm-tan rounded-xl z-10 overflow-hidden flex flex-col-reverse lg:flex-row-reverse items-end justify-between pr-6 gap-8"
+    >
+      <!-- Image Section -->
+      <div class="w-full lg:w-1/2 relative z-10">
+        <!-- Background Image -->
+        @if (_languageService.getIsArabic()) {
+
+        <div class="absolute top-[10px] left-0">
+          <figure>
+            <img
+              loading="lazy"
+              src="/images/offer-day/5.png"
+              alt="خلفية"
+              class="max-w-[346px]"
+            />
+          </figure>
+        </div>
+        } @else {
+        <div class="absolute top-[10px] right-0">
+          <figure>
+            <img
+              loading="lazy"
+              src="/images/offer-day/5-left.png"
+              alt="خلفية"
+              class="max-w-[346px]"
+            />
+          </figure>
+        </div>
+        }
+
+        <!-- Foreground Image -->
+        <div class="relative z-10 md:right-[110px]">
+          <figure>
+            <img
+              loading="lazy"
+              src="/images/offer-day/1.png"
+              alt="العناية بالنساء"
+              class="w-full md:max-w-[533px]"
+            />
+          </figure>
+        </div>
+      </div>
+
+      <!-- Text Content Section -->
+      <div class="w-full lg:w-1/2 p-3 md:p-8 text-start relative z-10">
+        <div
+          iv
+          class="text-category-size md:text-[28px] text-white mb-[10px] md:mb-[23px]"
+        >
+          {{ "bestSelling.heading" | translate }}
+        </div>
+        <h2
+          class="text-category-size md:text-[38px] text-white font-bold leading-snug mb-[10px] md:mb-[23px]"
+        >
+          <span class="text-black">
+            {{ "offer-day.text-content.title" | translate }}
+
+            :</span
+          >
+          <span> {{ "offer-day.text-content.description" | translate }} </span
+          ><br />
+          {{ "offer-day.text-content.altDesc" | translate }}
+        </h2>
+        <p class="text-white text-category-size md:text-[28px] mb-5 md:mb-9">
+          {{ "offer-day.text-content.paragraph" | translate }}
+        </p>
+
+        <app-arrow-button
+          [gap]="'5px'"
+          [px]="'4'"
+          [py]="'2'"
+          [title]="'shared.shopping_now' | translate"
+          [type]="'button'"
+          [bg]="'white'"
+          [border]="'black'"
+          [color]="'black'"
+          [image]="'/images/navbar/9.webp'"
+        ></app-arrow-button>
+      </div>
+
+      <div
+        class="banner-container absolute top-0 left-0 w-full h-full bg-white"
+      ></div>
+    </div>
+  </div>
+</section>

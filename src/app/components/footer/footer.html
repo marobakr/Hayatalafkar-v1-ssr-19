@@ -1,0 +1,142 @@
+<footer class="bg-white relative border-t border-gray-200 pb-[65px]">
+  <div class="container mx-auto px-4 pt-8 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid md:grid-cols-5 gap-8 text-right">
+      <!-- Column 1: Logo + Description -->
+      <div class="space-y-4">
+        <img
+          src="/images/navbar/2.webp"
+          alt="logo"
+          class="h-8 mx-auto md:mx-0"
+        />
+        <p class="text-sm text-footer-color leading-relaxed">
+          {{ "footer.description" | translate }}
+        </p>
+      </div>
+
+      <!-- Column 2: الأقسام (Now spans 2 columns) -->
+      <div class="md:col-span-2">
+        <h3 class="mb-4 text-sm font-bold text-black">
+          {{ "footer.sections.title" | translate }}
+        </h3>
+        <div class="links flex justify-between">
+          <ul class="space-y-2 text-sm text-footer-color flex-grow-2">
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.supplements" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.perfumes" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.skincare" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.haircare" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.womens-equipment" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.hair_styling" | translate }}</a
+              >
+            </li>
+          </ul>
+          <ul class="space-y-2 text-sm text-footer-color flex-grow-2">
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.mens_care" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.womens_care" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.dental_care" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.makeup" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.beauty_accessories" | translate }}</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:underline"
+                >{{ "footer.sections.items.beauty_devices" | translate }}</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Column 3: معلوماتنا -->
+      <div>
+        <h3 class="mb-4 text-sm font-bold text-black">
+          {{ "footer.info.title" | translate }}
+        </h3>
+        <ul class="space-y-2 text-sm text-footer-color">
+          <li>
+            <a href="#" class="hover:underline"
+              >{{ "footer.info.items.privacy_policy" | translate }}</a
+            >
+          </li>
+          <li>
+            <a href="#" class="hover:underline"
+              >{{ "footer.info.items.about_us" | translate }}</a
+            >
+          </li>
+          <li>
+            <a href="#" class="hover:underline"
+              >{{ "footer.info.items.news_articles" | translate }}</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 4: تواصل معنا -->
+      <div>
+        <h3 class="mb-4 text-sm font-bold text-black">
+          {{ "footer.contact.title" | translate }}
+        </h3>
+        <ul class="space-y-2 text-sm text-footer-color">
+          <li>{{ "footer.contact.phone" | translate }}</li>
+          <li>{{ "footer.contact.address" | translate }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer bottom -->
+    <div
+      class="flex items-center justify-center mt-[69px] text-center relative"
+    >
+      <span class="font-bold text-black">DIGITAL BOND</span>
+      <figure class="mx-[3px] max-w-[35px]" href="https://digitalbondmena.com/">
+        <img src="/images/navbar/lOGO.webp" alt="DIGITAL BOND Logo" />
+      </figure>
+      <a> {{ "footer.rights" | translate }} </a>
+      <div class="img-footer absolute">
+        <figure>
+          <img src="/images/footer/1.png" alt="footer" />
+        </figure>
+      </div>
+    </div>
+  </div>
+  <div class="absolute top-0 left-0 w-full h-full bg-white opacity-97"></div>
+</footer>

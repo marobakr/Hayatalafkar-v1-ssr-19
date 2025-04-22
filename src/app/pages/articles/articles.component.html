@@ -1,0 +1,187 @@
+<section>
+  <app-articles-header
+    [title]="'articles.header.title' | translate"
+    [showRotateImage]="false"
+    [subTitle]="'articles.header.subtitle' | translate"
+    [marginBottom]="'6'"
+  ></app-articles-header>
+  <div class="container mx-auto">
+    <!-- Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-11 items-start">
+      <div class="md:col-span-8 text-justify">
+        <!-- First Articles -->
+        <app-articles-card-shared
+          class="mb-10"
+          [haveMoreMarginBottom]="true"
+          [articleImage]="'/images/news/5.png'"
+          [articleTitle]="'articles.blogs.blog-1.title' | translate"
+          [articleDescription]="
+            'articles.blogs.blog-1.descriptions' | translate
+          "
+          [articleDate]="'news-articles.card-1.date' | translate"
+        ></app-articles-card-shared>
+        <!-- Second Articles -->
+
+        <app-articles-card-shared
+          class="mb-10"
+          [haveMoreMarginBottom]="true"
+          [articleImage]="'/images/news/7.png'"
+          [articleTitle]="'articles.blogs.blog-3.title' | translate"
+          [articleDescription]="
+            'articles.blogs.blog-3.descriptions' | translate
+          "
+          [articleDate]="'news-articles.card-1.date' | translate"
+        ></app-articles-card-shared>
+        <!-- Third Articles -->
+
+        <app-articles-card-shared
+          class="mb-10"
+          [haveMoreMarginBottom]="true"
+          [articleImage]="'/images/news/9.png'"
+          [articleTitle]="'articles.blogs.blog-4.title' | translate"
+          [articleDescription]="
+            'articles.blogs.blog-4.descriptions' | translate
+          "
+          [articleDate]="'news-articles.card-1.date' | translate"
+        ></app-articles-card-shared>
+        <!-- Four Articles -->
+        <app-articles-card-shared
+          class="mb-10"
+          [haveMoreMarginBottom]="true"
+          [articleImage]="'/images/news/6.png'"
+          [articleTitle]="'articles.blogs.blog-2.title' | translate"
+          [articleDescription]="
+            'articles.blogs.blog-2.descriptions' | translate
+          "
+          [articleDate]="'news-articles.card-1.date' | translate"
+        ></app-articles-card-shared>
+        <!-- Five Articles -->
+        <app-articles-card-shared
+          class="mb-10"
+          [haveMoreMarginBottom]="true"
+          [articleImage]="'/images/news/8.png'"
+          [articleTitle]="'articles.blogs.blog-5.title' | translate"
+          [articleDescription]="
+            'articles.blogs.blog-5.descriptions' | translate
+          "
+          [articleDate]="'news-articles.card-1.date' | translate"
+        ></app-articles-card-shared>
+      </div>
+      <div class="md:col-span-1"></div>
+      <div class="md:col-span-3">
+        <app-section-heading
+          class="mb-3"
+          [sectionName]="'articles.sidebar.popular-section' | translate"
+        ></app-section-heading>
+
+        <!-- All Sections -->
+        <div class="all-sections mb-9">
+          @for (title of titles; track $index) {
+          <div
+            class="p-3 mb-3 border rounded-[15px] border-[#E0E0E0] text-[#474747] text-description-size bg-white"
+          >
+            <span>{{ title }}</span>
+          </div>
+          }
+        </div>
+
+        <div class="newProducts mb-[60px]">
+          <app-section-heading
+            class="mb-3"
+            [sectionName]="'articles.sidebar.new-products' | translate"
+          ></app-section-heading>
+          <!-- First Card  -->
+          <div class="card">
+            <div class="flex gap-2 items-center mb-3">
+              <figure>
+                <img
+                  loading="lazy"
+                  class="w-[99px]"
+                  src="/images/news/12.png"
+                  alt=""
+                />
+              </figure>
+              <div class="content">
+                <p class="mb-1 text-category-size text-[#333]">
+                  {{
+                    "articles.sidebar.newProducts.product-1.title" | translate
+                  }}
+                </p>
+                <p class="mb-1 text-description-size font-semibold text-black">
+                  {{
+                    "articles.sidebar.newProducts.product-1.description"
+                      | translate
+                  }}
+                </p>
+                <div class="date underline text-muted-rose font-semibold">
+                  {{
+                    "articles.sidebar.newProducts.product-1.dates" | translate
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-2 items-center mb-3">
+              <figure>
+                <img
+                  loading="lazy"
+                  class="w-[99px]"
+                  src="/images/news/12.png"
+                  alt=""
+                />
+              </figure>
+              <div class="content">
+                <p class="mb-1 text-category-size text-[#333]">
+                  {{
+                    "articles.sidebar.newProducts.product-2.title" | translate
+                  }}
+                </p>
+                <p class="mb-1 text-description-size font-semibold text-black">
+                  {{
+                    "articles.sidebar.newProducts.product-2.description"
+                      | translate
+                  }}
+                </p>
+                <div class="date underline text-muted-rose font-semibold">
+                  {{
+                    "articles.sidebar.newProducts.product-2.dates" | translate
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-2 items-center mb-3">
+              <figure>
+                <img
+                  loading="lazy"
+                  class="w-[99px]"
+                  src="/images/news/12.png"
+                  alt=""
+                />
+              </figure>
+              <div class="content">
+                <p class="mb-1 text-category-size text-[#333]">
+                  {{
+                    "articles.sidebar.newProducts.product-3.title" | translate
+                  }}
+                </p>
+                <p class="mb-1 text-description-size font-semibold text-black">
+                  {{
+                    "articles.sidebar.newProducts.product-3.description"
+                      | translate
+                  }}
+                </p>
+                <div class="date underline text-muted-rose font-semibold">
+                  {{
+                    "articles.sidebar.newProducts.product-3.dates" | translate
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-talent-image-card
+          [imagePath]="'/images/news/13.png'"
+        ></app-talent-image-card>
+      </div>
+    </div>
+  </div>
+</section>
