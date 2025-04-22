@@ -13,8 +13,8 @@ import { AlertComponent } from "./shared/alert/alert.component";
 })
 export class AppComponent {
   constructor(private translate: TranslateService) {
-    translate.setDefaultLang("en");
-    translate.use("en");
+    translate.setDefaultLang("ar");
+    translate.use("ar");
   }
 
   switchLanguage(lang: string) {
