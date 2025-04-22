@@ -558,5 +558,101 @@
     "total": "الاجمالى",
     "summary": "الملخص",
     "complete-the-order": "استكمال الطلب"
+  },
+  "mega_menu": {
+    "dietary_supplements": {
+      "title": "المكملات الغذائية",
+      "items": {
+        "hair_supplements": "فيتامينات ومكملات غذائية للشعر",
+        "skin_supplements": "فيتامينات ومكملات غذائية للبشرة"
+      }
+    },
+    "perfumes": {
+      "title": "العطور",
+      "items": {
+        "perfume": "برفان",
+        "eau_de_perfume": "ماء العطر",
+        "eau_de_toilette": "ماء التواليت"
+      }
+    },
+    "skin_care": {
+      "title": "العناية بالبشرة",
+      "items": {
+        "sunscreens": "واقي شمس",
+        "facial_moisturisation": "ترطيب الوجه",
+        "facial_whitening": "تفتيح البشرة"
+      }
+    },
+    "hair_care": {
+      "title": "العناية بالشعر",
+      "items": {
+        "antihair_loss": "مضاد تساقط الشعر",
+        "antidandruff": "مضاد القشرة",
+        "antilice": "مضاد القمل"
+      }
+    },
+    "hair_styling": {
+      "title": "تصفيف الشعر",
+      "items": {
+        "hair_colors": "صبغات الشعر",
+        "hair_frizing": "فرد الشعر",
+        "hair_straightening": "تنعيم الشعر"
+      }
+    },
+    "men_care": {
+      "title": "العناية بالرجال",
+      "items": {
+        "men_special_care": "عناية خاصة للرجال",
+        "condoms": "واقي ذكري",
+        "lubricants": "مزلقات"
+      }
+    },
+    "women_care": {
+      "title": "العناية بالمرأة",
+      "items": {
+        "vaginal_washes": "غسول نسائي",
+        "women_special_care": "عناية خاصة بالمرأة",
+        "hair_removal": "إزالة الشعر"
+      }
+    },
+    "medical_equipments": {
+      "title": "المعدات الطبية",
+      "items": {
+        "face_masks": "كمامات",
+        "hand_sanitizers": "معقمات اليدين"
+      }
+    },
+    "dental_care": {
+      "title": "العناية بالأسنان",
+      "items": {
+        "dental_care_accessories": "مستلزمات العناية بالأسنان",
+        "tooth_brushes": "فرش أسنان",
+        "breath_freshners": "معطرات النفس"
+      }
+    },
+    "makeup": {
+      "title": "المكياج",
+      "items": {
+        "face_makeup": "مكياج الوجه",
+        "primers": "برايمر",
+        "foundations": "كريم أساس"
+      }
+    },
+    "beauty_accessories": {
+      "title": "مستلزمات التجميل",
+      "items": {
+        "artificial_nails": "أظافر صناعية",
+        "false_eyelashes": "رموش صناعية",
+        "eyelashes_adhesive": "لاصق رموش"
+      }
+    },
+    "beauty_devices": {
+      "title": "أجهزة التجميل",
+      "items": {
+        "nail_art": "فن الأظافر",
+        "facial_hair_removal": "إزالة شعر الوجه",
+        "body_hair_removal": "إزالة شعر الجسم"
+      }
+    }
   }
 }

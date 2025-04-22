@@ -1,0 +1,42 @@
+/* Accessibility - Touch Target Sizes */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Ensure links have proper touch target size */
+a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px;
+  text-decoration: none;
+}
+
+/* Preserve underline hover effect */
+a.hover\:underline:hover {
+  text-decoration: underline;
+}
+
+/* Ensure proper spacing between touch targets */
+.space-y-2 > a {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+/* Ensure buttons meet accessibility standards */
+button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
+
+/* Exception for icon-only buttons that are part of a larger touch target */
+button.icon-only {
+  min-width: unset;
+  min-height: unset;
+  padding: 4px;
+}
