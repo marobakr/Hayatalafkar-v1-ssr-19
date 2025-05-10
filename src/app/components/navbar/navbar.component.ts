@@ -16,6 +16,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { LanguageService } from '../../core/services/service/lang/language.service';
 import { MegaMenuComponent } from '../mega-menu/mega-menu.component';
 
@@ -44,6 +46,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
   isMenuOpen = false;
   isRtl = false;
 
+  // Constants
+  private readonly DESKTOP_BREAKPOINT = 1280; // xl breakpoint in Tailwind (in pixels)
+  private resizeSubscription?: Subscription;
+
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
   private _languageService = inject(LanguageService);
@@ -61,6 +67,25 @@ export class NavbarComponent implements OnDestroy, OnInit {
     this.currentLang$.subscribe((lang) => {
       this.isRtl = lang === 'ar';
     });
+
+    // Add resize listener to close mobile menu when screen size changes
+    if (isPlatformBrowser(this.platformId)) {
+      this.resizeSubscription = fromEvent(window, 'resize')
+        .pipe(debounceTime(150))
+        .subscribe(() => {
+          this.checkScreenWidth();
+        });
+
+      // Initial screen width check
+      this.checkScreenWidth();
+    }
+  }
+
+  private checkScreenWidth(): void {
+    if (window.innerWidth >= this.DESKTOP_BREAKPOINT && this.isMenuOpen) {
+      this.isMenuOpen = false;
+      document.body.classList.remove('scroll-lock');
+    }
   }
 
   changeLang(lang: string): void {
@@ -139,17 +164,20 @@ export class NavbarComponent implements OnDestroy, OnInit {
     // Prevent body scroll when menu is open
     if (isPlatformBrowser(this.platformId)) {
       if (this.isMenuOpen) {
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('scroll-lock');
       } else {
-        document.body.style.overflow = '';
+        document.body.classList.remove('scroll-lock');
       }
     }
   }
 
   ngOnDestroy(): void {
+    // Clean up all subscriptions
+    this.resizeSubscription?.unsubscribe();
+
     // Restore body scroll when component is destroyed
     if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
+      document.body.classList.remove('scroll-lock');
     }
     this.renderer.destroy();
   }

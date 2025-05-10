@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "/fonts.css";
 @plugin 'tailwind-scrollbar';
 
 @theme {
@@ -56,40 +57,4 @@ body,
       font-size: 10px;
     }
   }
-}
-/* Fonts */
-/* Almarai Regular - 400 */
-@font-face {
-  font-family: "Almarai";
-  src: url("/fonts/Almarai/Almarai-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Almarai Light - 300 */
-@font-face {
-  font-family: "Almarai";
-  src: url("/fonts/Almarai/Almarai-Light.woff2") format("woff2");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Almarai Bold - 700 */
-@font-face {
-  font-family: "Almarai";
-  src: url("/fonts/Almarai/Almarai-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Almarai ExtraBold - 800 */
-@font-face {
-  font-family: "Almarai";
-  src: url("/fonts/Almarai/Almarai-ExtraBold.woff2") format("woff2");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
 }

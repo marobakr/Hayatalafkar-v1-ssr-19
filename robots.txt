@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Disallow auth pages to prevent indexing of login/register pages
+Disallow: /*/login
+Disallow: /*/register
+Disallow: /*/register/*
+
+# Disallow profile pages which should be private
+Disallow: /*/profile
+Disallow: /*/profile/*
+
+# Sitemap
+Sitemap: https://hayatalafkar.com/sitemap.xml
