@@ -1,7 +1,6 @@
 @import "tailwindcss";
-@import "/fonts.css";
 @plugin 'tailwind-scrollbar';
-
+@import "/public/fonts/fonts.css";
 @theme {
   --color-black: #000000;
   --color-dark-brown: #7a7066;
