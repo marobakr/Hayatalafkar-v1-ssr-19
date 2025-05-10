@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
@@ -12,12 +13,15 @@ import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mega-menu',
+  standalone: true,
   imports: [TranslateModule, NgClass],
   templateUrl: './mega-menu.component.html',
   styleUrl: './mega-menu.component.css',
 })
 export class MegaMenuComponent implements AfterViewInit, OnDestroy {
   @ViewChild('menuContent') menuContent!: ElementRef;
+  @Input() isMobile: boolean = false;
+
   contentHeight = 0;
   private resizeSub?: Subscription;
 

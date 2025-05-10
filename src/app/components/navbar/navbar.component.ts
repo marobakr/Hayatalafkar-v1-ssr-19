@@ -1,10 +1,16 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  CommonModule,
+  isPlatformBrowser,
+  NgClass,
+  NgOptimizedImage,
+} from '@angular/common';
 import {
   Component,
   ElementRef,
   HostListener,
   inject,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   Renderer2,
 } from '@angular/core';
@@ -16,18 +22,27 @@ import { MegaMenuComponent } from '../mega-menu/mega-menu.component';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, MegaMenuComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    TranslateModule,
+    MegaMenuComponent,
+    NgOptimizedImage,
+    NgClass,
+  ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnDestroy {
+export class NavbarComponent implements OnDestroy, OnInit {
   showMenu: boolean = false;
   showSearch: boolean = false;
   showMobileSearch: boolean = false;
   showDesktopSearch: boolean = false;
   showProductsMenu = false;
+  showMobileProductsMenu = false;
   showMegaMenu = false;
   isMenuOpen = false;
+  isRtl = false;
 
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
@@ -41,10 +56,18 @@ export class NavbarComponent implements OnDestroy {
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
+  ngOnInit(): void {
+    // Set initial RTL state based on current language
+    this.currentLang$.subscribe((lang) => {
+      this.isRtl = lang === 'ar';
+    });
+  }
+
   changeLang(lang: string): void {
     const currentUrl = this._router.url;
     this._languageService.changeLanguage(lang, currentUrl);
     this.showMenu = false;
+    this.isRtl = lang === 'ar';
   }
 
   toggleMenu(): void {
@@ -71,6 +94,11 @@ export class NavbarComponent implements OnDestroy {
     this.showProductsMenu = !this.showProductsMenu;
   }
 
+  toggleMobileProductsMenu(event: Event) {
+    event.stopPropagation();
+    this.showMobileProductsMenu = !this.showMobileProductsMenu;
+  }
+
   closeProductsMenu() {
     this.showProductsMenu = false;
   }
@@ -78,6 +106,7 @@ export class NavbarComponent implements OnDestroy {
   @HostListener('document:click')
   onClickOutside() {
     this.showProductsMenu = false;
+    this.showMobileProductsMenu = false;
 
     if (isPlatformBrowser(this.platformId)) {
       const searchContainer =
@@ -107,9 +136,21 @@ export class NavbarComponent implements OnDestroy {
 
   toggleMobileMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+    // Prevent body scroll when menu is open
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.isMenuOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
   }
 
   ngOnDestroy(): void {
+    // Restore body scroll when component is destroyed
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
     this.renderer.destroy();
   }
 }

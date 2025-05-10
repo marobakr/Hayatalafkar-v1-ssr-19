@@ -5,64 +5,26 @@
     <a
       [routerLink]="['/', currentLang$ | async, 'home']"
       class="flex items-center xl:rtl:ml-[92px] xl:ltr:mr-[92px]"
+      [attr.aria-label]="'navbar.home_link' | translate"
     >
       <figure class="max-w-[56px] max-h-[40px]">
         <img
-          loading="lazy"
-          src="/images/navbar/2.webp"
+          ngSrc="/images/navbar/2.webp"
+          width="56"
+          height="40"
+          priority
           class="w-full"
-          alt="Flowbite Logo"
+          alt="Hayatalafkar Logo"
         />
       </figure>
     </a>
-    <ul
-      class="flex flex-row xl:space-x-[26px] rtl:space-x xl:hidden rtl:mr-auto ltr:ml-auto"
-    >
-      <!-- Search -->
-      <li class="cursor-pointer search-container relative" [routerLink]="['']">
-        <a class="block py-2 px-3 xl:p-0" (click)="toggleSearch($event)">
-          <figure class="max-w-[25px] max-h-[25px]">
-            <img loading="lazy" src="/images/navbar/5.webp" alt="" />
-          </figure>
-        </a>
-        @if (showSearch) {
-        <form
-          class="absolute bottom-0 left-0 -translate-x-[70%] min-w-[300px] max-w-[400px] animate-slide-in"
-        >
-          <label
-            for="default-search"
-            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-            >Search</label
-          >
-          <div class="relative">
-            <input
-              type="search"
-              id="default-search"
-              class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
-              placeholder="Search Mockups, Logos..."
-              required
-              (click)="$event.stopPropagation()"
-            />
-          </div>
-        </form>
-        }
-      </li>
 
-      <!-- Cart -->
-      <li
-        class="cursor-pointer"
-        [routerLink]="['/', currentLang$ | async, 'cart']"
-      >
-        <a class="block py-2 px-3 xl:p-0" aria-current="page">
-          <figure class="max-w-[25px] max-h-[25px]">
-            <img loading="lazy" src="/images/navbar/7.webp" alt="" />
-          </figure>
-        </a>
-      </li>
-    </ul>
+    <!-- Mobile Menu Toggle -->
     <button
       (click)="toggleMobileMenu()"
-      class="cursor-pointer capitalize text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 md:hidden"
+      class="cursor-pointer capitalize text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 xl:hidden"
+      [attr.aria-expanded]="isMenuOpen"
+      [attr.aria-label]="'navbar.toggle_menu' | translate"
     >
       <span class="sr-only">Open main menu</span>
       <svg
@@ -79,21 +41,18 @@
         ></path>
       </svg>
     </button>
-    <div
-      class="w-full xl:block xl:w-auto flex-grow-1"
-      id="navbar-default"
-      [class.hidden]="!isMenuOpen"
-    >
-      <div class="flex flex-col xl:flex-row font-medium">
-        <!-- Ul Links -->
+
+    <!-- Desktop Navigation - Always visible on desktop -->
+    <div class="hidden xl:block xl:w-auto flex-grow-1">
+      <div class="flex flex-row font-medium">
+        <!-- Desktop Links -->
         <ul
-          class="flex flex-col xl:flex-row xl:space-x-[40px] rtl:space-x rtl:ml-auto ltr:mr-auto"
+          class="flex flex-row xl:space-x-[40px] rtl:space-x rtl:ml-auto ltr:mr-auto"
+          role="menubar"
         >
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'home']"
-          >
+          <li class="cursor-pointer" role="menuitem">
             <a
+              [routerLink]="['/', currentLang$ | async, 'home']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
               aria-current="page"
             >
@@ -101,208 +60,468 @@
             </a>
           </li>
 
-          <li class="cursor-pointer">
-            <a
-              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
+          <li class="cursor-pointer" role="menuitem">
+            <button
+              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left"
               (click)="toggleMegaMenu($event)"
+              [attr.aria-expanded]="showMegaMenu"
+              [attr.aria-haspopup]="true"
             >
               {{ "navbar.pages_Title.products.title" | translate }}
-            </a>
+            </button>
             @if (showMegaMenu) {
             <app-mega-menu></app-mega-menu>
             }
           </li>
 
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'blog']"
-          >
+          <li class="cursor-pointer" role="menuitem">
             <a
+              [routerLink]="['/', currentLang$ | async, 'blog']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
             >
               {{ "navbar.pages_Title.articles.title" | translate }}
             </a>
           </li>
 
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'shopping']"
-          >
+          <li class="cursor-pointer" role="menuitem">
             <a
+              [routerLink]="['/', currentLang$ | async, 'shopping']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
             >
               {{ "navbar.pages_Title.shopping_now.title" | translate }}
             </a>
           </li>
 
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'about-us']"
-          >
+          <li class="cursor-pointer" role="menuitem">
             <a
+              [routerLink]="['/', currentLang$ | async, 'about-us']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
             >
               {{ "navbar.pages_Title.who_we_are.title" | translate }}
             </a>
           </li>
 
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'contact-us']"
-          >
+          <li class="cursor-pointer" role="menuitem">
             <a
+              [routerLink]="['/', currentLang$ | async, 'contact-us']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
             >
               {{ "navbar.pages_Title.contact_Us.title" | translate }}
             </a>
           </li>
         </ul>
-        <!-- Ul Icons -->
+
+        <!-- Language Selector -->
         <ul
           id="langDropdownButton"
-          (click)="toggleMenu()"
           class="flex flex-row md:space-x-[5px] rtl:space-x rtl:ml-[35px] ltr:mr-[35px] cursor-pointer"
         >
           <li>
-            <a
-              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
-            >
-              <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/3.webp" alt="" />
-              </figure>
-            </a>
-          </li>
-          <li>
-            <a
-              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
-              aria-current="page"
-              >{{ "navbar.languages.lang" | translate }}</a
-            >
-          </li>
-
-          <li class="relative cursor-pointer group">
             <button
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
-              type="button"
+              (click)="toggleMenu()"
+              [attr.aria-expanded]="showMenu"
+              [attr.aria-haspopup]="true"
+              [attr.aria-label]="'navbar.languages.lang' | translate"
             >
-              <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/1.webp" alt="Lang" />
+              <figure
+                class="max-w-[25px] max-h-[25px] inline-block align-middle"
+              >
+                <img
+                  ngSrc="/images/navbar/3.webp"
+                  width="25"
+                  height="25"
+                  alt="Language"
+                />
+              </figure>
+              <span class="inline-block align-middle">{{
+                "navbar.languages.lang" | translate
+              }}</span>
+              <figure
+                class="max-w-[25px] max-h-[25px] inline-block align-middle"
+              >
+                <img
+                  ngSrc="/images/navbar/1.webp"
+                  width="25"
+                  height="25"
+                  alt="Toggle"
+                />
               </figure>
             </button>
-            <!-- Dropdown -->
-            @if (showMenu) {
-            <div
-              id="langDropdown"
-              [class.hidden]="!showMenu"
-              class="z-50 bg-white divide-y divide-gray-100 rounded-2xl shadow w-28 absolute top-full right-0 mt-2"
-            >
-              <ul class="py-4 text-sm text-gray-700 dark:text-gray-200">
-                <li>
-                  <a
-                    (click)="changeLang('ar')"
-                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size"
-                  >
-                    <figure class="max-w-[25px] max-h-[25px]">
-                      <img
-                        loading="lazy"
-                        src="/images/navbar/10.webp"
-                        alt="change lang"
-                      />
-                    </figure>
-                    <span> العربية </span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    (click)="changeLang('en')"
-                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size"
-                  >
-                    <figure class="max-w-[25px] max-h-[25px]">
-                      <img
-                        loading="lazy"
-                        src="/images/navbar/10.webp"
-                        alt="change lang"
-                      />
-                    </figure>
-                    <span> English </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            }
           </li>
+
+          <!-- Dropdown -->
+          @if (showMenu) {
+          <div
+            id="langDropdown"
+            class="z-50 bg-white divide-y divide-gray-100 rounded-2xl shadow w-28 absolute top-[80px] right-0 mt-2"
+            role="menu"
+          >
+            <ul class="py-4 text-sm text-gray-700 dark:text-gray-200">
+              <li role="menuitem">
+                <button
+                  (click)="changeLang('ar')"
+                  class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                >
+                  <figure class="max-w-[25px] max-h-[25px]">
+                    <img
+                      ngSrc="/images/navbar/10.webp"
+                      width="25"
+                      height="25"
+                      alt="العربية"
+                    />
+                  </figure>
+                  <span> العربية </span>
+                </button>
+              </li>
+              <li role="menuitem">
+                <button
+                  (click)="changeLang('en')"
+                  class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                >
+                  <figure class="max-w-[25px] max-h-[25px]">
+                    <img
+                      ngSrc="/images/navbar/10.webp"
+                      width="25"
+                      height="25"
+                      alt="English"
+                    />
+                  </figure>
+                  <span> English </span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          }
         </ul>
-        <!-- Ul Icons Profile -->
-        <ul class="flex flex-row xl:space-x-[26px] rtl:space-x">
+
+        <!-- Desktop Actions -->
+        <ul class="flex flex-row xl:space-x-[26px] rtl:space-x" role="menu">
           <!-- Search -->
-          <li class="cursor-pointer search-container relative">
-            <a class="block py-2 px-3 xl:p-0" (click)="toggleSearch($event)">
+          <li class="cursor-pointer search-container relative" role="menuitem">
+            <button
+              class="block py-2 px-3 xl:p-0"
+              (click)="toggleSearch($event)"
+              [attr.aria-label]="'navbar.search' | translate"
+              [attr.aria-expanded]="showSearch"
+            >
               <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/5.webp" alt="" />
+                <img
+                  ngSrc="/images/navbar/5.webp"
+                  width="25"
+                  height="25"
+                  alt="Search"
+                />
               </figure>
-            </a>
+            </button>
             @if (showSearch) {
             <form
               class="absolute bottom-0 left-0 -translate-x-[50%] translate-y-[50%] min-w-[300px] max-w-[400px] animate-slide-in"
+              (click)="$event.stopPropagation()"
             >
               <label
-                for="default-search"
+                for="desktop-search"
                 class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
                 >Search</label
               >
               <div class="relative">
                 <input
                   type="search"
-                  id="default-search"
+                  id="desktop-search"
                   class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
-                  placeholder="Search Mockups, Logos..."
+                  [attr.placeholder]="'navbar.search_placeholder' | translate"
                   required
-                  (click)="$event.stopPropagation()"
                 />
               </div>
             </form>
             }
           </li>
 
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'wishlist']"
-          >
-            <a class="block py-2 px-3 xl:p-0" aria-current="page">
+          <li class="cursor-pointer" role="menuitem">
+            <a
+              [routerLink]="['/', currentLang$ | async, 'wishlist']"
+              class="block py-2 px-3 xl:p-0"
+              [attr.aria-label]="'navbar.wishlist' | translate"
+            >
               <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/6.webp" alt="" />
+                <img
+                  ngSrc="/images/navbar/6.webp"
+                  width="25"
+                  height="25"
+                  alt="Wishlist"
+                />
               </figure>
             </a>
           </li>
-          <!-- Cart -->
-          <li
-            class="hidden xl:block cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'cart']"
-          >
-            <a class="block py-2 px-3 xl:p-0" aria-current="page">
+
+          <li class="cursor-pointer" role="menuitem">
+            <a
+              [routerLink]="['/', currentLang$ | async, 'cart']"
+              class="block py-2 px-3 xl:p-0"
+              [attr.aria-label]="'navbar.cart' | translate"
+            >
               <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/7.webp" alt="" />
+                <img
+                  ngSrc="/images/navbar/7.webp"
+                  width="25"
+                  height="25"
+                  alt="Cart"
+                />
               </figure>
             </a>
           </li>
-          <li
-            class="cursor-pointer"
-            [routerLink]="['/', currentLang$ | async, 'profile']"
-          >
-            <a class="block py-2 px-3 xl:p-0" aria-current="page">
+
+          <li class="cursor-pointer" role="menuitem">
+            <a
+              [routerLink]="['/', currentLang$ | async, 'profile']"
+              class="block py-2 px-3 xl:p-0"
+              [attr.aria-label]="'navbar.profile' | translate"
+            >
               <figure class="max-w-[25px] max-h-[25px]">
-                <img loading="lazy" src="/images/navbar/4.webp" alt="" />
+                <img
+                  ngSrc="/images/navbar/4.webp"
+                  width="25"
+                  height="25"
+                  alt="Profile"
+                />
               </figure>
             </a>
           </li>
         </ul>
       </div>
     </div>
+  </div>
+
+  <!-- Off-Canvas Mobile Menu -->
+  <div
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity duration-300"
+    [class.hidden]="!isMenuOpen"
+    [class.opacity-0]="!isMenuOpen"
+    [class.opacity-100]="isMenuOpen"
+    (click)="toggleMobileMenu()"
+  ></div>
+
+  <div
+    class="fixed top-0 bottom-0 bg-white z-50 transition-transform duration-300 ease-in-out shadow-lg overflow-y-auto w-[80%] max-w-[300px]"
+    [class.right-0]="isRtl"
+    [class.left-0]="!isRtl"
+    [ngClass]="{
+      'translate-x-full': !isMenuOpen && isRtl,
+      '-translate-x-full': !isMenuOpen && !isRtl,
+      'translate-x-0': isMenuOpen
+    }"
+  >
+    <div class="p-4 flex justify-between items-center border-b border-gray-200">
+      <a
+        [routerLink]="['/', currentLang$ | async, 'home']"
+        (click)="toggleMobileMenu()"
+      >
+        <figure class="max-w-[56px] max-h-[40px]">
+          <img
+            ngSrc="/images/navbar/2.webp"
+            width="56"
+            height="40"
+            alt="Hayatalafkar Logo"
+          />
+        </figure>
+      </a>
+      <button
+        (click)="toggleMobileMenu()"
+        class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        [attr.aria-label]="'navbar.close_menu' | translate"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Links -->
+    <ul class="py-4 px-6 space-y-4">
+      <li>
+        <a
+          [routerLink]="['/', currentLang$ | async, 'home']"
+          class="block py-2 text-black font-bold"
+          (click)="toggleMobileMenu()"
+        >
+          {{ "navbar.pages_Title.home.title" | translate }}
+        </a>
+      </li>
+
+      <li>
+        <button
+          class="flex justify-between items-center w-full py-2 text-black font-bold"
+          (click)="toggleMobileProductsMenu($event)"
+          [attr.aria-expanded]="showMobileProductsMenu"
+        >
+          <span>{{ "navbar.pages_Title.products.title" | translate }}</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 transition-transform"
+            [class.rotate-180]="showMobileProductsMenu"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+        @if (showMobileProductsMenu) {
+        <div class="mt-2 ml-4 space-y-2">
+          <!-- Replace with actual mega menu content -->
+          <app-mega-menu [isMobile]="true"></app-mega-menu>
+        </div>
+        }
+      </li>
+
+      <li>
+        <a
+          [routerLink]="['/', currentLang$ | async, 'blog']"
+          class="block py-2 text-black font-bold"
+          (click)="toggleMobileMenu()"
+        >
+          {{ "navbar.pages_Title.articles.title" | translate }}
+        </a>
+      </li>
+
+      <li>
+        <a
+          [routerLink]="['/', currentLang$ | async, 'shopping']"
+          class="block py-2 text-black font-bold"
+          (click)="toggleMobileMenu()"
+        >
+          {{ "navbar.pages_Title.shopping_now.title" | translate }}
+        </a>
+      </li>
+
+      <li>
+        <a
+          [routerLink]="['/', currentLang$ | async, 'about-us']"
+          class="block py-2 text-black font-bold"
+          (click)="toggleMobileMenu()"
+        >
+          {{ "navbar.pages_Title.who_we_are.title" | translate }}
+        </a>
+      </li>
+
+      <li>
+        <a
+          [routerLink]="['/', currentLang$ | async, 'contact-us']"
+          class="block py-2 text-black font-bold"
+          (click)="toggleMobileMenu()"
+        >
+          {{ "navbar.pages_Title.contact_Us.title" | translate }}
+        </a>
+      </li>
+
+      <!-- Language Selector Mobile -->
+      <li class="border-t border-gray-200 pt-4 mt-4">
+        <div class="flex space-x-4 rtl:space-x-reverse">
+          <button
+            (click)="changeLang('ar'); toggleMobileMenu()"
+            class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
+            [class.bg-gray-100]="(currentLang$ | async) === 'ar'"
+          >
+            <figure class="max-w-[25px] max-h-[25px]">
+              <img
+                ngSrc="/images/navbar/10.webp"
+                width="25"
+                height="25"
+                alt="العربية"
+              />
+            </figure>
+            <span>العربية</span>
+          </button>
+
+          <button
+            (click)="changeLang('en'); toggleMobileMenu()"
+            class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
+            [class.bg-gray-100]="(currentLang$ | async) === 'en'"
+          >
+            <figure class="max-w-[25px] max-h-[25px]">
+              <img
+                ngSrc="/images/navbar/10.webp"
+                width="25"
+                height="25"
+                alt="English"
+              />
+            </figure>
+            <span>English</span>
+          </button>
+        </div>
+      </li>
+
+      <!-- Profile Links Mobile -->
+      <li class="border-t border-gray-200 pt-4 mt-4">
+        <ul class="flex flex-row space-x-2">
+          <li>
+            <a
+              [routerLink]="['/', currentLang$ | async, 'profile']"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              (click)="toggleMobileMenu()"
+            >
+              <figure class="w-5 h-5">
+                <img
+                  ngSrc="/images/navbar/4.webp"
+                  width="20"
+                  height="20"
+                  alt="Profile"
+                />
+              </figure>
+            </a>
+          </li>
+
+          <li>
+            <a
+              [routerLink]="['/', currentLang$ | async, 'wishlist']"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              (click)="toggleMobileMenu()"
+            >
+              <figure class="w-5 h-5">
+                <img
+                  ngSrc="/images/navbar/6.webp"
+                  width="20"
+                  height="20"
+                  alt="Wishlist"
+                />
+              </figure>
+            </a>
+          </li>
+
+          <li>
+            <a
+              [routerLink]="['/', currentLang$ | async, 'cart']"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              (click)="toggleMobileMenu()"
+            >
+              <figure class="w-5 h-5">
+                <img
+                  ngSrc="/images/navbar/7.webp"
+                  width="20"
+                  height="20"
+                  alt="Cart"
+                />
+              </figure>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </nav>
