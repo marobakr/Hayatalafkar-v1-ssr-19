@@ -5,18 +5,22 @@
   <div
     class="btns absolute top-[30px] rtl:left-[20px] ltr:right-[20px] z-1 flex flex-col"
   >
-    <button class="mb-[10px] cursor-pointer">
+    <button class="mb-[10px] cursor-pointer" aria-label="Add to wishlist">
       <figure>
         <img
           loading="lazy"
           src="/images/common/wishlist.svg"
-          alt="add in wishlist"
+          [alt]="'add_to_wishlist' | translate"
         />
       </figure>
     </button>
-    <button class="cursor-pointer">
+    <button class="cursor-pointer" aria-label="Add to cart">
       <figure>
-        <img loading="lazy" src="/images/common/cart.svg" alt="add to cart" />
+        <img
+          loading="lazy"
+          src="/images/common/cart.svg"
+          [alt]="'add_to_cart' | translate"
+        />
       </figure>
     </button>
   </div>
@@ -70,7 +74,8 @@
           loading="lazy"
           class="w-[73px]"
           src="/images/common/rotate.gif"
-          alt="logo"
+          alt="Product rotation animation"
+          role="presentation"
         />
       </figure>
     </div>

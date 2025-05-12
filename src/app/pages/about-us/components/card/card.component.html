@@ -1,11 +1,16 @@
 <div class="p-5 bg-white border border-[#CBCBCB] rounded-[15px] shadow-md">
   <div class="flex justify-start gap-x-2 mb-3">
     <figure class="p-3 bg bg-warm-tan rounded-full w-fit">
-      <img loading="lazy" class="w-[33px]" [src]="cardImagePath" alt="logo" />
+      <img
+        loading="lazy"
+        class="w-[33px]"
+        [src]="cardImagePath"
+        [alt]="cardTitle"
+      />
     </figure>
     <span class="text-title-size text-black">{{ cardTitle }}</span>
   </div>
-  <p class="mb-3 text-description-size text-black">
-    {{ cardDescription }}
-  </p>
+  <div class="mb-3 text-description-size text-black">
+    <app-safe-html [content]="cardDescription"></app-safe-html>
+  </div>
 </div>

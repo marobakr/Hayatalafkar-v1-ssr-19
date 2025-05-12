@@ -8,7 +8,7 @@ import { BigCardOfferComponent } from '../../shared/components/big-card-offer/bi
 import { CardComponent } from './components/card/card.component';
 import { FAQComponent } from './components/faq/faq.component';
 import { ServiceCardComponent } from './components/service-card/service-card.component';
-import { IAboutUs } from './res/about-us.interface';
+import { IAboutUsOne, IAboutUsTwo } from './res/about-us.interface';
 import { AboutUsService } from './res/about-us.service';
 
 @Component({
@@ -30,14 +30,24 @@ import { AboutUsService } from './res/about-us.service';
 export class AboutUsComponent {
   aboutUsService = inject(AboutUsService);
   API_CONFIG = API_CONFIG.BASE_URL_IMAGE;
-  aboutUs: IAboutUs = {} as IAboutUs;
+
+  aboutUsOne: IAboutUsOne = {} as IAboutUsOne;
+  aboutUsTwo: IAboutUsTwo = {} as IAboutUsTwo;
   ngOnInit(): void {
     this.getAboutUs();
+    this.getAboutData();
+  }
+  /* counters ,offers ,breaks*/
+  getAboutUs() {
+    this.aboutUsService.getAboutUs().subscribe((res: IAboutUsOne) => {
+      this.aboutUsOne = res;
+    });
   }
 
-  getAboutUs() {
-    this.aboutUsService.getAboutUs().subscribe((res: IAboutUs) => {
-      this.aboutUs = res;
+  /* aboutdata ,features , FAQS  */
+  getAboutData() {
+    this.aboutUsService.getAboutData().subscribe((res: IAboutUsTwo) => {
+      this.aboutUsTwo = res;
     });
   }
 }
