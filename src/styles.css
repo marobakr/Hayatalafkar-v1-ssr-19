@@ -56,3 +56,9 @@ body,
     }
   }
 }
+
+/* Global styles */
+html,
+body {
+  font-family: Arial, sans-serif;
+}

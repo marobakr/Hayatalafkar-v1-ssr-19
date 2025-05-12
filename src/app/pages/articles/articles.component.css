@@ -1,0 +1,55 @@
+/* Reset styles to override user agent styles */
+:host {
+  display: block;
+  font-family: inherit;
+}
+
+/* Section card styles */
+.all-sections .section-card {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 15px;
+  border: 1px solid #e0e0e0;
+  color: #474747;
+  background-color: #fff;
+}
+
+/* New products card styles */
+.new-product-card {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.new-product-image {
+  width: 99px;
+  height: auto;
+}
+
+.new-product-title {
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.new-product-description {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.new-product-date {
+  text-decoration: underline;
+  color: var(--muted-rose);
+  font-weight: 600;
+}
+
+/* Loading state */
+.loading-container {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.loading-text {
+  color: #6b7280;
+}

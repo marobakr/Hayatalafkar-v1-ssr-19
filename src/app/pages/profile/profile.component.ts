@@ -9,7 +9,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LanguageService } from '../../core/services/service/lang/language.service';
+import { LanguageService } from '../../core/services/lang/language.service';
 import { TalentImageCardComponent } from '../../shared/components/talent-image-card/talent-image-card.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 

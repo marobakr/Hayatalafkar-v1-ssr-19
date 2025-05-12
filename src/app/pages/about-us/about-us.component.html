@@ -1,8 +1,10 @@
-<app-who-we-are-shared
+<app-about-shared
   [showBgImage]="false"
   [sloganText]="'about-us.slogan-text' | translate"
   [showSloganText]="true"
-></app-who-we-are-shared>
+  [aboutUs]="aboutUs.aboutUs"
+  [counters]="aboutUs.counters"
+></app-about-shared>
 
 <!-- Big Offer Card  -->
 <div class="container mx-auto">
@@ -20,40 +22,29 @@
   </div>
 </div>
 
-<!-- Banner -->
-
+<!-- Banner_1 -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
-  [bannerText]="'banner.banner-about-us-1' | translate"
+  [bannerText]="aboutUs.breaks[0] | customTranslate : 'name'"
 >
 </app-banner>
 
 <!-- Card Service  -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+  @for (feature of aboutUs.features | customTranslate; track feature.id) {
   <app-service-card
-    [cardDescription]="'about-us.service-card.card-3.description' | translate"
-    [cardImagePath]="'/images/whoWeAre/8.webp'"
-    [cardTitle]="'about-us.service-card.card-3.title' | translate"
+    [cardDescription]="feature.text"
+    [cardImagePath]="API_CONFIG + 'uploads/about/' + feature.icon_image"
+    [cardTitle]="feature.title"
     [isCenter]="false"
   ></app-service-card>
-  <app-service-card
-    [cardDescription]="'about-us.service-card.card-2.description' | translate"
-    [cardImagePath]="'/images/whoWeAre/7.webp'"
-    [cardTitle]="'about-us.service-card.card-2.title' | translate"
-    [isCenter]="false"
-  ></app-service-card>
-  <app-service-card
-    [cardDescription]="'about-us.service-card.card-1.description' | translate"
-    [cardImagePath]="'/images/whoWeAre/9.webp'"
-    [cardTitle]="'about-us.service-card.card-1.title' | translate"
-    [isCenter]="false"
-  ></app-service-card>
+  }
 </div>
 
-<!-- Banner -->
+<!-- Banner_2 -->
 <app-banner
-  [bannerText]="'banner.banner-about-us-2' | translate"
+  [bannerText]="aboutUs.breaks[1] | customTranslate : 'name'"
   [showLeftSideImage]="false"
   [showRightSideImage]="true"
 ></app-banner>
@@ -63,28 +54,25 @@
   class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
 >
   <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
+    @for (offer of aboutUs.offers | customTranslate; track offer.id) {
+    @if(offer.active_status) {
     <app-big-card-offer
       [mainColor]="true"
-      [alt]="''"
-      [imgPath]="'/images/categories/14.webp'"
-      [title]="'offers.bigCard.0.imgTitle' | translate"
-      [subtitle]="'offers.bigCard.0.imgSubtitle' | translate"
-      [description]="'offers.bigCard.0.imgDescription' | translate"
+      [alt]="offer.title"
+      [imgPath]="API_CONFIG + 'uploads/about/' + offer.main_image"
+      [title]="offer.ar_title"
+      [subtitle]="offer.small_title"
+      [description]="offer.text"
     ></app-big-card-offer>
-    <app-big-card-offer
-      [mainColor]="false"
-      [alt]="'bestSelling.heading' | translate"
-      [imgPath]="'/images/categories/13.webp'"
-      [title]="'offers.bigCard.1.imgTitle' | translate"
-      [subtitle]="'offers.bigCard.1.imgSubtitle' | translate"
-      [description]="'offers.bigCard.1.imgDescription' | translate"
-    ></app-big-card-offer>
+    } }
   </div>
 </div>
 
-<!-- Banner -->
+<!-- Banner_3 -->
 <app-banner
-  [bannerText]="'banner.banner-about-us-3' | translate"
+  [bannerText]="
+    aboutUs.breaks[aboutUs.breaks.length - 1] | customTranslate : 'name'
+  "
   [showLeftSideImage]="true"
   [showRightSideImage]="false"
 ></app-banner>

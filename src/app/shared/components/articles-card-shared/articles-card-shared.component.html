@@ -4,7 +4,7 @@
     <figure>
       <img
         loading="lazy"
-        [src]="articleImage"
+        [src]="getImageUrl(blogData.main_image)"
         alt="article"
         class="w-full object-cover"
       />
@@ -16,32 +16,42 @@
 
     <div class="built relative">
       <div class="classs text-[14px] text-[#333] mb-[13px]">
-        {{ articleDate }}
+        {{ blogData.blog_date }}
       </div>
       <div
         class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"
       ></div>
     </div>
     <!-- ArticleTitle -->
-
-    @if (articleTitle !=='') {
     <h1 class="text-subtitle-size text-black mb-[15px] font-semibold">
-      {{ articleTitle }}
+      {{ blogData | customTranslate : "blog_title" }}
     </h1>
-    }
+
     <!-- ArticleDescription -->
     <h3
       [ngClass]="{
-        'mb-[23px]': haveMoreMarginBottom,
-        'mb-[10px]': !haveMoreMarginBottom
+        'mb-[23px]': true,
+        'mb-[10px]': !false
       }"
       class="text-description-size"
     >
-      {{ articleDescription }}
+      <app-safe-html
+        [content]="blogData | customTranslate : 'blog_text'"
+      ></app-safe-html>
     </h3>
 
     <!-- Read More -->
-    <a href="#" class="text-muted-rose text-[14px] font-bold underline">
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'blog',
+        blogData | customTranslate : 'slug'
+      ]"
+      routerLinkActive="router-link-active"
+      href="#"
+      class="text-muted-rose text-[14px] font-bold underline"
+    >
       {{ "shared.readMore" | translate }}
     </a>
   </div>

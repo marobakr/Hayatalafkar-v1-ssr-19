@@ -17,4 +17,5 @@ export class ArrowButtonComponent {
   @Input({ required: true }) bg: string = '';
   @Input({ required: true }) color: string = '';
   @Input({ required: true }) image: string = '';
+  @Input() disabled: boolean = false;
 }

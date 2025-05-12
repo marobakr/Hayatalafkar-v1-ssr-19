@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/service/lang/language.service';
+import { LanguageService } from '../../../../core/services/lang/language.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({

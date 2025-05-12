@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Meta, Title } from '@angular/platform-browser';
+import { Component, inject, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { AboutSharedComponent } from '../../shared/components/about-shared/about-shared.component';
 import { BannerComponent } from '../../shared/components/banner/banner.component';
-import { WhoWeAreSharedComponent } from '../../shared/components/who-we-are-shared/who-we-are-shared.component';
 import { BestSellerComponent } from './components/best-seller/best-seller.component';
 import { HeroComponent } from './components/hero/hero.component';
 import { NewArticlsComponent } from './components/new-articls/new-articls.component';
@@ -10,7 +9,8 @@ import { NewProductsComponent } from './components/new-products/new-products.com
 import { OfferCardComponent } from './components/offer-card/offer-card.component';
 import { OfferDayComponent } from './components/offer-day/offer-day.component';
 import { SectionsComponent } from './components/sections/sections.component';
-
+import { IHome } from './res/home.interfaces';
+import { HomeService } from './res/home.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -23,48 +23,30 @@ import { SectionsComponent } from './components/sections/sections.component';
     OfferDayComponent,
     NewArticlsComponent,
     NewProductsComponent,
-    WhoWeAreSharedComponent,
+    AboutSharedComponent,
     TranslateModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  constructor(private meta: Meta, private title: Title) {}
+  homeService = inject(HomeService);
 
-  ngOnInit() {
-    // Set meta description
-    this.meta.updateTag({
-      name: 'description',
-      content:
-        'موقعك الأمثل للجمال ومستحضرات التجميل. نقدم لكِ أحدث مستحضرات التجميل من أفضل العلامات التجارية العالمية، إضافةً إلى نصائح حصرية للعناية بالبشرة والمكياج.',
+  homeData: IHome = {} as IHome;
+
+  ngOnInit(): void {
+    this.getHomeData();
+  }
+
+  getHomeData() {
+    this.homeService.getHomeData().subscribe({
+      next: (response: any) => {
+        this.homeData = response;
+        console.log(response);
+      },
+      error: (err) => {
+        console.log(err);
+      },
     });
-
-    // Add other relevant meta tags
-    this.meta.updateTag({
-      name: 'keywords',
-      content:
-        'مستحضرات تجميل, العناية بالبشرة, مكياج, عطور, منتجات تجميل, كوزمتكس',
-    });
-
-    this.meta.updateTag({
-      property: 'og:title',
-      content: 'COSMETICS - موقعك الأمثل للجمال ومستحضرات التجميل',
-    });
-
-    this.meta.updateTag({
-      property: 'og:description',
-      content:
-        'اكتشفي تشكيلة واسعة من منتجات العناية بالبشرة والمكياج والعطور من أفضل الماركات العالمية',
-    });
-
-    // Set canonical URL
-    this.meta.updateTag({
-      property: 'og:url',
-      content: 'https://iridescent-frangipane-90a1bc.netlify.app/ar/home',
-    });
-
-    // Set page title
-    this.title.setTitle('COSMETICS - موقعك الأمثل للجمال ومستحضرات التجميل');
   }
 }

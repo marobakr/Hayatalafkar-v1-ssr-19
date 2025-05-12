@@ -1,16 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { PercentPipe } from '@angular/common';
+import { Component, inject, Input } from '@angular/core';
+import { FilterHtmlPipe } from '@core/pipes/filter-html.pipe';
+import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { ApiService } from '@core/services/conf/api.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { IAllProduct } from 'src/app/pages/shopping/res/products.interface';
 
 @Component({
   selector: 'app-shared-best-seller',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, CustomTranslatePipe, PercentPipe, FilterHtmlPipe],
   templateUrl: './shared-best-seller.component.html',
   styleUrl: './shared-best-seller.component.css',
 })
 export class SharedBestSellerComponent {
-  @Input({ required: true }) imgPath: string = '';
-  @Input({ required: true }) isOffer: boolean = false;
-  @Input({ required: true }) title: string = '';
-  @Input({ required: true }) description: string = '';
+  _apiService = inject(ApiService);
+
+  @Input({ required: true }) productData: IAllProduct = {} as IAllProduct;
+
+  getImageUrl(image: string) {
+    return this._apiService.getImageUrl(image, '');
+  }
 }

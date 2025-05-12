@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BigCardOfferComponent } from '../../../../shared/components/big-card-offer/big-card-offer.component';
+import { Offer } from '../../res/home.interfaces';
 
 @Component({
   selector: 'app-offer-card',
@@ -17,4 +18,6 @@ export class OfferCardComponent {
         console.log(titles);
       });
   }
+
+  @Input({ required: true }) offers: Offer[] = [];
 }

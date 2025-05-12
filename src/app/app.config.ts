@@ -16,11 +16,14 @@ import {
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { initFlowbite } from 'flowbite-angular/core';
+import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
 import { provideTranslation } from './core/i18n/i18n.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    initFlowbite(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
@@ -31,5 +34,12 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withFetch()),
     importProvidersFrom(TranslateModule.forRoot(provideTranslation())),
+    provideToastr({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      closeButton: true,
+      progressBar: true,
+    }),
   ],
 };
