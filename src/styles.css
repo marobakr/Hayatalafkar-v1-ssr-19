@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @plugin 'tailwind-scrollbar';
-/* @import url("/public/fonts/fonts.css"); */
 @theme {
   --color-black: #000000;
   --color-dark-brown: #7a7066;
@@ -56,4 +55,10 @@ body,
       font-size: 10px;
     }
   }
+}
+
+/* Global styles */
+html,
+body {
+  font-family: Arial, sans-serif;
 }

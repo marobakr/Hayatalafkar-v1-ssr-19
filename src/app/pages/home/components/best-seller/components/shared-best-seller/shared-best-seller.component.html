@@ -19,14 +19,18 @@
   </div>
   <div class="img relative cursor-pointer">
     <figure class="h-[386px] md:h-[334px]">
-      <img class="w-full h-full" [src]="imgPath" alt="product image" />
+      <img
+        class="w-full h-full"
+        [src]="getImageUrl(productData.main_image)"
+        alt="product image"
+      />
     </figure>
     <!-- Offer Title -->
-    @if (isOffer) {
+    @if (productData.sale_price) {
     <div
       class="absolute top-3 left-3 bg-[#000000b3] text-white py-4 px-8 rounded-full text-category-size font-bold"
     >
-      {{ "shared.offer" | translate }}
+      {{ +productData.sale_price / 100 | percent : "0.0" }}
     </div>
     }
   </div>
@@ -41,24 +45,26 @@
       {{ "shared.show-products" | translate }}
     </a>
 
-    <p class="text-black mb-3 text-category-size">{{ title }}</p>
+    <p class="text-black mb-3 text-category-size">
+      {{ productData | customTranslate : "name" }}
+    </p>
   </div>
+
   <h3
-    [title]="description"
     class="text-description-size font-bold text-black mb-8 line-clamp-1"
-  >
-    {{ description }}
-  </h3>
+    [innerHTML]="productData | customTranslate : 'description' | filterHtml"
+  ></h3>
   <div class="text-subtitle-size mb-[13px]">
-    <span class="text-warm-tan font-bold rtl:mr-[28px] ltr:mr-[28px]"
-      >200
+    @if (productData.price_after_sale) {
+    <span class="text-warm-tan font-bold rtl:mr-[28px] ltr:mr-[28px]">
+      {{ productData.price_after_sale }}
       {{ "shared.currency" | translate }}
     </span>
-    <!-- prev Price Based on Offer -->
-    @if ( isOffer) {
-    <span class="line-through text-black"
-      >250 {{ "shared.currency" | translate }}</span
-    >
     }
+    <!-- prev Price Based on Offer -->
+    <span class="line-through text-black">
+      {{ productData.price }}
+      {{ "shared.currency" | translate }}
+    </span>
   </div>
 </div>

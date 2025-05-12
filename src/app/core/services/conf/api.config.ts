@@ -11,6 +11,7 @@ export const API_CONFIG = {
     GET_ALL: 'menu/products',
     GET_WITH_CATEGORY: 'menu/category',
     GET_WITH_SUBCATEGORY: 'menu/subcategory',
+    GET_WITH_SLUG: 'menu/product',
   },
 
   CATEGORY: {

@@ -9,15 +9,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ICategory } from '@core/interfaces/common.model';
+import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CategoryService } from '@core/services/category.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { LanguageService } from '../../core/services/lang/language.service';
-
 @Component({
   selector: 'app-mega-menu',
   standalone: true,
-  imports: [TranslateModule, NgClass, RouterLink],
+  imports: [TranslateModule, NgClass, RouterLink, CustomTranslatePipe],
   templateUrl: './mega-menu.component.html',
   styleUrl: './mega-menu.component.css',
 })
@@ -52,5 +54,20 @@ export class MegaMenuComponent implements AfterViewInit, OnDestroy {
     if (this.menuContent?.nativeElement) {
       this.contentHeight = this.menuContent.nativeElement.scrollHeight;
     }
+  }
+
+  categoryService = inject(CategoryService);
+
+  categories: ICategory[] = [];
+
+  ngOnInit() {
+    this.getAllCategories();
+  }
+
+  getAllCategories() {
+    this.categoryService.getAllCategories().subscribe((res: any) => {
+      console.log(res.categories);
+      this.categories = res.categories;
+    });
   }
 }

@@ -30,12 +30,17 @@ export const routes: Routes = [
       },
       /* Blogs */
       {
-        path: 'blog',
+        path: 'blogs',
         loadComponent: () =>
           import('./pages/articles/articles.component').then(
             (c) => c.ArticlesComponent
           ),
         data: { titleKey: 'routes.blog' },
+      },
+      {
+        path: 'blog/:slug',
+        loadComponent: () =>
+          import('./pages/blog/blog.component').then((c) => c.BlogComponent),
       },
       /* Shopping */
       {

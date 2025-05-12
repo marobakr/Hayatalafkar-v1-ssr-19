@@ -56,7 +56,6 @@ export class CustomTranslatePipe implements PipeTransform {
         result[key] = value;
       }
     }
-    console.log('result', result);
     return result;
   }
 }

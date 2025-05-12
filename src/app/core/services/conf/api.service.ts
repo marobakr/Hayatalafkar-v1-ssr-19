@@ -55,6 +55,6 @@ export class ApiService {
   }
 
   getImageUrl(image: string, endpoint: string) {
-    return `${API_CONFIG.BASE_URL_IMAGE}/${endpoint}/${image}`;
+    return `${API_CONFIG.BASE_URL_IMAGE}${endpoint}/${image}`;
   }
 }

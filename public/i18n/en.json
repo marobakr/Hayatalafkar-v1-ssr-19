@@ -185,6 +185,7 @@
     }
   },
   "availability": "availability",
+  "unavailability": "unavailability",
   "banner": {
     "banner-about-us-1": "We believe that beauty begins with care, which is why we offer products designed to enhance your natural glow with confidence.",
     "banner-about-us-2": "Because your beauty is unique, we provide cosmetics that combine luxury and quality to give you lasting radiance.",
@@ -654,5 +655,15 @@
         "body_hair_removal": "Body Hair Removal"
       }
     }
+  },
+  "validation": {
+    "name-required": "Name is required",
+    "name-min-length": "Name must be at least 3 characters long",
+    "phone-required": "Phone is required",
+    "phone-format": "Phone must be a valid number",
+    "email-required": "Email is required",
+    "email-format": "Email must be a valid email address",
+    "your-msg-required": "Your message is required",
+    "your-msg-min-length": "Your message must be at least 10 characters long"
   }
 }

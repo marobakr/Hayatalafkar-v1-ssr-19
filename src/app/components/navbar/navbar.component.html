@@ -76,7 +76,7 @@
 
           <li class="cursor-pointer" role="menuitem">
             <a
-              [routerLink]="['/', currentLang$ | async, 'blog']"
+              [routerLink]="['/', currentLang$ | async, 'blogs']"
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0"
             >
               {{ "navbar.pages_Title.articles.title" | translate }}
@@ -392,7 +392,7 @@
 
       <li>
         <a
-          [routerLink]="['/', currentLang$ | async, 'blog']"
+          [routerLink]="['/', currentLang$ | async, 'blogs']"
           class="block py-2 text-black font-bold"
           (click)="toggleMobileMenu()"
         >
