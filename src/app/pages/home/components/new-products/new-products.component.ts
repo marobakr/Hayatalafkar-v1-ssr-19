@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/service/lang/language.service';
+import { LanguageService } from '../../../../core/services/lang/language.service';
 import { TalentImageCardComponent } from '../../../../shared/components/talent-image-card/talent-image-card.component';
 import { SharedBestSellerComponent } from '../best-seller/components/shared-best-seller/shared-best-seller.component';
 

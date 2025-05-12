@@ -16,11 +16,13 @@ import {
 
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { initFlowbite } from 'flowbite-angular/core';
 import { routes } from './app.routes';
 import { provideTranslation } from './core/i18n/i18n.config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    initFlowbite(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,

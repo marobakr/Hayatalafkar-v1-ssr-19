@@ -1,43 +1,59 @@
-<app-hero></app-hero>
+<!-- Sliders -->
+<app-hero [heroSection]="homeData.sliders"></app-hero>
 
-<app-who-we-are-shared
+<!-- About-us  -->
+<app-about-shared
+  ut-shared
+  [aboutUs]="homeData.aboutUs"
+  [counters]="homeData.counters"
   [showSloganText]="false"
   [showBgImage]="true"
   [sloganText]="'hero.title' | translate"
 >
-</app-who-we-are-shared>
+</app-about-shared>
 
-<app-sections></app-sections>
+<!-- Categories -->
+<app-sections [categories]="homeData.categories"></app-sections>
 
+<!-- Breacks -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="'banner.title-1' | translate"
 ></app-banner>
 
-<app-offer-card></app-offer-card>
+<!-- offers -->
+<app-offer-card [offers]="homeData.offers"></app-offer-card>
 
-<app-best-seller></app-best-seller>
+<!-- Latest-Products -->
+<app-best-seller [LatestProduct]="homeData.latestProducts"></app-best-seller>
 
+<!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="'banner.title-2' | translate"
 ></app-banner>
 
-<app-offer-day></app-offer-day>
+<!-- RandomProducts -->
+<app-offer-day [randomProducts]="homeData.randomProducts"></app-offer-day>
 
+<!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="'banner.title-3' | translate"
 ></app-banner>
 
+<!-- Will-be-added-soon -->
 <app-new-products> </app-new-products>
+
+<!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="'banner.title-4' | translate"
 ></app-banner>
 
+<!-- Blogs -->
 <app-new-articls></app-new-articls>

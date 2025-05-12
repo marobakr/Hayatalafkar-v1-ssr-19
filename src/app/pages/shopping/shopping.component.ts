@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/service/lang/language.service';
+import { LanguageService } from '../../core/services/lang/language.service';
 import { DismissibleBadgesComponent } from '../../shared/components/dismissible-badges/dismissible-badges.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 import { SharedBestSellerComponent } from '../home/components/best-seller/components/shared-best-seller/shared-best-seller.component';

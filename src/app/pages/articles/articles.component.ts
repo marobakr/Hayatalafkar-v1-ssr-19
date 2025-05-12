@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/service/lang/language.service';
+import { LanguageService } from '../../core/services/lang/language.service';
 import { ArticlesCardSharedComponent } from '../../shared/components/articles-card-shared/articles-card-shared.component';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
 import { TalentImageCardComponent } from '../../shared/components/talent-image-card/talent-image-card.component';

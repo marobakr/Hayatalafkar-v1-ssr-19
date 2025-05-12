@@ -6,9 +6,14 @@
     class="flex flex-col lg:flex-row items-start justify-between gap-10 relative z-10"
   >
     <!-- Image Column -->
-    <!-- it will be replaced with the image get from backend 🔻🔻🔻🔻🔻🔻🔻🔻  -->
     <div class="hidden lg:flex flex-col justify-between flex-grow-1">
-      <div class="flex gap-6 mb-3">
+      <figure>
+        <img [src]="getImageUrl(aboutUs.main_image)" alt="" />
+      </figure>
+
+      <!-- Static  -->
+      <!-- it will be replaced with the image get from backend 🔻🔻🔻🔻🔻🔻🔻🔻  -->
+      <!-- <div class="flex gap-6 mb-3">
         <div class="main-image relative">
           <figure>
             <img
@@ -49,7 +54,7 @@
             />
           </figure>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Text Column -->
@@ -64,45 +69,33 @@
         </span>
       </h2>
       <p class="text-[#474747] text-description-size leading-relaxed mb-[50px]">
-        {{ "hero.about-us.description" | translate }}
+        <!-- Static -->
+        <!-- {{ "hero.about-us.description" | translate }} -->
+        {{ aboutUs | customTranslate : "main_title" }}
       </p>
-
       <!-- Stats -->
       <div
         class="flex flex-col sm:flex-row justify-evenly items-center gap-4 bg-warm-tan rounded-2xl p-4 text-white font-bold mb-[60px]"
       >
+        @for (counter of counters; track counter.id) {
+
         <div class="text-center">
           <div class="text-black mb-[10px]">
-            {{ "hero.about-us.stats-values.clients" | translate }}
+            <!-- Static -->
+            <!-- {{ "hero.about-us.stats-values.clients" | translate }} -->
+            {{ counter.counter_value }}
           </div>
           <div class="text-sm text-white">
-            {{ "hero.about-us.stats.clients" | translate }}
+            <!-- Static -->
+            <!-- {{ "hero.about-us.stats.clients" | translate }} -->
+            {{ counter | customTranslate : "name" }}
           </div>
         </div>
         <span
           class="hidden sm:inline-block h-10 border-l border-[#D7D7D7] rtl:border-r rtl:border-l-0"
         ></span>
 
-        <div class="text-center">
-          <div class="text-black mb-[10px]">
-            {{ "hero.about-us.stats-values.products" | translate }}
-          </div>
-          <div class="text-sm text-white">
-            {{ "hero.about-us.stats.products" | translate }}
-          </div>
-        </div>
-        <span
-          class="hidden sm:inline-block h-10 border-l border-[#D7D7D7] rtl:border-r rtl:border-l-0"
-        ></span>
-
-        <div class="text-center px-4">
-          <div class="text-black mb-[10px]">
-            {{ "hero.about-us.stats-values.partners" | translate }}
-          </div>
-          <div class="text-sm text-white">
-            {{ "hero.about-us.stats.partners" | translate }}
-          </div>
-        </div>
+        }
       </div>
 
       <!-- Slogan -->

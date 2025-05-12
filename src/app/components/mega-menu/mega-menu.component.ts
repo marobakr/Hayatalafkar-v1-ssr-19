@@ -3,18 +3,21 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  inject,
   Input,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { LanguageService } from '../../core/services/lang/language.service';
 
 @Component({
   selector: 'app-mega-menu',
   standalone: true,
-  imports: [TranslateModule, NgClass],
+  imports: [TranslateModule, NgClass, RouterLink],
   templateUrl: './mega-menu.component.html',
   styleUrl: './mega-menu.component.css',
 })
@@ -24,6 +27,9 @@ export class MegaMenuComponent implements AfterViewInit, OnDestroy {
 
   contentHeight = 0;
   private resizeSub?: Subscription;
+
+  // Inject the language service
+  protected languageService = inject(LanguageService);
 
   ngAfterViewInit() {
     // Use setTimeout to ensure view is rendered

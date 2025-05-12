@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/service/lang/language.service';
+import { LanguageService } from '../../../../core/services/lang/language.service';
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { Category } from '../../res/home.interfaces';
 
 @Component({
   selector: 'app-sections',
@@ -27,7 +28,11 @@ export class SectionsComponent {
     });
   }
 
+  /* Get Methods */
   getImagePath(index: number): string {
     return `/images/categories/${index + 1}.png`;
   }
+
+  /* Dynamic Inputs Properties */
+  @Input({ required: true }) categories: Category[] = [];
 }

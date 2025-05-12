@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/service/lang/language.service';
+import { LanguageService } from '../../../../core/services/lang/language.service';
+import { LatestProduct } from '../../res/home.interfaces';
 import { SharedBestSellerComponent } from './components/shared-best-seller/shared-best-seller.component';
 
 @Component({
@@ -11,6 +12,8 @@ import { SharedBestSellerComponent } from './components/shared-best-seller/share
   styleUrl: './best-seller.component.css',
 })
 export class BestSellerComponent {
+  @Input({ required: true }) LatestProduct: LatestProduct[] = [];
+
   descriptions: string[] = [];
 
   _translate = inject(TranslateService);

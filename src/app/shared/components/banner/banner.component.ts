@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { BaseBannerComponent } from '@shared/ts/baseBanner';
 
 @Component({
   selector: 'app-banner',
@@ -7,8 +8,4 @@ import { Component, Input } from '@angular/core';
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.css',
 })
-export class BannerComponent {
-  @Input({ required: true }) bannerText: string = '';
-  @Input({ required: true }) showLeftSideImage: boolean = true;
-  @Input({ required: true }) showRightSideImage: boolean = true;
-}
+export class BannerComponent extends BaseBannerComponent {}

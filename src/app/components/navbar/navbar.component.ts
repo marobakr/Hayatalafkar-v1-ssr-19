@@ -18,7 +18,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { LanguageService } from '../../core/services/service/lang/language.service';
+import { LanguageService } from '../../core/services/lang/language.service';
 import { MegaMenuComponent } from '../mega-menu/mega-menu.component';
 
 @Component({
