@@ -12,4 +12,7 @@ export class ButtonComponent {
   @Input({ required: true }) px: string = '';
   @Input({ required: true }) py: string = '';
   @Input({ required: true }) type: string = '';
+  @Input() disabled: boolean = false;
+  @Input() isLoading: boolean = false;
+  @Input() ariaLabel: string | null = null;
 }

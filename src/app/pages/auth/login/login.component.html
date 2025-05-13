@@ -1,9 +1,10 @@
-<section>
+<section aria-labelledby="login-heading">
   <app-articles-header
     [title]="'auth.login.header.title' | translate"
     [subTitle]="'auth.login.header.subtitle' | translate"
     [showRotateImage]="false"
     [marginBottom]="'9'"
+    [headingId]="'login-heading'"
   ></app-articles-header>
   <div class="container mx-auto">
     <!-- Contact Us Form -->
@@ -12,8 +13,8 @@
         <div class="col-span-12 lg:col-span-8">
           <!-- Left Section: Form -->
 
-          <form [formGroup]="loginForm" (ngSubmit)="submition()">
-            <!-- Phone Number -->
+          <form [formGroup]="loginForm" (ngSubmit)="submition()" novalidate>
+            <!-- Email/Phone Number -->
             <div class="mb-[30px]">
               <label
                 for="phone-number"
@@ -25,11 +26,29 @@
                 formControlName="email"
                 type="text"
                 id="phone-number"
-                class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full rtl:text-right ltr:text-left"
+                class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full rtl:text-right ltr:text-left"
+                [class.border-red-500]="emailInvalid()"
+                [attr.aria-invalid]="emailInvalid() ? 'true' : 'false'"
+                [attr.aria-describedby]="emailInvalid() ? 'email-error' : null"
+                (blur)="onEmailBlur()"
                 [placeholder]="
                   'auth.login.login-form.phone-number-placeholder' | translate
                 "
               />
+              @if (emailInvalid()) {
+              <div
+                id="email-error"
+                class="text-red-500 mt-2 text-sm"
+                role="alert"
+                aria-live="assertive"
+              >
+                @if (email?.errors?.['required']) {
+                <span>{{ "validation.email-required" | translate }}</span>
+                } @if (email?.errors?.['email']) {
+                <span>{{ "validation.email-format" | translate }}</span>
+                }
+              </div>
+              }
             </div>
 
             <!-- Password -->
@@ -43,21 +62,54 @@
               <input
                 type="password"
                 id="password"
-                class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
+                class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+                [class.border-red-500]="passwordInvalid()"
+                [attr.aria-invalid]="passwordInvalid() ? 'true' : 'false'"
+                [attr.aria-describedby]="
+                  passwordInvalid() ? 'password-error' : null
+                "
+                (blur)="onPasswordBlur()"
                 [placeholder]="
                   'auth.login.login-form.password-placeholder' | translate
                 "
                 formControlName="password"
               />
+              @if (passwordInvalid()) {
+              <div
+                id="password-error"
+                class="text-red-500 mt-2 text-sm"
+                role="alert"
+                aria-live="assertive"
+              >
+                @if (password?.errors?.['required']) {
+                <span>{{ "validation.password-required" | translate }}</span>
+                } @if (password?.errors?.['minlength']) {
+                <span>{{ "validation.password-min-length" | translate }}</span>
+                }
+              </div>
+              }
             </div>
-
-            <app-button
-              [px]="'px-[67px]'"
-              [py]="'py-[9px]'"
-              [title]="'routes.login' | translate"
-              [type]="'submit'"
-            >
-            </app-button>
+            <div class="flex justify-between items-center">
+              <app-button
+                [px]="'px-[67px]'"
+                [py]="'py-[9px]'"
+                [title]="'routes.login' | translate"
+                [type]="'submit'"
+                [disabled]="formInvalid()"
+                [isLoading]="isLoading()"
+                [ariaLabel]="'submit-button-aria-label' | translate"
+              >
+              </app-button>
+              <a
+                [routerLink]="['/', currentLang$ | async, 'register']"
+                class="text-muted-rose text-description-size"
+                [attr.aria-label]="
+                  'auth.login.login-form.haveAccount' | translate
+                "
+              >
+                {{ "auth.login.login-form.haveAccount" | translate }}
+              </a>
+            </div>
           </form>
         </div>
         <div class="hidden lg:block lg:col-span-4">
@@ -65,8 +117,11 @@
             <img
               class="rtl:mr-auto ltr:ml-auto"
               loading="lazy"
+              width="350"
+              height="400"
+              fetchpriority="low"
               src="/images/auth/1.png"
-              alt=""
+              alt="{{ 'auth.login.login-image-alt' | translate }}"
             />
           </figure>
         </div>

@@ -37,4 +37,9 @@ export const API_CONFIG = {
     PROMO_CODE: 'Promo Code Validation',
     PLACE_ORDER: 'Place Order',
   },
+
+  AUTH: {
+    REGISTER: 'signup',
+    LOGIN: 'signin',
+  },
 };

@@ -1,6 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArticlesHeaderComponent } from '../../articles/components/articles-header/articles-header.component';
 
@@ -19,21 +24,22 @@ import { ArticlesHeaderComponent } from '../../articles/components/articles-head
   styleUrl: './register.component.css',
 })
 export class RegisterComponent implements OnInit {
-  _fb = inject(FormBuilder);
+  private _router = inject(Router);
 
-  loginForm!: FormGroup;
   ngOnInit(): void {
-    this.intiForm();
+    // By default, navigate to the personal info tab
+    // Check if we're at the root register path, then redirect to personal
+    if (this._router.url.endsWith('/register')) {
+      // this._router.navigate(['register/personal']);
+    }
   }
 
-  intiForm() {
-    this.loginForm = this._fb.group({
-      email: [''],
-      password: [''],
-    });
-  }
-
-  submition() {
-    console.log(this.loginForm.value);
+  /**
+   * Checks if the given route segment is active
+   * @param route The route segment to check
+   * @returns True if the route is active
+   */
+  isRouteActive(route: string): boolean {
+    return this._router.url.includes(route);
   }
 }

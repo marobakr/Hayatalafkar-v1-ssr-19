@@ -23,12 +23,7 @@ export class HtmlSanitizerService {
     'li',
     'a',
     'em',
-    'strong',
     'img',
-    'table',
-    'tr',
-    'td',
-    'th',
   ];
 
   private allowedAttributes: string[] = [

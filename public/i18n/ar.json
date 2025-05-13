@@ -665,6 +665,9 @@
     "email-required": "البريد الإلكتروني مطلوب",
     "email-format": "البريد الإلكتروني غير صالح",
     "your-msg-required": "رسالة المستخدم مطلوبة",
-    "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف"
-  }
+    "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف",
+    "password-required": "كلمة المرور مطلوبة",
+    "password-min-length": "كلمة المرور يجب أن تكون أطول من 6 أحرف"
+  },
+  "submit-button-aria-label": "إرسال البيانات"
 }

@@ -665,6 +665,9 @@
     "email-required": "Email is required",
     "email-format": "Email must be a valid email address",
     "your-msg-required": "Your message is required",
-    "your-msg-min-length": "Your message must be at least 10 characters long"
-  }
+    "your-msg-min-length": "Your message must be at least 10 characters long",
+    "password-required": "Password is required",
+    "password-min-length": "Password must be at least 6 characters long"
+  },
+  "submit-button-aria-label": "submit button"
 }
