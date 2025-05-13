@@ -1,6 +1,9 @@
 <div class="container mx-auto mt-3 mb-{{ marginBottom }}">
-  <div class="header p-9 text-center rounded-2xl relative">
-    <h1 class="text-title-size font-bold text-white mb-3 capitalize">
+  <div class="header p-9 text-center rounded-2xl relative" role="banner">
+    <h1
+      id="{{ headingId }}"
+      class="text-title-size font-bold text-white mb-3 capitalize"
+    >
       {{ title }}
     </h1>
     <p class="text-white text-description-size">
@@ -12,9 +15,13 @@
     >
       <img
         loading="lazy"
+        width="73"
+        height="73"
         class="max-w-[73px]"
         src="/images/common/rotate.gif"
-        alt="rotate image "
+        alt="Rotating animation"
+        fetchpriority="low"
+        aria-hidden="true"
       />
     </figure>
     }

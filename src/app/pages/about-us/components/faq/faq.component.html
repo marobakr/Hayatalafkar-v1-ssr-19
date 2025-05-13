@@ -16,45 +16,25 @@
       <!-- Right Card -->
       <div class="md:col-span-2">
         <flowbite-accordion>
-          @for (item of faqItems(); track item.id) {
-          <flowbite-accordion-panel [isOpen]="item.isOpen" class="mb-[17px]">
+          @for (faq of faqs; track faq.id) {
+          <flowbite-accordion-panel [isOpen]="false" class="mb-[17px]">
             <flowbite-accordion-title
               class="p-5 mb-8 rounded-[15px] border border-[rgba(141,141,141,0.00)] bg-white shadow-md shadow-[rgba(0,0,0,0.25)]"
             >
               <div class="flex items-center justify-between w-full">
                 <span class="text-black text-subtitle-size font-medium">
-                  {{ item.title | translate }}
+                  <app-safe-html
+                    [content]="faq | customTranslate : 'title'"
+                  ></app-safe-html>
                 </span>
-                <!-- <figure class="max-w-[24px] max-h-[24px]">
-                  <img
-                    class="w-full h-auto"
-                    loading="lazy"
-                    [src]="
-                      item.isOpen
-                        ? '/images/whoWeAre/close.webp'
-                        : '/images/whoWeAre/open.webp'
-                    "
-                    alt=""
-                  />
-                </figure> -->
               </div>
             </flowbite-accordion-title>
             <flowbite-accordion-content class="border-t-0">
-              <p class="mb-2 text-gray-500">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quibusdam in facere laudantium, incidunt hic vero quaerat, modi
-                quisquam doloremque eius ea quis quod illum commodi dolor
-                excepturi expedita placeat at asperiores numquam voluptatum?
-                Mollitia non sunt ipsa accusamus harum inventore, iste vel
-                exercitationem? Tenetur error ad tempore necessitatibus dicta.
-                Consequuntur. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Quibusdam in facere laudantium, incidunt hic vero quaerat,
-                modi quisquam doloremque eius ea quis quod illum commodi dolor
-                excepturi expedita placeat at asperiores numquam voluptatum?
-                Mollitia non sunt ipsa accusamus harum inventore, iste vel
-                exercitationem? Tenetur error ad tempore necessitatibus dicta.
-                Consequuntur.
-              </p>
+              <div class="mb-2 text-gray-500">
+                <app-safe-html
+                  [content]="faq | customTranslate : 'text'"
+                ></app-safe-html>
+              </div>
             </flowbite-accordion-content>
           </flowbite-accordion-panel>
           }
@@ -70,7 +50,7 @@
             class="max-w-[45px] max-h-[45px]"
             loading="lazy"
             src="/images/whoWeAre/10.webp"
-            alt=""
+            alt="FAQ section icon"
           />
         </figure>
         <h3 class="text-black text-subtitle-size mb-[15px]">
@@ -80,6 +60,7 @@
           {{ "FAQ.card.description" | translate }}
         </p>
         <app-arrow-button
+          [pathLink]="'contact-us'"
           [gap]="'5px'"
           [px]="'4'"
           [py]="'2'"

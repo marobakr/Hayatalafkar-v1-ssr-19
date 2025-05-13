@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [],
+  imports: [SafeHtmlComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

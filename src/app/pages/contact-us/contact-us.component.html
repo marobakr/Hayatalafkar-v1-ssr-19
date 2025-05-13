@@ -45,16 +45,19 @@
                   autocomplete="name"
                   aria-required="true"
                 />
-                @if (contactForm.get('name')?.touched &&
-                contactForm.get('name')?.errors) {
-                <div class="text-red-500 text-sm mt-1" aria-live="polite">
-                  @if (contactForm.get('name')?.errors?.['required']) {
-                  <span>{{ "validation.name-required" | translate }}</span>
-                  } @else if (contactForm.get('name')?.errors?.['minlength']) {
-                  <span>{{ "validation.name-min-length" | translate }}</span>
+                <div class="min-h-[24px]">
+                  @if (contactForm.get('name')?.touched &&
+                  contactForm.get('name')?.errors) {
+                  <div class="text-red-500 text-sm mt-1" aria-live="polite">
+                    @if (contactForm.get('name')?.errors?.['required']) {
+                    <span>{{ "validation.name-required" | translate }}</span>
+                    } @else if (contactForm.get('name')?.errors?.['minlength'])
+                    {
+                    <span>{{ "validation.name-min-length" | translate }}</span>
+                    }
+                  </div>
                   }
                 </div>
-                }
               </div>
             </div>
 
@@ -79,16 +82,18 @@
                 autocomplete="tel"
                 aria-required="true"
               />
-              @if (contactForm.get('phone')?.touched &&
-              contactForm.get('phone')?.errors) {
-              <div class="text-red-500 text-sm mt-1" aria-live="polite">
-                @if (contactForm.get('phone')?.errors?.['required']) {
-                <span>{{ "validation.phone-required" | translate }}</span>
-                } @else if (contactForm.get('phone')?.errors?.['pattern']) {
-                <span>{{ "validation.phone-format" | translate }}</span>
+              <div class="min-h-[24px]">
+                @if (contactForm.get('phone')?.touched &&
+                contactForm.get('phone')?.errors) {
+                <div class="text-red-500 text-sm mt-1" aria-live="polite">
+                  @if (contactForm.get('phone')?.errors?.['required']) {
+                  <span>{{ "validation.phone-required" | translate }}</span>
+                  } @else if (contactForm.get('phone')?.errors?.['pattern']) {
+                  <span>{{ "validation.phone-format" | translate }}</span>
+                  }
+                </div>
                 }
               </div>
-              }
             </div>
 
             <!-- Email -->
@@ -110,16 +115,18 @@
                 autocomplete="email"
                 aria-required="true"
               />
-              @if (contactForm.get('email')?.touched &&
-              contactForm.get('email')?.errors) {
-              <div class="text-red-500 text-sm mt-1" aria-live="polite">
-                @if (contactForm.get('email')?.errors?.['required']) {
-                <span>{{ "validation.email-required" | translate }}</span>
-                } @else if (contactForm.get('email')?.errors?.['email']) {
-                <span>{{ "validation.email-format" | translate }}</span>
+              <div class="min-h-[24px]">
+                @if (contactForm.get('email')?.touched &&
+                contactForm.get('email')?.errors) {
+                <div class="text-red-500 text-sm mt-1" aria-live="polite">
+                  @if (contactForm.get('email')?.errors?.['required']) {
+                  <span>{{ "validation.email-required" | translate }}</span>
+                  } @else if (contactForm.get('email')?.errors?.['email']) {
+                  <span>{{ "validation.email-format" | translate }}</span>
+                  }
+                </div>
                 }
               </div>
-              }
             </div>
 
             <!-- Your Msg -->
@@ -143,16 +150,21 @@
                 "
                 aria-required="true"
               ></textarea>
-              @if (contactForm.get('message')?.touched &&
-              contactForm.get('message')?.errors) {
-              <div class="text-red-500 text-sm mt-1" aria-live="polite">
-                @if (contactForm.get('message')?.errors?.['required']) {
-                <span>{{ "validation.your-msg-required" | translate }}</span>
-                } @else if (contactForm.get('message')?.errors?.['minlength']) {
-                <span>{{ "validation.your-msg-min-length" | translate }}</span>
+              <div class="min-h-[24px]">
+                @if (contactForm.get('message')?.touched &&
+                contactForm.get('message')?.errors) {
+                <div class="text-red-500 text-sm mt-1" aria-live="polite">
+                  @if (contactForm.get('message')?.errors?.['required']) {
+                  <span>{{ "validation.your-msg-required" | translate }}</span>
+                  } @else if (contactForm.get('message')?.errors?.['minlength'])
+                  {
+                  <span>{{
+                    "validation.your-msg-min-length" | translate
+                  }}</span>
+                  }
+                </div>
                 }
               </div>
-              }
             </div>
 
             <app-arrow-button
@@ -174,9 +186,9 @@
           </form>
         </div>
         <div class="hidden lg:block lg:col-span-4">
-          <figure>
+          <figure class="relative aspect-[2/3] w-full">
             <img
-              class="w-full h-auto"
+              class="w-full h-full object-cover"
               loading="lazy"
               width="400"
               height="600"
@@ -189,100 +201,108 @@
     </div>
 
     <!-- Contact Cards Details -->
-    @if (contactUs()) {
-    <div class="grid md:grid-cols-12 gap-[30px]">
-      <!-- Maps Cards -->
-      <div class="md:col-span-6 lg:col-span-4">
-        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
-          <figure
-            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
+    <div class="min-h-[350px]">
+      @if (contactUs()) {
+      <div class="grid md:grid-cols-12 gap-[30px]">
+        <!-- Maps Cards -->
+        <div class="md:col-span-6 lg:col-span-4">
+          <div
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
           >
-            <img
-              loading="lazy"
-              width="30"
-              height="30"
-              class="max-w-[30px]"
-              src="/images/contact-us/maps.webp"
-              alt="{{ 'contact-us.cards.maps-card.alt' | translate }}"
-            />
-          </figure>
+            <figure
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+            >
+              <img
+                loading="lazy"
+                width="30"
+                height="30"
+                class="w-[30px] h-[30px]"
+                src="/images/contact-us/maps.webp"
+                alt="{{ 'contact-us.cards.maps-card.alt' | translate }}"
+              />
+            </figure>
 
-          <h3
-            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+            <h3
+              class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+            >
+              {{ "contact-us.cards.maps-card.title" | translate }}
+            </h3>
+
+            <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
+              {{ "contact-us.cards.maps-card.subTitle" | translate }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Call Cards -->
+        <div class="md:col-span-6 lg:col-span-4">
+          <div
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
           >
-            {{ "contact-us.cards.maps-card.title" | translate }}
-          </h3>
+            <figure
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+            >
+              <img
+                loading="lazy"
+                width="30"
+                height="30"
+                class="w-[30px] h-[30px]"
+                src="/images/contact-us/call.webp"
+                alt="{{ 'contact-us.cards.call-card.alt' | translate }}"
+              />
+            </figure>
 
-          <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
-            {{ "contact-us.cards.maps-card.subTitle" | translate }}
-          </p>
+            <h3
+              class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+            >
+              {{ "contact-us.cards.call-card.title" | translate }}
+            </h3>
+
+            <address
+              class="text-[#333] text-category-size font-light mt-5 mb-[55px] not-italic"
+            >
+              {{
+                contactUs().phone || "contact-us.cards.call-card.subTitle"
+                  | translate
+              }}
+            </address>
+          </div>
+        </div>
+
+        <!-- Msg Cards -->
+        <div class="md:col-span-6 lg:col-span-4">
+          <div
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
+          >
+            <figure
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+            >
+              <img
+                loading="lazy"
+                width="30"
+                height="30"
+                class="w-[30px] h-[30px]"
+                src="/images/contact-us/msg.webp"
+                alt="{{ 'contact-us.cards.msg-card.alt' | translate }}"
+              />
+            </figure>
+
+            <h3
+              class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
+            >
+              {{ "contact-us.cards.msg-card.title" | translate }}
+            </h3>
+
+            <address
+              class="text-[#333] text-category-size font-light mt-5 mb-[55px] not-italic"
+            >
+              {{ contactUs().email || "example@gmail.com" }}
+            </address>
+          </div>
         </div>
       </div>
-
-      <!-- Call Cards -->
-      <div class="md:col-span-6 lg:col-span-4">
-        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
-          <figure
-            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
-          >
-            <img
-              loading="lazy"
-              width="30"
-              height="30"
-              class="max-w-[30px]"
-              src="/images/contact-us/call.webp"
-              alt="{{ 'contact-us.cards.call-card.alt' | translate }}"
-            />
-          </figure>
-
-          <h3
-            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
-          >
-            {{ "contact-us.cards.call-card.title" | translate }}
-          </h3>
-
-          <address
-            class="text-[#333] text-category-size font-light mt-5 mb-[55px] not-italic"
-          >
-            {{
-              contactUs().phone || "contact-us.cards.call-card.subTitle"
-                | translate
-            }}
-          </address>
-        </div>
-      </div>
-
-      <!-- Msg Cards -->
-      <div class="md:col-span-6 lg:col-span-4">
-        <div class="border border-[#8D8D8D] rounded-[15px] text-center">
-          <figure
-            class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto"
-          >
-            <img
-              loading="lazy"
-              width="30"
-              height="30"
-              class="max-w-[30px]"
-              src="/images/contact-us/msg.webp"
-              alt="{{ 'contact-us.cards.msg-card.alt' | translate }}"
-            />
-          </figure>
-
-          <h3
-            class="mt-[27px] text-black text-subtitle-size font-bold capitalize"
-          >
-            {{ "contact-us.cards.msg-card.title" | translate }}
-          </h3>
-
-          <address
-            class="text-[#333] text-category-size font-light mt-5 mb-[55px] not-italic"
-          >
-            {{ contactUs().email || "example@gmail.com" }}
-          </address>
-        </div>
-      </div>
+      }
     </div>
-    }
   </div>
 
   @if (breaks().length > 0) {
@@ -299,7 +319,7 @@
       <h2 id="service-features" class="sr-only">
         {{ "contact-us.services.heading" | translate }}
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 min-h-[200px]">
         @for (feature of features() | customTranslate; track feature.id) {
         <app-service-card
           [cardDescription]="feature.text"

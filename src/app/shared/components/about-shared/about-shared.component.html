@@ -8,7 +8,12 @@
     <!-- Image Column -->
     <div class="hidden lg:flex flex-col justify-between flex-grow-1">
       <figure>
-        <img [src]="getImageUrl(aboutUs.main_image)" alt="" />
+        <img
+          loading="lazy"
+          src="https://digitalbondmena.com/mesoshop/uploads/about/1744811586d5JAxZe3CX.webp"
+          alt="About us main image"
+        />
+        <!-- <img [src]="getImageUrl(aboutUs.main_image)" alt="" /> -->
       </figure>
 
       <!-- Static  -->
@@ -97,7 +102,6 @@
 
         }
       </div>
-
       <!-- Slogan -->
       @if (showSloganText) {
       <app-slogan

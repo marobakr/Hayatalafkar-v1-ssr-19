@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
-
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { LanguageService } from '@core/services/lang/language.service';
 @Component({
   selector: 'app-arrow-button',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './arrow-button.component.html',
   styleUrl: './arrow-button.component.css',
 })
@@ -18,4 +20,8 @@ export class ArrowButtonComponent {
   @Input({ required: true }) color: string = '';
   @Input({ required: true }) image: string = '';
   @Input() disabled: boolean = false;
+
+  @Input() pathLink: string = '';
+
+  currentLang$ = inject(LanguageService).getLanguage();
 }

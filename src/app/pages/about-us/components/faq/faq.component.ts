@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
 import {
@@ -8,14 +10,8 @@ import {
   AccordionPanelComponent,
   AccordionTitleComponent,
 } from 'flowbite-angular/accordion';
-
-interface FAQItem {
-  id: string;
-  title: string;
-  content: string;
-  isOpen: boolean;
-}
-
+import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
+import { IFaq } from '../../res/about-us.interface';
 @Component({
   selector: 'app-faq',
   templateUrl: './faq.component.html',
@@ -29,27 +25,11 @@ interface FAQItem {
     AccordionPanelComponent,
     AccordionContentComponent,
     AccordionTitleComponent,
+    SafeHtmlComponent,
+    CustomTranslatePipe,
+    RouterLink,
   ],
 })
 export class FAQComponent {
-  faqItems = signal<FAQItem[]>([
-    {
-      id: 'faq-1',
-      title: 'FAQ.Accordions.Accordion-1',
-      content: 'FAQ.Accordions.Accordion-1',
-      isOpen: false,
-    },
-    {
-      id: 'faq-2',
-      title: 'FAQ.Accordions.Accordion-2',
-      content: 'FAQ.Accordions.Accordion-2',
-      isOpen: false,
-    },
-    {
-      id: 'faq-3',
-      title: 'FAQ.Accordions.Accordion-3',
-      content: 'FAQ.Accordions.Accordion-3',
-      isOpen: false,
-    },
-  ]);
+  @Input() faqs: IFaq[] = [];
 }
