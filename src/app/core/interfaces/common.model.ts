@@ -7,17 +7,19 @@ export interface IQuotes {
   updated_at: string;
 }
 
-export interface ICategory {
+export interface Category {
   id: number;
   en_name: string;
   ar_name: string;
   en_slug: string;
   ar_slug: string;
   active_status: number;
-  main_image?: string;
+  main_image: string;
   order_view: number;
   created_at: string;
   updated_at: string;
+}
+export interface ICategory extends Category {
   subcategories: ISubcategory[];
 }
 
@@ -30,6 +32,16 @@ export interface ISubcategory {
   ar_slug: string;
   active_status: number;
   order_view: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Locations {
+  id: number;
+  en_name: string;
+  ar_name: string;
+  delivery_amount: string;
+  active_status: boolean;
   created_at: string;
   updated_at: string;
 }

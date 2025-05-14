@@ -15,7 +15,7 @@
       </label>
       <input
         type="text"
-        id="firstName"
+        formControlName="firstName"
         class="bg-white capo border border-[#8D8D8D] rounded-[15px] capitalize rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="'contact-us.form.placeholder-first-name' | translate"
       />
@@ -30,6 +30,7 @@
       </label>
       <input
         type="text"
+        formControlName="lastName"
         id="last-name"
         class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="'contact-us.form.placeholder-last-name' | translate"
@@ -47,6 +48,7 @@
     </label>
     <input
       type="text"
+      formControlName="phoneNumber"
       id="phone-number"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full rtl:text-right ltr:text-left"
       [placeholder]="'contact-us.form.placeholder-phone-number' | translate"
@@ -63,7 +65,8 @@
     </label>
     <input
       type="email"
-      id="firstName"
+      formControlName="email"
+      id="email"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="'contact-us.form.placeholder-email' | translate"
     />

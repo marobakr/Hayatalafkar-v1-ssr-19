@@ -80,3 +80,34 @@
 .empty-cart:hover svg {
   transform: scale(1.05);
 }
+
+/* Primary and primary-dark colors */
+:host {
+  --primary: #a4907c; /* Warm-tan color from the existing design */
+  --primary-dark: #8a7a68;
+}
+
+/* Apply custom colors to Tailwind classes */
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.hover\:bg-primary-dark:hover {
+  background-color: var(--primary-dark);
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--primary);
+}
+
+/* Sticky order summary */
+@media (min-width: 1024px) {
+  .sticky {
+    position: sticky;
+    top: 2rem;
+  }
+}

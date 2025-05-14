@@ -7,11 +7,26 @@ interface TokenData {
   expiresAt: number;
 }
 
+export interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  admin_status: number;
+  verify_status: number;
+  deactive_status: number;
+  delete_status: number;
+  created_at: string;
+  updated_at: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthStorageService {
   private readonly TOKEN_KEY = 'auth_token';
+  private readonly USER_DATA_KEY = 'user_data';
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
 
@@ -25,6 +40,32 @@ export class AuthStorageService {
     const expiresAt = new Date().getTime() + expiresIn * 1000;
     const tokenData: TokenData = { token, expiresAt };
     localStorage.setItem(this.TOKEN_KEY, JSON.stringify(tokenData));
+  }
+
+  saveUserData(userData: UserData): void {
+    if (!this.isBrowser) return;
+
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(userData));
+  }
+
+  getUserData(): UserData | null {
+    if (!this.isBrowser) return null;
+
+    const userDataStr = localStorage.getItem(this.USER_DATA_KEY);
+    if (!userDataStr) return null;
+
+    try {
+      return JSON.parse(userDataStr);
+    } catch (error) {
+      this.removeUserData();
+      return null;
+    }
+  }
+
+  removeUserData(): void {
+    if (!this.isBrowser) return;
+
+    localStorage.removeItem(this.USER_DATA_KEY);
   }
 
   getToken(): string | null {
@@ -61,6 +102,7 @@ export class AuthStorageService {
 
   logout(): void {
     this.removeToken();
+    this.removeUserData();
     if (this.isBrowser) {
       this.router.navigate(['/']);
     }

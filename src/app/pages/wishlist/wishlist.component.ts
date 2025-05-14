@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
@@ -50,6 +51,7 @@ import { ArticlesHeaderComponent } from '../articles/components/articles-header/
 export class WishlistComponent {
   _translate = inject(TranslateService);
   _languageService = inject(LanguageService);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   productsItem: string[] = [];
   cartAnimationStates: { [key: number]: boolean } = {};
@@ -73,6 +75,11 @@ export class WishlistComponent {
   }
 
   removeAllItems() {
+    if (!this.isBrowser) {
+      this.productsItem = [];
+      return;
+    }
+
     const items = document.querySelectorAll('.wishlist-item');
     items.forEach((item, index) => {
       setTimeout(() => {

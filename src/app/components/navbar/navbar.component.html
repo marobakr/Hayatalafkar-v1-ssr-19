@@ -22,7 +22,7 @@
     <!-- Mobile Menu Toggle -->
     <button
       (click)="toggleMobileMenu()"
-      class="cursor-pointer capitalize text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 xl:hidden"
+      class="capitalize text-muted-rose hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 xl:hidden"
       [attr.aria-expanded]="isMenuOpen"
       [attr.aria-label]="'navbar.toggle_menu' | translate"
     >
@@ -70,7 +70,7 @@
               {{ "navbar.pages_Title.products.title" | translate }}
             </button>
             @if (showMegaMenu) {
-            <app-mega-menu></app-mega-menu>
+            <app-mega-menu (closeMenu)="showMegaMenu = false"></app-mega-menu>
             }
           </li>
 
@@ -270,10 +270,11 @@
               </figure>
             </a>
           </li>
-
+          <!-- PROFILE -->
           <li class="cursor-pointer" role="menuitem">
             <a
-              [routerLink]="['/', currentLang$ | async, 'profile']"
+              [href]="'/' + (currentLang$ | async) + '/profile'"
+              (click)="navigateToProfile(); $event.preventDefault()"
               class="block py-2 px-3 xl:p-0"
               [attr.aria-label]="'navbar.profile' | translate"
             >
@@ -286,6 +287,23 @@
                 />
               </figure>
             </a>
+          </li>
+          <!-- Add logout button for authenticated users -->
+          <li class="cursor-pointer" role="menuitem" *ngIf="isAuthenticated()">
+            <button
+              (click)="logout()"
+              class="block py-2 px-3 xl:p-0"
+              [attr.aria-label]="'navbar.logout' | translate"
+            >
+              <figure class="max-w-[25px] max-h-[25px]">
+                <img
+                  src="/images/navbar/logout.svg"
+                  width="25"
+                  height="25"
+                  alt="Logout"
+                />
+              </figure>
+            </button>
           </li>
         </ul>
       </div>
@@ -384,8 +402,10 @@
         </button>
         @if (showMobileProductsMenu) {
         <div class="mt-2 ml-4 space-y-2">
-          <!-- Replace with actual mega menu content -->
-          <app-mega-menu [isMobile]="true"></app-mega-menu>
+          <app-mega-menu
+            [isMobile]="true"
+            (closeMenu)="showMobileProductsMenu = false"
+          ></app-mega-menu>
         </div>
         }
       </li>
@@ -469,18 +489,20 @@
 
       <!-- Profile Links Mobile -->
       <li class="border-t border-gray-200 pt-4 mt-4">
-        <ul class="flex flex-row space-x-2">
+        <ul class="flex flex-row space-x-2 justify-between items-center">
+          <!-- PROFILE -->
           <li>
             <a
-              [routerLink]="['/', currentLang$ | async, 'profile']"
+              [href]="'/' + (currentLang$ | async) + '/profile'"
+              (click)="
+                navigateToProfile(); toggleMobileMenu(); $event.preventDefault()
+              "
               class="flex items-center space-x-2 rtl:space-x-reverse py-2"
-              (click)="toggleMobileMenu()"
             >
-              <figure class="w-5 h-5">
+              <figure>
                 <img
-                  ngSrc="/images/navbar/4.webp"
-                  width="20"
-                  height="20"
+                  src="/images/navbar/4.webp"
+                  class="w-[30px]"
                   alt="Profile"
                 />
               </figure>
@@ -493,11 +515,10 @@
               class="flex items-center space-x-2 rtl:space-x-reverse py-2"
               (click)="toggleMobileMenu()"
             >
-              <figure class="w-5 h-5">
+              <figure>
                 <img
-                  ngSrc="/images/navbar/6.webp"
-                  width="20"
-                  height="20"
+                  src="/images/navbar/6.webp"
+                  class="w-[30px]"
                   alt="Wishlist"
                 />
               </figure>
@@ -510,17 +531,33 @@
               class="flex items-center space-x-2 rtl:space-x-reverse py-2"
               (click)="toggleMobileMenu()"
             >
-              <figure class="w-5 h-5">
-                <img
-                  ngSrc="/images/navbar/7.webp"
-                  width="20"
-                  height="20"
-                  alt="Cart"
-                />
+              <figure>
+                <img src="/images/navbar/7.webp" class="w-[30px]" alt="Cart" />
               </figure>
             </a>
           </li>
         </ul>
+      </li>
+
+      <li class="border-t border-gray-200 pt-4 mt-4">
+        @if (isAuthenticated()) {
+          <!-- Add this to the mobile menu -->
+          <li class="mt-4">
+            <button
+              [attr.aria-label]="'navbar.logout' | translate"
+              (click)="logout()"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2 text-black font-bold"
+            >
+              <figure>
+                <img
+                  src="/images/navbar/logout.svg"
+                  class="w-[30px]"
+                  alt="Logout"
+                />
+              </figure>
+            </button>
+          </li>
+          }
       </li>
     </ul>
   </div>

@@ -78,6 +78,7 @@
     },
     "sidebar": {
       "new-products": "الأكثر مبيعًا",
+      "new-products-title": "المنتجات الجديدة",
       "newProducts": {
         "product-1": {
           "dates": "23 يناير 2025",
@@ -139,15 +140,15 @@
               "label": "البريد الالكترونى ",
               "placeholder": "اكتب بريدك الالكترونى"
             },
-            "firstName": {
+            "first_name": {
               "label": "الاسم الاول ",
               "placeholder": "قم بكتابة اسمك الاساسى"
             },
-            "lastName": {
+            "last_name": {
               "label": "الاسم الاخير ",
               "placeholder": "قم بكتابة اسمك الاخير"
             },
-            "phoneNumber": {
+            "phone": {
               "label": "رقم الهاتف ",
               "placeholder": "يجب إدخال رقم الهاتف الصحيح"
             },
@@ -156,7 +157,39 @@
               "placeholder": "قم بإدخال الرمز البريدى الخاص بدولتك"
             }
           },
-          "title": "اضافة عنوان جديد"
+          "title": "اضافة عنوان جديد",
+          "validation": {
+            "first_name": {
+              "required": "الاسم الأول مطلوب"
+            },
+            "last_name": {
+              "required": "اسم العائلة مطلوب"
+            },
+            "address": {
+              "required": "العنوان مطلوب"
+            },
+            "city": {
+              "required": "المدينة مطلوبة"
+            },
+            "state": {
+              "required": "المنطقة مطلوبة"
+            },
+            "country": {
+              "required": "الدولة مطلوبة"
+            },
+            "phone": {
+              "required": "رقم الهاتف مطلوب",
+              "pattern": "يرجى إدخال رقم هاتف صالح"
+            },
+            "email": {
+              "required": "البريد الإلكتروني مطلوب",
+              "invalid": "يرجى إدخال عنوان بريد إلكتروني صالح"
+            },
+            "postalCode": {
+              "required": "الرمز البريدي مطلوب",
+              "pattern": "يرجى إدخال رمز بريدي صالح"
+            }
+          }
         },
         "password": {
           "button": "اضافة كلمة المرور",
@@ -187,6 +220,8 @@
   },
   "availability": "التوافر",
   "unavailability": "غير متوفر",
+  "page": "الصفحة",
+  "of": "من",
   "banner": {
     "banner-about-us-1": " نؤمن بأن الجمال يبدأ من العناية، ولهذا نقدم لكِ مستحضرات مصممة لتعزيز إشراقتك الطبيعية بثقة. ",
     "banner-about-us-2": " لأن جمالك فريد، نوفر لكِ مستحضرات تجميل تجمع بين الفخامة والجودة لتمنحكِ تألقًا يدوم. ",
@@ -333,9 +368,11 @@
   "navbar": {
     "languages": {
       "ar": "العربية",
-      "en": "الانجليزية",
+      "en": "الإنجليزية",
       "lang": "اللغة"
     },
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
     "pages_Title": {
       "articles": {
         "title": "المقالات"
@@ -344,18 +381,20 @@
         "title": "تواصل معنا"
       },
       "home": {
-        "title": "الصفحة الرئيسية"
+        "title": "الرئيسية"
       },
       "products": {
         "title": "المنتجات"
       },
       "shopping_now": {
-        "title": "تسوق الان"
+        "title": "تسوق الآن"
       },
       "who_we_are": {
         "title": "من نحن"
       }
-    }
+    },
+    "search": "بحث",
+    "search_placeholder": "ابحث عن المنتجات..."
   },
   "newProducts": {
     "alt-description": " بشرة مشرقة و نضارة فائقة",
@@ -419,16 +458,60 @@
     "order-status": "حالة الطلب",
     "value": "تم الشحن"
   },
-  "profile.password": {
-    "confirm-password": "تاكيد كلمة المرور الجديدة",
-    "current-password": "كلمة المرور الحالية",
-    "new-password": "كلمة المرور الجديدة",
-    "placeholder-confirm-password": "تاكيد كلمة المرور الجديدة",
-    "placeholder-current-password": "ادخل كلمة المرور الحالية",
-    "placeholder-new-password": "ادخل كلمة المرور الجديدة",
-    "update": "تحديث كلمة المرور"
+  "profile": {
+    "title": "ملفي الشخصي",
+    "subtitle": "تابع ملفك الشخصي وسجل بياناتك",
+    "tabs": {
+      "profile": "البيانات الشخصية",
+      "orders": "طلباتي",
+      "address": "إدارة العناوين",
+      "account": "إدارة الحساب"
+    },
+    "password": {
+      "confirm-password": "تأكيد كلمة المرور",
+      "current-password": "كلمة المرور الحالية",
+      "new-password": "كلمة المرور الجديدة",
+      "placeholder-confirm-password": "تأكيد كلمة المرور الجديدة",
+      "placeholder-current-password": "أدخل كلمة المرور الحالية",
+      "placeholder-new-password": "أدخل كلمة المرور الجديدة",
+      "update": "تحديث كلمة المرور"
+    },
+    "address": {
+      "success_title": "تم بنجاح",
+      "error_title": "خطأ",
+      "validation_title": "خطأ في التحقق",
+      "info_title": "معلومات",
+      "address_added_success": "تمت إضافة العنوان بنجاح",
+      "address_error": "خطأ في إضافة العنوان",
+      "form_invalid": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
+      "user_info_error": "خطأ في جلب معلومات المستخدم",
+      "form_reset": "تم إعادة تعيين النموذج",
+      "locations_error": "خطأ في جلب المواقع"
+    }
   },
-  "profile.subtitle": "تابع ملفك الشخصى و قم بتسجيل بياناتك",
+  "profile.orders": {
+    "title": "طلباتي",
+    "order_number": "رقم الطلب",
+    "date": "التاريخ",
+    "total": "المجموع",
+    "payment_method": "طريقة الدفع",
+    "items": "العناصر",
+    "view_details": "عرض التفاصيل",
+    "no_orders": {
+      "title": "لا توجد طلبات حتى الآن",
+      "message": "لم تقم بإجراء أي طلبات حتى الآن"
+    },
+    "start_shopping": "ابدأ التسوق"
+  },
+  "account_management": {
+    "title": "إدارة الحساب",
+    "deactivate_title": "تعطيل الحساب",
+    "deactivate_description": "تعطيل حسابك مؤقتًا. يمكنك إعادة تنشيطه لاحقًا عن طريق تسجيل الدخول مرة أخرى.",
+    "deactivate_button": "تعطيل الحساب",
+    "delete_title": "حذف الحساب",
+    "delete_description": "حذف حسابك وجميع البيانات المرتبطة به بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
+    "delete_button": "حذف الحساب"
+  },
   "reorder": "اعاده طلب الاوردر",
   "routes": {
     "about": "من نحن",
@@ -481,10 +564,13 @@
       },
       "price": {
         "currency": "ر.س ",
-        "title": "السعر"
+        "title": "السعر",
+        "reset": "إعادة ضبط"
       },
       "products-counts": "مشاهدة 1 - 15 منتج من 3440",
-      "selected-filter": "اختيارات الفلتر"
+      "selected-filter": "اختيارات الفلتر",
+      "items": "منتج",
+      "active": "مفعّل"
     },
     "filter-box": {
       "filterItems": [
@@ -662,12 +748,20 @@
     "name-min-length": "اسم يجب أن يكون أطول من 3 أحرف",
     "phone-required": "رقم الهاتف مطلوب",
     "phone-format": "رقم الهاتف غير صالح",
-    "email-required": "البريد الإلكتروني مطلوب",
-    "email-format": "البريد الإلكتروني غير صالح",
+    "email-required": "البريد الإلكتروني أو رقم الهاتف مطلوب",
+    "email-format": "البريد الإلكتروني أو رقم الهاتف غير صالح",
     "your-msg-required": "رسالة المستخدم مطلوبة",
     "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف",
     "password-required": "كلمة المرور مطلوبة",
-    "password-min-length": "كلمة المرور يجب أن تكون أطول من 6 أحرف"
+    "password-min-length": "كلمة المرور يجب أن تكون أطول من 6 أحرف",
+    "password-mismatch": "كلمة المرور غير متطابقة"
   },
-  "submit-button-aria-label": "إرسال البيانات"
+  "submit-button-aria-label": "إرسال البيانات",
+  "blogs": {
+    "title": "اخبار & مقالات ذات صلة"
+  },
+  "privacy": {
+    "title": "سياسة الخصوصية"
+  },
+  "reset.form": "إعادة تعيين النموذج"
 }

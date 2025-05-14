@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, JsonPipe, NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -25,6 +25,7 @@ import { ArticlesHeaderComponent } from '../../articles/components/articles-head
     AsyncPipe,
     RouterLink,
     NgClass,
+    JsonPipe,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -43,15 +44,27 @@ export class LoginComponent implements OnInit {
   // Form state signals
   emailTouched = signal(false);
   passwordTouched = signal(false);
+  formSubmitted = signal(false);
 
   // Computed values for validation state
-  emailInvalid = computed(() => this.email?.invalid && this.emailTouched());
+  emailInvalid = computed(() => {
+    // Only show validation errors if the field has been interacted with
+    // or the form has been submitted
+    if (!this.email) return false;
+    if (!(this.emailTouched() || this.formSubmitted())) return false;
+    return this.email.invalid;
+  });
 
-  passwordInvalid = computed(
-    () => this.password?.invalid && this.passwordTouched()
-  );
+  passwordInvalid = computed(() => {
+    // Only show validation errors if the field has been interacted with
+    // or the form has been submitted
+    if (!this.password) return false;
+    if (!(this.passwordTouched() || this.formSubmitted())) return false;
+    return this.password.invalid;
+  });
 
-  formInvalid = computed(() => this.loginForm?.invalid || this.isLoading());
+  // Simple computed value for form validation - kept for future use
+  formInvalid = computed(() => this.loginForm?.invalid ?? false);
 
   ngOnInit(): void {
     this.initForm();
@@ -65,6 +78,8 @@ export class LoginComponent implements OnInit {
   }
 
   submition() {
+    this.formSubmitted.set(true);
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       this.emailTouched.set(true);

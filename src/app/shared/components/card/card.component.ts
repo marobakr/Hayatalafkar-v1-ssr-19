@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { ImageUrlDirective } from '@core/directives/image-url.directive';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [],
+  imports: [ImageUrlDirective],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

@@ -12,7 +12,6 @@
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 lg:col-span-8">
           <!-- Left Section: Form -->
-
           <form [formGroup]="loginForm" (ngSubmit)="submition()" novalidate>
             <!-- Email/Phone Number -->
             <div class="mb-[30px]">
@@ -59,6 +58,7 @@
               >
                 {{ "auth.login.login-form.password" | translate }}
               </label>
+
               <input
                 type="password"
                 id="password"
@@ -89,13 +89,14 @@
               </div>
               }
             </div>
+
             <div class="flex justify-between items-center">
               <app-button
                 [px]="'px-[67px]'"
                 [py]="'py-[9px]'"
                 [title]="'routes.login' | translate"
                 [type]="'submit'"
-                [disabled]="formInvalid()"
+                [disabled]="loginForm.invalid"
                 [isLoading]="isLoading()"
                 [ariaLabel]="'submit-button-aria-label' | translate"
               >

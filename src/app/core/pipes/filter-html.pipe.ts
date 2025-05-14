@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
@@ -6,7 +7,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   standalone: true,
 })
 export class FilterHtmlPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  private sanitizer = inject(DomSanitizer);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   // Allowed tags and attributes
   private allowedTags: string[] = [
@@ -23,14 +25,15 @@ export class FilterHtmlPipe implements PipeTransform {
     'ol',
     'li',
     'a',
-    'em',
-    'strong',
     'img',
     'table',
     'tr',
     'td',
     'th',
   ];
+
+  // Tags to unwrap (keep content but remove the tag)
+  private tagsToUnwrap: string[] = ['strong', 'b', 'em'];
 
   private allowedAttributes: string[] = [
     'src',
@@ -45,31 +48,110 @@ export class FilterHtmlPipe implements PipeTransform {
       return this.sanitizer.bypassSecurityTrustHtml('');
     }
 
-    // Parse HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(value, 'text/html');
+    // Pre-process HTML to remove formatting tags using regex
+    value = this.removeFormattingTags(value);
 
-    // Clean the HTML
-    this.cleanNode(doc.body);
+    // For server-side rendering, use simple regex-based filtering
+    if (!this.isBrowser) {
+      // Apply a simplified version of HTML cleaning for SSR
+      const simpleCleaned = this.simpleCleanHtml(value);
+      return this.sanitizer.bypassSecurityTrustHtml(simpleCleaned);
+    }
 
-    // Remove empty tags
-    this.removeEmptyTags(doc.body);
+    // For browser rendering, use the DOM API
+    try {
+      // Parse HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(value, 'text/html');
 
-    // Remove all classes
-    this.removeAllClasses(doc.body);
+      // Clean the HTML
+      this.cleanNode(doc.body);
 
-    // Get cleaned HTML content
-    const cleanedHtml = doc.body.innerHTML;
+      // Remove empty tags
+      this.removeEmptyTags(doc.body);
 
-    // Return as SafeHtml for binding
-    return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
+      // Remove all classes
+      this.removeAllClasses(doc.body);
+
+      // Get cleaned HTML content
+      const cleanedHtml = doc.body.innerHTML;
+
+      // Return as SafeHtml for binding
+      return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
+    } catch (error) {
+      console.error('Error parsing HTML:', error);
+      // Fallback to simple cleaning
+      const simpleCleaned = this.simpleCleanHtml(value);
+      return this.sanitizer.bypassSecurityTrustHtml(simpleCleaned);
+    }
+  }
+
+  // Server-side simple HTML cleaning using regex
+  private simpleCleanHtml(html: string): string {
+    // Remove disallowed tags
+    const allowedTagsPattern = this.allowedTags.join('|');
+    const tagRegex = new RegExp(
+      `<(?!\\/?(${allowedTagsPattern})\\b)[^>]+>`,
+      'gi'
+    );
+    html = html.replace(tagRegex, '');
+
+    // Remove classes
+    html = html.replace(/\sclass="[^"]*"/gi, '');
+
+    // Remove style attributes
+    html = html.replace(/\sstyle="[^"]*"/gi, '');
+
+    // Remove other disallowed attributes (keep only allowed ones)
+    const allowedAttributesStr = this.allowedAttributes.join('|');
+    const attrRegex = new RegExp(
+      `\\s(?!(${allowedAttributesStr})\\b)[^\\s>]+(?:=(?:"[^"]*"|'[^']*'))?`,
+      'gi'
+    );
+    html = html.replace(attrRegex, '');
+
+    return html;
+  }
+
+  private removeFormattingTags(html: string): string {
+    // Remove opening and closing strong tags
+    html = html.replace(/<\/?strong[^>]*>/gi, '');
+
+    // Remove opening and closing b tags
+    html = html.replace(/<\/?b[^>]*>/gi, '');
+
+    // Remove opening and closing em tags
+    html = html.replace(/<\/?em[^>]*>/gi, '');
+
+    return html;
   }
 
   private cleanNode(node: Element): void {
     // Process all child nodes
     Array.from(node.children).forEach((child) => {
+      const tagName = child.tagName.toLowerCase();
+
+      // Check if this tag should be unwrapped (keep content, remove tag)
+      if (this.tagsToUnwrap.includes(tagName)) {
+        // Create a document fragment to hold the child's content
+        const fragment = document.createDocumentFragment();
+
+        // Move all child nodes to the fragment
+        while (child.firstChild) {
+          fragment.appendChild(child.firstChild);
+        }
+
+        // Replace the child with its content
+        if (child.parentNode) {
+          child.parentNode.replaceChild(fragment, child);
+        }
+
+        // Skip further processing for this node since it's been replaced
+        return;
+      }
+
       // Check if this tag is allowed, if not, replace with its content
-      if (!this.allowedTags.includes(child.tagName.toLowerCase())) {
+      if (!this.allowedTags.includes(tagName)) {
         // Create a document fragment to hold the child's content
         const fragment = document.createDocumentFragment();
 

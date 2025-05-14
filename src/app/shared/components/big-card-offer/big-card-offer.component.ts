@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '../arrow-button/arrow-button.component';
 
 @Component({
   selector: 'app-big-card-offer',
   standalone: true,
-  imports: [NgClass, TranslateModule, ArrowButtonComponent],
+  imports: [NgClass, TranslateModule, ArrowButtonComponent, ImageUrlDirective],
   templateUrl: './big-card-offer.component.html',
   styleUrl: './big-card-offer.component.css',
 })

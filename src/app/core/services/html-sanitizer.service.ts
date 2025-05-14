@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Injectable({
@@ -6,6 +7,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class HtmlSanitizerService {
   private sanitizer = inject(DomSanitizer);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   // Default allowed tags and attributes
   private allowedTags: string[] = [
@@ -44,24 +46,64 @@ export class HtmlSanitizerService {
       return this.sanitizer.bypassSecurityTrustHtml('');
     }
 
-    // Parse HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    // Use regex-based sanitization for SSR
+    if (!this.isBrowser) {
+      return this.sanitizer.bypassSecurityTrustHtml(this.simpleCleanHtml(html));
+    }
 
-    // Clean the HTML
-    this.cleanNode(doc.body);
+    try {
+      // Parse HTML (browser-only)
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
 
-    // Remove empty tags
-    this.removeEmptyTags(doc.body);
+      // Clean the HTML
+      this.cleanNode(doc.body);
 
-    // Remove all classes
-    this.removeAllClasses(doc.body);
+      // Remove empty tags
+      this.removeEmptyTags(doc.body);
 
-    // Get cleaned HTML content
-    const cleanedHtml = doc.body.innerHTML;
+      // Remove all classes
+      this.removeAllClasses(doc.body);
 
-    // Return as SafeHtml for binding
-    return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
+      // Get cleaned HTML content
+      const cleanedHtml = doc.body.innerHTML;
+
+      // Return as SafeHtml for binding
+      return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
+    } catch (error) {
+      console.error('Error sanitizing HTML:', error);
+      // Fallback to simple regex cleaning
+      return this.sanitizer.bypassSecurityTrustHtml(this.simpleCleanHtml(html));
+    }
+  }
+
+  /**
+   * Server-side simple HTML cleaning using regex
+   */
+  private simpleCleanHtml(html: string): string {
+    // Remove disallowed tags
+    const allowedTagsPattern = this.allowedTags.join('|');
+    const tagRegex = new RegExp(
+      `<(?!\\/?(${allowedTagsPattern})\\b)[^>]+>`,
+      'gi'
+    );
+    html = html.replace(tagRegex, '');
+
+    // Remove classes
+    html = html.replace(/\sclass="[^"]*"/gi, '');
+
+    // Remove style attributes
+    html = html.replace(/\sstyle="[^"]*"/gi, '');
+
+    // Remove other disallowed attributes (keep only allowed ones)
+    const allowedAttributesStr = this.allowedAttributes.join('|');
+    const attrRegex = new RegExp(
+      `\\s(?!(${allowedAttributesStr})\\b)[^\\s>]+(?:=(?:"[^"]*"|'[^']*'))?`,
+      'gi'
+    );
+    html = html.replace(attrRegex, '');
+
+    return html;
   }
 
   /**
@@ -72,9 +114,22 @@ export class HtmlSanitizerService {
   stripAllHtml(html: string): string {
     if (!html) return '';
 
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div.textContent || '';
+    // Server-side implementation
+    if (!this.isBrowser) {
+      // Use regex to remove all HTML tags
+      return html.replace(/<[^>]*>/g, '');
+    }
+
+    // Browser implementation
+    try {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || '';
+    } catch (error) {
+      console.error('Error stripping HTML:', error);
+      // Fallback to regex
+      return html.replace(/<[^>]*>/g, '');
+    }
   }
 
   private cleanNode(node: Element): void {

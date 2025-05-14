@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '@core/guards/auth.guard';
+import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/ar', pathMatch: 'full' },
@@ -41,6 +43,10 @@ export const routes: Routes = [
         path: 'blog/:slug',
         loadComponent: () =>
           import('./pages/blog/blog.component').then((c) => c.BlogComponent),
+        resolve: {
+          blogData: blogDetailsResolver,
+        },
+        data: { titleKey: 'routes.blogDetails' },
       },
       /* Shopping */
       {
@@ -84,6 +90,7 @@ export const routes: Routes = [
           import('../app/pages/profile/profile.component').then(
             (c) => c.ProfileComponent
           ),
+        canActivate: [authGuard],
         children: [
           { path: '', redirectTo: 'personal', pathMatch: 'full' },
           {
@@ -118,6 +125,16 @@ export const routes: Routes = [
         data: {
           titleKey: 'routes.profile',
         },
+      },
+
+      /* Privacy */
+      {
+        path: 'privacy',
+        loadComponent: () =>
+          import('./pages/privacy/privacy.component').then(
+            (c) => c.PrivacyComponent
+          ),
+        data: { titleKey: 'routes.privacy' },
       },
     ],
   },

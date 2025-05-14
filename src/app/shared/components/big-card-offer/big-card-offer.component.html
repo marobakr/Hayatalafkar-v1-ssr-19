@@ -1,6 +1,6 @@
 <div
   [ngClass]="{ 'bg-[#d7bba5]': mainColor, 'bg-white': !mainColor }"
-  class="relative flex flex-col md:flex-row text-right rounded-lg shadow-md max-w-xl w-full"
+  class="relative flex flex-col h-full md:flex-row text-right rounded-lg shadow-md max-w-xl w-full"
 >
   <div
     class="btns absolute top-[30px] rtl:left-[20px] ltr:right-[20px] z-1 flex flex-col"
@@ -55,14 +55,9 @@
     </app-arrow-button>
   </div>
 
-  <div class="md:w-1/2 flex items-end">
-    <figure>
-      <img
-        loading="lazy"
-        [src]="imgPath"
-        [alt]="alt"
-        class="w-full min-h-full"
-      />
+  <div class="md:w-1/2 flex h-full items-end">
+    <figure class="h-full">
+      <img loading="lazy" [src]="imgPath" [alt]="alt" class="w-full h-full" />
     </figure>
     @if (!mainColor ) {
 

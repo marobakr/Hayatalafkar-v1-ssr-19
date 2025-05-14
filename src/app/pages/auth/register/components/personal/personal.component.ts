@@ -1,9 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,6 +15,21 @@ import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { LanguageService } from '../../../../../core/services/lang/language.service';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+
+// Custom validator to check if passwords match
+function passwordMatchValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+  const password = control.get('password');
+  const confirmPassword = control.get('confirmPassword');
+
+  if (password?.value !== confirmPassword?.value) {
+    confirmPassword?.setErrors({ passwordMismatch: true });
+    return { passwordMismatch: true };
+  }
+
+  return null;
+}
 
 @Component({
   selector: 'app-personal',
@@ -44,13 +61,17 @@ export class PersonalComponent implements OnInit {
   }
 
   initForm() {
-    this.registerForm = this._fb.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      phone: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    this.registerForm = this._fb.group(
+      {
+        firstName: ['', [Validators.required]],
+        lastName: ['', [Validators.required]],
+        phone: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: passwordMatchValidator }
+    );
   }
 
   submition() {
@@ -78,13 +99,12 @@ export class PersonalComponent implements OnInit {
           this._languageService.getLanguage().subscribe((next) => {
             lang = next;
           });
-          console.log(response);
-          this._toastr.success('Registration successful');
-          // After successful registration, navigate to the password tab
-          // Store user data in localStorage or a service for multi-step form
-          localStorage.setItem('register_data', JSON.stringify(registerData));
-
-          // this._router.navigate([`/${lang}/register/password`]);
+          if (response.user.message !== '') {
+            this._router.navigate([`/${lang}/login`]);
+            this._toastr.success('Registration successful');
+          } else {
+            this._toastr.error('Registration failed');
+          }
         },
         error: (error) => {
           if (error?.error?.errors && typeof error.error.errors === 'object') {
@@ -130,5 +150,9 @@ export class PersonalComponent implements OnInit {
 
   get password() {
     return this.registerForm.get('password');
+  }
+
+  get confirmPassword() {
+    return this.registerForm.get('confirmPassword');
   }
 }

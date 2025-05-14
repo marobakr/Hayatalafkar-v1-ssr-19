@@ -2,7 +2,8 @@
   <figure class="overflow-hidden mb-0 rounded-xl">
     <img
       loading="lazy"
-      [src]="imgPath"
+      [appImageUrl]="imgPath"
+      [imageEndpoint]="'uploads/categories'"
       [alt]="alt"
       class="w-full h-auto rounded-xl mb-0 transform transition-transform duration-300 group-hover:scale-125"
     />

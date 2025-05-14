@@ -131,6 +131,36 @@
     </div>
     }
   </div>
+  <!-- Confirm Password -->
+  <div class="mb-[41px]">
+    <label
+      for="confirmPassword"
+      class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+    >
+      {{ "profile.password.confirm-password" | translate }}
+    </label>
+    <input
+      formControlName="confirmPassword"
+      type="password"
+      id="confirmPassword"
+      class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+      [class.border-red-500]="
+        confirmPassword?.invalid && confirmPassword?.touched
+      "
+      [placeholder]="
+        'profile.password.placeholder-confirm-password' | translate
+      "
+    />
+    @if (confirmPassword?.invalid && confirmPassword?.touched) {
+    <div class="text-red-500 mt-2 text-sm">
+      @if (confirmPassword?.errors?.['required']) {
+      <span>{{ "validation.password-required" | translate }}</span>
+      } @if (confirmPassword?.errors?.['passwordMismatch']) {
+      <span>{{ "validation.password-mismatch" | translate }}</span>
+      }
+    </div>
+    }
+  </div>
 
   <div class="flex justify-between items-center">
     <app-button

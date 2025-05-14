@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStorageService } from '@core/services/auth/auth-storage.service';
 import { API_CONFIG } from '@core/services/conf/api.config';
 import { ApiService } from '@core/services/conf/api.service';
 import { LanguageService } from '@core/services/lang/language.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { ILogin, IRegister } from '../../interfaces/auth.interfaces';
 
 interface AuthResponse {
   access_token: string;
   expires_in?: number;
   token_type?: string;
+  user?: any;
   [key: string]: any;
 }
 
@@ -20,18 +21,21 @@ interface AuthResponse {
 })
 export class AuthService {
   _apiService = inject(ApiService);
-  private http = inject(HttpClient);
+  private _http = inject(HttpClient);
   private baseUrl = API_CONFIG.BASE_URL;
   private authStorage = inject(AuthStorageService);
-  private router = inject(Router);
-  private languageService = inject(LanguageService);
+  private _router = inject(Router);
+  private _languageService = inject(LanguageService);
+
+  // Authentication state using signal
+  private isAuthenticatedValue = signal<boolean>(this.checkAuthStatus());
 
   login(data: ILogin): Observable<AuthResponse> {
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
 
-    return this.http
+    return this._http
       .post<AuthResponse>(`${this.baseUrl}${API_CONFIG.AUTH.LOGIN}`, formData)
       .pipe(
         tap((response) => {
@@ -39,36 +43,78 @@ export class AuthService {
             // Default expiration to 24 hours if not provided by backend
             const expiresIn = response.expires_in || 24 * 60 * 60;
             this.authStorage.saveToken(response.access_token, expiresIn);
+
+            // Save user data to local storage
+            if (response.user) {
+              this.authStorage.saveUserData(response.user);
+            }
+
+            this.isAuthenticatedValue.set(true);
           }
         })
       );
   }
 
-  register(data: IRegister) {
+  register(data: IRegister): Observable<any> {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('email', data.email);
     formData.append('phone', data.phone);
     formData.append('password', data.password);
 
-    return this.http.post(
-      `${this.baseUrl}${API_CONFIG.AUTH.REGISTER}`,
-      formData
-    );
+    return this._http
+      .post<AuthResponse>(
+        `${this.baseUrl}${API_CONFIG.AUTH.REGISTER}`,
+        formData
+      )
+      .pipe(
+        tap((response: AuthResponse) => {
+          if (response && response.access_token) {
+            this.authStorage.saveToken(
+              response.access_token,
+              response.expires_in || 24 * 60 * 60
+            );
+
+            // Save user data to local storage
+            if (response.user) {
+              this.authStorage.saveUserData(response.user);
+            }
+
+            this.isAuthenticatedValue.set(true);
+          }
+        })
+      );
   }
 
-  logout(): void {
+  logout(): Observable<any> {
     this.authStorage.logout();
+    this.isAuthenticatedValue.set(false);
+
     let lang = '';
-    this.languageService.getLanguage().subscribe((next) => (lang = next));
-    this.router.navigate(['/', lang]);
+    this._languageService.getLanguage().subscribe((next) => (lang = next));
+    this._router.navigate(['/', lang]);
+
+    return of({ success: true });
   }
 
   isAuthenticated(): boolean {
-    return this.authStorage.isAuthenticated();
+    return this.isAuthenticatedValue();
   }
 
   getToken(): string | null {
     return this.authStorage.getToken();
+  }
+
+  authenticationState() {
+    return this.isAuthenticatedValue.asReadonly();
+  }
+
+  private checkAuthStatus(): boolean {
+    return !!this.authStorage.getToken();
+  }
+
+  // Add a method to get the user data
+  getUserData(): any {
+    return this.authStorage.getUserData();
   }
 }

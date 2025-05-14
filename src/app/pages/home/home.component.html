@@ -1,11 +1,11 @@
 <!-- Sliders -->
-<app-hero [heroSection]="homeData.sliders"></app-hero>
+<app-hero [heroSection]="sliders"></app-hero>
 
 <!-- About-us  -->
 <app-about-shared
   ut-shared
-  [aboutUs]="homeData.aboutUs"
-  [counters]="homeData.counters"
+  [aboutUs]="aboutUs"
+  [counters]="counters"
   [showSloganText]="false"
   [showBgImage]="true"
   [sloganText]="'hero.title' | translate"
@@ -13,47 +13,53 @@
 </app-about-shared>
 
 <!-- Categories -->
-<app-sections [categories]="homeData.categories"></app-sections>
+<app-sections [categories]="categories"></app-sections>
 
 <!-- Breacks -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
-  [bannerText]="'banner.title-1' | translate"
+  [bannerText]="getQuoteById(1) | customTranslate : 'name'"
 ></app-banner>
 
 <!-- offers -->
-<app-offer-card [offers]="homeData.offers"></app-offer-card>
+<app-offer-card [offers]="offers"></app-offer-card>
 
 <!-- Latest-Products -->
-<app-best-seller [LatestProduct]="homeData.latestProducts"></app-best-seller>
+<app-best-seller [LatestProducts]="latestProducts"></app-best-seller>
 
 <!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
-  [bannerText]="'banner.title-2' | translate"
+  [bannerText]="getQuoteById(2) | customTranslate : 'name'"
 ></app-banner>
 
 <!-- RandomProducts -->
-<app-offer-day [randomProducts]="homeData.randomProducts"></app-offer-day>
+<app-offer-day
+  [randomProducts]="randomProducts"
+  [lastOffer]="offers[offers.length - 1]"
+></app-offer-day>
 
 <!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
-  [bannerText]="'banner.title-3' | translate"
+  [bannerText]="getQuoteById(2) | customTranslate : 'name'"
 ></app-banner>
 
-<!-- Will-be-added-soon -->
-<app-new-products> </app-new-products>
+<!-- bestProducts -->
+<app-new-products [bestProducts]="bestProducts"> </app-new-products>
 
 <!-- Static-Banners -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
-  [bannerText]="'banner.title-4' | translate"
+  [bannerText]="getQuoteById(3) | customTranslate : 'name'"
 ></app-banner>
 
 <!-- Blogs -->
-<app-new-articls></app-new-articls>
+<app-related-blogs
+  [relatedBlogs]="latestBlogs"
+  [lightLabel]="true"
+></app-related-blogs>
