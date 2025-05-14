@@ -1,94 +1,80 @@
-import { animate, style, transition, trigger } from '@angular/animations';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/lang/language.service';
-import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { LanguageService } from '@core/services/lang/language.service';
+import { CartStateService } from '../../core/services/common/cart-state.service';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [ArticlesHeaderComponent, TranslateModule, ServiceCardComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    ArticlesHeaderComponent,
+    AsyncPipe,
+  ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
-  animations: [
-    trigger('itemAnimation', [
-      transition(':leave', [
-        style({ transform: 'translateX(0)', opacity: 1 }),
-        animate(
-          '300ms ease-out',
-          style({
-            transform: 'translateX(-100%)',
-            opacity: 0,
-            height: 0,
-            margin: 0,
-            padding: 0,
-          })
-        ),
-      ]),
-    ]),
-    trigger('emptyCartAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate(
-          '500ms ease-out',
-          style({
-            opacity: 1,
-            transform: 'translateY(0)',
-          })
-        ),
-      ]),
-    ]),
-  ],
 })
 export class CartComponent {
-  _translate = inject(TranslateService);
+  _cartState = inject(CartStateService);
+
   _languageService = inject(LanguageService);
 
-  productsItem: any[] = [];
-  quantity: number = 3;
+  formBuilder = inject(FormBuilder);
 
-  constructor() {
-    // Fetch the proper language from the service
-    this._languageService.getLanguage().subscribe((lang) => {
-      // Fetch descriptions from translation file
-      this._translate.use(lang).subscribe(() => {
-        this._translate
-          .get('wishlist.productsItem.commonItems')
-          .subscribe((descriptions: string[]) => {
-            console.log(descriptions);
-            this.productsItem = descriptions;
-          });
+  currentLang$ = this._languageService.getLanguage();
+
+  promoCodeForm: FormGroup = this.formBuilder.group({
+    code: ['', [Validators.required, Validators.minLength(3)]],
+  });
+
+  promoCodeError: string | null = null;
+  promoCodeSuccess: string | null = null;
+
+  updateQuantity(productId: string | number, quantity: number) {
+    if (quantity > 0) {
+      this._cartState.updateQuantity(productId, quantity).subscribe();
+    } else {
+      this.removeItem(productId);
+    }
+  }
+
+  removeItem(productId: string | number) {
+    this._cartState.removeItem(productId).subscribe();
+  }
+
+  clearCart() {
+    this._cartState.clearCart().subscribe();
+  }
+
+  applyPromoCode() {
+    if (this.promoCodeForm.valid) {
+      const code = this.promoCodeForm.get('code')?.value;
+      this.promoCodeError = null;
+      this.promoCodeSuccess = null;
+
+      this._cartState.applyPromoCode(code).subscribe({
+        next: (response) => {
+          if (response.valid) {
+            this.promoCodeSuccess = 'Promo code applied successfully!';
+            this.promoCodeForm.reset();
+          } else {
+            this.promoCodeError = response.message || 'Invalid promo code.';
+          }
+        },
+        error: () => {
+          this.promoCodeError = 'Error applying promo code. Please try again.';
+        },
       });
-    });
-  }
-  incrementQuantity() {
-    if (this.quantity < 100000) {
-      this.quantity++;
     }
-  }
-
-  decrementQuantity() {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
-  }
-  removeItem(index: number) {
-    this.productsItem = this.productsItem.filter((_, i) => i !== index);
-  }
-
-  removeAllItems() {
-    // Add removing class to all items
-    const items = document.querySelectorAll('.cart-item');
-    items.forEach((item, index) => {
-      setTimeout(() => {
-        item.classList.add('removing');
-      }, index * 100); // Stagger the animation
-    });
-
-    // Clear the array after all animations complete
-    setTimeout(() => {
-      this.productsItem = [];
-    }, items.length * 100 + 300);
   }
 }

@@ -5,3 +5,63 @@
 .rotate-180 {
   transform: rotate(180);
 }
+
+/* Swiper Styles */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom Navigation Arrows */
+.custom-swiper-button-prev,
+.custom-swiper-button-next {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.custom-swiper-button-prev:hover,
+.custom-swiper-button-next:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+/* Hide default Swiper buttons but keep them accessible for JS */
+.swiper-button-prev,
+.swiper-button-next {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.swiper-pagination-bullet {
+  background: #d9d9d9;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background: #ffffff;
+  opacity: 1;
+}
+
+.image-rotate {
+  z-index: 10;
+  animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

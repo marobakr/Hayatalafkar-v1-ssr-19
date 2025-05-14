@@ -1,46 +1,86 @@
-<div class="absolute inset-x-0 z-100 bg-white">
+<div
+  class="absolute inset-x-0 z-50 bg-white shadow-xl rounded-b-xl"
+  (click)="$event.stopPropagation()"
+>
   <div
-    class="absolute w-full mt-5 max-h-[400px] overflow-y-scroll lg:h-auto lg:overflow-visible"
+    class="absolute w-full mt-5 max-h-[600px] overflow-y-auto lg:h-auto lg:overflow-visible"
   >
     <div
-      class="w-full overflow-hidden bg-white text-sm/6 shadow-lg ring-1 ring-gray-900/5"
+      class="w-full overflow-hidden bg-white text-sm/6 ring-1 ring-gray-200 rounded-b-xl"
     >
-      <div
-        class="flex items-center justify-evenly gap-x-[34px] gap-y-[60px] pt-[70px] pb-[90px] px-[31px] flex-wrap"
-      >
-        <!-- dietary_supplements -->
-        @for (category of categories; track category.id) { @if
-        (category.subcategories.length > 0) {
-
-        <div class="parent">
-          <h3
-            class="text-black underline text-category-size font-bold capitalize px-4 mb[21px]"
+      <div class="p-6">
+        <!-- Title and search -->
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-[#3C3C3C]">
+            {{ "navbar.pages_Title.products.title" | translate }}
+          </h2>
+          <button
+            class="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            (click)="closeMenu.emit()"
+            aria-label="Close menu"
           >
-            {{ category | customTranslate : "name" }}
-          </h3>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-          <div
-            [ngClass]="{
-              'overflow-y-scroll': contentHeight > 200,
-              'overflow-visible': contentHeight <= 200
-            }"
-            #menuContent
-            class="bg-white min-w-[200px] max-h-[200px] overflow-y-auto overflow-x-hidden shadow-[0_4px_4px_rgba(0,0,0,0.25)] rounded-2xl scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-warm-tan scrollbar-track-[#EEE2E2] p-4"
-          >
-            <div class="space-y-2">
-              @for (subCategory of category.subcategories; track subCategory.id)
-              {
-              <p class="text-gray-600 hover:text-gray-900 cursor-pointer">
-                {{ subCategory | customTranslate : "name" }}
-              </p>
-
-              }
-
-              <p class="text-gray-600 hover:text-gray-900 cursor-pointer"></p>
+        <!-- Categories grid -->
+        <div class="grid xl:grid-cols-4 gap-6 pt-4 pb-8">
+          <!-- Skeleton loader when categories are loading -->
+          @if (isLoading) { @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+          <div class="animate-pulse">
+            <div class="h-6 w-40 bg-gray-200 rounded mb-4"></div>
+            <div
+              class="bg-white min-w-[200px] h-[200px] shadow-sm border border-gray-100 rounded-xl p-4"
+            >
+              <div class="space-y-4">
+                @for (j of [1, 2, 3, 4, 5]; track j) {
+                <div class="h-4 bg-gray-200 rounded w-full"></div>
+                }
+              </div>
             </div>
           </div>
+          } } @else {
+          <!-- Categories -->
+          @for (category of categories; track category.id) { @if
+          (category.subcategories.length > 0) {
+          <div class="category-card">
+            <h3
+              class="text-[#3C3C3C] text-lg font-bold capitalize mb-3 border-b p-2"
+            >
+              {{ category | customTranslate : "name" }}
+            </h3>
+
+            <div
+              #menuContent
+              class="bg-white min-w-[200px] overflow-y-auto overflow-x-hidden rounded-xl p-2"
+            >
+              <div class="space-y-2">
+                @for (subCategory of category.subcategories; track
+                subCategory.id) {
+                <a
+                  class="block py-2 px-3 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+                >
+                  {{ subCategory | customTranslate : "name" }}
+                </a>
+                }
+              </div>
+            </div>
+          </div>
+          } } }
         </div>
-        } }
       </div>
     </div>
   </div>

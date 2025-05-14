@@ -1,6 +1,6 @@
 <footer class="bg-white relative border-t border-gray-200 pb-[65px]">
   <div class="container mx-auto px-4 pt-8 sm:px-6 lg:px-8 relative z-10">
-    <div class="grid md:grid-cols-5 gap-8 text-right">
+    <div class="grid md:grid-cols-5 gap-8 ltr:text-left rtl:text-right">
       <!-- Column 1: Logo + Description -->
       <div class="space-y-4">
         <img
@@ -19,69 +19,27 @@
           {{ "footer.sections.title" | translate }}
         </h3>
         <div class="links flex justify-between">
+          <!-- First column of categories -->
           <ul class="space-y-2 text-sm text-footer-color flex-grow-2">
+            @for (category of categories(); track category.id; let i = $index) {
+            @if (i < categories().length / 2) {
             <li>
               <p class="hover:underline">
-                {{ "footer.sections.items.supplements" | translate }}
+                {{ category | customTranslate : "name" }}
               </p>
             </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.perfumes" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.skincare" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.haircare" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.womens-equipment" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.hair_styling" | translate }}
-              </p>
-            </li>
+            } }
           </ul>
+          <!-- Second column of categories -->
           <ul class="space-y-2 text-sm text-footer-color flex-grow-2">
+            @for (category of categories(); track category.id; let i = $index) {
+            @if (i >= categories().length / 2) {
             <li>
               <p class="hover:underline">
-                {{ "footer.sections.items.mens_care" | translate }}
+                {{ category | customTranslate : "name" }}
               </p>
             </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.womens_care" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.dental_care" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.makeup" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.beauty_accessories" | translate }}
-              </p>
-            </li>
-            <li>
-              <p class="hover:underline">
-                {{ "footer.sections.items.beauty_devices" | translate }}
-              </p>
-            </li>
+            } }
           </ul>
         </div>
       </div>

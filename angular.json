@@ -27,9 +27,11 @@
               "src/sitemap.xml"
             ],
             "styles": [
+              "node_modules/ngx-toastr/toastr.css",
               "public/fonts/fonts.css",
               "src/styles.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "src/styles/base.css",
+              "src/styles/swiper.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",

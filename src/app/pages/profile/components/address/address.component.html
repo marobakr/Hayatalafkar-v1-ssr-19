@@ -40,23 +40,31 @@
     <!-- First Name  -->
     <div class="flex-grow-1">
       <label
-        for="firstName"
+        for="first_name"
         class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
       >
         {{
-          "auth.register.register-form.address.fields.firstName.label"
+          "auth.register.register-form.address.fields.first_name.label"
             | translate
         }}
       </label>
       <input
         type="text"
-        id="firstName"
+        id="first_name"
+        formControlName="first_name"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('first_name') }"
         class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="
-          'auth.register.register-form.address.fields.firstName.placeholder'
+          'auth.register.register-form.address.fields.first_name.placeholder'
             | translate
         "
       />
+      <div
+        *ngIf="isFieldInvalid('first_name')"
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ getErrorMessage("first_name") }}
+      </div>
     </div>
 
     <!-- Last Name  -->
@@ -66,44 +74,28 @@
         class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
       >
         {{
-          "auth.register.register-form.address.fields.lastName.label"
+          "auth.register.register-form.address.fields.last_name.label"
             | translate
         }}
       </label>
       <input
         type="text"
         id="last-name"
+        formControlName="last_name"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('last_name') }"
         class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="
-          'auth.register.register-form.address.fields.lastName.placeholder'
+          'auth.register.register-form.address.fields.last_name.placeholder'
             | translate
         "
       />
+      <div
+        *ngIf="isFieldInvalid('last_name')"
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ getErrorMessage("last_name") }}
+      </div>
     </div>
-  </div>
-
-  <!-- it will be drop down 🔻🔻🔻🔻🔻🔻🔻🔻🔻 -->
-
-  <!-- country -->
-  <div class="mb-[41px]">
-    <label
-      for="country"
-      class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
-    >
-      {{
-        "auth.register.register-form.address.fields.country.label" | translate
-      }}
-    </label>
-    <input
-      type="text"
-      id="country"
-      formControlName="country"
-      class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full rtl:text-right ltr:text-left"
-      [placeholder]="
-        'auth.register.register-form.address.fields.country.placeholder'
-          | translate
-      "
-    />
   </div>
 
   <!-- address -->
@@ -120,15 +112,17 @@
       type="text"
       id="address"
       formControlName="address"
+      [ngClass]="{ 'border-red-500': isFieldInvalid('address') }"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="
         'auth.register.register-form.address.fields.address.placeholder'
           | translate
       "
     />
+    <div *ngIf="isFieldInvalid('address')" class="text-red-500 text-sm mt-1">
+      {{ getErrorMessage("address") }}
+    </div>
   </div>
-
-  <!-- it will be drop down 🔻🔻🔻🔻🔻🔻🔻🔻🔻 -->
 
   <!-- City -->
   <div class="mb-[41px]">
@@ -142,59 +136,42 @@
       type="text"
       id="city"
       formControlName="city"
+      [ngClass]="{ 'border-red-500': isFieldInvalid('city') }"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="
         'auth.register.register-form.address.fields.city.placeholder'
           | translate
       "
     />
+    <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
+      {{ getErrorMessage("city") }}
+    </div>
   </div>
 
-  <!-- PostalCode -->
+  <!-- phone -->
   <div class="mb-[41px]">
     <label
-      for="postalCode"
+      for="phone"
       class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
     >
-      {{
-        "auth.register.register-form.address.fields.postalCode.label"
-          | translate
-      }}
+      {{ "auth.register.register-form.address.fields.phone.label" | translate }}
     </label>
     <input
-      type="text"
-      id="postalCode"
-      formControlName="postalCode"
+      type="tel"
+      id="phone"
+      formControlName="phone"
+      [ngClass]="{ 'border-red-500': isFieldInvalid('phone') }"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="
-        'auth.register.register-form.address.fields.postalCode.placeholder'
+        'auth.register.register-form.address.fields.phone.placeholder'
           | translate
       "
     />
+    <div *ngIf="isFieldInvalid('phone')" class="text-red-500 text-sm mt-1">
+      {{ getErrorMessage("phone") }}
+    </div>
   </div>
 
-  <!-- PhoneNumber -->
-  <div class="mb-[41px]">
-    <label
-      for="postalCode"
-      class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
-    >
-      {{
-        "auth.register.register-form.address.fields.phoneNumber.label"
-          | translate
-      }}
-    </label>
-    <input
-      type="text"
-      id="phoneNumber"
-      formControlName="phoneNumber"
-      class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
-      [placeholder]="
-        'auth.register.register-form.address.fields.phoneNumber.placeholder'
-          | translate
-      "
-    />
-  </div>
   <!-- Email -->
   <div class="mb-[41px]">
     <label
@@ -207,12 +184,16 @@
       type="email"
       formControlName="email"
       id="email"
+      [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="
         'auth.register.register-form.address.fields.email.placeholder'
           | translate
       "
     />
+    <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-sm mt-1">
+      {{ getErrorMessage("email") }}
+    </div>
   </div>
 
   <div class="flex justify-between items-center">
@@ -220,8 +201,18 @@
       [px]="'px-[84px]'"
       [py]="'py-[9px] '"
       [title]="'add.address' | translate"
-      type="'submit'"
+      [disabled]="loading()"
+      [isLoading]="loading()"
+      type="submit"
     >
     </app-button>
+
+    <button
+      type="button"
+      (click)="resetForm()"
+      class="text-rose-600 text-description-size underline font-light capitalize"
+    >
+      {{ "reset.form" | translate }}
+    </button>
   </div>
 </form>

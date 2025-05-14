@@ -76,7 +76,9 @@
       "subtitle": "our latest news and articles",
       "title": "News & blogs"
     },
+
     "sidebar": {
+      "new-products-title": "new-products",
       "new-products": "best selling",
       "newProducts": {
         "product-1": {
@@ -139,21 +141,53 @@
               "label": "E-Mail ",
               "placeholder": "Write Your E-Mail"
             },
-            "firstName": {
+            "first_name": {
               "label": "First Name ",
               "placeholder": "Write Your First Name"
             },
-            "lastName": {
+            "last_name": {
               "label": "Last Name ",
               "placeholder": "Write Your Last Name"
             },
-            "phoneNumber": {
+            "phone": {
               "label": "Phone Number ",
               "placeholder": "You Must Enter The Correct Phone Number"
             },
             "postalCode": {
               "label": "Zip Code ",
               "placeholder": "Enter Your Country's Postal Code"
+            }
+          },
+          "validation": {
+            "first_name": {
+              "required": "First name is required"
+            },
+            "last_name": {
+              "required": "Last name is required"
+            },
+            "address": {
+              "required": "Address is required"
+            },
+            "city": {
+              "required": "City is required"
+            },
+            "state": {
+              "required": "State is required"
+            },
+            "country": {
+              "required": "Country is required"
+            },
+            "phone": {
+              "required": "Phone number is required",
+              "pattern": "Please enter a valid phone number"
+            },
+            "email": {
+              "required": "Email is required",
+              "invalid": "Please enter a valid email address"
+            },
+            "postalCode": {
+              "required": "Postal code is required",
+              "pattern": "Please enter a valid postal code"
             }
           },
           "title": "Add Address"
@@ -187,6 +221,8 @@
   },
   "availability": "availability",
   "unavailability": "unavailability",
+  "page": "Page",
+  "of": "of",
   "banner": {
     "banner-about-us-1": "We believe that beauty begins with care, which is why we offer products designed to enhance your natural glow with confidence.",
     "banner-about-us-2": "Because your beauty is unique, we provide cosmetics that combine luxury and quality to give you lasting radiance.",
@@ -298,6 +334,8 @@
       "title": "Sections"
     }
   },
+  "newProducts.title": "products",
+  "newProducts.subtitle": "new products",
   "form": {
     "send": "send"
   },
@@ -336,6 +374,8 @@
       "en": "English",
       "lang": "Language"
     },
+    "logout": "Logout",
+    "profile": "Profile",
     "pages_Title": {
       "articles": {
         "title": "Articles"
@@ -355,7 +395,9 @@
       "who_we_are": {
         "title": "about us"
       }
-    }
+    },
+    "search": "Search",
+    "search_placeholder": "Search for products..."
   },
   "newProducts": {
     "alt-description": "Radiant skin and exceptional freshness.",
@@ -419,16 +461,60 @@
     "order-status": "order status",
     "value": "pending"
   },
-  "profile.password": {
-    "confirm-password": "Confirm Password",
-    "current-password": "Current Password",
-    "new-password": "New Password",
-    "placeholder-confirm-password": "Confirm your new password",
-    "placeholder-current-password": "Enter your current password",
-    "placeholder-new-password": "Enter your new password",
-    "update": "Update Password"
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "follow your profile and register your data",
+    "tabs": {
+      "profile": "Personal Details",
+      "orders": "My Orders",
+      "address": "Manage Addresses",
+      "account": "Account Management"
+    },
+    "password": {
+      "confirm-password": "Confirm Password",
+      "current-password": "Current Password",
+      "new-password": "New Password",
+      "placeholder-confirm-password": "Confirm your new password",
+      "placeholder-current-password": "Enter your current password",
+      "placeholder-new-password": "Enter your new password",
+      "update": "Update Password"
+    },
+    "address": {
+      "success_title": "Success",
+      "error_title": "Error",
+      "validation_title": "Validation Error",
+      "info_title": "Information",
+      "address_added_success": "Address added successfully",
+      "address_error": "Error adding address",
+      "form_invalid": "Please fill all required fields correctly",
+      "user_info_error": "Error fetching user information",
+      "form_reset": "Form has been reset",
+      "locations_error": "Error fetching locations"
+    }
   },
-  "profile.subtitle": "follow your profile and register your data",
+  "profile.orders": {
+    "title": "My Orders",
+    "order_number": "Order Number",
+    "date": "Date",
+    "total": "Total",
+    "payment_method": "Payment Method",
+    "items": "Items",
+    "view_details": "View Details",
+    "no_orders": {
+      "title": "No Orders Yet",
+      "message": "You haven't placed any orders yet"
+    },
+    "start_shopping": "Start Shopping"
+  },
+  "account_management": {
+    "title": "Account Management",
+    "deactivate_title": "Deactivate Account",
+    "deactivate_description": "Temporarily disable your account. You can reactivate it later by logging in again.",
+    "deactivate_button": "Deactivate Account",
+    "delete_title": "Delete Account",
+    "delete_description": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "delete_button": "Delete Account"
+  },
   "reorder": "reorder",
   "routes": {
     "about": "about",
@@ -481,10 +567,13 @@
       },
       "price": {
         "currency": "SAR",
-        "title": "price"
+        "title": "price",
+        "reset": "Reset to default"
       },
       "products-counts": "view 1-15 products from 3440",
-      "selected-filter": "filter options"
+      "selected-filter": "filter options",
+      "items": "items",
+      "active": "active"
     },
     "filter-box": {
       "filterItems": [
@@ -662,12 +751,19 @@
     "name-min-length": "Name must be at least 3 characters long",
     "phone-required": "Phone is required",
     "phone-format": "Phone must be a valid number",
-    "email-required": "Email is required",
-    "email-format": "Email must be a valid email address",
+    "email-required": "Email or phone is required",
+    "email-format": "Email or phone must be a valid email address",
     "your-msg-required": "Your message is required",
     "your-msg-min-length": "Your message must be at least 10 characters long",
     "password-required": "Password is required",
-    "password-min-length": "Password must be at least 6 characters long"
+    "password-min-length": "Password must be at least 6 characters long",
+    "password-mismatch": "Passwords do not match"
   },
-  "submit-button-aria-label": "submit button"
+  "submit-button-aria-label": "submit button",
+  "blogs": {
+    "title": "News and Articles"
+  },
+  "privacy": {
+    "title": "Privacy Policy"
+  }
 }

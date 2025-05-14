@@ -28,7 +28,7 @@
             >
               {{ "auth.taps.personal" | translate }}
             </button>
-            <button
+            <!-- <button
               class="bg-white rounded-[15px] text-[#474747] border border-[#E0E0E0] w-full mb-[10px] p-[11px] cursor-pointer"
               [routerLink]="['password']"
               [routerLinkActive]="['active-subroute', 'text-white']"
@@ -43,7 +43,7 @@
               [attr.aria-current]="isRouteActive('address') ? 'step' : null"
             >
               {{ "auth.taps.address" | translate }}
-            </button>
+            </button> -->
           </nav>
           <!-- Image Banner -->
           <div class="col-span-12 md:col-span-2 lg:col-span-3">
@@ -52,10 +52,9 @@
                 class="w-full"
                 src="/images/auth/1.png"
                 alt="{{ 'auth.register.register-image-alt' | translate }}"
-                loading="lazy"
+                loading="eager"
                 width="350"
                 height="400"
-                fetchpriority="low"
               />
             </figure>
           </div>

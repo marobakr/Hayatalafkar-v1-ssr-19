@@ -53,3 +53,73 @@
 .loading-text {
   color: #6b7280;
 }
+
+/* Custom styles for pagination */
+::ng-deep .ngx-pagination {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+::ng-deep .ngx-pagination li {
+  margin: 0 0.25rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+::ng-deep .ngx-pagination .current {
+  background: #cbac8d !important;
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+::ng-deep .ngx-pagination a {
+  color: #333 !important;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::ng-deep .ngx-pagination a:hover {
+  background-color: #f3f4f6;
+}
+
+::ng-deep .ngx-pagination .pagination-previous a::before,
+::ng-deep .ngx-pagination .pagination-next a::after {
+  display: none;
+}
+
+::ng-deep .ngx-pagination .pagination-previous.disabled,
+::ng-deep .ngx-pagination .pagination-next.disabled {
+  opacity: 0.5;
+  padding: 0.5rem 1rem;
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #e5697a;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

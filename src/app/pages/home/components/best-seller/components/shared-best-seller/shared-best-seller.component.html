@@ -21,7 +21,8 @@
     <figure class="h-[386px] md:h-[334px]">
       <img
         class="w-full h-full"
-        [src]="getImageUrl(productData.main_image)"
+        [appImageUrl]="productData.main_image"
+        [imageEndpoint]="'uploads/products'"
         alt="product image"
       />
     </figure>

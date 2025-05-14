@@ -73,13 +73,9 @@
     @for (offer of aboutUsOne.offers | customTranslate; track offer.id) {
     @if(offer.active_status) {
 
-    <!-- [imgPath]="API_CONFIG + 'uploads/about/' + offer.main_image" -->
-
     <app-big-card-offer
       [mainColor]="true"
-      [imgPath]="
-        'https://digitalbondmena.com/mesoshop/uploads/about/1744811586d5JAxZe3CX.webp'
-      "
+      [imgPath]="offer.main_image"
       [alt]="offer.title"
       [title]="offer.ar_title"
       [subtitle]="offer.small_title"

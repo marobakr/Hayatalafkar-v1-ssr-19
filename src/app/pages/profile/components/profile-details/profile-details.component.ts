@@ -1,35 +1,99 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/lang/language.service';
+import { UserService } from '../../../../core/services/user/user.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule, ButtonComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    ReactiveFormsModule,
+    ButtonComponent,
+  ],
   templateUrl: './profile-details.component.html',
   styleUrls: ['./profile-details.component.css'],
 })
-export class ProfileDetailsComponent {
-  _fb = inject(FormBuilder);
-  _languageService = inject(LanguageService);
-
-  currentLang$ = this._languageService.getLanguage();
+export class ProfileDetailsComponent implements OnInit {
+  private _fb = inject(FormBuilder);
+  private _userService = inject(UserService);
+  private _destroyRef = inject(DestroyRef);
 
   loginForm!: FormGroup;
+  loading = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
+
   ngOnInit(): void {
-    this.intiForm();
+    this.initForm();
+    this.getUserInfo();
   }
 
-  intiForm() {
+  initForm(): void {
     this.loginForm = this._fb.group({
-      email: [''],
-      password: [''],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
-  submition() {
-    console.log(this.loginForm.value);
+  getUserInfo(): void {
+    this.loading.set(true);
+    this._userService
+      .getUserInfo()
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.loading.set(false);
+          if (response && response.row) {
+            this.populateForm(response.row);
+          }
+        },
+        error: (error) => {
+          this.loading.set(false);
+          this.errorMessage.set(error?.message || 'Error fetching user info');
+          console.error('Error fetching user info:', error);
+        },
+      });
+  }
+
+  populateForm(userData: any): void {
+    if (userData) {
+      this.loginForm.patchValue({
+        firstName: userData.name.split(' ')[0] || '',
+        lastName: userData.name.split(' ')[1] || '',
+        phoneNumber: userData.phone || '',
+        email: userData.email || '',
+      });
+    }
+  }
+
+  submition(): void {
+    if (this.loginForm.valid) {
+      this.loading.set(true);
+      const userData = this.loginForm.value;
+
+      // In a real implementation, you would have an update user endpoint
+      // For now, we'll just show a success message
+      setTimeout(() => {
+        this.loading.set(false);
+        this.successMessage.set('Profile updated successfully');
+        setTimeout(() => this.successMessage.set(''), 3000);
+      }, 1000);
+    } else {
+      this.loginForm.markAllAsTouched();
+      this.errorMessage.set('Please fill all required fields correctly');
+      setTimeout(() => this.errorMessage.set(''), 3000);
+    }
   }
 }

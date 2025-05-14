@@ -1,3 +1,5 @@
+import { ICategory } from '@core/interfaces/common.model';
+
 export interface IHome {
   latestProducts: LatestProduct[];
   sliders: Slider[];
@@ -5,7 +7,7 @@ export interface IHome {
   features: Feature[];
   offers: Offer[];
   randomProducts: RandomProduct[];
-  categories: Category[];
+  categories: ICategory[];
   latestBlogs: LatestBlog[];
   counters: Counter[];
   breaks: Break[];
@@ -22,7 +24,7 @@ export interface LatestProduct {
   en_description: string;
   ar_description: string;
   price: string;
-  sale_price?: string;
+  sale_price: string;
   price_after_sale?: string;
   stock_status: boolean;
   main_image: string;
@@ -110,7 +112,7 @@ export interface RandomProduct {
   en_description: string;
   ar_description: string;
   price: string;
-  sale_price?: string;
+  sale_price: string;
   price_after_sale?: string;
   stock_status: boolean;
   main_image: string;
@@ -126,18 +128,6 @@ export interface RandomProduct {
   en_how_to_use?: string;
   ar_how_to_use?: string;
   product_counter: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Category {
-  id: number;
-  en_name: string;
-  ar_name: string;
-  en_slug: string;
-  ar_slug: string;
-  active_status: number;
-  order_view: number;
   created_at: string;
   updated_at: string;
 }
@@ -177,6 +167,36 @@ export interface Break {
   en_name: string;
   ar_name: string;
   order_by: string;
+  created_at: string;
+  updated_at: string;
+}
+export interface BestProduct {
+  id: number;
+  category_id: number;
+  subcategory_id: number;
+  en_name: string;
+  ar_name: string;
+  en_slug: string;
+  ar_slug: string;
+  en_description: string;
+  ar_description: string;
+  price: string;
+  sale_price?: string;
+  price_after_sale?: string;
+  stock_status: boolean;
+  main_image: string;
+  additional_images?: any[][];
+  en_specifications: any;
+  ar_specifications: any;
+  featured: number;
+  active_status: boolean;
+  en_more_information?: string;
+  ar_more_information?: string;
+  en_ingredient?: string;
+  ar_ingredient?: string;
+  en_how_to_use?: string;
+  ar_how_to_use?: string;
+  product_counter: number;
   created_at: string;
   updated_at: string;
 }

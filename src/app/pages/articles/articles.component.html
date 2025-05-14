@@ -7,128 +7,164 @@
   ></app-articles-header>
   <div class="container mx-auto">
     <!-- Layout -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-11 items-start">
-      <div class="md:col-span-8 text-justify">
-        @if (blogs && blogs.length > 0) { @for (blog of blogs; track blog.id ||
-        $index) {
-        <app-articles-card-shared [blogData]="blog"></app-articles-card-shared>
-        } } @else {
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-11 items-start">
+      <div class="lg:col-span-8 text-justify order-2 lg:order-1">
+        @if (loading) {
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+        </div>
+        } @else if (error) {
         <div class="text-center py-8">
-          <p class="text-gray-500">Loading articles...</p>
+          <p class="text-red-500">
+            Failed to load articles. Please try again later.
+          </p>
+        </div>
+        } @else if (blogs && blogs.length > 0) { @for (blog of blogs | paginate:
+        { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems:
+        totalItems }; track blog.id || $index) {
+        <app-articles-card-shared [blogData]="blog"></app-articles-card-shared>
+        }
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-center mt-8">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+            previousLabel="Previous"
+            nextLabel="Next"
+            screenReaderPaginationLabel="Pagination"
+            screenReaderPageLabel="page"
+            screenReaderCurrentLabel="You're on page"
+          >
+          </pagination-controls>
+        </div>
+        } @else {
+        <div class="text-center py-8">
+          <p class="text-gray-500">No articles found.</p>
         </div>
         }
       </div>
-      <div class="md:col-span-1"></div>
-      <div class="md:col-span-3">
+      <div class="lg:col-span-1"></div>
+      <div class="lg:col-span-3 order-1 lg:order-2">
+        <!-- Heading -->
         <app-section-heading
           class="mb-3"
           [sectionName]="'articles.sidebar.popular-section' | translate"
         ></app-section-heading>
 
-        <!-- All Sections -->
+        <!-- Blogs Related -->
         <div class="all-sections mb-9">
-          @for (title of titles; track $index) {
-          <div
-            class="p-3 mb-3 border rounded-[15px] border-[#E0E0E0] text-[#474747] text-description-size bg-white"
+          @for (blog of blogs.slice(0, 4); track $index) {
+          <a
+            class="cursor-pointer"
+            href="#"
+            [routerLink]="[
+              '/',
+              currentLanguage$ | async,
+              'blog',
+              blog | customTranslate : 'slug'
+            ]"
           >
-            <span>{{ title }}</span>
-          </div>
+            <div
+              class="p-3 mb-3 border rounded-[15px] border-[#E0E0E0] text-[#474747] text-description-size bg-white"
+            >
+              <span>
+                {{ blog | customTranslate : "blog_title" }}
+              </span>
+            </div>
+          </a>
           }
         </div>
 
+        <!-- Best Selling  -->
         <div class="newProducts mb-[60px]">
           <app-section-heading
             class="mb-3"
             [sectionName]="'articles.sidebar.new-products' | translate"
           ></app-section-heading>
           <!-- First Card  -->
-          <div class="card">
+          <div class="card md:flex flex-wrap justify-between block">
+            @for (latestProduct of latestProducts.slice(0,4); track $index) {
             <div class="flex gap-2 items-center mb-3">
-              <figure>
-                <img
-                  loading="lazy"
-                  class="w-[99px]"
-                  src="/images/news/12.png"
-                  alt=""
-                />
-              </figure>
+              <a
+                class="cursor-pointer"
+                href="#"
+                [routerLink]="[
+                  '/',
+                  currentLanguage$ | async,
+                  'products',
+                  latestProduct | customTranslate : 'slug'
+                ]"
+              >
+                <figure>
+                  <img
+                    loading="lazy"
+                    class="w-[99px]"
+                    [appImageUrl]="latestProduct.main_image"
+                    [imageEndpoint]="'uploads/blogs'"
+                    [alt]="latestProduct | customTranslate : 'name'"
+                  />
+                </figure>
+              </a>
+
               <div class="content">
                 <p class="mb-1 text-category-size text-[#333]">
-                  {{
-                    "articles.sidebar.newProducts.product-1.title" | translate
-                  }}
+                  {{ latestProduct | customTranslate : "name" }}
                 </p>
-                <p class="mb-1 text-description-size font-semibold text-black">
-                  {{
-                    "articles.sidebar.newProducts.product-1.description"
-                      | translate
-                  }}
-                </p>
+                <div
+                  class="mb-1 text-description-size font-semibold text-black"
+                >
+                  <app-safe-html
+                    [content]="latestProduct | customTranslate : 'description'"
+                  ></app-safe-html>
+                </div>
                 <div class="date underline text-muted-rose font-semibold">
-                  {{
-                    "articles.sidebar.newProducts.product-1.dates" | translate
-                  }}
+                  {{ latestProduct.created_at | date : "yyyy-mm-dd" }}
                 </div>
               </div>
             </div>
-            <div class="flex gap-2 items-center mb-3">
-              <figure>
-                <img
-                  loading="lazy"
-                  class="w-[99px]"
-                  src="/images/news/12.png"
-                  alt=""
-                />
-              </figure>
-              <div class="content">
-                <p class="mb-1 text-category-size text-[#333]">
-                  {{
-                    "articles.sidebar.newProducts.product-2.title" | translate
-                  }}
-                </p>
-                <p class="mb-1 text-description-size font-semibold text-black">
-                  {{
-                    "articles.sidebar.newProducts.product-2.description"
-                      | translate
-                  }}
-                </p>
-                <div class="date underline text-muted-rose font-semibold">
-                  {{
-                    "articles.sidebar.newProducts.product-2.dates" | translate
-                  }}
-                </div>
-              </div>
-            </div>
-            <div class="flex gap-2 items-center mb-3">
-              <figure>
-                <img
-                  loading="lazy"
-                  class="w-[99px]"
-                  src="/images/news/12.png"
-                  alt=""
-                />
-              </figure>
-              <div class="content">
-                <p class="mb-1 text-category-size text-[#333]">
-                  {{
-                    "articles.sidebar.newProducts.product-3.title" | translate
-                  }}
-                </p>
-                <p class="mb-1 text-description-size font-semibold text-black">
-                  {{
-                    "articles.sidebar.newProducts.product-3.description"
-                      | translate
-                  }}
-                </p>
-                <div class="date underline text-muted-rose font-semibold">
-                  {{
-                    "articles.sidebar.newProducts.product-3.dates" | translate
-                  }}
-                </div>
+            }
+          </div>
+        </div>
+
+        <!-- New  Products -->
+        <div class="newProducts mb-[60px]">
+          <app-section-heading
+            class="mb-3"
+            [sectionName]="'articles.sidebar.new-products' | translate"
+          ></app-section-heading>
+          <!-- First Card  -->
+          @for (latestProduct of latestProducts.slice(0, 4); track $index) {
+          <div class="flex gap-2 items-center mb-3">
+            <figure>
+              <img
+                loading="lazy"
+                class="w-[99px]"
+                alt="image"
+                [appImageUrl]="latestProduct.main_image"
+                [imageEndpoint]="'uploads/latest_products'"
+              />
+            </figure>
+
+            <div class="content">
+              <p class="mb-1 text-category-size text-[#333]">
+                {{ latestProduct | customTranslate : "name" }}
+              </p>
+
+              <p class="mb-1 text-description-size font-semibold text-black">
+                <app-safe-html
+                  [content]="latestProduct | customTranslate : 'description'"
+                ></app-safe-html>
+              </p>
+
+              <div class="date underline text-muted-rose font-semibold">
+                {{ latestProduct.created_at | date : "dd MMMM yyyy" }}
               </div>
             </div>
           </div>
+          }
         </div>
+
         <app-talent-image-card
           [imagePath]="'/images/news/13.png'"
         ></app-talent-image-card>

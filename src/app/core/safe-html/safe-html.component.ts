@@ -6,7 +6,9 @@ import { FilterHtmlPipe } from '@core/pipes/filter-html.pipe';
   selector: 'app-safe-html',
   standalone: true,
   imports: [FilterHtmlPipe],
-  template: ` <div [innerHTML]="htmlContent | filterHtml"></div> `,
+  template: `
+    <span class="description" [innerHTML]="htmlContent | filterHtml"></span>
+  `,
   styles: `
     :host {
       display: block;

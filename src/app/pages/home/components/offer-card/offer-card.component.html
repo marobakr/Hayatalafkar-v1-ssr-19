@@ -2,21 +2,16 @@
   class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
 >
   <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
+    @for (offer of offers.slice(0, 2); track offer.id) {
+
     <app-big-card-offer
-      [mainColor]="true"
-      [alt]="''"
-      [imgPath]="'/images/categories/14.webp'"
-      [title]="'offers.bigCard.0.imgTitle' | translate"
-      [subtitle]="'offers.bigCard.0.imgSubtitle' | translate"
-      [description]="'offers.bigCard.0.imgDescription' | translate"
+      [mainColor]="$even"
+      [alt]="offer | customTranslate : 'title'"
+      [imgPath]="`/images/categories/${$index}.webp`"
+      [title]="offer | customTranslate : 'title'"
+      [subtitle]="offer | customTranslate : 'samll_title'"
+      [description]="offer | customTranslate : 'text'"
     ></app-big-card-offer>
-    <app-big-card-offer
-      [mainColor]="false"
-      [alt]="'bestSelling.heading' | translate"
-      [imgPath]="'/images/categories/13.webp'"
-      [title]="'offers.bigCard.1.imgTitle' | translate"
-      [subtitle]="'offers.bigCard.1.imgSubtitle' | translate"
-      [description]="'offers.bigCard.1.imgDescription' | translate"
-    ></app-big-card-offer>
+    }
   </div>
 </div>

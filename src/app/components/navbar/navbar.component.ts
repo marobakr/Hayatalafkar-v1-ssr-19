@@ -7,10 +7,12 @@ import {
 import {
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   inject,
   OnDestroy,
   OnInit,
+  Output,
   PLATFORM_ID,
   Renderer2,
 } from '@angular/core';
@@ -18,7 +20,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/lang/language.service';
+import { SearchService } from '../../core/services/search/search.service';
 import { MegaMenuComponent } from '../mega-menu/mega-menu.component';
 
 @Component({
@@ -46,6 +50,9 @@ export class NavbarComponent implements OnDestroy, OnInit {
   isMenuOpen = false;
   isRtl = false;
 
+  // Custom events for search state
+  @Output() searchToggle = new EventEmitter<boolean>();
+
   // Constants
   private readonly DESKTOP_BREAKPOINT = 1280; // xl breakpoint in Tailwind (in pixels)
   private resizeSubscription?: Subscription;
@@ -53,6 +60,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
   private _router = inject(Router);
   private _activatedRoute = inject(ActivatedRoute);
   private _languageService = inject(LanguageService);
+  private _searchService = inject(SearchService);
+  private _authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
 
   currentLang$ = this._languageService.getLanguage();
@@ -112,6 +121,32 @@ export class NavbarComponent implements OnDestroy, OnInit {
   toggleSearch(event: Event) {
     event.stopPropagation();
     this.showSearch = !this.showSearch;
+
+    // Use the search service instead of EventEmitter
+    this._searchService.toggleSearch(this.showSearch);
+
+    // If search is shown, focus the input after a short delay to allow rendering
+    if (this.showSearch) {
+      setTimeout(() => {
+        const searchInput = document.getElementById(
+          'desktop-search'
+        ) as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+
+          // Set up input event listener
+          const inputListener = () => {
+            this._searchService.updateSearchQuery(
+              searchInput.value.trim().toLowerCase()
+            );
+            // Remove event listener after first use to avoid duplication
+            searchInput.removeEventListener('input', inputListener);
+          };
+
+          searchInput.addEventListener('input', inputListener);
+        }
+      }, 100);
+    }
   }
 
   toggleProductsMenu(event: Event) {
@@ -137,7 +172,12 @@ export class NavbarComponent implements OnDestroy, OnInit {
       const searchContainer =
         this.elementRef.nativeElement.querySelector('.search-container');
       if (!searchContainer?.matches(':hover')) {
-        this.showSearch = false;
+        if (this.showSearch) {
+          this.showSearch = false;
+
+          // Use the search service
+          this._searchService.toggleSearch(false);
+        }
       }
     }
   }
@@ -169,6 +209,48 @@ export class NavbarComponent implements OnDestroy, OnInit {
         document.body.classList.remove('scroll-lock');
       }
     }
+  }
+
+  /**
+   * Handles navigation when the profile icon is clicked
+   * Redirects to login page if not authenticated, otherwise goes to profile
+   */
+  navigateToProfile(): void {
+    let lang = '';
+    this.currentLang$.subscribe((next) => (lang = next));
+
+    if (this._authService.isAuthenticated()) {
+      // User is authenticated, navigate to profile page
+      this._router.navigate(['/', lang, 'profile']);
+    } else {
+      // User is not authenticated, redirect to login page
+      this._router.navigate(['/', lang, 'login']);
+    }
+  }
+
+  /**
+   * Check if user is authenticated
+   * @returns boolean indicating authentication status
+   */
+  isAuthenticated(): boolean {
+    return this._authService.isAuthenticated();
+  }
+
+  /**
+   * Logs out the current user and redirects to home page
+   */
+  logout(): void {
+    this._authService.logout().subscribe({
+      next: () => {
+        // Closing mobile menu if open after logout
+        if (this.isMenuOpen) {
+          this.toggleMobileMenu();
+        }
+      },
+      error: (error) => {
+        console.error('Logout error:', error);
+      },
+    });
   }
 
   ngOnDestroy(): void {

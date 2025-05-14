@@ -12,7 +12,7 @@ import { SharedBestSellerComponent } from './components/shared-best-seller/share
   styleUrl: './best-seller.component.css',
 })
 export class BestSellerComponent {
-  @Input({ required: true }) LatestProduct: LatestProduct[] = [];
+  @Input({ required: true }) LatestProducts: LatestProduct[] = [];
 
   descriptions: string[] = [];
 

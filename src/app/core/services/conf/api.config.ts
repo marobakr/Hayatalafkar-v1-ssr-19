@@ -28,18 +28,36 @@ export const API_CONFIG = {
     CONTACT_US: 'home/contact-us',
   },
 
-  ORDERS: {
-    CHECK_CART: 'Check Cart',
-    ADD_TO_CART: 'Add To Cart & Create Order',
-    UPDATE_QUANTITY: 'Update Quantity',
-    REMOVE_FROM_CART: 'Remove From Cart',
-    REMOVE_ALL: 'Remove All Cart',
-    PROMO_CODE: 'Promo Code Validation',
-    PLACE_ORDER: 'Place Order',
-  },
-
   AUTH: {
     REGISTER: 'signup',
     LOGIN: 'signin',
+  },
+
+  /* Pending */
+  ORDERS: {
+    CHECK_CART: 'orders/cartcheck',
+    ADD_TO_CART_OR_CREATE_ORDER: 'orders/addToCart/',
+    UPDATE_QUANTITY: 'orders/updateQuantity/',
+    REMOVE_FROM_CART: 'orders/removeFromCart/',
+    REMOVE_ALL: 'orders/removeAllCart/',
+    PROMO_CODE: 'orders/checkPromoCode',
+    PLACE_ORDER: 'orders/placeOrder/',
+  },
+
+  /* Pending */
+  USER_MANAGEMENT: {
+    GET_USER_INFO: 'users',
+    GET_USER_ORDERS: 'users/showOrders',
+    GET_USER_LAST_ORDER: 'users/neworders',
+    ADD_NEW_ADDRESS: 'users/addNewAddress',
+    DEACTIVATE_USER: 'users/deactiveuser/',
+    DELETE_USER: 'users/deleteuser/',
+    LOCATION: 'menu/locations',
+  },
+
+  /* Pending */
+  WISHLIST: {
+    STORE_WISH: 'wish',
+    GET_USER_WISH: 'wish/',
   },
 };

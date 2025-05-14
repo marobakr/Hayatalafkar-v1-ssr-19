@@ -8,9 +8,12 @@
     </p>
 
     <div class="flex flex-wrap justify-center lg:justify-between gap-4">
-      @for (title of titles; track $index) {
+      @for (category of categories; track $index) {
       <div class="w-full sm:w-1/3 md:w-1/4 lg:w-1/5">
-        <app-card [imgPath]="getImagePath($index)" [title]="title"></app-card>
+        <app-card
+          [imgPath]="category.main_image"
+          [title]="category | customTranslate : 'name'"
+        ></app-card>
       </div>
       }
     </div>
