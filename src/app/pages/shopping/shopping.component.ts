@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ICategory } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CommonService } from '@core/services/common/common.service';
@@ -48,6 +49,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
   private readonly searchService = inject(SearchService);
 
+  private readonly route = inject(ActivatedRoute);
+
   // ===== Constants =====
   readonly API_CONFIG_IMAGE = API_CONFIG.BASE_URL_IMAGE;
 
@@ -66,6 +69,16 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
   readonly searchQuery = signal<string>('');
 
+  readonly categoryId = signal<string | null>(null);
+
+  readonly categoryName = signal<string | null>(null);
+
+  readonly subcategoryId = signal<string | null>(null);
+
+  readonly subcategoryName = signal<string | null>(null);
+
+  readonly isLoading = signal<boolean>(true);
+
   products: IAllProduct[] = [];
 
   categories: ICategory[] = [];
@@ -74,6 +87,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
   private searchSubscription: Subscription | null = null;
   private searchToggleSubscription: Subscription | null = null;
   private searchQuerySubscription: Subscription | null = null;
+  private routeParamsSubscription: Subscription | null = null;
 
   // ===== Pagination Configuration =====
   readonly pageSize = 9; // Products per page
@@ -90,9 +104,9 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Initializes the component by fetching products and categories
    */
   ngOnInit(): void {
-    this.getAllProducts();
     this.getAllCategories();
     this.setupSearchListener();
+    this.setupRouteParamsListener();
 
     // Subscribe to search toggle events
     this.searchToggleSubscription = this.searchService.searchToggle$.subscribe(
@@ -122,9 +136,151 @@ export class ShoppingComponent implements OnInit, OnDestroy {
       this.searchQuerySubscription.unsubscribe();
     }
 
+    if (this.routeParamsSubscription) {
+      this.routeParamsSubscription.unsubscribe();
+    }
+
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
     }
+  }
+
+  /**
+   * Sets up listener for route query parameters
+   * Handles category and subcategory filtering from URL
+   */
+  private setupRouteParamsListener(): void {
+    this.routeParamsSubscription = this.route.queryParams.subscribe(
+      (params) => {
+        const categoryId = params['categoryId'];
+        const subcategoryId = params['subcategoryId'];
+
+        this.isLoading.set(true);
+
+        if (categoryId) {
+          // Set category ID parameter
+          this.categoryId.set(categoryId);
+
+          // Call API to get products by category
+          this.getProductsByCategory(categoryId);
+        } else if (subcategoryId) {
+          // Set subcategory ID parameter
+          this.subcategoryId.set(subcategoryId);
+
+          // Call API to get products by subcategory
+          this.getProductsBySubcategory(subcategoryId);
+        } else {
+          // No category/subcategory filter, get all products
+          this.getAllProducts();
+        }
+      }
+    );
+  }
+
+  /**
+   * Fetches products by category
+   * @param categoryId The category ID to filter by
+   */
+  private getProductsByCategory(categoryId: string): void {
+    this.productsService.getProductByCategory(categoryId).subscribe({
+      next: (response: any) => {
+        this.products = response.products || [];
+
+        // Set category name from API response or find from categories list
+        if (this.products.length > 0 && this.products[0].category) {
+          const currentLang = this._translate.currentLang;
+          const categoryName =
+            currentLang === 'en'
+              ? this.products[0].category.en_name
+              : this.products[0].category.ar_name;
+
+          this.categoryName.set(categoryName);
+
+          // Add category to selected filters
+          const currentFilters = this.selectedFilters();
+          const categorySlug =
+            currentLang === 'en'
+              ? this.products[0].category.en_slug
+              : this.products[0].category.ar_slug;
+
+          if (categorySlug && !currentFilters.includes(categorySlug)) {
+            this.selectedFilters.set([...currentFilters, categorySlug]);
+          }
+        } else {
+          // Try to find category name from categories list if not in API response
+          const category = this.categories.find(
+            (c) => c.id.toString() === categoryId
+          );
+          if (category) {
+            const currentLang = this._translate.currentLang;
+            this.categoryName.set(
+              currentLang === 'en' ? category.en_name : category.ar_name
+            );
+          }
+        }
+
+        // Update filters and pagination
+        this.filteredProducts.set(this.products);
+        const initialTotalPages = Math.ceil(
+          this.products.length / this.pageSize
+        );
+        this.totalPages.set(Math.max(1, initialTotalPages));
+        this.updatePaginatedProducts();
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching products by category:', err);
+        this.products = [];
+        this.filteredProducts.set([]);
+        this.paginatedProducts.set([]);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  /**
+   * Fetches products by subcategory
+   * @param subcategoryId The subcategory ID to filter by
+   */
+  private getProductsBySubcategory(subcategoryId: string): void {
+    this.productsService.getProductBySubcategory(subcategoryId).subscribe({
+      next: (response: any) => {
+        this.products = response.products || [];
+
+        // Try to find subcategory name from first product's subcategory info
+        if (this.products.length > 0 && this.products[0].subcategory) {
+          const currentLang = this._translate.currentLang;
+          const subcategoryName =
+            currentLang === 'en'
+              ? this.products[0].subcategory.en_name
+              : this.products[0].subcategory.ar_name;
+
+          const categoryName =
+            currentLang === 'en'
+              ? this.products[0].category.en_name
+              : this.products[0].category.ar_name;
+
+          this.categoryName.set(categoryName);
+          this.subcategoryName.set(subcategoryName);
+        }
+
+        // Update filters and pagination
+        this.filteredProducts.set(this.products);
+        const initialTotalPages = Math.ceil(
+          this.products.length / this.pageSize
+        );
+        this.totalPages.set(Math.max(1, initialTotalPages));
+        this.updatePaginatedProducts();
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching products by subcategory:', err);
+        this.products = [];
+        this.filteredProducts.set([]);
+        this.paginatedProducts.set([]);
+        this.isLoading.set(false);
+      },
+    });
   }
 
   // ===== Public Methods =====
@@ -312,6 +468,10 @@ export class ShoppingComponent implements OnInit, OnDestroy {
     this.minPrice = 200;
     this.maxPrice = 1000;
     this.searchQuery.set('');
+    this.categoryId.set(null);
+    this.categoryName.set(null);
+    this.subcategoryId.set(null);
+    this.subcategoryName.set(null);
 
     // Clear the search input field
     const searchInput = document.getElementById(
@@ -323,6 +483,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
     this.resetCheckboxes();
     this.resetFilters();
+    this.getAllProducts();
   }
 
   /**
@@ -347,6 +508,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
       !this.searchQuery()
     ) {
       this.resetFilters();
+      this.getAllProducts();
     } else {
       this.resetPagination();
       this.applyFilters();
@@ -648,18 +810,31 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Initializes the product list and filtered products
    */
   private getAllProducts(): void {
-    this.productsService.getAllProducts().subscribe((response: any) => {
-      this.products = response.products;
+    this.isLoading.set(true);
+    this.productsService.getAllProducts().subscribe({
+      next: (response: any) => {
+        this.products = response.products;
 
-      // Set the filtered products to all products initially
-      this.filteredProducts.set(this.products);
+        // Set the filtered products to all products initially
+        this.filteredProducts.set(this.products);
 
-      // Calculate initial total pages
-      const initialTotalPages = Math.ceil(this.products.length / this.pageSize);
-      this.totalPages.set(Math.max(1, initialTotalPages));
+        // Calculate initial total pages
+        const initialTotalPages = Math.ceil(
+          this.products.length / this.pageSize
+        );
+        this.totalPages.set(Math.max(1, initialTotalPages));
 
-      // Initialize the paginated products
-      this.updatePaginatedProducts();
+        // Initialize the paginated products
+        this.updatePaginatedProducts();
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error fetching all products:', err);
+        this.products = [];
+        this.filteredProducts.set([]);
+        this.paginatedProducts.set([]);
+        this.isLoading.set(false);
+      },
     });
   }
 

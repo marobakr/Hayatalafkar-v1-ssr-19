@@ -11,7 +11,7 @@
         <img
           loading="lazy"
           [appImageUrl]="aboutUs.main_image"
-          [imageEndpoint]="'uploads/about'"
+          [imageEndpoint]="''"
           alt="About us main image"
         />
       </figure>
@@ -63,7 +63,7 @@
     </div>
 
     <!-- Text Column -->
-    <div class="lg:w-1/2 space-y-6">
+    <div class="w-full lg:w-1/2 space-y-6">
       <h1 class="text-black font-bold text-title-size mb-6 mt-8">
         {{ "hero.about-us.title" | translate }}
       </h1>
@@ -110,9 +110,13 @@
         [sloganTitle]="sloganText"
       ></app-slogan>
       } @else {
-      <button class="text-muted-rose text-description-size underline">
+      <a
+        [routerLink]="['/', currentLang$ | async, 'about-us']"
+        class="text-muted-rose text-description-size underline"
+        [attr.aria-label]="'shared.readMore' | translate"
+      >
         {{ "shared.readMore" | translate }}
-      </button>
+      </a>
       }
     </div>
   </div>

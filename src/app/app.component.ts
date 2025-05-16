@@ -1,24 +1,36 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AlertComponent } from './shared/alert/alert.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, FooterComponent, AlertComponent],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    TranslateModule,
+    NavbarComponent,
+    FooterComponent,
+    AlertComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(private translate: TranslateService) {
-    translate.setDefaultLang('ar');
-    translate.use('ar');
+  private translationService = inject(TranslateService);
+  title = 'hayatalafkar-v1-ssr';
+
+  constructor() {
+    this.translationService.setDefaultLang('ar');
+    this.translationService.use('ar');
   }
 
   switchLanguage(lang: string) {
-    this.translate.use(lang);
+    this.translationService.use(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   }

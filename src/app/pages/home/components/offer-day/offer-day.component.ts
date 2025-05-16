@@ -1,5 +1,6 @@
-import { PercentPipe } from '@angular/common';
+import { AsyncPipe, PercentPipe } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,12 +18,16 @@ import { Offer, RandomProduct } from '../../res/home.interfaces';
     CustomTranslatePipe,
     SafeHtmlComponent,
     ImageUrlDirective,
+    RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './offer-day.component.html',
   styleUrl: './offer-day.component.css',
 })
 export class OfferDayComponent {
   _languageService = inject(LanguageService);
+
+  currentLang$ = this._languageService.getLanguage();
 
   @Input({ required: true }) randomProducts: RandomProduct[] = [];
   @Input({ required: true }) lastOffer: Offer = {} as Offer;

@@ -19,13 +19,27 @@
       >
         <!-- Image with discount badge -->
         <div class="relative rounded-2xl overflow-hidden">
-          <img
-            loading="lazy"
-            [appImageUrl]="randomProduct.main_image"
-            [imageEndpoint]="'uploads/products'"
-            alt="product"
-            class="w-full md:max-w-[220px] h-full"
-          />
+          <a
+            [routerLink]="[
+              '/',
+              currentLang$ | async,
+              'products',
+              randomProduct.id
+            ]"
+            [attr.aria-label]="
+              (randomProduct | customTranslate : 'name') +
+              ' ' +
+              ('shared.product_details' | translate)
+            "
+          >
+            <img
+              loading="lazy"
+              [appImageUrl]="randomProduct?.main_image || ''"
+              [imageEndpoint]="'uploads/products'"
+              [alt]="randomProduct | customTranslate : 'name'"
+              class="w-full md:max-w-[220px] h-full"
+            />
+          </a>
           <span
             class="absolute top-[7px] right-[7px] bg-[#434645] text-white py-4 px-8 rounded-full text-category-size"
           >
@@ -56,15 +70,11 @@
                 {{ "shared.currency" | translate }}</span
               >
             </div>
-            <p class="text-category-size text-[#333] mt-5 leading-5">
-              <app-safe-html
-                [content]="randomProduct | customTranslate : 'more_information'"
-              ></app-safe-html>
-            </p>
           </div>
           <a
-            href="#"
+            [routerLink]="['/', currentLang$ | async, 'shopping']"
             class="text-muted-rose text-description-size font-bold mt-4 flex items-center gap-[1px]"
+            [attr.aria-label]="'shared.shopping_now' | translate"
           >
             <span>
               {{ "shared.shopping_now" | translate }}
@@ -74,7 +84,7 @@
                 loading="lazy"
                 class="ltr:rotate-180 rtl:rotate-0"
                 src="/images/offer-day/4.svg"
-                alt=""
+                alt="{{ 'shared.arrow_icon' | translate }}"
               />
             </figure>
           </a>
@@ -91,7 +101,9 @@
       <div class="w-full lg:w-1/2 relative z-10">
         <!-- Background Image -->
         @if (_languageService.getIsArabic()) {
-        <div class="absolute top-[10px] ltr:right-[10px] rtl:left-[10px]">
+        <div
+          class="absolute bottom-0 ltr:right-[-20px] rtl:left-[0px] ltr:rotate-y-180"
+        >
           <figure>
             <img
               loading="lazy"
@@ -110,9 +122,9 @@
           <figure>
             <img
               loading="lazy"
-              [appImageUrl]="lastOffer.main_image"
+              [appImageUrl]="lastOffer?.main_image || ''"
               [imageEndpoint]="'uploads/offers'"
-              alt="العناية بالنساء"
+              [alt]="lastOffer | customTranslate : 'title'"
               class="w-full md:max-w-[533px]"
             />
           </figure>
@@ -122,7 +134,6 @@
       <!-- Text Content Section -->
       <div class="w-full lg:w-1/2 p-3 md:p-8 text-start relative z-10">
         <div
-          iv
           class="text-category-size md:text-[28px] text-white mb-[10px] md:mb-[23px]"
         >
           {{ lastOffer | customTranslate : "title" }}
@@ -132,7 +143,7 @@
         >
           <p class="text-black">
             <app-safe-html
-              [content]="lastOffer | customTranslate : 'samll_title'"
+              [content]="lastOffer | customTranslate : 'small_title'"
             ></app-safe-html>
           </p>
           <p>
@@ -154,6 +165,7 @@
           [border]="'black'"
           [color]="'black'"
           [image]="'/images/navbar/9.webp'"
+          [pathLink]="'shopping'"
         ></app-arrow-button>
       </div>
 

@@ -1,10 +1,11 @@
 import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
+import { ImageUrlDirective } from '@core/directives/image-url.directive';
+import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
 @Component({
   selector: 'app-service-card',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, ImageUrlDirective, SafeHtmlComponent],
   templateUrl: './service-card.component.html',
   styleUrl: './service-card.component.css',
 })

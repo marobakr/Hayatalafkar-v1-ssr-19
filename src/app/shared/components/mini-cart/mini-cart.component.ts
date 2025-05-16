@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartStateService } from '../../../core/services/common/cart-state.service';
+import { CartStateService } from '../../../core/services/cart/cart-state.service';
 
 @Component({
   selector: 'app-mini-cart',

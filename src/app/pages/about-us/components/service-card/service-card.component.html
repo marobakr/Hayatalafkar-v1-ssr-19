@@ -10,7 +10,8 @@
     <img
       loading="lazy"
       class="max-w-[80px] h-auto mx-auto md:mx-0"
-      [src]="cardImagePath"
+      [appImageUrl]="cardImagePath"
+      [imageEndpoint]="'uploads/about'"
       [alt]="cardTitle"
     />
   </figure>
@@ -18,6 +19,6 @@
     {{ cardTitle }}
   </h3>
   <p class="text-[#333] text-category-size w-full">
-    {{ cardDescription }}
+    <app-safe-html [content]="cardDescription"></app-safe-html>
   </p>
 </div>

@@ -117,4 +117,8 @@ export class AuthService {
   getUserData(): any {
     return this.authStorage.getUserData();
   }
+
+  getUserId(): string {
+    return this.authStorage.getUserData()?.id.toString() || '';
+  }
 }

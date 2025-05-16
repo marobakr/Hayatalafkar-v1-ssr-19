@@ -219,8 +219,8 @@
       "personal": "Personal"
     }
   },
-  "availability": "availability",
-  "unavailability": "unavailability",
+  "availability": "Available Products",
+  "unavailability": "Unavailable Products",
   "page": "Page",
   "of": "of",
   "banner": {
@@ -552,48 +552,71 @@
   "shared": {
     "currency": "SAR",
     "offer": "25% Discount",
+    "price_varies": "Price varies based on options",
     "readMore": "Read More",
     "shopping_now": "shopping now",
-    "show-products": "buying the product "
+    "show-products": "buying the product ",
+    "success": "Success",
+    "added_to_cart_success": "Item added to cart successfully",
+    "continue_shopping": "Continue Shopping",
+    "go_to_cart": "Go to Cart",
+    "add_to_cart": "Add to cart",
+    "update_cart_quantity": "Update cart quantity"
   },
   "shopping": {
+    "header": {
+      "title": "All products",
+      "subtitle": "Shop the most recent products"
+    },
+    "view-category": "View category",
     "filter": {
+      "selected-filter": "selected filters",
+      "products-counts": "Products Count",
+      "items": "items",
+      "active": "active",
       "filter-type": {
-        "all": "all",
-        "categories": "BEST-SELLING PRODUCTS",
-        "clear-all": "delete all",
-        "in-stock": "in stock",
-        "price": "price: 200 SAR - 1000 SAR"
+        "clear-all": "clear all"
       },
       "price": {
-        "currency": "SAR",
         "title": "price",
-        "reset": "Reset to default"
+        "currency": "USD",
+        "reset": "Reset prices"
       },
-      "products-counts": "view 1-15 products from 3440",
-      "selected-filter": "filter options",
-      "items": "items",
-      "active": "active"
+      "category": "Category",
+      "subcategory": "Subcategory",
+      "view-all-products": "View All Products"
     },
     "filter-box": {
-      "filterItems": [
-        "All",
-        "Anti Aging",
-        "Anti Dandruff",
-        "Anti Dandruff",
-        "Anti Frizz",
-        "Anti Grease",
-        "Anti Hair Loss",
-        "Anti Lice",
-        "Anti Wrinkles",
-        "Hair Moisturizer",
-        "Hair Nutrition"
-      ],
-      "title": "Hair Care"
+      "title": "categories"
     },
-    "header": {
-      "subtitle": "Shop with us now effortlessly with the products you need",
-      "title": "Shop Now"
+    "search": {
+      "placeholder": "Search for products",
+      "hint": "Looking for something specific?",
+      "button": "Search",
+      "no-results": "No products found",
+      "suggestions": "Try different keywords"
+    },
+    "grid": {
+      "sort-by": "Sort by",
+      "newest": "Newest",
+      "price-low-high": "Price: Low to High",
+      "price-high-low": "Price: High to Low",
+      "popularity": "Popularity"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page",
+      "of": "of"
+    },
+    "no-products": {
+      "title": "No products found",
+      "description": "Try clearing some filters or try a different search term",
+      "button": "Clear filters"
+    },
+    "view-options": {
+      "grid": "Grid view",
+      "list": "List view"
     }
   },
   "show": {

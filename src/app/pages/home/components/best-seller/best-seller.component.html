@@ -2,9 +2,7 @@
   <div class="container mx-auto">
     <div class="flex items-center justify-between mb-[50px]">
       <div>
-        <h2
-          class="text-description-size md:text-title-size font-bold text-[#333]"
-        >
+        <h2 class="!text-price-size md:text-title-size font-bold text-[#333]">
           <span class="text-muted-rose">
             {{ "bestSelling.title" | translate }} -
           </span>
@@ -13,7 +11,8 @@
       </div>
 
       <a
-        class="text-description-size md:text-title-size text-white bg-warm-tan rounded-full py-[13px] px-[22px]"
+        [routerLink]="['/', currentLang$ | async, 'shopping']"
+        class="!text-price-size md:text-title-size text-white bg-warm-tan rounded-full py-[13px] px-[22px]"
       >
         {{ "bestSelling.viewAllProducts" | translate }}
       </a>

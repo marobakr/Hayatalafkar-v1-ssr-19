@@ -237,10 +237,11 @@
             }
           </li>
 
+          <!-- Desktop Wishlist Link -->
           <li class="cursor-pointer" role="menuitem">
             <a
               [routerLink]="['/', currentLang$ | async, 'wishlist']"
-              class="block py-2 px-3 xl:p-0"
+              class="block py-2 px-3 xl:p-0 relative"
               [attr.aria-label]="'navbar.wishlist' | translate"
             >
               <figure class="max-w-[25px] max-h-[25px]">
@@ -250,6 +251,11 @@
                   height="25"
                   alt="Wishlist"
                 />
+                @if (wishlistCount() > 0) {
+                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {{ wishlistCount() }}
+                </span>
+                }
               </figure>
             </a>
           </li>
@@ -510,30 +516,39 @@
           </li>
 
           <li>
+            <!-- Mobile Wishlist Link -->
             <a
               [routerLink]="['/', currentLang$ | async, 'wishlist']"
-              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              class="block py-2 text-black font-bold relative"
               (click)="toggleMobileMenu()"
             >
-              <figure>
+              <figure class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2">
                 <img
                   src="/images/navbar/6.webp"
-                  class="w-[30px]"
+                  width="25"
+                  height="25"
                   alt="Wishlist"
                 />
+                @if (wishlistCount() > 0) {
+                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {{ wishlistCount() }}
+                </span>
+                }
               </figure>
+              {{ "navbar.wishlist" | translate }}
             </a>
           </li>
 
           <li>
             <a
               [routerLink]="['/', currentLang$ | async, 'cart']"
-              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              class="block py-2 text-black font-bold relative"
               (click)="toggleMobileMenu()"
             >
-              <figure>
-                <img src="/images/navbar/7.webp" class="w-[30px]" alt="Cart" />
+              <figure class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2">
+                <img src="/images/navbar/7.webp" width="25" height="25" alt="Cart" />
               </figure>
+              {{ "navbar.cart" | translate }}
             </a>
           </li>
         </ul>

@@ -54,7 +54,7 @@ export class ApiService {
     return this.http.delete<T>(url, { params: httpParams });
   }
 
-  getImageUrl(image: string, endpoint: string) {
-    return `${API_CONFIG.BASE_URL_IMAGE}${endpoint}/${image}`;
+  getImageUrl(image: string) {
+    return `${API_CONFIG.BASE_URL_IMAGE}${image}`;
   }
 }

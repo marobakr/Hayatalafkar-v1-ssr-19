@@ -16,11 +16,15 @@ export class ProductsService {
     return this.apiService.get(API_CONFIG.PRODUCTS.GET_WITH_SLUG + slug);
   }
 
-  // getProductByCategory(slug: string) {
-  //   return this.apiService.get(API_CONFIG.PRODUCTS.GET_WITH_CATEGORY + slug);
-  // }
+  getProductByCategory(categoryId: string) {
+    return this.apiService.get(
+      `${API_CONFIG.PRODUCTS.GET_WITH_CATEGORY}${categoryId}`
+    );
+  }
 
-  // getProductBySubcategory(slug: string) {
-  //   return this.apiService.get(API_CONFIG.PRODUCTS.GET_WITH_SUBCATEGORY + slug);
-  // }
+  getProductBySubcategory(subcategoryId: string) {
+    return this.apiService.get(
+      `${API_CONFIG.PRODUCTS.GET_WITH_SUBCATEGORY}${subcategoryId}`
+    );
+  }
 }
