@@ -16,13 +16,19 @@ import {
   PLATFORM_ID,
   Renderer2,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+} from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { SearchService } from '../../core/services/search/search.service';
+import { WishlistService } from '../../core/services/wishlist/wishlist.service';
 import { MegaMenuComponent } from '../mega-menu/mega-menu.component';
 
 @Component({
@@ -62,7 +68,11 @@ export class NavbarComponent implements OnDestroy, OnInit {
   private _languageService = inject(LanguageService);
   private _searchService = inject(SearchService);
   private _authService = inject(AuthService);
+  private _wishlistService = inject(WishlistService);
   private platformId = inject(PLATFORM_ID);
+
+  // Get wishlist count as a signal
+  wishlistCount = this._wishlistService.getWishlistCountSignal();
 
   currentLang$ = this._languageService.getLanguage();
 
@@ -88,6 +98,16 @@ export class NavbarComponent implements OnDestroy, OnInit {
       // Initial screen width check
       this.checkScreenWidth();
     }
+
+    // Load wishlist count
+    this._wishlistService.loadWishlistCount();
+
+    // Set up event listener to refresh the wishlist count
+    this._router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this._wishlistService.loadWishlistCount();
+      });
   }
 
   private checkScreenWidth(): void {

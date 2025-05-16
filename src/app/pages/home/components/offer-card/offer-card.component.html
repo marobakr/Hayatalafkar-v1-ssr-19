@@ -2,8 +2,8 @@
   class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
 >
   <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
-    @for (offer of offers.slice(0, 2); track offer.id) {
-
+    @if(offers.length > 0){ @for (offer of offers.length > 1 ? offers.slice(0,2)
+    : [offers[0], offers[0]]; track $index) {
     <app-big-card-offer
       [mainColor]="$even"
       [alt]="offer | customTranslate : 'title'"
@@ -12,6 +12,6 @@
       [subtitle]="offer | customTranslate : 'samll_title'"
       [description]="offer | customTranslate : 'text'"
     ></app-big-card-offer>
-    }
+    } }
   </div>
 </div>

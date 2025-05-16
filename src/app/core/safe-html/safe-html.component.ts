@@ -7,7 +7,11 @@ import { FilterHtmlPipe } from '@core/pipes/filter-html.pipe';
   standalone: true,
   imports: [FilterHtmlPipe],
   template: `
-    <span class="description" [innerHTML]="htmlContent | filterHtml"></span>
+    <span
+      [title]="htmlContent | filterHtml"
+      class="description"
+      [innerHTML]="htmlContent | filterHtml"
+    ></span>
   `,
   styles: `
     :host {

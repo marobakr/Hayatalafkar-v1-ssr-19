@@ -1,8 +1,9 @@
-import { JsonPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
-import { ApiService } from '@core/services/conf/api.service';
+import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AboutUs, Counter } from 'src/app/pages/home/res/home.interfaces';
 import { SloganComponent } from '../slogan/slogan.component';
@@ -14,8 +15,9 @@ import { SloganComponent } from '../slogan/slogan.component';
     SloganComponent,
     TranslateModule,
     CustomTranslatePipe,
-    JsonPipe,
+    RouterLink,
     ImageUrlDirective,
+    AsyncPipe,
   ],
   templateUrl: './about-shared.component.html',
   styleUrl: './about-shared.component.css',
@@ -33,7 +35,5 @@ export class AboutSharedComponent {
   @Input() mainImage!: string;
 
   currentImage: string | null = null;
-
-  /* Services */
-  apiService = inject(ApiService);
+  currentLang$ = inject(LanguageService).getLanguage();
 }

@@ -13,6 +13,8 @@
         <app-card
           [imgPath]="category.main_image"
           [title]="category | customTranslate : 'name'"
+          [categoryId]="category.id"
+          [alt]="category | customTranslate : 'name'"
         ></app-card>
       </div>
       }

@@ -12,7 +12,7 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ICategory } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +20,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { CommonService } from './../../core/services/common/common.service';
+
 @Component({
   selector: 'app-mega-menu',
   standalone: true,
@@ -34,14 +35,18 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
   contentHeight = 0;
   private resizeSub?: Subscription;
+  private langSub?: Subscription;
   isLoading = true;
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  currentLang = 'en';
 
-  // Inject the language service
+  // Inject services
   protected languageService = inject(LanguageService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.getAllCategories();
+    this.setupLanguageSubscription();
 
     // Only add document click handler in browser environment
     if (this.isBrowser) {
@@ -50,6 +55,12 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         document.addEventListener('click', this.handleDocumentClick);
       }, 100);
     }
+  }
+
+  private setupLanguageSubscription() {
+    this.langSub = this.languageService.getLanguage().subscribe((lang) => {
+      this.currentLang = lang;
+    });
   }
 
   // Store the handler as a property so we can remove it later
@@ -86,6 +97,10 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.resizeSub) {
       this.resizeSub.unsubscribe();
     }
+
+    if (this.langSub) {
+      this.langSub.unsubscribe();
+    }
   }
 
   private adjustMenuHeight() {
@@ -109,5 +124,32 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  /**
+   * Navigate to shopping page filtered by category
+   * @param category The category to filter by
+   */
+  navigateToCategory(category: ICategory) {
+    this.router.navigate(['/', this.currentLang, 'shopping'], {
+      queryParams: {
+        categoryId: category.id,
+      },
+    });
+    this.closeMenu.emit();
+  }
+
+  /**
+   * Navigate to shopping page filtered by subcategory
+   * @param subcategoryId The subcategory ID to filter by
+   * @param subcategoryName The subcategory name for display
+   */
+  navigateToSubcategory(subcategoryId: string) {
+    this.router.navigate(['/', this.currentLang, 'shopping'], {
+      queryParams: {
+        subcategoryId,
+      },
+    });
+    this.closeMenu.emit();
   }
 }

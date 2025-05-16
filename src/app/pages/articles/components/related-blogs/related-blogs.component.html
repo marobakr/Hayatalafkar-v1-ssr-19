@@ -11,6 +11,7 @@
     </h2>
 
     <a
+      [routerLink]="['/', currentLang$ | async, 'blogs']"
       class="text-[5px] md:text-subtitle-size text-white bg-warm-tan rounded-full py-[13px] px-[35px]"
     >
       {{ "news-articles.title" | translate }}

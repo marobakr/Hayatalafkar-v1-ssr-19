@@ -1,12 +1,17 @@
-<div class="group relative rounded-xl overflow-hidden">
-  <figure class="overflow-hidden mb-0 rounded-xl">
+<a
+  class="group relative rounded-xl overflow-hidden transition-all duration-300 block"
+  [attr.aria-label]="categoryName || title"
+  [routerLink]="categoryId ? ['/', currentLang, 'shopping'] : []"
+  [queryParams]="categoryId ? { categoryId: categoryId } : {}"
+>
+  <figure class="overflow-hidden mb-0 rounded-xl h-[300px]">
     <img
       loading="lazy"
       [appImageUrl]="imgPath"
-      [imageEndpoint]="'uploads/categories'"
+      [imageEndpoint]="''"
       [alt]="alt"
-      class="w-full h-auto rounded-xl mb-0 transform transition-transform duration-300 group-hover:scale-125"
+      class="w-full h-full rounded-xl mb-0 transform transition-transform duration-300 group-hover:scale-110"
     />
   </figure>
-  <p class="text-subtitle-size mt-4">{{ title }}</p>
-</div>
+  <p class="text-subtitle-size font-medium my-3">{{ title }}</p>
+</a>

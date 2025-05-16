@@ -10,13 +10,14 @@ import {
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
+import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { SloganComponent } from '@shared/components/slogan/slogan.component';
+import { Subscription } from 'rxjs';
 import { Slider } from '../../res/home.interfaces';
-
 // Add Window interface extension for Swiper
 declare global {
   interface Window {
@@ -32,6 +33,7 @@ declare global {
     TranslateModule,
     CustomTranslatePipe,
     SafeHtmlComponent,
+    ImageUrlDirective,
   ],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css',
@@ -46,6 +48,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   private swiper: any;
   private initTimeout?: number;
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private langSubscription?: Subscription;
 
   currentLang$ = this.languageService.getLanguage();
 
@@ -60,6 +63,26 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       this.initTimeout = window.setTimeout(() => {
         this.initializeSwiper();
       }, 500);
+    });
+
+    // Subscribe to language changes to reinitialize Swiper
+    this.langSubscription = this.languageService.getLanguage().subscribe(() => {
+      this.ngZone.runOutsideAngular(() => {
+        // Destroy existing Swiper instance if it exists
+        if (this.swiper) {
+          try {
+            this.swiper.destroy(true, true);
+            this.swiper = null;
+          } catch (error) {
+            console.error('Error destroying Swiper instance:', error);
+          }
+        }
+
+        // Delay initialization to ensure DOM is updated after language change
+        window.setTimeout(() => {
+          this.initializeSwiper();
+        }, 300);
+      });
     });
   }
 
@@ -76,6 +99,11 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       } catch (error) {
         console.error('Error destroying Swiper instance:', error);
       }
+    }
+
+    // Unsubscribe from language changes
+    if (this.langSubscription) {
+      this.langSubscription.unsubscribe();
     }
   }
 
@@ -170,6 +198,9 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
         slidesPerView: 1,
         spaceBetween: 0,
         loop: this.heroSection.length > 1,
+        direction: 'horizontal',
+        // Reverse the direction
+        reverseDirection: true,
         autoplay:
           this.heroSection.length > 1
             ? {
@@ -177,10 +208,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
                 disableOnInteraction: false,
               }
             : false,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
+        // Remove default navigation and use custom buttons only
+        navigation: false,
         pagination: {
           el: '.swiper-pagination',
           clickable: true,
@@ -190,13 +219,17 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
       // Add click handlers to custom navigation buttons
       if (prevBtn) {
         prevBtn.addEventListener('click', () => {
-          this.swiper?.slidePrev();
+          // With reverseDirection, we need to slide next for prev button
+          // to maintain correct navigation direction
+          this.swiper?.slideNext();
         });
       }
 
       if (nextBtn) {
         nextBtn.addEventListener('click', () => {
-          this.swiper?.slideNext();
+          // With reverseDirection, we need to slide prev for next button
+          // to maintain correct navigation direction
+          this.swiper?.slidePrev();
         });
       }
     } catch (error) {

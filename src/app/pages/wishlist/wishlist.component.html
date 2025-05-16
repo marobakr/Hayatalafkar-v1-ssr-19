@@ -10,7 +10,7 @@
     <div class="grid grid-cols-15">
       <div class="col-span-15 lg:col-span-11">
         <!-- Wishlist Items Header -->
-        @if (productsItem.length > 0) {
+        @if (wishlistItem.length > 0) {
         <div
           class="header hidden md:flex items-center justify-between rounded-[15px] bg-warm-tan py-6 px-12 text-white text-description-size"
         >
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Wishlist Items -->
-        @for (item of productsItem; track $index) {
+        @for (item of wishlistItem; track $index) {
         <div
           [@itemAnimation]
           class="block md:flex items-center justify-between flex-wrap mb-8 py-6 px-[23px] pb-6 border-b-1 border-[#8D8D8D]"
@@ -40,14 +40,22 @@
             class="flex justify-start md:ltr:pr-15 md:rtl:pl-15 md:justify-between items-center capitalize gap-[10px] mb-5 md:mb-0"
           >
             <!-- Remove Item -->
-            <div class="close cursor-pointer" (click)="removeItem($index)">
+            <div
+              class="close cursor-pointer"
+              (click)="removeItem($index, item.id)"
+            >
               <figure class="mx-0 remove-icon">
                 <img src="/images/wishlist/remove.svg" alt="remove item" />
               </figure>
             </div>
 
             <figure class="max-w-[80px] relative">
-              <img class="w-full" src="/images/wishlist/3.png" alt="" />
+              <img
+                class="w-full"
+                [alt]="item.product | customTranslate : 'slug'"
+                [appImageUrl]="item.product.main_image"
+                [imageEndpoint]="''"
+              />
               <!-- Cart Animation Icon -->
               @if (cartAnimationStates[$index]) {
 
@@ -60,27 +68,42 @@
             </figure>
             <div class="details">
               <h3
-                [title]="'item' | translate"
+                [title]="item.product | customTranslate : 'slug'"
                 class="text-category-size text-black font-bold mb-[15px] line-clamp-1"
               >
-                {{ item }}
+                {{ item.product | customTranslate : "slug" }}
               </h3>
               <p class="text-[#333] text-[14px]">
-                {{ "wishlist.productsItem.item-1.subtitle" | translate }}
+                {{ item.product | customTranslate : "name" }}
               </p>
             </div>
           </div>
           <!-- Price & Quantity -->
-
           <div
             class="flex justify-between items-center flex-grow-1 flex-row-reverse md:flex-row mb-5 md:mb-0"
           >
-            <!-- Price -->
-            <div class="text-[#333] text-category-size font-bold flex-grow-1">
-              200
-
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+            @if (+item.product.price === 0) {
+            <!-- Price is 0, show message about product with choices -->
+            <div
+              class="text-muted-rose text-category-size font-medium flex-grow-1"
+            >
+              {{ "shared.price_varies" | translate }}
             </div>
+            } @else if (item.product.price_after_sale &&
+            +item.product.price_after_sale !== 0) {
+            <!-- Price After Sale -->
+            <div class="text-[#333] text-category-size font-bold flex-grow-1">
+              {{ "wishlist.productsItem.item-1.price" | translate }}
+              {{ item.product.price_after_sale }}
+            </div>
+            } @else {
+            <!-- Regular Price -->
+            <div class="text-[#333] text-category-size font-bold flex-grow-1">
+              {{ "wishlist.productsItem.item-1.price" | translate }}
+              {{ item.product.price }}
+            </div>
+            }
+
             <!-- Quantity -->
 
             <form class="max-w-xs flex-grow-1">
@@ -102,7 +125,7 @@
                   aria-describedby="helper-text-explanation"
                   class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
                   placeholder="999"
-                  value="5"
+                  [value]="item.product.product_counter"
                   required
                 />
                 <button
@@ -120,7 +143,7 @@
           <!-- Add To Cart -->
           <button
             type="button"
-            class="text-white block md:inline bg-warm-tan font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none capitalize"
+            class="cursor-pointer text-white block md:inline bg-warm-tan font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none capitalize"
             (click)="showCartAnimation($index)"
           >
             {{ "add_to_cart" | translate }}
@@ -203,8 +226,7 @@
       </div>
       <!-- this acts as an offset -->
       <div class="hidden lg:block lg:col-span-1"></div>
-      @if (productsItem.length > 0) {
-
+      @if (wishlistItem.length > 0) {
       <div class="hidden lg:block lg:col-span-3">
         <app-talent-image-card
           [imagePath]="'/images/news/13.png'"

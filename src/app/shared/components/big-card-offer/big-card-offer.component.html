@@ -2,28 +2,6 @@
   [ngClass]="{ 'bg-[#d7bba5]': mainColor, 'bg-white': !mainColor }"
   class="relative flex flex-col h-full md:flex-row text-right rounded-lg shadow-md max-w-xl w-full"
 >
-  <div
-    class="btns absolute top-[30px] rtl:left-[20px] ltr:right-[20px] z-1 flex flex-col"
-  >
-    <button class="mb-[10px] cursor-pointer" aria-label="Add to wishlist">
-      <figure>
-        <img
-          loading="lazy"
-          src="/images/common/wishlist.svg"
-          [alt]="'add_to_wishlist' | translate"
-        />
-      </figure>
-    </button>
-    <button class="cursor-pointer" aria-label="Add to cart">
-      <figure>
-        <img
-          loading="lazy"
-          src="/images/common/cart.svg"
-          [alt]="'add_to_cart' | translate"
-        />
-      </figure>
-    </button>
-  </div>
   <div class="flex flex-col justify-between p-6 md:w-1/2">
     <span
       [ngClass]="{ 'bg-[#d7bba5]': !mainColor, 'bg-white': mainColor, 'text-[#d7bba5]': mainColor, 'text-white': !mainColor, }"
@@ -37,9 +15,9 @@
         >{{ subtitle }}</span
       >
     </h2>
-    <p class="text-description-size text-black mb-4">
-      {{ description }}
-    </p>
+    <div class="text-description-size text-black mb-4">
+      <app-safe-html [content]="description | customTranslate"></app-safe-html>
+    </div>
 
     <app-arrow-button
       [gap]="'5px'"
