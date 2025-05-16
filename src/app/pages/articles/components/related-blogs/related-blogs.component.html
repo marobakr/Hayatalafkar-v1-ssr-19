@@ -2,13 +2,13 @@
   <!-- Section Header -->
   @if (lightLabel) {
   <div class="flex items-center justify-between mb-[35px] font-bold">
-    <h2 class="text-[8px] md:text-title-size">
+    <h4 class="text-[8px] md:text-title-size">
       {{ "news-articles.main-title" | translate }}
 
       <span class="text-muted-rose">
         {{ "news-articles.title" | translate }}
       </span>
-    </h2>
+    </h4>
 
     <a
       [routerLink]="['/', currentLang$ | async, 'blogs']"
@@ -19,13 +19,13 @@
   </div>
   } @else {
   <div class="mb-[35px]">
-    <h2 class="">
+    <h4 class="">
       {{ "news-articles.main-title" | translate }}
 
       <span class="text-black text-[24px]">
         {{ "blogs.title" | translate }}
       </span>
-    </h2>
+    </h4>
 
     <a
       class="text-[5px] md:text-subtitle-size text-white bg-warm-tan rounded-full py-[13px] px-[35px]"
@@ -69,9 +69,9 @@
           ></div>
         </div>
         <!-- ArticleTitle -->
-        <h1 class="text-subtitle-size text-black mb-[15px] font-semibold">
+        <h2 class="text-subtitle-size text-black mb-[15px] font-semibold">
           {{ blog | customTranslate : "blog_title" }}
-        </h1>
+        </h2>
 
         <!-- ArticleDescription -->
         <h3

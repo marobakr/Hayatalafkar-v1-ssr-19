@@ -2,6 +2,9 @@
   <div
     class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between ltr:flex-row-reverse gap-12 rtl:md:flex-row-reverse bg-[#CBAC8D] [border-radius:23px] relative"
   >
+    <h1 class="sr-only">
+      {{ "hero.title" | translate }}
+    </h1>
     <!-- Carousel Container -->
     <div class="carousel-container relative w-full" #swiperContainer>
       <!-- Slides Wrapper -->
@@ -34,11 +37,11 @@
             </app-slogan>
 
             <!-- Main Title -->
-            <h1
+            <h2
               class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
             >
               {{ slide | customTranslate : "title" }}
-            </h1>
+            </h2>
 
             <!-- Description Text -->
             <div class="text-[#F5F5F5] leading-relaxed mb-8">
