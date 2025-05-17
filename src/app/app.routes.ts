@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
-
+import { productDetailsResolver } from './pages/product-details/res/product-details.resolver';
 export const routes: Routes = [
   { path: '', redirectTo: '/ar', pathMatch: 'full' },
 
@@ -29,6 +29,7 @@ export const routes: Routes = [
             (c) => c.WishlistComponent
           ),
         data: { titleKey: 'routes.wishlist' },
+        canActivate: [authGuard],
       },
       /* Blogs */
       {
@@ -57,6 +58,20 @@ export const routes: Routes = [
           ),
         data: { titleKey: 'routes.shopping' },
       },
+
+      /* Product Details */
+      {
+        path: 'product-details/:id',
+        loadComponent: () =>
+          import('./pages/product-details/product-details.component').then(
+            (c) => c.ProductDetailsComponent
+          ),
+        data: { titleKey: 'routes.home' },
+        resolve: {
+          productDetails: productDetailsResolver,
+        },
+      },
+
       /* About Us  */
       {
         path: 'about-us',
@@ -81,6 +96,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/cart/cart.component').then((c) => c.CartComponent),
         data: { titleKey: 'routes.home' },
+        canActivate: [authGuard],
       },
 
       /* Profile */
@@ -120,6 +136,13 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/password/password.component'
               ).then((c) => c.PasswordComponent),
+          },
+          {
+            path: 'account-management',
+            loadComponent: () =>
+              import(
+                '../app/pages/profile/components/account-management/account-management.component'
+              ).then((c) => c.AccountManagementComponent),
           },
         ],
         data: {

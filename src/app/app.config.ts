@@ -24,6 +24,7 @@ import { provideTranslation } from '@core/i18n/i18n.config';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { initFlowbite } from 'flowbite-angular/core';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
@@ -42,7 +43,10 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions()
     ),
     provideClientHydration(withEventReplay()),
-    importProvidersFrom(TranslateModule.forRoot(provideTranslation())),
+    importProvidersFrom(
+      TranslateModule.forRoot(provideTranslation()),
+      CarouselModule
+    ),
     provideAnimations(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
 

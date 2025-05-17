@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IGetCartOrOrder, OrderDetail } from '@core/interfaces/cart.interfaces';
 import { EMPTY, catchError, tap } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
 import { OrdersService } from './orders.service';
 
 @Injectable({
@@ -18,28 +19,58 @@ import { OrdersService } from './orders.service';
 export class CartStateService {
   private ordersService = inject(OrdersService);
   private destroyRef = inject(DestroyRef);
-  private _authService = inject(AuthService);
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
 
   // Cart state signals
-  private cartState = signal<IGetCartOrOrder | null>(null);
+  private cartState = signal<IGetCartOrOrder>({} as IGetCartOrOrder);
 
   // Public computed signals
-  readonly order = computed(() => this.cartState()?.order || null);
+  readonly order = computed(() => this.cartState().order);
+
   readonly orderDetails = computed(() => this.cartState()?.orderDetails || []);
-  readonly subtotal = computed(() => this.order()?.subtotal || '0');
-  readonly total = computed(() => this.order()?.total || '0');
-  readonly tax = computed(() => this.order()?.tax || '0');
-  readonly shipping = computed(() => this.order()?.shipping || '0');
-  readonly discount = computed(() => this.order()?.promo_code_value || '0');
-  readonly itemCount = computed(() => {
-    return this.orderDetails().reduce(
-      (count: number, item: OrderDetail) => count + item.quantity,
-      0
-    );
-  });
+
+  readonly promoCode = computed(() => this.cartState()?.promocode || null);
+
+  readonly user = computed(() => this.cartState()?.user || null);
+
   readonly isEmpty = computed(() => this.orderDetails().length === 0);
 
+  /**
+   * Get the total number of items in the cart
+   */
+  readonly cartCount = computed(() => {
+    // Return 0 if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      return 0;
+    }
+
+    // Don't calculate cart count if there are no confirmed orders
+    const hasConfirmedOrders = this.hasConfirmedOrders();
+    if (!hasConfirmedOrders) {
+      return 0;
+    }
+
+    const items = this.orderDetails();
+    if (!items || items.length === 0) return 0;
+
+    // Sum up the quantities of all items
+    return items.reduce((total, item) => total + (item.quantity || 0), 0);
+  });
+
+  // Signal to track if user has confirmed orders
+  private hasConfirmedOrdersSignal = signal<boolean>(false);
+
+  // Method to check if user has confirmed orders
+  private hasConfirmedOrders(): boolean {
+    console.log(this.hasConfirmedOrdersSignal());
+    return this.hasConfirmedOrdersSignal();
+  }
+
   constructor() {
+    // Check for confirmed orders first
+    this.checkConfirmedOrders();
+
     // Initialize cart
     this.fetchCart();
 
@@ -53,12 +84,65 @@ export class CartStateService {
     });
   }
 
+  // Check if the user has confirmed orders
+  checkConfirmedOrders(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.hasConfirmedOrdersSignal.set(false);
+      return;
+    }
+
+    // Use ordersService.checkCart() to get current cart items
+    this.ordersService.checkCart().subscribe({
+      next: (response) => {
+        // Check if response has orderDetails and if it has items
+        const hasItems =
+          response &&
+          response.orderDetails &&
+          Array.isArray(response.orderDetails) &&
+          response.orderDetails.length > 0;
+
+        console.log('Cart has items:', hasItems);
+        this.hasConfirmedOrdersSignal.set(hasItems);
+      },
+      error: (err) => {
+        console.error('Error checking cart items:', err);
+        this.hasConfirmedOrdersSignal.set(false);
+      },
+    });
+  }
+
   fetchCart() {
+    // Don't fetch cart for unauthenticated users
+    if (!this.authService.isAuthenticated()) {
+      // Initialize with empty cart
+      this.cartState.set({
+        orderDetails: [],
+        promocode: null,
+        order: null as any,
+        user: null as any,
+      });
+      return;
+    }
+
+    // Don't fetch cart if user has no confirmed orders
+    if (!this.hasConfirmedOrders()) {
+      // Initialize with empty cart
+      this.cartState.set({
+        orderDetails: [],
+        promocode: null,
+        order: null as any,
+        user: null as any,
+      });
+      return;
+    }
+
     this.ordersService
       .checkCart()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap((cart) => this.cartState.set(cart)),
+        tap((cart) => {
+          this.cartState.set(cart);
+        }),
         catchError((err) => {
           console.error('Error fetching cart', err);
           return EMPTY;
@@ -73,6 +157,7 @@ export class CartStateService {
    * @returns boolean indicating whether the product is in the cart
    */
   isProductInCart(productId: number | string): boolean {
+    // console.log(productId);
     const orderDetails = this.orderDetails();
     if (!orderDetails || orderDetails.length === 0) {
       return false;
@@ -81,6 +166,12 @@ export class CartStateService {
     // Convert to string for comparison to handle both number and string types
     const searchProductId = productId.toString();
     // Find product in cart by ID
+    // console.log(
+    //   orderDetails.some(
+    //     (item) => item.product_id.toString() === searchProductId
+    //   )
+    // );
+    // console.log(searchProductId);
     return orderDetails.some(
       (item) => item.product_id.toString() === searchProductId
     );
@@ -117,9 +208,43 @@ export class CartStateService {
           choice_id?: string;
         }
   ) {
-    const userId = this._authService.getUserId();
+    // Prevent adding to cart if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to add items to cart');
+      return EMPTY;
+    }
+
+    const userId = this.authService.getUserId();
     return this.ordersService.addToCartOrCreateOrder(item, userId).pipe(
-      tap((cart) => this.cartState.set(cart)),
+      tap((response: any) => {
+        // Set hasConfirmedOrders to true since we just added an item
+        this.hasConfirmedOrdersSignal.set(true);
+
+        // Ensure the response has the expected structure
+        let formattedCart: IGetCartOrOrder;
+
+        // Check if the response is already in the expected format
+        if (response.orderDetails && Array.isArray(response.orderDetails)) {
+          formattedCart = response as IGetCartOrOrder;
+        }
+        // If response has a different structure like { cart: { details: [...] } }
+        else if (response.cart && response.cart.details) {
+          formattedCart = {
+            orderDetails: response.cart.details,
+            order: response.cart.order || (null as any),
+            promocode: response.cart.promocode || null,
+            user: response.cart.user || (null as any),
+          };
+        }
+        // If we can't determine the structure, use the response as is
+        else {
+          console.warn('Unexpected cart response structure:', response);
+          formattedCart = response as IGetCartOrOrder;
+        }
+
+        // Set the cart state with the formatted response
+        this.cartState.set(formattedCart);
+      }),
       catchError((err) => {
         console.error('Error adding item to cart', err);
         return EMPTY;
@@ -127,17 +252,37 @@ export class CartStateService {
     );
   }
 
+  /**
+   * Update quantity of an item in the cart
+   */
   updateQuantity(productId: string | number, quantity: number) {
-    return this.ordersService.updateQuantity({ productId, quantity }).pipe(
+    // Prevent updating cart if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to update cart');
+      return EMPTY;
+    }
+
+    const item = {
+      productId: productId,
+      quantity: quantity,
+    };
+
+    return this.ordersService.updateQuantity(item).pipe(
       tap((cart) => this.cartState.set(cart)),
       catchError((err) => {
-        console.error('Error updating quantity', err);
+        console.error('Error updating cart quantity', err);
         return EMPTY;
       })
     );
   }
 
   removeItem(productId: string | number) {
+    // Prevent removing items if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to remove items from cart');
+      return EMPTY;
+    }
+
     return this.ordersService.removeFromCart(productId).pipe(
       tap((cart) => this.cartState.set(cart)),
       catchError((err) => {
@@ -148,6 +293,12 @@ export class CartStateService {
   }
 
   clearCart() {
+    // Prevent clearing cart if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to clear cart');
+      return EMPTY;
+    }
+
     return this.ordersService.removeAllFromCart().pipe(
       tap((cart) => this.cartState.set(cart)),
       catchError((err) => {
@@ -158,6 +309,12 @@ export class CartStateService {
   }
 
   applyPromoCode(code: string) {
+    // Prevent applying promo code if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      console.warn('User must be authenticated to apply promo code');
+      return EMPTY;
+    }
+
     return this.ordersService.checkPromoCode(code).pipe(
       tap((response) => {
         if (response.valid && this.cartState()) {
@@ -171,248 +328,3 @@ export class CartStateService {
     );
   }
 }
-/*
-<app-articles-header
-  [title]="'cart.header.title' | translate"
-  [subTitle]="'cart.header.subtitle' | translate"
-  [showRotateImage]="false"
-  [marginBottom]="'9'"
-></app-articles-header>
-
-<section>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-8">Shopping Cart</h1>
-
-    @if (_cartState.isEmpty()) {
-    <div class="bg-white rounded-lg shadow-md p-8 text-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-16 w-16 mx-auto text-gray-400 mb-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-        />
-      </svg>
-      <h2 class="text-xl font-semibold mb-2">Your cart is empty</h2>
-      <p class="text-gray-600 mb-6">
-        Looks like you haven't added any products to your cart yet.
-      </p>
-      <a
-        [routerLink]="['/', currentLang$ | async, 'shopping']"
-        class="bg-primary text-white py-2 px-6 rounded-md hover:bg-primary-dark transition duration-150 ease-in-out"
-      >
-        Continue Shopping
-      </a>
-    </div>
-    } @else {
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Cart Items -->
-      <div class="lg:col-span-2">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-          <div class="p-4 border-b flex justify-between items-center">
-            <h2 class="text-lg font-semibold">
-              Items ({{ _cartState.itemCount() }})
-            </h2>
-            <button
-              (click)="clearCart()"
-              class="text-red-500 hover:text-red-700 text-sm font-medium"
-              aria-label="Remove all items"
-            >
-              Remove all
-            </button>
-          </div>
-
-          @for (item of _cartState.orderDetails(); track item.product_id) {
-          <div class="p-4 border-b flex flex-col sm:flex-row gap-4">
-            <!-- Product Image -->
-            <div
-              class="w-full sm:w-24 h-24 bg-gray-100 rounded-md overflow-hidden flex-shrink-0"
-            >
-              @if (item.product?.main_image) {
-              <img
-                [appImageUrl]="item.product.main_image"
-                [imageEndpoint]="''"
-                [alt]="item.product | customTranslate : 'name'"
-                class="w-full h-full object-cover"
-              />
-              } @else {
-              <div
-                class="w-full h-full bg-gray-200 flex items-center justify-center"
-              >
-                <span class="text-gray-400 text-xs">No image</span>
-              </div>
-              }
-            </div>
-
-            <!-- Product Details -->
-            <div class="flex-1">
-              <h3 class="text-lg font-medium mb-1">
-                {{ item.product | customTranslate : "name" }}
-              </h3>
-              <p class="text-gray-500 text-sm mb-2">
-                ${{ formatPrice(item.unit_price) }}
-              </p>
-
-              <!-- Quantity Controls -->
-              <div class="flex items-center mt-2">
-                <button
-                  (click)="updateQuantity(item.product_id, item.quantity - 1)"
-                  class="bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-l-md px-3 py-1"
-                  aria-label="Decrease quantity"
-                >
-                  -
-                </button>
-                <span class="px-4 py-1 bg-gray-50 text-center w-12">{{
-                  item.quantity
-                }}</span>
-                <button
-                  (click)="updateQuantity(item.product_id, item.quantity + 1)"
-                  class="bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-r-md px-3 py-1"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-
-                <button
-                  (click)="removeItem(item.product_id)"
-                  class="ml-4 text-red-500 hover:text-red-700"
-                  aria-label="Remove item"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Price -->
-            <div class="text-right">
-              <p class="text-lg font-semibold">
-                ${{ formatPrice(calculateItemTotal(item)) }}
-              </p>
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-
-      <!-- Order Summary -->
-      <div class="lg:col-span-1">
-        <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
-          <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
-
-          <!-- Promo Code -->
-          <form
-            [formGroup]="promoCodeForm"
-            (ngSubmit)="applyPromoCode()"
-            class="mb-6"
-          >
-            <div class="flex flex-col space-y-2 mb-2">
-              <label for="promo-code" class="text-sm font-medium text-gray-700"
-                >Promo Code</label
-              >
-              <div class="flex">
-                <input
-                  type="text"
-                  id="promo-code"
-                  formControlName="code"
-                  class="flex-1 border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Enter code"
-                />
-                <button
-                  type="submit"
-                  [disabled]="!promoCodeForm.valid"
-                  class="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-primary-dark transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            @if (promoCodeError) {
-            <p class="text-sm text-red-500 mt-1">{{ promoCodeError }}</p>
-            } @if (promoCodeSuccess) {
-            <p class="text-sm text-green-500 mt-1">{{ promoCodeSuccess }}</p>
-            }
-          </form>
-
-          <!-- Summary Items -->
-          <div class="space-y-3 border-b pb-4 mb-4">
-            <div class="flex justify-between">
-              <span class="text-gray-600">Subtotal</span>
-              <span class="font-medium"
-                >${{ formatPrice(_cartState.subtotal()) }}</span
-              >
-            </div>
-
-            @if (_cartState.discount() !== '0') {
-            <div class="flex justify-between text-green-600">
-              <span>Discount</span>
-              <span>-${{ formatPrice(_cartState.discount()) }}</span>
-            </div>
-            } @if (_cartState.tax() !== '0') {
-            <div class="flex justify-between">
-              <span class="text-gray-600">Tax</span>
-              <span class="font-medium"
-                >${{ formatPrice(_cartState.tax()) }}</span
-              >
-            </div>
-            } @if (_cartState.shipping() !== '0') {
-            <div class="flex justify-between">
-              <span class="text-gray-600">Shipping</span>
-              <span class="font-medium"
-                >${{ formatPrice(_cartState.shipping()) }}</span
-              >
-            </div>
-            }
-          </div>
-
-          <!-- Total -->
-          <div class="flex justify-between items-center mb-6">
-            <span class="text-lg font-bold">Total</span>
-            <span class="text-xl font-bold"
-              >${{ formatPrice(_cartState.total()) }}</span
-            >
-          </div>
-
-          <!-- Checkout Button -->
-          <a
-            routerLink="/checkout"
-            class="block w-full bg-primary text-white text-center py-3 rounded-md hover:bg-primary-dark transition duration-150 ease-in-out"
-          >
-            Proceed to Checkout
-          </a>
-
-          <!-- Continue Shopping -->
-          <a
-            routerLink="/products"
-            class="block w-full text-center text-gray-600 hover:text-gray-900 mt-4"
-          >
-            Continue Shopping
-          </a>
-        </div>
-      </div>
-    </div>
-    }
-  </div>
-</section>
-
-
-*/

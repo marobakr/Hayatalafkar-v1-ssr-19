@@ -1,0 +1,143 @@
+/* Owl Carousel Custom Styles */
+::ng-deep .owl-carousel {
+  width: 100%;
+  position: relative;
+}
+
+::ng-deep .owl-stage-outer {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+::ng-deep .owl-stage {
+  display: flex;
+  transition: all 0.5s ease !important;
+}
+
+::ng-deep .owl-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-in-out !important;
+}
+
+/* Navigation Arrows */
+::ng-deep .owl-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+::ng-deep .owl-prev,
+::ng-deep .owl-next {
+  background-color: rgba(203, 172, 141, 0.6) !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .owl-prev:hover,
+::ng-deep .owl-next:hover {
+  background-color: rgba(203, 172, 141, 0.9) !important;
+  transform: scale(1.1);
+}
+
+/* Fix for Font Awesome icons */
+::ng-deep .owl-prev i,
+::ng-deep .owl-next i {
+  color: white;
+  font-size: 18px;
+}
+
+/* Remove default arrow text if any exists */
+::ng-deep .owl-prev span,
+::ng-deep .owl-next span {
+  display: none;
+}
+
+/* Thumbnail gallery styles */
+.thumbnail-gallery ::ng-deep .owl-stage {
+  display: flex;
+  gap: 10px;
+}
+
+.thumbnail-item {
+  height: 70px;
+  width: 100%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.thumbnail-active {
+  border: 2px solid #cbac8d !important;
+}
+
+/* Product image styles */
+.product-images img {
+  max-height: 500px;
+  object-fit: contain;
+}
+
+/* Size buttons */
+.size-btn {
+  transition: all 0.3s ease;
+}
+
+.size-btn:hover:not(.bg-\[\#CBAC8D\]) {
+  background-color: #f9f9f9;
+}
+
+/* Quantity selector */
+.quantity-selector {
+  min-width: 120px;
+}
+
+/* Make all transitions smoother */
+::ng-deep .owl-carousel * {
+  transition-timing-function: ease-in-out !important;
+}
+
+/* Fix for RTL layout */
+:host-context([dir="rtl"]) ::ng-deep .owl-prev i:before {
+  content: "\f054"; /* fa-chevron-right */
+}
+
+:host-context([dir="rtl"]) ::ng-deep .owl-next i:before {
+  content: "\f053"; /* fa-chevron-left */
+}
+
+/* Add Font Awesome */
+section::before {
+  content: "";
+  display: block;
+  height: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .product-images {
+    margin-bottom: 30px;
+  }
+
+  .thumbnail-item {
+    height: 60px;
+  }
+
+  ::ng-deep .owl-prev,
+  ::ng-deep .owl-next {
+    width: 35px;
+    height: 35px;
+  }
+}

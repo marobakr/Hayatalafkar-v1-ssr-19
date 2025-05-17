@@ -53,11 +53,11 @@
             <p class="text-[#333] text-category-size mb-[15px]">
               {{ randomProduct | customTranslate : "name" }}
             </p>
-            <h3 class="text-[18px] font-bold mb-[15px]">
+            <div class="text-[18px] font-bold mb-[15px]">
               <app-safe-html
                 [content]="randomProduct | customTranslate : 'description'"
               ></app-safe-html>
-            </h3>
+            </div>
             <div class="flex items-center text-subtitle-size gap-7 mb-[20px]">
               <span class="text-muted-rose">
                 {{ randomProduct.price_after_sale }}
@@ -141,16 +141,18 @@
         <h2
           class="text-category-size md:text-[38px] text-white font-bold leading-snug mb-[10px] md:mb-[23px]"
         >
-          <p class="text-black">
-            <app-safe-html
-              [content]="lastOffer | customTranslate : 'small_title'"
-            ></app-safe-html>
-          </p>
-          <p>
+          <div class="text-black">
+            <div class="text-[18px] font-bold mb-[15px]">
+              <app-safe-html
+                [content]="lastOffer | customTranslate : 'small_title'"
+              ></app-safe-html>
+            </div>
+          </div>
+          <div>
             <app-safe-html
               [content]="lastOffer | customTranslate : 'text'"
             ></app-safe-html>
-          </p>
+          </div>
         </h2>
         <p class="text-white text-category-size md:text-[28px] mb-5 md:mb-9">
           {{ "offer-day.text-content.paragraph" | translate }}

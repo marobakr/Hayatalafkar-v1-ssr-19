@@ -59,12 +59,11 @@
       [disabled]="isAddingToCart()"
       [class.opacity-50]="isAddingToCart()"
       [attr.aria-label]="
-        isInCart()
+        isAddingToCart()
           ? ('shared.update_cart_quantity' | translate)
           : ('shared.add_to_cart' | translate)
       "
     >
-      {{ isAddingToCart() }}
       <figure>
         @if (isAddingToCart()) {
         <svg
@@ -115,14 +114,23 @@
     </button>
   </div>
   <div class="img relative cursor-pointer">
-    <figure class="h-[386px] md:h-[334px]">
-      <img
-        class="w-full h-full"
-        [appImageUrl]="productData.main_image"
-        [imageEndpoint]="'uploads/products'"
-        alt="product image"
-      />
-    </figure>
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'product-details',
+        productData | customTranslate : 'slug'
+      ]"
+    >
+      <figure class="h-[386px] md:h-[334px]">
+        <img
+          class="w-full h-full"
+          [appImageUrl]="productData.main_image"
+          [imageEndpoint]="'uploads/products'"
+          alt="product image"
+        />
+      </figure>
+    </a>
     <!-- Offer Title -->
     @if (productData.sale_price) {
     <div

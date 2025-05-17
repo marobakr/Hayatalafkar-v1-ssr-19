@@ -1,3 +1,12 @@
+import {
+  animate,
+  query,
+  stagger,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { CommonModule, NgClass } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import {
@@ -38,6 +47,60 @@ import { ContactUsService } from './res/contact-us.service';
   ],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css',
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '400ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('formAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('cardAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(20px)' }),
+            stagger('100ms', [
+              animate(
+                '400ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('cardHover', [
+      state(
+        'normal',
+        style({
+          transform: 'translateY(0)',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        })
+      ),
+      state(
+        'hovered',
+        style({
+          transform: 'translateY(-10px)',
+          boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+        })
+      ),
+      transition('normal <=> hovered', animate('300ms ease-in-out')),
+    ]),
+  ],
 })
 export class ContactUsComponent implements OnInit {
   private readonly contactUsService = inject(ContactUsService);
@@ -49,6 +112,9 @@ export class ContactUsComponent implements OnInit {
   contactUs = signal<IContactUs>({} as IContactUs);
   breaks = signal<IQuotes[]>([]);
   isSubmitting = signal<boolean>(false);
+
+  // Card hover state tracking
+  cardStates: { [key: number]: string } = {};
 
   // Form group
   contactForm!: FormGroup;
@@ -68,10 +134,7 @@ export class ContactUsComponent implements OnInit {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [
-        '',
-        [Validators.required, Validators.pattern(/^[0-9+\s-]{8,15}$/)],
-      ],
+      phone: ['', Validators.pattern(/^((\+?966\s?\d{9})|(\+?20\s?\d{10}))$/)],
       message: ['', [Validators.required, Validators.minLength(10)]],
     });
   }
@@ -94,6 +157,18 @@ export class ContactUsComponent implements OnInit {
         if (response) {
           this.features.set(response.features);
           this.breaks.set(response.breaks || []);
+
+          // Initialize card hover states
+          if (response.features && response.features.data) {
+            response.features.data.forEach((feature: any) => {
+              this.cardStates[feature.id] = 'normal';
+            });
+          }
+
+          // Initialize fixed card IDs for contact cards
+          this.cardStates[1] = 'normal';
+          this.cardStates[2] = 'normal';
+          this.cardStates[3] = 'normal';
         }
       },
     });
@@ -169,5 +244,16 @@ export class ContactUsComponent implements OnInit {
         ? 'border-red-500'
         : 'border-green-500'
       : '';
+  }
+
+  /**
+   * Card hover event handlers
+   */
+  onCardMouseEnter(cardId: number): void {
+    this.cardStates[cardId] = 'hovered';
+  }
+
+  onCardMouseLeave(cardId: number): void {
+    this.cardStates[cardId] = 'normal';
   }
 }

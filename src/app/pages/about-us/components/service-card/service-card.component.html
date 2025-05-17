@@ -1,24 +1,17 @@
-<div
-  [ngClass]="{
-    'rtl:text-center ltr:text-center md:ltr:text-left md:rtl:text-right':
-      isCenter,
-    'text-center': !isCenter
-  }"
-  class="flex flex-col items-center text-center p-4"
->
+<div class="flex flex-col p-4">
   <figure class="mb-6 w-full">
     <img
       loading="lazy"
-      class="max-w-[80px] h-auto mx-auto md:mx-0"
+      class="max-w-[80px] h-auto mx-auto lg:mx-0"
       [appImageUrl]="cardImagePath"
-      [imageEndpoint]="'uploads/about'"
+      [imageEndpoint]="''"
       [alt]="cardTitle"
     />
   </figure>
-  <h3 class="text-category-size font-semibold mb-[10px] w-full">
+  <h3 class="text-black text-subtitle-size font-bold mb-[7px]">
     {{ cardTitle }}
   </h3>
-  <p class="text-[#333] text-category-size w-full">
+  <div class="text-description text-[#333] text-category-size w-full">
     <app-safe-html [content]="cardDescription"></app-safe-html>
-  </p>
+  </div>
 </div>

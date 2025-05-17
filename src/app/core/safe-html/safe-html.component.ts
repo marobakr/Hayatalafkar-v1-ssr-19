@@ -7,17 +7,23 @@ import { FilterHtmlPipe } from '@core/pipes/filter-html.pipe';
   standalone: true,
   imports: [FilterHtmlPipe],
   template: `
-    <span
+    <div
       [title]="htmlContent | filterHtml"
-      class="description"
+      class="safe-html-content"
       [innerHTML]="htmlContent | filterHtml"
-    ></span>
+    ></div>
   `,
   styles: `
     :host {
-      display: block;
+      display: contents;
+    }
+    .safe-html-content {
+      display: contents;
     }
   `,
+  host: {
+    ngSkipHydration: 'true',
+  },
 })
 export class SafeHtmlComponent {
   @Input() set content(value: string) {

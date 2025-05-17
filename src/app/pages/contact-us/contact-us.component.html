@@ -3,7 +3,7 @@
     <h1 class="sr-only">{{ "contact-us.heading" | translate }}</h1>
 
     <!-- Header Map -->
-    <figure class="mb-[60px]">
+    <figure class="mb-[60px]" @fadeIn>
       <img
         class="w-full h-auto"
         loading="lazy"
@@ -17,9 +17,13 @@
     <!-- Contact Us Form -->
     <div class="mb-15">
       <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 lg:col-span-8">
+        <div class="col-span-12 lg:col-span-8" @formAnimation>
           <!-- Left Section: Form -->
-          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          <form
+            [formGroup]="contactForm"
+            (ngSubmit)="onSubmit()"
+            class="form-fade-in"
+          >
             <!-- Full Name  -->
             <div
               class="flex justify-between items-center gap-x-[23px] mb-[44px]"
@@ -185,7 +189,7 @@
             </app-arrow-button>
           </form>
         </div>
-        <div class="hidden lg:block lg:col-span-4">
+        <div class="hidden lg:block lg:col-span-4 main_Image_Animation">
           <figure
             class="relative aspect-[2/3] w-full rounded-xl overflow-hidden"
           >
@@ -203,16 +207,19 @@
     </div>
 
     <!-- Contact Cards Details -->
-    <div class="min-h-[350px]">
+    <div class="min-h-[350px]" @fadeIn>
       @if (contactUs()) {
-      <div class="grid md:grid-cols-12 gap-[30px]">
+      <div class="grid md:grid-cols-12 gap-[30px]" @cardAnimation>
         <!-- Maps Cards -->
         <div class="md:col-span-6 lg:col-span-4">
           <div
-            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
+            [@cardHover]="'normal'"
+            (mouseenter)="onCardMouseEnter(1)"
+            (mouseleave)="onCardMouseLeave(1)"
           >
             <figure
-              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
             >
               <img
                 loading="lazy"
@@ -239,10 +246,13 @@
         <!-- Call Cards -->
         <div class="md:col-span-6 lg:col-span-4">
           <div
-            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
+            [@cardHover]="'normal'"
+            (mouseenter)="onCardMouseEnter(2)"
+            (mouseleave)="onCardMouseLeave(2)"
           >
             <figure
-              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
             >
               <img
                 loading="lazy"
@@ -274,10 +284,13 @@
         <!-- Msg Cards -->
         <div class="md:col-span-6 lg:col-span-4">
           <div
-            class="border border-[#8D8D8D] rounded-[15px] text-center h-full"
+            class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
+            [@cardHover]="'normal'"
+            (mouseenter)="onCardMouseEnter(3)"
+            (mouseleave)="onCardMouseLeave(3)"
           >
             <figure
-              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square"
+              class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
             >
               <img
                 loading="lazy"
@@ -312,22 +325,29 @@
     [showLeftSideImage]="true"
     [showRightSideImage]="true"
     [bannerText]="breaks()[breaks().length - 1] | customTranslate : 'name'"
+    @fadeIn
   ></app-banner>
   }
 
   <div class="container mx-auto">
     <!-- Service Features Section -->
-    <section aria-labelledby="service-features" class="py-8">
+    <section aria-labelledby="service-features" class="py-8" @fadeIn>
       <h2 id="service-features" class="sr-only">
         {{ "contact-us.services.heading" | translate }}
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 min-h-[200px]">
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 min-h-[200px]"
+        @cardAnimation
+      >
         @for (feature of features() | customTranslate; track feature.id) {
         <app-service-card
           [cardDescription]="feature | customTranslate : 'text'"
           [cardImagePath]="feature.icon_image"
           [cardTitle]="feature.title"
           [isCenter]="true"
+          [@cardHover]="cardStates[feature.id] || 'normal'"
+          (mouseenter)="onCardMouseEnter(feature.id)"
+          (mouseleave)="onCardMouseLeave(feature.id)"
         ></app-service-card>
         }
       </div>

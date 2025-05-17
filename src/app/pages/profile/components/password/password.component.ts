@@ -12,11 +12,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 @Component({
   selector: 'app-password',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    TranslateModule,
-    ButtonComponent,
-  ],
+  imports: [ReactiveFormsModule, TranslateModule, ButtonComponent],
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.css'],
 })
@@ -61,19 +57,19 @@ export class PasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.passwordForm.valid) {
-      this.alertService.show({
-        title: 'Update Password',
-        message: 'Are you sure you want to update your password?',
-        confirmText: 'Update',
-        cancelText: 'Cancel',
-        onConfirm: () => {
-          // Handle password update
-          console.log('Password updated');
-        },
-        onCancel: () => {
-          console.log('Update cancelled');
-        },
-      });
+      // this.alertService.show({
+      //   title: 'Update Password',
+      //   message: 'Are you sure you want to update your password?',
+      //   confirmText: 'Update',
+      //   cancelText: 'Cancel',
+      //   onConfirm: () => {
+      //     // Handle password update
+      //     console.log('Password updated');
+      //   },
+      //   onCancel: () => {
+      //     console.log('Update cancelled');
+      //   },
+      // });
     } else {
       // Handle form validation errors
       console.log('Form is invalid');

@@ -16,16 +16,12 @@ import {
   PLATFORM_ID,
   Renderer2,
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterLink,
-} from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { CartStateService } from '../../core/services/cart/cart-state.service';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { SearchService } from '../../core/services/search/search.service';
 import { WishlistService } from '../../core/services/wishlist/wishlist.service';
@@ -64,15 +60,18 @@ export class NavbarComponent implements OnDestroy, OnInit {
   private resizeSubscription?: Subscription;
 
   private _router = inject(Router);
-  private _activatedRoute = inject(ActivatedRoute);
   private _languageService = inject(LanguageService);
   private _searchService = inject(SearchService);
   private _authService = inject(AuthService);
   private _wishlistService = inject(WishlistService);
+  private _cartStateService = inject(CartStateService);
   private platformId = inject(PLATFORM_ID);
 
   // Get wishlist count as a signal
   wishlistCount = this._wishlistService.getWishlistCountSignal();
+
+  // Get cart count as a signal
+  cartCount = this._cartStateService.cartCount;
 
   currentLang$ = this._languageService.getLanguage();
 
@@ -102,11 +101,25 @@ export class NavbarComponent implements OnDestroy, OnInit {
     // Load wishlist count
     this._wishlistService.loadWishlistCount();
 
-    // Set up event listener to refresh the wishlist count
+    // Check confirmed orders first, then load cart if necessary
+    if (this._authService.isAuthenticated()) {
+      this._cartStateService.checkConfirmedOrders();
+      this._cartStateService.fetchCart();
+    }
+
+    // Set up event listener to refresh the wishlist count and cart
+    // and monitor authentication state
     this._router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        this._wishlistService.loadWishlistCount();
+        // Check if authenticated and load data accordingly
+        if (this._authService.isAuthenticated()) {
+          this._wishlistService.loadWishlistCount();
+          this._cartStateService.checkConfirmedOrders();
+          this._cartStateService.fetchCart();
+        }
+        // No need to handle unauthenticated case explicitly since
+        // services will return 0 for unauthenticated users
       });
   }
 
@@ -262,6 +275,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
   logout(): void {
     this._authService.logout().subscribe({
       next: () => {
+        // Reset cart and wishlist counts
+        this._wishlistService.loadWishlistCount();
+        this._cartStateService.fetchCart();
+
         // Closing mobile menu if open after logout
         if (this.isMenuOpen) {
           this.toggleMobileMenu();

@@ -9,11 +9,11 @@ export class ProductsService {
   apiService = inject(ApiService);
 
   getAllProducts() {
-    return this.apiService.get(API_CONFIG.PRODUCTS.GET_ALL);
+    return this.apiService.get(`${API_CONFIG.PRODUCTS.GET_ALL}`);
   }
 
   getProductById(slug: string) {
-    return this.apiService.get(API_CONFIG.PRODUCTS.GET_WITH_SLUG + slug);
+    return this.apiService.get(`${API_CONFIG.PRODUCTS.GET_WITH_SLUG}/${slug}`);
   }
 
   getProductByCategory(categoryId: string) {

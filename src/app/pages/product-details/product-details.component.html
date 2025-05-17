@@ -1,0 +1,551 @@
+<app-articles-header
+  [title]="'shopping.header.title' | translate"
+  [subTitle]="'shopping.header.subtitle' | translate"
+  [showRotateImage]="true"
+  [marginBottom]="'9'"
+  @fadeIn
+></app-articles-header>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+/>
+
+<section @fadeIn>
+  <div class="container mx-auto overflow-hidden">
+    @if (!isLoading()) {
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 rtl:flex-row-reverse"
+    >
+      <!-- Left Side: Product Images Carousel -->
+      <div class="product-images">
+        <!-- Main Carousel -->
+        <div class="carousel-wrapper overflow-hidden rounded-lg mb-4">
+          <owl-carousel-o [options]="mainCarouselOptions" #mainCarousel>
+            @for (image of processedImages(); track image.id) {
+            <ng-template carouselSlide [id]="'slide_' + image.id">
+              <img
+                src="https://digitalbondmena.com/mesoshop/uploads/products/1746524248GNH7Ra3Sbt.webp"
+                [alt]="image.alt"
+                class="w-full h-auto"
+              />
+            </ng-template>
+            }
+          </owl-carousel-o>
+        </div>
+
+        <!-- Thumbnail Gallery -->
+        <div class="thumbnail-gallery mt-4">
+          <owl-carousel-o [options]="thumbnailOptions" #thumbnailCarousel>
+            @for (image of processedImages(); track image.id; let i = $index) {
+            <ng-template carouselSlide [id]="'thumb_' + image.id">
+              <div
+                [class.thumbnail-active]="activeIndex() === i"
+                (click)="setActiveIndex(i)"
+                class="thumbnail-item cursor-pointer p-1 border rounded-md"
+              >
+                <img
+                  src="https://digitalbondmena.com/mesoshop/uploads/products/1746524248GNH7Ra3Sbt.webp"
+                  [alt]="image.alt"
+                  class="w-full h-full object-cover rounded"
+                />
+              </div>
+            </ng-template>
+            }
+          </owl-carousel-o>
+        </div>
+      </div>
+
+      <!-- Right Side: Product Details -->
+      <div class="product-info rtl:text-right ltr:text-left">
+        <!-- Product Title -->
+        <h1 class="text-[16px] mb-4">
+          {{ productDetails.product[0] | customTranslate : "name" }}
+        </h1>
+
+        <!-- Stock Status & Rating -->
+        <div class="mb-2 flex gap-4 items-center">
+          <h2 class="text-2xl font-bold">
+            {{ productDetails.product[0] | customTranslate : "slug" }}
+          </h2>
+          <div
+            class="text-xs py-1 px-3 rounded-full bg-gray-100 text-[#CBAC8D]"
+          >
+            @if (productDetails.product[0].stock_status) {
+            {{ "in_stock" | translate }}
+            } @else {
+            {{ "out_of_stock" | translate }}
+            }
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="flex items-center mb-5">
+          <span class="text-yellow-400">★</span>
+          <span class="black mr-1">4.8</span>
+        </div>
+
+        <!-- Product Price -->
+        <div class="price-container flex items-center gap-4 mb-6">
+          <span class="text-lg font-bold">
+            {{ productDetails.product[0].price }}
+            {{ "shared.currency" | translate }}
+          </span>
+          @if (productDetails.product[0].sale_price) {
+          <span class="text-gray-500 line-through">
+            {{ productDetails.product[0].price_after_sale }}
+            {{ "shared.currency" | translate }}
+          </span>
+          }
+        </div>
+
+        <!-- Product Description -->
+        <div class="text-gray-600 mb-6 leading-relaxed text-right">
+          <app-safe-html
+            [content]="
+              productDetails.product[0] | customTranslate : 'description'
+            "
+          ></app-safe-html>
+        </div>
+
+        <!-- Size Selector -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-3">الحجم</h3>
+          <div class="flex flex-wrap gap-3">
+            <button
+              (click)="setSelectedSize('30 مل')"
+              [class.bg-[#CBAC8D]]="selectedSize() === '30 مل'"
+              [class.text-white]="selectedSize() === '30 مل'"
+              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
+            >
+              30 مل
+            </button>
+            <button
+              (click)="setSelectedSize('60 مل')"
+              [class.bg-[#CBAC8D]]="selectedSize() === '60 مل'"
+              [class.text-white]="selectedSize() === '60 مل'"
+              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
+            >
+              60 مل
+            </button>
+            <button
+              (click)="setSelectedSize('80 مل')"
+              [class.bg-[#CBAC8D]]="selectedSize() === '80 مل'"
+              [class.text-white]="selectedSize() === '80 مل'"
+              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
+            >
+              80 مل
+            </button>
+            <button
+              (click)="setSelectedSize('100 مل')"
+              [class.bg-[#CBAC8D]]="selectedSize() === '100 مل'"
+              [class.text-white]="selectedSize() === '100 مل'"
+              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
+            >
+              100 مل
+            </button>
+          </div>
+        </div>
+
+        <!-- Quantity Selector and Add to Cart -->
+        <div class="flex flex-wrap gap-4 items-center">
+          <!-- Quantity Selector -->
+          <div
+            class="quantity-selector flex items-center border border-gray-300 rounded-md"
+          >
+            <button
+              (click)="decrementQuantity()"
+              class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+            >
+              -
+            </button>
+            <span class="px-4 py-2">{{ quantity() }}</span>
+            <button
+              (click)="incrementQuantity()"
+              class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+            >
+              +
+            </button>
+          </div>
+
+          <!-- Add to Cart Button -->
+          <button
+            class="cursor-pointer bg-[#111111] text-white px-6 py-3 rounded-md hover:opacity-90 transition-opacity"
+          >
+            {{ "shared.add_to_cart" | translate }}
+          </button>
+
+          <!-- Wishlist Button -->
+          <button
+            type="button"
+            class="cursor-pointer flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+            [disabled]="isAddingToWishlist()"
+            (click)="isInWishlist() ? removeFromWishlist() : addToWishlist()"
+            aria-label="Add to wishlist"
+          >
+            <span class="sr-only">Add to wishlist</span>
+            @if (isAddingToWishlist()) {
+            <span class="animate-spin">
+              <i class="fas fa-spinner"></i>
+            </span>
+            } @else {
+            <i
+              class="fas"
+              [class.fa-heart]="true"
+              [style.color]="isInWishlist() ? '#ef4444' : '#9ca3af'"
+            ></i>
+            }
+          </button>
+        </div>
+
+        <!-- Product Code -->
+        <div class="mt-8 text-gray-500 text-sm">
+          {{ "product_code" | translate }}: QRFR857k331
+        </div>
+
+        <!-- Product Categories -->
+        <div class="mt-2 text-gray-500 text-sm">
+          كلمات صلة: العناية بالبشرة, لوشن, مرطب
+        </div>
+
+        <!-- Social Share -->
+        <div class="mt-2 flex items-center gap-2 mb-4">
+          <span class="text-gray-500 text-sm">مشاركة:</span>
+          <div class="social-icons flex gap-2">
+            <a
+              href="javascript:void(0)"
+              (click)="shareOnFacebook()"
+              class="text-gray-500 hover:text-[#CBAC8D] p-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 320 512"
+                class="w-4 h-4"
+              >
+                <path
+                  d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
+                />
+              </svg>
+            </a>
+            <a
+              href="javascript:void(0)"
+              (click)="shareOnTwitter()"
+              class="text-gray-500 hover:text-[#CBAC8D] p-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 512 512"
+                class="w-4 h-4"
+              >
+                <path
+                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                />
+              </svg>
+            </a>
+            <a
+              href="javascript:void(0)"
+              (click)="shareOnWhatsApp()"
+              class="text-gray-500 hover:text-[#CBAC8D] p-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 448 512"
+                class="w-4 h-4"
+              >
+                <path
+                  d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Product Description NavTaps -->
+    <div class="my-16">
+      <div>
+        <nav class="flex justify-between flex-rows-reverce">
+          @for (tab of productTabs; track tab.id; let i = $index) {
+          <button
+            (click)="setActiveTab(i)"
+            class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out"
+            [class.border-[#CBAC8D]]="activeTab() === i"
+            [class.text-[#CBAC8D]]="activeTab() === i"
+            [class.border-transparent]="activeTab() !== i"
+            [class.text-gray-500]="activeTab() !== i"
+            [class.hover:text-gray-700]="activeTab() !== i"
+            [class.hover:border-gray-300]="activeTab() !== i"
+            class="text-price-size font-bold cursor-pointer"
+          >
+            {{ tab.title | translate }}
+          </button>
+          }
+        </nav>
+      </div>
+
+      <div class="mt-8 overflow-hidden">
+        <!-- Description Tab -->
+        @if (activeTab() === 0) {
+        <div
+          @fadeSlideInOut
+          class="prose max-w-none text-gray-600 leading-relaxed"
+        >
+          <app-safe-html
+            [content]="
+              productDetails.product[0] | customTranslate : 'description'
+            "
+          ></app-safe-html>
+        </div>
+        }
+
+        <!-- Additional Information Tab -->
+        @if (activeTab() === 1) {
+        <div @fadeSlideInOut class="prose max-w-none">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <div class="text-lg font-medium text-gray-900 mb-4">
+                <app-safe-html
+                  [content]="
+                    productDetails.product[0] | customTranslate : 'description'
+                  "
+                ></app-safe-html>
+              </div>
+              <!-- <ul class="space-y-3">
+                  @if (productDetails.product[0].brand) {
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.brand" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      productDetails.product[0].brand
+                    }}</span>
+                  </li>
+                  } @if (productDetails.product[0].sku) {
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.sku" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      productDetails.product[0].sku
+                    }}</span>
+                  </li>
+                  } @if (productDetails.product[0].weight) {
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.weight" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      productDetails.product[0].weight
+                    }}</span>
+                  </li>
+                  } @if (productDetails.product[0].dimensions) {
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.dimensions" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      productDetails.product[0].dimensions
+                    }}</span>
+                  </li>
+                  }
+                </ul> -->
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">
+                {{ "product_details.shipping" | translate }}
+              </h3>
+              <!-- <ul class="space-y-3">
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.availability" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      productDetails.product[0].stock_status
+                        ? ("product_details.in_stock" | translate)
+                        : ("product_details.out_of_stock" | translate)
+                    }}</span>
+                  </li>
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.shipping_fee" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      "product_details.shipping_fee_value" | translate
+                    }}</span>
+                  </li>
+                  <li class="flex">
+                    <span class="font-medium text-gray-700 w-40">{{
+                      "product_details.delivery_time" | translate
+                    }}</span>
+                    <span class="text-gray-600">{{
+                      "product_details.delivery_time_value" | translate
+                    }}</span>
+                  </li>
+                </ul> -->
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Ratings & Reviews Tab -->
+        @if (activeTab() === 2) {
+        <div @fadeSlideInOut class="prose max-w-none">
+          <div class="flex flex-col md:flex-row gap-8">
+            <!-- Overall Rating Summary -->
+            <div class="md:w-1/3">
+              <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
+                <h3 class="text-xl font-bold text-gray-900">4.8</h3>
+                <div class="flex justify-center my-2">
+                  <span class="text-yellow-400 flex">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </span>
+                </div>
+                <p class="text-sm text-gray-600">
+                  {{ "product_details.based_on" | translate }} 24
+                  {{ "product_details.reviews" | translate }}
+                </p>
+
+                <!-- Rating Breakdown -->
+                <div class="mt-4 space-y-2">
+                  <div class="flex items-center">
+                    <span class="text-sm w-8">5★</span>
+                    <div
+                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="bg-yellow-400 h-full rounded-full"
+                        style="width: 75%"
+                      ></div>
+                    </div>
+                    <span class="text-sm w-8">75%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm w-8">4★</span>
+                    <div
+                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="bg-yellow-400 h-full rounded-full"
+                        style="width: 20%"
+                      ></div>
+                    </div>
+                    <span class="text-sm w-8">20%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm w-8">3★</span>
+                    <div
+                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="bg-yellow-400 h-full rounded-full"
+                        style="width: 5%"
+                      ></div>
+                    </div>
+                    <span class="text-sm w-8">5%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm w-8">2★</span>
+                    <div
+                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="bg-yellow-400 h-full rounded-full"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="text-sm w-8">0%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm w-8">1★</span>
+                    <div
+                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
+                    >
+                      <div
+                        class="bg-yellow-400 h-full rounded-full"
+                        style="width: 0%"
+                      ></div>
+                    </div>
+                    <span class="text-sm w-8">0%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews List -->
+            <div class="md:w-2/3">
+              <div class="space-y-6">
+                <!-- Review Item -->
+                @for (i of [1, 2]; track i; let idx = $index) {
+                <div
+                  class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm"
+                  @fadeIn
+                  [style.animation-delay]="idx * 100 + 'ms'"
+                >
+                  <div class="flex justify-between items-start">
+                    <div class="flex items-center">
+                      <div
+                        class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600"
+                      >
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div class="ml-4">
+                        <h4 class="text-sm font-medium text-gray-900">
+                          {{ "product_details.customer_" + i | translate }}
+                        </h4>
+                        <div class="flex text-yellow-400 text-xs mt-1">
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                          <i class="fas fa-star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-sm text-gray-500">{{
+                      i === 1 ? "2023-12-10" : "2023-11-23"
+                    }}</span>
+                  </div>
+                  <div class="mt-4">
+                    <h5 class="text-sm font-medium text-gray-900">
+                      {{ "product_details.review_title_" + i | translate }}
+                    </h5>
+                    <p class="mt-2 text-sm text-gray-600">
+                      {{ "product_details.review_content_" + i | translate }}
+                    </p>
+                  </div>
+                </div>
+                }
+
+                <!-- Load More Button -->
+                <div class="text-center">
+                  <button
+                    class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    {{ "product_details.load_more_reviews" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    } @else {
+    <app-loading class="loading-spinner"></app-loading>
+    }
+  </div>
+</section>

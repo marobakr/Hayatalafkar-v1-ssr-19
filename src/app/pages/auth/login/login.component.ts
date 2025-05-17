@@ -1,3 +1,12 @@
+import {
+  animate,
+  query,
+  stagger,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { AsyncPipe, JsonPipe, NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import {
@@ -29,6 +38,61 @@ import { ArticlesHeaderComponent } from '../../articles/components/articles-head
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
+  animations: [
+    trigger('formAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('inputAnimation', [
+      transition(':enter', [
+        query(
+          'input, label, div, .text-red-500',
+          [
+            style({ opacity: 0, transform: 'translateY(10px)' }),
+            stagger(80, [
+              animate(
+                '400ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('imageAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate('700ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+    ]),
+    trigger('shake', [
+      state(
+        'idle',
+        style({
+          transform: 'translateX(0)',
+        })
+      ),
+      state(
+        'shake',
+        style({
+          transform: 'translateX(0)',
+        })
+      ),
+      transition('idle => shake', [
+        animate('50ms', style({ transform: 'translateX(-10px)' })),
+        animate('100ms', style({ transform: 'translateX(10px)' })),
+        animate('100ms', style({ transform: 'translateX(-10px)' })),
+        animate('100ms', style({ transform: 'translateX(10px)' })),
+        animate('50ms', style({ transform: 'translateX(0)' })),
+      ]),
+    ]),
+  ],
 })
 export class LoginComponent implements OnInit {
   private _fb = inject(FormBuilder);
@@ -40,6 +104,9 @@ export class LoginComponent implements OnInit {
   currentLang$ = this._languageService.getLanguage();
   loginForm!: FormGroup;
   isLoading = signal(false);
+
+  // Animation state
+  shakeState = signal('idle');
 
   // Form state signals
   emailTouched = signal(false);
@@ -84,6 +151,7 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       this.emailTouched.set(true);
       this.passwordTouched.set(true);
+      this.triggerShakeAnimation();
       return;
     }
 
@@ -107,6 +175,7 @@ export class LoginComponent implements OnInit {
           } else {
             this._toastr.warning(response.en_error);
           }
+          this.triggerShakeAnimation();
         }
       },
       error: (error) => {
@@ -114,6 +183,7 @@ export class LoginComponent implements OnInit {
         const errorMessage =
           error?.error?.message || 'Login failed. Please try again.';
         this._toastr.error(errorMessage);
+        this.triggerShakeAnimation();
       },
     });
   }
@@ -124,6 +194,13 @@ export class LoginComponent implements OnInit {
 
   onPasswordBlur() {
     this.passwordTouched.set(true);
+  }
+
+  triggerShakeAnimation() {
+    this.shakeState.set('shake');
+    setTimeout(() => {
+      this.shakeState.set('idle');
+    }, 500);
   }
 
   // Helper methods for template

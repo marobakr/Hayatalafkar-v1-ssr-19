@@ -1,3 +1,13 @@
+import {
+  animate,
+  group,
+  query,
+  stagger,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +23,7 @@ import { Subscription, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { DismissibleBadgesComponent } from '../../shared/components/dismissible-badges/dismissible-badges.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 import { SharedBestSellerComponent } from '../home/components/best-seller/components/shared-best-seller/shared-best-seller.component';
 import { IAllProduct } from './res/products.interface';
@@ -33,9 +44,108 @@ export type StockFilterType = 'all' | 'available' | 'unavailable';
     FormsModule,
     CustomTranslatePipe,
     NavbarComponent,
+    LoadingComponent,
   ],
   templateUrl: './shopping.component.html',
   styleUrl: './shopping.component.css',
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '400ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('filterAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate(
+          '350ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('productGridAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(20px)' }),
+            stagger('50ms', [
+              animate(
+                '400ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('badgeAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate('250ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+      transition(':leave', [
+        animate(
+          '200ms ease-in',
+          style({ opacity: 0, transform: 'scale(0.8)' })
+        ),
+      ]),
+    ]),
+    trigger('chipAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, width: 0, marginRight: 0 }),
+        group([
+          animate('300ms ease', style({ opacity: 1 })),
+          animate('300ms ease', style({ width: '*' })),
+          animate('300ms ease', style({ marginRight: '*' })),
+        ]),
+      ]),
+      transition(':leave', [
+        group([
+          animate('200ms ease', style({ opacity: 0 })),
+          animate('200ms ease', style({ width: 0 })),
+          animate('200ms ease', style({ marginRight: 0 })),
+        ]),
+      ]),
+    ]),
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate(
+          '300ms ease-out',
+          style({ transform: 'translateX(0)', opacity: 1 })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '300ms ease-in',
+          style({ transform: 'translateX(100%)', opacity: 0 })
+        ),
+      ]),
+    ]),
+    trigger('cardHover', [
+      state(
+        'normal',
+        style({
+          transform: 'translateY(0)',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        })
+      ),
+      state(
+        'hovered',
+        style({
+          transform: 'translateY(-5px)',
+          boxShadow: '0 10px 15px rgba(0, 0, 0, 0.15)',
+        })
+      ),
+      transition('normal <=> hovered', animate('200ms ease-in-out')),
+    ]),
+  ],
 })
 export class ShoppingComponent implements OnInit, OnDestroy {
   // ===== Services =====
@@ -78,6 +188,9 @@ export class ShoppingComponent implements OnInit, OnDestroy {
   readonly subcategoryName = signal<string | null>(null);
 
   readonly isLoading = signal<boolean>(true);
+
+  // Card hover states
+  productHoverStates: { [key: number]: string } = {};
 
   products: IAllProduct[] = [];
 
@@ -227,6 +340,9 @@ export class ShoppingComponent implements OnInit, OnDestroy {
         this.totalPages.set(Math.max(1, initialTotalPages));
         this.updatePaginatedProducts();
         this.isLoading.set(false);
+
+        // Initialize hover states for products
+        this.initProductHoverStates();
       },
       error: (err) => {
         console.error('Error fetching products by category:', err);
@@ -272,6 +388,9 @@ export class ShoppingComponent implements OnInit, OnDestroy {
         this.totalPages.set(Math.max(1, initialTotalPages));
         this.updatePaginatedProducts();
         this.isLoading.set(false);
+
+        // Initialize hover states for products
+        this.initProductHoverStates();
       },
       error: (err) => {
         console.error('Error fetching products by subcategory:', err);
@@ -813,23 +932,20 @@ export class ShoppingComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.productsService.getAllProducts().subscribe({
       next: (response: any) => {
-        this.products = response.products;
-
-        // Set the filtered products to all products initially
+        this.products = response.products || [];
         this.filteredProducts.set(this.products);
-
-        // Calculate initial total pages
         const initialTotalPages = Math.ceil(
           this.products.length / this.pageSize
         );
         this.totalPages.set(Math.max(1, initialTotalPages));
-
-        // Initialize the paginated products
         this.updatePaginatedProducts();
         this.isLoading.set(false);
+
+        // Initialize hover states for products
+        this.initProductHoverStates();
       },
       error: (err) => {
-        console.error('Error fetching all products:', err);
+        console.error('Error fetching products:', err);
         this.products = [];
         this.filteredProducts.set([]);
         this.paginatedProducts.set([]);
@@ -880,5 +996,25 @@ export class ShoppingComponent implements OnInit, OnDestroy {
     if (this.maxPrice < this.minPrice + 50) {
       this.maxPrice = this.minPrice + 50;
     }
+  }
+
+  /**
+   * Track product card hover state
+   */
+  onProductMouseEnter(productId: number): void {
+    this.productHoverStates[productId] = 'hovered';
+  }
+
+  onProductMouseLeave(productId: number): void {
+    this.productHoverStates[productId] = 'normal';
+  }
+
+  /**
+   * Initialize product hover states after products are loaded
+   */
+  private initProductHoverStates(): void {
+    this.products.forEach((product) => {
+      this.productHoverStates[product.id] = 'normal';
+    });
   }
 }

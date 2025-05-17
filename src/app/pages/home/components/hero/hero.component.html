@@ -1,140 +1,121 @@
-<section class="mt-[7px]">
+<section class="mt-[7px]" aria-label="Hero Section">
+  @if (heroSection.length === 0) {
+  <div class="min-h-[300px] flex items-center justify-center">
+    <app-loading></app-loading>
+  </div>
+  } @else {
   <div
-    class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between ltr:flex-row-reverse gap-12 rtl:md:flex-row-reverse bg-[#CBAC8D] [border-radius:23px] relative"
+    class="container mx-auto px-4 relative bg-[#CBAC8D] [border-radius:23px] py-6"
   >
     <h1 class="sr-only">
       {{ "hero.title" | translate }}
     </h1>
-    <!-- Carousel Container -->
-    <div class="carousel-container relative w-full" #swiperContainer>
-      <!-- Slides Wrapper -->
-      <div class="swiper-wrapper">
-        <!-- If empty array, show a placeholder -->
-        @if (heroSection.length === 0) {
-        <div
-          class="swiper-slide flex flex-col md:flex-row items-center justify-between w-full gap-12"
-        >
-          <div class="w-full py-12 text-center">
-            <h2 class="text-2xl text-white">No slider content available</h2>
-          </div>
-        </div>
-        } @else {
-        <!-- Otherwise, render all slides -->
-        @for (slide of heroSection; track slide) {
-        <div
-          class="swiper-slide flex flex-col md:flex-row-reverse items-center justify-between w-full gap-12"
-        >
-          <!-- Text Column -->
-          <div
-            class="w-full md:w-full lg:w-1/2 text-center rtl:text-right ltr:text-left py-12"
-          >
-            <!-- Small Title -->
-            <app-slogan
-              [haveBg]="true"
-              [sloganImage]="'/images/navbar/8.webp'"
-              [sloganTitle]="slide | customTranslate : 'small_title'"
-            >
-            </app-slogan>
 
-            <!-- Main Title -->
-            <h2
-              class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
-            >
-              {{ slide | customTranslate : "title" }}
-            </h2>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
 
-            <!-- Description Text -->
-            <div class="text-[#F5F5F5] leading-relaxed mb-8">
-              <app-safe-html
-                [content]="slide | customTranslate : 'text'"
-              ></app-safe-html>
-            </div>
-
-            <!-- CTA Button -->
+    <!-- Owl Carousel with wrapper for better transition management -->
+    <div class="carousel-wrapper overflow-hidden">
+      <owl-carousel-o [options]="customOptions" #owlCarousel>
+        @for (slide of heroSection; track slide.main_image) {
+        <ng-template carouselSlide [id]="'slide_' + slide.main_image">
+          <!-- Slide Content Container -->
+          <div class="slide-container w-full px-2 py-4">
             <div
-              class="flex flex-col md:flex-row gap-4 items-center justify-start"
+              class="slide-content flex flex-col md:flex-row-reverse items-center justify-between w-full gap-8"
             >
-              <button
-                class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
+              <!-- Text Column -->
+              <div
+                class="w-full md:w-1/2 lg:w-1/2 text-center rtl:text-right ltr:text-left py-4"
               >
-                <span>{{ "hero.title-btn" | translate }}</span>
-                <figure
-                  class="direction-aware-rotate max-w-[24px] max-h-[24px]"
+                <!-- Small Title -->
+                <app-slogan
+                  [haveBg]="true"
+                  [sloganImage]="'/images/navbar/8.webp'"
+                  [sloganTitle]="slide | customTranslate : 'small_title'"
                 >
-                  <img
-                    class="w-full h-auto"
-                    loading="lazy"
-                    [src]="'/images/navbar/9.webp'"
-                    alt="arrow"
-                  />
-                </figure>
-              </button>
+                </app-slogan>
+
+                <!-- Main Title -->
+                <h2
+                  class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
+                >
+                  {{ slide | customTranslate : "title" }}
+                </h2>
+
+                <!-- Description Text -->
+                <div class="text-[#F5F5F5] leading-relaxed mb-8">
+                  <app-safe-html
+                    [content]="slide | customTranslate : 'text'"
+                  ></app-safe-html>
+                </div>
+
+                <!-- CTA Button -->
+                <div
+                  class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+                >
+                  <button
+                    class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
+                    aria-label="Call to action"
+                    [attr.title]="'hero.title-btn' | translate"
+                  >
+                    <span>{{ "hero.title-btn" | translate }}</span>
+                    <figure
+                      class="direction-aware-rotate max-w-[24px] max-h-[24px]"
+                      aria-hidden="true"
+                    >
+                      <img
+                        class="w-full h-auto"
+                        width="24"
+                        height="24"
+                        loading="eager"
+                        [src]="'/images/navbar/9.webp'"
+                        alt="arrow icon"
+                      />
+                    </figure>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Image Column -->
+              <div
+                class="w-full md:w-1/2 lg:w-1/2 flex justify-center items-center"
+              >
+                <img
+                  [appImageUrl]="slide.main_image"
+                  [imageEndpoint]="''"
+                  [alt]="slide | customTranslate : 'title'"
+                  class="w-full max-w-md h-auto object-contain"
+                  width="600"
+                  height="400"
+                  loading="eager"
+                />
+              </div>
             </div>
           </div>
+        </ng-template>
+        }
+      </owl-carousel-o>
+    </div>
 
-          <!-- Image Column -->
-          <div class="hidden md:block md:w-full lg:w-1/2">
-            <img
-              [appImageUrl]="slide.main_image"
-              [imageEndpoint]="''"
-              [alt]="slide | customTranslate : 'title'"
-              class="w-full max-w-md mx-auto"
-            />
-          </div>
-        </div>
-        } }
-      </div>
-
-      <!-- Custom Navigation Arrows -->
-      <div
-        class="custom-swiper-button-prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/30 rounded-full p-2 cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="text-white"
-        >
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </div>
-
-      <div
-        class="custom-swiper-button-next absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/30 rounded-full p-2 cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="text-white"
-        >
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </div>
-
-      <!-- Pagination -->
-      <div class="swiper-pagination"></div>
-
-      <!-- Rotating image -->
-      <div
-        class="hidden md:block image-rotate absolute z-1 top-[14px] left-[14px]"
-      >
-        <figure>
-          <img class="w-[73px]" src="/images/common/rotate.gif" alt="logo" />
-        </figure>
-      </div>
+    <!-- Rotating image -->
+    <div
+      class="hidden md:block image-rotate absolute z-10 top-[14px] left-[14px]"
+      aria-hidden="true"
+    >
+      <figure>
+        <img
+          class="w-[73px]"
+          src="/images/common/rotate.gif"
+          alt=""
+          width="73"
+          height="73"
+          loading="eager"
+        />
+      </figure>
     </div>
   </div>
+  }
 </section>

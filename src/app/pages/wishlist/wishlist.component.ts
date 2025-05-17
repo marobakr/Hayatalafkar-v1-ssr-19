@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, isPlatformBrowser } from '@angular/common';
 import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { IGetWishlist } from '@core/interfaces/wishlist.interfaces';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { WishlistService } from '../../core/services/wishlist/wishlist.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { TalentImageCardComponent } from '../../shared/components/talent-image-card/talent-image-card.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 
@@ -23,6 +24,9 @@ import { ArticlesHeaderComponent } from '../articles/components/articles-header/
     ButtonComponent,
     ImageUrlDirective,
     CustomTranslatePipe,
+    AsyncPipe,
+    RouterLink,
+    LoadingComponent,
   ],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css',
@@ -58,30 +62,53 @@ import { ArticlesHeaderComponent } from '../articles/components/articles-header/
 })
 export class WishlistComponent implements OnInit {
   _translate = inject(TranslateService);
+
   _languageService = inject(LanguageService);
+
   _wishlistService = inject(WishlistService);
+
   _authService = inject(AuthService);
+
   _router = inject(Router);
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  currectlang$ = inject(LanguageService).getLanguage();
 
   wishlistItem: IGetWishlist[] = [];
+
   cartAnimationStates: { [key: number]: boolean } = {};
+
   isLoading = true;
+
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
   private userId: number | null = null;
 
   ngOnInit(): void {
-    // Get user ID if authenticated
-    if (this._authService.isAuthenticated()) {
+    // Check if user is authenticated
+    if (this.isAuthenticated()) {
+      // User is authenticated, set loading state
+      this.isLoading = true;
       const userData = this._authService.getUserData();
+
       if (userData && userData.id) {
         this.userId = userData.id;
         this.loadWishlistItems();
       } else {
-        this.redirectToLogin();
+        // User data incomplete, stop loading
+        this.isLoading = false;
       }
     } else {
-      this.redirectToLogin();
+      // Not authenticated, no need to show loading
+      this.isLoading = false;
     }
+  }
+
+  /**
+   * Checks if the user is authenticated
+   * @returns boolean Whether the user is authenticated
+   */
+  isAuthenticated(): boolean {
+    return this._authService.isAuthenticated();
   }
 
   private redirectToLogin(): void {
@@ -92,18 +119,20 @@ export class WishlistComponent implements OnInit {
 
   loadWishlistItems(): void {
     if (!this.userId) {
-      this.redirectToLogin();
+      this.isLoading = false;
       return;
     }
 
     this.isLoading = true;
 
-    this._wishlistService.getWishlistItems(this.userId).subscribe({
+    this._wishlistService.getWishlistItems().subscribe({
       next: (response) => {
         // Check different possible response formats
         if (response && Array.isArray(response.wishs)) {
           this.wishlistItem = response.wishs;
+          console.log('Wishlist items loaded:', this.wishlistItem.length);
         } else {
+          console.log('No wishlist items found or unexpected response format');
           this.wishlistItem = [];
         }
         this.isLoading = false;
@@ -113,9 +142,10 @@ export class WishlistComponent implements OnInit {
         this.wishlistItem = [];
         this.isLoading = false;
 
-        // If unauthorized, redirect to login
+        // If unauthorized, handle accordingly
         if (error.status === 401) {
-          this.redirectToLogin();
+          // Force a re-login if token is invalid
+          this._authService.logout().subscribe();
         }
       },
     });
@@ -131,7 +161,9 @@ export class WishlistComponent implements OnInit {
 
         // If unauthorized, redirect to login
         if (error.status === 401) {
-          this.redirectToLogin();
+          this._authService.logout().subscribe(() => {
+            this.redirectToLogin();
+          });
         }
       },
     });
@@ -150,31 +182,22 @@ export class WishlistComponent implements OnInit {
       }, index * 100);
     });
 
-    // Remove all items sequentially
-    const removePromises = this.wishlistItem.map((item, index) => {
-      return new Promise<void>((resolve) => {
+    // Remove all items at once with a single API call
+    this._wishlistService.removeFromWishlist('all').subscribe({
+      next: () => {
+        // After all items are removed, clear the array
         setTimeout(() => {
-          if (item.id) {
-            this._wishlistService.removeFromWishlist(item.id).subscribe({
-              next: () => resolve(),
-              error: (error) => {
-                // If unauthorized, redirect to login
-                if (error.status === 401) {
-                  this.redirectToLogin();
-                }
-                resolve();
-              },
-            });
-          } else {
-            resolve();
-          }
-        }, index * 100);
-      });
-    });
-
-    // After all items are removed, clear the array
-    Promise.all(removePromises).then(() => {
-      this.wishlistItem = [];
+          this.wishlistItem = [];
+        }, items.length * 100); // Wait for animations to complete
+      },
+      error: (error) => {
+        // If unauthorized, redirect to login
+        if (error.status === 401) {
+          this._authService.logout().subscribe(() => {
+            this.redirectToLogin();
+          });
+        }
+      },
     });
   }
 

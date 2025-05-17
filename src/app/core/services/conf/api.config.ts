@@ -10,7 +10,7 @@ export const API_CONFIG = {
     GET_ALL: 'menu/products',
     GET_WITH_CATEGORY: 'menu/category/',
     GET_WITH_SUBCATEGORY: 'menu/subcategory/',
-    GET_WITH_SLUG: 'menu/product',
+    GET_WITH_SLUG: 'menu/products',
   },
 
   CATEGORY: {
@@ -69,5 +69,6 @@ export const API_CONFIG = {
   WISHLIST: {
     STORE_WISH: 'wish',
     GET_USER_WISH: 'wish',
+    REMOVE_WISH: 'wish/delete/',
   },
 };

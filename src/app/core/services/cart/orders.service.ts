@@ -12,13 +12,14 @@ export class OrdersService {
   private api = inject(ApiService);
   private authService = inject(AuthService);
 
+  userId = this.authService.getUserId();
+
   /**
    * Check cart status
    */
   checkCart(): Observable<IGetCartOrOrder> {
-    const userId = this.authService.getUserId();
     return this.api.get<IGetCartOrOrder>(
-      `${API_CONFIG.ORDERS.CHECK_CART}${userId}`
+      `${API_CONFIG.ORDERS.CHECK_CART}${this.userId}`
     );
   }
 
@@ -50,9 +51,13 @@ export class OrdersService {
     productId: string | number;
     quantity: number;
   }): Observable<IGetCartOrOrder> {
+    const data = new FormData();
+    data.append('product_id', item.productId.toString());
+    data.append('quantity', item.quantity.toString());
+    let userId = this.authService.getUserId();
     return this.api.post<IGetCartOrOrder>(
-      API_CONFIG.ORDERS.UPDATE_QUANTITY,
-      item
+      `${API_CONFIG.ORDERS.UPDATE_QUANTITY}${userId}`,
+      data
     );
   }
 
@@ -60,27 +65,36 @@ export class OrdersService {
    * Remove item from cart
    */
   removeFromCart(productId: string | number): Observable<IGetCartOrOrder> {
-    return this.api.post<IGetCartOrOrder>(API_CONFIG.ORDERS.REMOVE_FROM_CART, {
-      productId,
-    });
+    const formData = new FormData();
+    formData.append('product_id', productId.toString());
+
+    return this.api.post<IGetCartOrOrder>(
+      `${API_CONFIG.ORDERS.REMOVE_FROM_CART}${this.userId}`,
+      formData
+    );
   }
 
   /**
    * Remove all items from cart
    */
   removeAllFromCart(): Observable<IGetCartOrOrder> {
-    return this.api.post<IGetCartOrOrder>(API_CONFIG.ORDERS.REMOVE_ALL, {});
+    return this.api.post<IGetCartOrOrder>(
+      `${API_CONFIG.ORDERS.REMOVE_ALL}${this.userId}`,
+      {}
+    );
   }
 
   /**
    * Apply promo code
    */
-  /* error hereeeeeeeeeeeeeeeeeeeeee */
 
   checkPromoCode(code: string): Observable<any> {
-    return this.api.post<any>(API_CONFIG.ORDERS.PROMO_CODE, {
-      code,
-    });
+    const formData = new FormData();
+    formData.append('code', code);
+    return this.api.post<any>(
+      `${API_CONFIG.ORDERS.PROMO_CODE}/${this.userId}`,
+      formData
+    );
   }
 
   /**

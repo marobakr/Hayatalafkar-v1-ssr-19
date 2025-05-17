@@ -1,14 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '../../../../core/services/user/user.service';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { IGetOrders } from './res/order.interface';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ButtonComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    ButtonComponent,
+    LoadingComponent,
+    ImageUrlDirective,
+  ],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
 })
@@ -16,7 +25,7 @@ export class OrdersComponent implements OnInit {
   private _userService = inject(UserService);
   private _destroyRef = inject(DestroyRef);
 
-  orders = signal<any[]>([]);
+  orders = signal<IGetOrders>({} as IGetOrders);
   loading = signal(false);
   errorMessage = signal('');
 
@@ -30,10 +39,10 @@ export class OrdersComponent implements OnInit {
       .getUserOrders()
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
-        next: (response) => {
+        next: (response: IGetOrders) => {
           this.loading.set(false);
-          if (response && response.data) {
-            this.orders.set(response.data);
+          if (response && response.row) {
+            this.orders.set(response);
           }
         },
         error: (error) => {

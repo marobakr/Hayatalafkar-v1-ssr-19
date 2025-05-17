@@ -40,6 +40,15 @@
     },
     "slogan-text": "تألق بثقة, تسوق بعناية و امان"
   },
+  "account_management": {
+    "deactivate_button": "تعطيل الحساب",
+    "deactivate_description": "تعطيل حسابك مؤقتًا. يمكنك إعادة تنشيطه لاحقًا عن طريق تسجيل الدخول مرة أخرى.",
+    "deactivate_title": "تعطيل الحساب",
+    "delete_button": "حذف الحساب",
+    "delete_description": "حذف حسابك وجميع البيانات المرتبطة به بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
+    "delete_title": "حذف الحساب",
+    "title": "إدارة الحساب"
+  },
   "add": {
     "address": "اضافه العنوان",
     "new": {
@@ -48,6 +57,26 @@
   },
   "add_to_cart": "اضافة الى السلة",
   "add_to_wishlist": "اضافة الى المفضلة",
+  "alerts": {
+    "wishlist": {
+      "add_success": {
+        "title": "تمت اضافة المنتج الى المفضلة بنجاح"
+      },
+      "remove_confirm": {
+        "cancel": "إلغاء",
+        "message": "هل أنت متأكد من رغبتك في إزالة هذا المنتج من المفضلة؟",
+        "title": "حذف المنتج من المفضلة",
+        "yes": "نعم"
+      },
+      "remove_error": {
+        "message": "فشل إزالة المنتج من المفضلة",
+        "title": "خطأ"
+      },
+      "remove_success": {
+        "title": "تم إزالة المنتج من المفضلة بنجاح"
+      }
+    }
+  },
   "all-total-price": "الاجمالى الفرعى",
   "articles": {
     "blogs": {
@@ -159,35 +188,35 @@
           },
           "title": "اضافة عنوان جديد",
           "validation": {
-            "first_name": {
-              "required": "الاسم الأول مطلوب"
-            },
-            "last_name": {
-              "required": "اسم العائلة مطلوب"
-            },
             "address": {
               "required": "العنوان مطلوب"
             },
             "city": {
               "required": "المدينة مطلوبة"
             },
-            "state": {
-              "required": "المنطقة مطلوبة"
-            },
             "country": {
               "required": "الدولة مطلوبة"
             },
-            "phone": {
-              "required": "رقم الهاتف مطلوب",
-              "pattern": "يرجى إدخال رقم هاتف صالح"
-            },
             "email": {
-              "required": "البريد الإلكتروني مطلوب",
-              "invalid": "يرجى إدخال عنوان بريد إلكتروني صالح"
+              "invalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+              "required": "البريد الإلكتروني مطلوب"
+            },
+            "first_name": {
+              "required": "الاسم الأول مطلوب"
+            },
+            "last_name": {
+              "required": "اسم العائلة مطلوب"
+            },
+            "phone": {
+              "pattern": "يرجى إدخال رقم هاتف صالح",
+              "required": "رقم الهاتف مطلوب"
             },
             "postalCode": {
-              "required": "الرمز البريدي مطلوب",
-              "pattern": "يرجى إدخال رمز بريدي صالح"
+              "pattern": "يرجى إدخال رمز بريدي صالح",
+              "required": "الرمز البريدي مطلوب"
+            },
+            "state": {
+              "required": "المنطقة مطلوبة"
             }
           }
         },
@@ -219,9 +248,6 @@
     }
   },
   "availability": "المنتجات المتوفرة",
-  "unavailability": "المنتجات غير المتوفرة",
-  "page": "صفحة",
-  "of": "من",
   "banner": {
     "banner-about-us-1": " نؤمن بأن الجمال يبدأ من العناية، ولهذا نقدم لكِ مستحضرات مصممة لتعزيز إشراقتك الطبيعية بثقة. ",
     "banner-about-us-2": " لأن جمالك فريد، نوفر لكِ مستحضرات تجميل تجمع بين الفخامة والجودة لتمنحكِ تألقًا يدوم. ",
@@ -246,6 +272,9 @@
     "title": "منتجاتنا",
     "viewAllProducts": "مشاهدة كل المنتجات"
   },
+  "blogs": {
+    "title": "اخبار & مقالات ذات صلة"
+  },
   "cancel-order": "الغاء الطلب",
   "cart": {
     "cart-footer": {
@@ -254,13 +283,27 @@
       "discount-code": "كود الخصم"
     },
     "empty": {
-      "title": "عربة التسوق فارغة",
-      "message": "يبدو أنك لم تضف أي منتجات إلى عربة التسوق بعد",
-      "shop-now": "تسوق الآن"
+      "message": "يبدو أنك لم تضف أي عناصر إلى سلة التسوق الخاصة بك حتى الآن",
+      "shop-now": "تسوق الآن",
+      "title": "سلة التسوق فارغة"
+    },
+    "error": {
+      "add_failed": "فشل إضافة العنصر إلى سلة التسوق. يرجى المحاولة مرة أخرى.",
+      "clear_failed": "فشل مسح سلة التسوق. يرجى المحاولة مرة أخرى.",
+      "remove_failed": "فشل إزالة العنصر من سلة التسوق. يرجى المحاولة مرة أخرى.",
+      "update_failed": "فشل تحديث الكمية. يرجى المحاولة مرة أخرى."
     },
     "header": {
-      "subtitle": "شاهد جميع المنتجات التى تحتاج اليها و تود طلبها و استكمل طلبك معنا",
-      "title": "سلة التسوق"
+      "subtitle": "اعرض جميع المنتجات التي تحتاجها وترغب في طلبها وأكمل طلبك معنا",
+      "title": "عربة التسوق"
+    },
+    "item_removed": "تمت إزالة العنصر من سلة التسوق بنجاح",
+    "cart_cleared": "تم مسح سلة التسوق بنجاح",
+    "promo-code": {
+      "enter-valid-code": "الرجاء إدخال كود ترويجي صالح",
+      "error-applying": "خطأ في تطبيق الكود الترويجي. الرجاء المحاولة مرة أخرى.",
+      "invalid-code": "كود ترويجي غير صالح. يرجى التحقق والمحاولة مرة أخرى.",
+      "success": "تم تطبيق الكود الترويجي بنجاح!"
     }
   },
   "change": {
@@ -360,8 +403,105 @@
     "title": "الجمال يبدأ بفكرة",
     "title-btn": "تسوق الان"
   },
+  "in_stock": "متوفر في المخزون",
   "invoice": "الفاتوره",
   "maps-subtitle": "الرياض 12244, المملكة العربية السعودية 2567777 , الرياض السليمانية",
+  "mega_menu": {
+    "beauty_accessories": {
+      "items": {
+        "artificial_nails": "أظافر صناعية",
+        "eyelashes_adhesive": "لاصق رموش",
+        "false_eyelashes": "رموش صناعية"
+      },
+      "title": "مستلزمات التجميل"
+    },
+    "beauty_devices": {
+      "items": {
+        "body_hair_removal": "إزالة شعر الجسم",
+        "facial_hair_removal": "إزالة شعر الوجه",
+        "nail_art": "فن الأظافر"
+      },
+      "title": "أجهزة التجميل"
+    },
+    "dental_care": {
+      "items": {
+        "breath_freshners": "معطرات النفس",
+        "dental_care_accessories": "مستلزمات العناية بالأسنان",
+        "tooth_brushes": "فرش أسنان"
+      },
+      "title": "العناية بالأسنان"
+    },
+    "dietary_supplements": {
+      "items": {
+        "hair_supplements": "فيتامينات ومكملات غذائية للشعر",
+        "skin_supplements": "فيتامينات ومكملات غذائية للبشرة"
+      },
+      "title": "المكملات الغذائية"
+    },
+    "hair_care": {
+      "items": {
+        "antidandruff": "مضاد القشرة",
+        "antihair_loss": "مضاد تساقط الشعر",
+        "antilice": "مضاد القمل"
+      },
+      "title": "العناية بالشعر"
+    },
+    "hair_styling": {
+      "items": {
+        "hair_colors": "صبغات الشعر",
+        "hair_frizing": "فرد الشعر",
+        "hair_straightening": "تنعيم الشعر"
+      },
+      "title": "تصفيف الشعر"
+    },
+    "makeup": {
+      "items": {
+        "face_makeup": "مكياج الوجه",
+        "foundations": "كريم أساس",
+        "primers": "برايمر"
+      },
+      "title": "المكياج"
+    },
+    "medical_equipments": {
+      "items": {
+        "face_masks": "كمامات",
+        "hand_sanitizers": "معقمات اليدين"
+      },
+      "title": "المعدات الطبية"
+    },
+    "men_care": {
+      "items": {
+        "condoms": "واقي ذكري",
+        "lubricants": "مزلقات",
+        "men_special_care": "عناية خاصة للرجال"
+      },
+      "title": "العناية بالرجال"
+    },
+    "perfumes": {
+      "items": {
+        "eau_de_perfume": "ماء العطر",
+        "eau_de_toilette": "ماء التواليت",
+        "perfume": "برفان"
+      },
+      "title": "العطور"
+    },
+    "skin_care": {
+      "items": {
+        "facial_moisturisation": "ترطيب الوجه",
+        "facial_whitening": "تفتيح البشرة",
+        "sunscreens": "واقي شمس"
+      },
+      "title": "العناية بالبشرة"
+    },
+    "women_care": {
+      "items": {
+        "hair_removal": "إزالة الشعر",
+        "vaginal_washes": "غسول نسائي",
+        "women_special_care": "عناية خاصة بالمرأة"
+      },
+      "title": "العناية بالمرأة"
+    }
+  },
   "my": {
     "requests": "طلباتي"
   },
@@ -372,13 +512,12 @@
       "lang": "اللغة"
     },
     "logout": "تسجيل الخروج",
-    "profile": "الملف الشخصي",
     "pages_Title": {
       "articles": {
         "title": "المقالات"
       },
       "contact_Us": {
-        "title": "تواصل معنا"
+        "title": "اتصل بنا"
       },
       "home": {
         "title": "الرئيسية"
@@ -393,6 +532,9 @@
         "title": "من نحن"
       }
     },
+    "profile": "الملف الشخصي",
+    "cart": "سلة التسوق",
+    "wishlist": "المفضلة",
     "search": "بحث",
     "search_placeholder": "ابحث عن المنتجات..."
   },
@@ -411,6 +553,7 @@
     "subtitle": "مشاهدة كل الاخبار",
     "title": "الأخبار و المقالات"
   },
+  "of": "من",
   "offer-day": {
     "altTitle": "      العروض الخاصة",
     "card-1": {
@@ -458,14 +601,31 @@
     "order-status": "حالة الطلب",
     "value": "تم الشحن"
   },
-  "profile": {
-    "title": "ملفي الشخصي",
-    "subtitle": "تابع ملفك الشخصي وسجل بياناتك",
+  "out_of_stock": "غير متوفر في المخزون",
+  "page": "صفحة",
+  "privacy": {
+    "title": "سياسة الخصوصية"
+  },
+  "product_code": "كود المنتج",
+  "product_details": {
     "tabs": {
-      "profile": "البيانات الشخصية",
-      "orders": "طلباتي",
-      "address": "إدارة العناوين",
-      "account": "إدارة الحساب"
+      "additional_info": "معلومات اضافيه ",
+      "description": "الوصف",
+      "reviews": "التقيم"
+    }
+  },
+  "profile": {
+    "address": {
+      "address_added_success": "تمت إضافة العنوان بنجاح",
+      "address_error": "خطأ في إضافة العنوان",
+      "error_title": "خطأ",
+      "form_invalid": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
+      "form_reset": "تم إعادة تعيين النموذج",
+      "info_title": "معلومات",
+      "locations_error": "خطأ في جلب المواقع",
+      "success_title": "تم بنجاح",
+      "user_info_error": "خطأ في جلب معلومات المستخدم",
+      "validation_title": "خطأ في التحقق"
     },
     "password": {
       "confirm-password": "تأكيد كلمة المرور",
@@ -476,43 +636,35 @@
       "placeholder-new-password": "أدخل كلمة المرور الجديدة",
       "update": "تحديث كلمة المرور"
     },
-    "address": {
-      "success_title": "تم بنجاح",
-      "error_title": "خطأ",
-      "validation_title": "خطأ في التحقق",
-      "info_title": "معلومات",
-      "address_added_success": "تمت إضافة العنوان بنجاح",
-      "address_error": "خطأ في إضافة العنوان",
-      "form_invalid": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح",
-      "user_info_error": "خطأ في جلب معلومات المستخدم",
-      "form_reset": "تم إعادة تعيين النموذج",
-      "locations_error": "خطأ في جلب المواقع"
-    }
+    "subtitle": "تابع ملفك الشخصي وسجل بياناتك",
+    "tabs": {
+      "account": "إدارة الحساب",
+      "address": "إدارة العناوين",
+      "orders": "طلباتي",
+      "profile": "البيانات الشخصية"
+    },
+    "title": "ملفي الشخصي"
   },
   "profile.orders": {
-    "title": "طلباتي",
-    "order_number": "رقم الطلب",
     "date": "التاريخ",
-    "total": "المجموع",
-    "payment_method": "طريقة الدفع",
     "items": "العناصر",
-    "view_details": "عرض التفاصيل",
     "no_orders": {
-      "title": "لا توجد طلبات حتى الآن",
-      "message": "لم تقم بإجراء أي طلبات حتى الآن"
+      "message": "لم تقم بإجراء أي طلبات حتى الآن",
+      "title": "لا توجد طلبات حتى الآن"
     },
-    "start_shopping": "ابدأ التسوق"
+    "order_number": "رقم الطلب",
+    "payment_method": "طريقة الدفع",
+    "start_shopping": "ابدأ التسوق",
+    "title": "طلباتي",
+    "total": "المجموع",
+    "view_details": "عرض التفاصيل"
   },
-  "account_management": {
-    "title": "إدارة الحساب",
-    "deactivate_title": "تعطيل الحساب",
-    "deactivate_description": "تعطيل حسابك مؤقتًا. يمكنك إعادة تنشيطه لاحقًا عن طريق تسجيل الدخول مرة أخرى.",
-    "deactivate_button": "تعطيل الحساب",
-    "delete_title": "حذف الحساب",
-    "delete_description": "حذف حسابك وجميع البيانات المرتبطة به بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
-    "delete_button": "حذف الحساب"
+  "related-blog": {
+    "subtitle": " الاخبار & المقالات",
+    "title": "اخبار & مقالات ذات صلة"
   },
   "reorder": "اعاده طلب الاوردر",
+  "reset.form": "إعادة تعيين النموذج",
   "routes": {
     "about": "من نحن",
     "blog": "المقالات",
@@ -547,70 +699,70 @@
     ]
   },
   "shared": {
+    "add_to_cart": "أضف إلى السلة",
+    "added_to_cart_success": "تمت إضافة المنتج إلى سلة التسوق بنجاح",
+    "continue_shopping": "متابعة التسوق",
     "currency": "ر.س",
+    "go_to_cart": "الذهاب إلى السلة",
     "offer": "خصم 25%",
     "price_varies": "السعر يختلف حسب الخيارات",
     "readMore": "قراءة المزيد",
     "shopping_now": "تسوق الآن",
     "show-products": "شراء المنتج ",
     "success": "تم بنجاح",
-    "added_to_cart_success": "تمت إضافة المنتج إلى سلة التسوق بنجاح",
-    "continue_shopping": "متابعة التسوق",
-    "go_to_cart": "الذهاب إلى السلة",
-    "add_to_cart": "أضف إلى السلة",
     "update_cart_quantity": "تحديث كمية المنتج في السلة"
   },
   "shopping": {
-    "header": {
-      "title": "جميع المنتجات",
-      "subtitle": "تسوق أحدث المنتجات"
-    },
-    "view-category": "عرض الفئة",
     "filter": {
-      "selected-filter": "التصفية المحددة",
-      "products-counts": "عدد المنتجات",
-      "items": "منتج",
       "active": "نشط",
+      "category": "الفئة",
       "filter-type": {
         "clear-all": "مسح الكل"
       },
+      "items": "منتج",
       "price": {
-        "title": "السعر",
         "currency": "ريال",
-        "reset": "إعادة تعيين الأسعار"
+        "reset": "إعادة تعيين الأسعار",
+        "title": "السعر"
       },
-      "category": "الفئة",
+      "products-counts": "عدد المنتجات",
+      "selected-filter": "التصفية المحددة",
       "subcategory": "الفئة الفرعية",
       "view-all-products": "عرض جميع المنتجات"
     },
     "filter-box": {
       "title": "التصنيفات"
     },
-    "search": {
-      "placeholder": "البحث عن المنتجات",
-      "hint": "هل تبحث عن شيء محدد؟",
-      "button": "بحث",
-      "no-results": "لم يتم العثور على منتجات",
-      "suggestions": "جرب كلمات مفتاحية مختلفة"
-    },
     "grid": {
-      "sort-by": "ترتيب حسب",
       "newest": "الأحدث",
-      "price-low-high": "السعر: من الأقل إلى الأعلى",
+      "popularity": "الشعبية",
       "price-high-low": "السعر: من الأعلى إلى الأقل",
-      "popularity": "الشعبية"
+      "price-low-high": "السعر: من الأقل إلى الأعلى",
+      "sort-by": "ترتيب حسب"
     },
-    "pagination": {
-      "previous": "السابق",
-      "next": "التالي",
-      "page": "الصفحة",
-      "of": "من"
+    "header": {
+      "subtitle": "تسوق أحدث المنتجات",
+      "title": "جميع المنتجات"
     },
     "no-products": {
-      "title": "لم يتم العثور على منتجات",
+      "button": "مسح عوامل التصفية",
       "description": "حاول مسح بعض عوامل التصفية أو جرب مصطلح بحث مختلف",
-      "button": "مسح عوامل التصفية"
+      "title": "لم يتم العثور على منتجات"
     },
+    "pagination": {
+      "next": "التالي",
+      "of": "من",
+      "page": "الصفحة",
+      "previous": "السابق"
+    },
+    "search": {
+      "button": "بحث",
+      "hint": "هل تبحث عن شيء محدد؟",
+      "no-results": "لم يتم العثور على منتجات",
+      "placeholder": "البحث عن المنتجات",
+      "suggestions": "جرب كلمات مفتاحية مختلفة"
+    },
+    "view-category": "عرض الفئة",
     "view-options": {
       "grid": "عرض الشبكة",
       "list": "عرض القائمة"
@@ -620,171 +772,73 @@
     "product": "مشاهده المنتج"
   },
   "signOut": "تسجيل الخروج",
+  "submit-button-aria-label": "إرسال البيانات",
+  "summary": {
+    "complete-the-order": "استكمال الطلب",
+    "delivery": "التوصيل",
+    "discount-coupon": "الكوبون الخصمى",
+    "items": "العناصر",
+    "subtotal": "المجموع الفرعى",
+    "summary": "الملخص",
+    "tax": "الضريبة",
+    "total": "الاجمالى"
+  },
   "total-price": {
     "total-price": "السعر الاجمالي",
     "value": "2000 ر.س"
   },
   "track-order": "متابعه الطلب",
+  "unavailability": "المنتجات غير المتوفرة",
+  "validation": {
+    "email-format": "البريد الإلكتروني أو رقم الهاتف غير صالح",
+    "email-required": "البريد الإلكتروني أو رقم الهاتف مطلوب",
+    "name-min-length": "اسم يجب أن يكون أطول من 3 أحرف",
+    "name-required": "اسم مطلوب",
+    "password-min-length": "كلمة المرور يجب أن تكون أطول من 6 أحرف",
+    "password-mismatch": "كلمة المرور غير متطابقة",
+    "password-required": "كلمة المرور مطلوبة",
+    "phone-format": "رقم الهاتف غير صالح",
+    "phone-required": "رقم الهاتف مطلوب",
+    "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف",
+    "your-msg-required": "رسالة المستخدم مطلوبة"
+  },
   "wishlist": {
+    "auth": {
+      "message": "تحتاج إلى تسجيل الدخول لعرض وإدارة عناصر قائمة المفضلة الخاصة بك.",
+      "title": "يرجى تسجيل الدخول للوصول إلى قائمة المفضلة"
+    },
+    "empty": {
+      "message": "يبدو أنك لم تضف أي عناصر إلى قائمة المفضلة بعد",
+      "shop-now": "ابدأ التسوق",
+      "title": "قائمة المفضلة فارغة"
+    },
     "header": {
-      "subtitle": "شاهد المنتجات التى تفضلها",
+      "subtitle": "عرض منتجاتك المفضلة",
       "title": "المفضلة"
     },
     "orderList": {
-      "addToCart": "اضف الى السله",
+      "addToCart": "أضف إلى عربة التسوق",
       "price": "السعر",
       "product": "المنتج",
       "quantity": "الكمية"
     },
     "productsItem": {
       "commonItems": [
-        " سيروم فيتامين-سى ...",
-        "كريم لترطيب اليد غنى ب..",
-        "كريم لترطيب اليد غنى ب..",
-        "كريم لنضارة الوجه ...",
-        "لوشن مرطب للجسم"
+        "سيروم فيتامين سي...",
+        "كريم ترطيب اليدين...",
+        "كريم ترطيب اليدين...",
+        "كريم نضارة الوجه...",
+        "لوشن ترطيب الجسم"
       ],
       "item-1": {
-        "price": " ر.س",
+        "price": "ريال",
         "subtitle": "العناية بالبشرة"
       }
     },
     "wishlist-footer": {
-      "add-all": "اضافة الكل",
-      "add-new": "هل تريد وضع الكل فى السلة؟!",
-      "delete-all": "مسح كل العناصر"
-    },
-    "empty": {
-      "title": "قائمة الرغبات فارغة",
-      "message": "يبدو أنك لم تضف أي منتجات إلى قائمة الرغبات بعد",
-      "shop-now": "ابدأ التسوق"
+      "add-all": "إضافة الكل",
+      "add-new": "هل تريد وضع الكل في العربة؟",
+      "delete-all": "حذف كل العناصر"
     }
-  },
-  "summary": {
-    "items": "العناصر",
-    "subtotal": "المجموع الفرعى",
-    "delivery": "التوصيل",
-    "tax": "الضريبة",
-    "discount-coupon": "الكوبون الخصمى",
-    "total": "الاجمالى",
-    "summary": "الملخص",
-    "complete-the-order": "استكمال الطلب"
-  },
-  "mega_menu": {
-    "dietary_supplements": {
-      "title": "المكملات الغذائية",
-      "items": {
-        "hair_supplements": "فيتامينات ومكملات غذائية للشعر",
-        "skin_supplements": "فيتامينات ومكملات غذائية للبشرة"
-      }
-    },
-    "perfumes": {
-      "title": "العطور",
-      "items": {
-        "perfume": "برفان",
-        "eau_de_perfume": "ماء العطر",
-        "eau_de_toilette": "ماء التواليت"
-      }
-    },
-    "skin_care": {
-      "title": "العناية بالبشرة",
-      "items": {
-        "sunscreens": "واقي شمس",
-        "facial_moisturisation": "ترطيب الوجه",
-        "facial_whitening": "تفتيح البشرة"
-      }
-    },
-    "hair_care": {
-      "title": "العناية بالشعر",
-      "items": {
-        "antihair_loss": "مضاد تساقط الشعر",
-        "antidandruff": "مضاد القشرة",
-        "antilice": "مضاد القمل"
-      }
-    },
-    "hair_styling": {
-      "title": "تصفيف الشعر",
-      "items": {
-        "hair_colors": "صبغات الشعر",
-        "hair_frizing": "فرد الشعر",
-        "hair_straightening": "تنعيم الشعر"
-      }
-    },
-    "men_care": {
-      "title": "العناية بالرجال",
-      "items": {
-        "men_special_care": "عناية خاصة للرجال",
-        "condoms": "واقي ذكري",
-        "lubricants": "مزلقات"
-      }
-    },
-    "women_care": {
-      "title": "العناية بالمرأة",
-      "items": {
-        "vaginal_washes": "غسول نسائي",
-        "women_special_care": "عناية خاصة بالمرأة",
-        "hair_removal": "إزالة الشعر"
-      }
-    },
-    "medical_equipments": {
-      "title": "المعدات الطبية",
-      "items": {
-        "face_masks": "كمامات",
-        "hand_sanitizers": "معقمات اليدين"
-      }
-    },
-    "dental_care": {
-      "title": "العناية بالأسنان",
-      "items": {
-        "dental_care_accessories": "مستلزمات العناية بالأسنان",
-        "tooth_brushes": "فرش أسنان",
-        "breath_freshners": "معطرات النفس"
-      }
-    },
-    "makeup": {
-      "title": "المكياج",
-      "items": {
-        "face_makeup": "مكياج الوجه",
-        "primers": "برايمر",
-        "foundations": "كريم أساس"
-      }
-    },
-    "beauty_accessories": {
-      "title": "مستلزمات التجميل",
-      "items": {
-        "artificial_nails": "أظافر صناعية",
-        "false_eyelashes": "رموش صناعية",
-        "eyelashes_adhesive": "لاصق رموش"
-      }
-    },
-    "beauty_devices": {
-      "title": "أجهزة التجميل",
-      "items": {
-        "nail_art": "فن الأظافر",
-        "facial_hair_removal": "إزالة شعر الوجه",
-        "body_hair_removal": "إزالة شعر الجسم"
-      }
-    }
-  },
-  "validation": {
-    "name-required": "اسم مطلوب",
-    "name-min-length": "اسم يجب أن يكون أطول من 3 أحرف",
-    "phone-required": "رقم الهاتف مطلوب",
-    "phone-format": "رقم الهاتف غير صالح",
-    "email-required": "البريد الإلكتروني أو رقم الهاتف مطلوب",
-    "email-format": "البريد الإلكتروني أو رقم الهاتف غير صالح",
-    "your-msg-required": "رسالة المستخدم مطلوبة",
-    "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف",
-    "password-required": "كلمة المرور مطلوبة",
-    "password-min-length": "كلمة المرور يجب أن تكون أطول من 6 أحرف",
-    "password-mismatch": "كلمة المرور غير متطابقة"
-  },
-  "submit-button-aria-label": "إرسال البيانات",
-  "blogs": {
-    "title": "اخبار & مقالات ذات صلة"
-  },
-  "privacy": {
-    "title": "سياسة الخصوصية"
-  },
-  "reset.form": "إعادة تعيين النموذج"
+  }
 }

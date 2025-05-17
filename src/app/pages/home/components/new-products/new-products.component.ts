@@ -36,34 +36,4 @@ export class NewProductsComponent {
       });
     });
   }
-
-  imageSrc: {
-    image: string;
-    offer: boolean;
-  }[] = [
-    {
-      image: '/images/best-Seller/1.png',
-      offer: true,
-    },
-    {
-      image: '/images/best-Seller/2.png',
-      offer: true,
-    },
-    {
-      image: '/images/best-Seller/3.png',
-      offer: true,
-    },
-    {
-      image: '/images/best-Seller/4.png',
-      offer: true,
-    },
-    {
-      image: '/images/best-Seller/5.png',
-      offer: true,
-    },
-    {
-      image: '/images/best-Seller/6.png',
-      offer: true,
-    },
-  ];
 }

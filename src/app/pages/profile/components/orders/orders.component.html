@@ -1,11 +1,14 @@
 <!-- Current order -->
 <div class="mb-[35px]">
+  @if(!loading()){
   <div
     class="bg-warm-tan text-white flex flex-col md:flex-row-reverse justify-between items-center rounded-t-[20px] pb-[17px] pt-[18px] px-[42px] text-description-size capitalize text-center"
   >
     <div class="mb-4 md:mb-0">
       <p class="pb-[10px]">{{ "order.date.date" | translate }}</p>
-      <p class="font-bold">{{ "order.date.value" | translate }}</p>
+      <p class="font-bold">
+        {{ orders().row.created_at | date : "dd/MM/yyyy" }}
+      </p>
     </div>
     <div class="mb-4 md:mb-0">
       <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
@@ -27,6 +30,7 @@
   </div>
 
   <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
+    @for(order of orders().row.confirmed_orders; track order.id){
     <div
       class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
     >
@@ -48,49 +52,8 @@
         {{ "wishlist.productsItem.item-1.price" | translate }}
       </p>
     </div>
+    }
 
-    <div
-      class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
-    >
-      <img
-        class="w-[80px] h-[80px] rounded-[15px] mb-4 md:mb-0"
-        src="/images/wishlist/3.png"
-        alt="Product Image"
-      />
-      <div class="flex-grow rtl:pr-4 ltr:pl-4">
-        <p class="text-description-size font-bold mb-[15px]">
-          {{ "footer.sections.items.skincare" | translate }}
-        </p>
-        <p class="text-category-size text-[#333]">
-          {{ "wishlist.productsItem.item-1.subtitle" | translate }}
-        </p>
-      </div>
-      <p class="text-lg font-semibold">
-        200
-        {{ "wishlist.productsItem.item-1.price" | translate }}
-      </p>
-    </div>
-    <div
-      class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
-    >
-      <img
-        class="w-[80px] h-[80px] rounded-[15px] mb-4 md:mb-0"
-        src="/images/wishlist/3.png"
-        alt="Product Image"
-      />
-      <div class="flex-grow rtl:pr-4 ltr:pl-4">
-        <p class="text-description-size font-bold mb-[15px]">
-          {{ "footer.sections.items.skincare" | translate }}
-        </p>
-        <p class="text-category-size text-[#333]">
-          {{ "wishlist.productsItem.item-1.subtitle" | translate }}
-        </p>
-      </div>
-      <p class="text-lg font-semibold">
-        200
-        {{ "wishlist.productsItem.item-1.price" | translate }}
-      </p>
-    </div>
     <button
       class="bg-[#FFF4E9] block w-full md:inline md:w-auto cursor-pointer text-muted-rose border border-[#A48374] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize mb-[30px]"
     >
@@ -120,8 +83,12 @@
       </button>
     </div>
   </div>
+  } @else {
+  <app-loading></app-loading>
+  }
 </div>
 
+@if(!loading()){
 <!-- Have been Delivered -->
 <div>
   <div
@@ -187,3 +154,7 @@
     </div>
   </div>
 </div>
+}@else {
+<app-loading></app-loading>
+
+}
