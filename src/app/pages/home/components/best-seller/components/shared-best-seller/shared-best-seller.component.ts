@@ -47,6 +47,8 @@ export class SharedBestSellerComponent implements OnInit {
 
   private userId = inject(AuthService).getUserId();
 
+  productsInWishlist = this._wishlistService.getProductsInWishlistSignal();
+
   isAddingToWishlist = signal(false);
 
   isInWishlist = signal(false);
@@ -81,6 +83,86 @@ export class SharedBestSellerComponent implements OnInit {
     return this._cartStateService.isProductInCart(this.productData.id);
   }
 
+  toggleCart(): void {
+    if (this.isInCart()) {
+      this.removeFromCart();
+    } else {
+      this.addToCart();
+    }
+  }
+
+  removeFromCart(): void {
+    if (!this.isInCart() || !this.productData?.id) return;
+
+    if (this.isAddingToCart()) return;
+
+    // Get the cart item detail for this product
+    const cartItem = this._cartStateService.getCartItemForProduct(
+      this.productData.id
+    );
+    if (!cartItem) return;
+
+    this.setCartLoading(true);
+
+    // Show confirmation alert before removing
+    this._alertService.showConfirmation({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.cart.remove_confirm.title',
+        message: 'alerts.cart.remove_confirm.message',
+        confirmText: 'alerts.cart.remove_confirm.yes',
+        cancelText: 'alerts.cart.remove_confirm.cancel',
+      },
+      onConfirm: () => {
+        // Proceed with removal
+        this.executeRemoveFromCart(cartItem.id);
+      },
+      onCancel: () => {
+        this.setCartLoading(false);
+      },
+    });
+  }
+
+  private executeRemoveFromCart(detailId: number): void {
+    this._cartStateService.removeItem(detailId).subscribe({
+      next: () => {
+        this.setCartLoading(false);
+
+        // Refresh the cart state
+        this._cartStateService.fetchCart();
+
+        // Show success notification (without buttons)
+        this._alertService.showNotification({
+          imagePath: '/images/common/remove.gif',
+          translationKeys: {
+            title: 'alerts.cart.remove_success.title',
+          },
+        });
+      },
+      error: (err) => {
+        this.setCartLoading(false);
+        if (err.status === 401) {
+          this._languageService
+            .getLanguage()
+            .pipe(take(1))
+            .subscribe((lang) => {
+              this._router.navigate(['/', lang, 'login']);
+            });
+        }
+
+        // Show error notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/before-remove.png',
+          translationKeys: {
+            title: 'alerts.cart.remove_error.title',
+            message: 'alerts.cart.remove_error.message',
+          },
+        });
+        console.error('Error removing from cart:', err);
+      },
+    });
+  }
+
   addToCart(): void {
     if (this.isAddingToCart() || !this.productData?.id) {
       if (!this.productData?.id) console.error('Product data or ID missing');
@@ -98,39 +180,7 @@ export class SharedBestSellerComponent implements OnInit {
     }
 
     this.setCartLoading(true);
-
-    // Now `this.isInCart()` will provide the reactive, correct state.
-    if (this._cartStateService.isProductInCart(this.productData.id)) {
-      const cartItem = this._cartStateService.getCartItemForProduct(
-        this.productData.id
-      );
-      if (cartItem) {
-        const newQuantity = cartItem.quantity + 1;
-        this._cartStateService
-          .updateQuantity(this.productData.id, newQuantity)
-          .subscribe({
-            next: () => {
-              this.setCartLoading(false);
-              // No need to manually set isInCart, computed signal handles it.
-              this.showAddToCartSuccessAlert();
-            },
-            error: (error) => {
-              this.setCartLoading(false);
-              this.handleCartError(error);
-            },
-          });
-      } else {
-        // This case should ideally not be reached if isInCart() is true
-        // and getCartItemForProduct is consistent with isProductInCart
-        console.warn(
-          'Product was in cart, but no cart item found. Attempting to add as new.'
-        );
-        this.addNewItemToCart(); // Fallback to add new if item somehow missing
-        // this.setCartLoading(false); // Or just stop if state is inconsistent
-      }
-    } else {
-      this.addNewItemToCart();
-    }
+    this.addNewItemToCart();
   }
 
   isAddingToCart(): boolean {
@@ -174,10 +224,9 @@ export class SharedBestSellerComponent implements OnInit {
 
     // Show success notification for adding to cart
     this._alertService.showNotification({
-      imagePath: '/images/common/cart-success.png',
+      imagePath: '/images/common/addtocart.gif',
       translationKeys: {
         title: 'alerts.cart.add_success.title',
-        message: 'alerts.cart.add_success.message',
       },
     });
   }
@@ -262,6 +311,9 @@ export class SharedBestSellerComponent implements OnInit {
       },
       onConfirm: () => {
         // Proceed with removal
+        this.productsInWishlist().forEach((item) => {
+          // console.log(item);
+        });
         this.executeRemoveFromWishlist(wishId);
       },
     });
@@ -290,7 +342,6 @@ export class SharedBestSellerComponent implements OnInit {
           imagePath: '/images/common/remove.gif',
           translationKeys: {
             title: 'alerts.wishlist.remove_success.title',
-            message: 'alerts.wishlist.remove_success.message',
           },
         });
       },

@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
+import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserService } from '../../../../core/services/user/user.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { IGetOrders } from './res/order.interface';
 
 @Component({

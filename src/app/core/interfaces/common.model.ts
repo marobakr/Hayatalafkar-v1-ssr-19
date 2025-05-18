@@ -35,13 +35,3 @@ export interface ISubcategory {
   created_at: string;
   updated_at: string;
 }
-
-export interface Locations {
-  id: number;
-  en_name: string;
-  ar_name: string;
-  delivery_amount: string;
-  active_status: boolean;
-  created_at: string;
-  updated_at: string;
-}

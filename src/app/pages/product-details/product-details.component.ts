@@ -8,7 +8,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, NgClass } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -25,6 +25,8 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { WishlistService } from '@core/services/wishlist/wishlist.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import {
   CarouselComponent,
   CarouselModule,
@@ -32,9 +34,9 @@ import {
 } from 'ngx-owl-carousel-o';
 import { take } from 'rxjs';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
-import { AlertService } from '../../shared/alert/alert.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
+import { SharedBestSellerComponent } from '../home/components/best-seller/components/shared-best-seller/shared-best-seller.component';
+import { IAllProduct } from '../shopping/res/products.interface';
 import { ProductsService } from '../shopping/res/products.service';
 import { IProduct } from './res/productDetails.interface';
 
@@ -50,6 +52,8 @@ import { IProduct } from './res/productDetails.interface';
     RouterLink,
     CustomTranslatePipe,
     SafeHtmlComponent,
+    SharedBestSellerComponent,
+    NgClass,
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
@@ -187,7 +191,9 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   _productsService = inject(ProductsService);
 
-  productDetails: IProduct = this._route.snapshot.data['productDetails'];
+  productDetails!: IProduct;
+
+  relatedProducts: IAllProduct[] = [];
 
   currentPageUrl = '';
 
@@ -198,6 +204,9 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   quantity = signal(4);
 
   activeIndex = signal(0);
+
+  // Direction for layout (RTL or LTR)
+  isRtlMode = signal(false);
 
   // Process product images
   processedImages = signal<Array<{ id: number; url: string; alt: string }>>([]);
@@ -213,9 +222,10 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     items: 1,
     autoplay: false,
     nav: true,
+    rtl: false,
     navText: [
-      '<i class="fa fa-chevron-left"></i>',
-      '<i class="fa fa-chevron-right"></i>',
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
     ],
   };
 
@@ -230,6 +240,7 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     items: 4,
     autoplay: false,
     nav: false,
+    rtl: false,
     margin: 10,
     responsive: {
       0: {
@@ -239,19 +250,32 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
         items: 4,
       },
     },
+    navText: [
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+    ],
   };
 
   // Product tabs configuration
   productTabs = [
     { id: 'description', title: 'product_details.tabs.description' },
     { id: 'additional', title: 'product_details.tabs.additional_info' },
-    { id: 'reviews', title: 'product_details.tabs.reviews' },
+    // { id: 'reviews', title: 'product_details.tabs.reviews' },
   ];
 
   // Active tab index
   activeTab = signal(0);
 
   ngOnInit(): void {
+    // Check language direction
+    this._languageService.getLanguage().subscribe((lang) => {
+      this.isRtlMode.set(lang === 'ar');
+
+      // Update carousel RTL setting based on language
+      this.updateCarouselRtlSetting();
+    });
+
+    this.subscriptResolverToProductDetails();
     this.processProductImages();
     if (this.isBrowser) {
       this.currentPageUrl = window.location.href;
@@ -261,12 +285,82 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
       const userData = this._authService.getUserData();
       if (userData && userData.id) {
         this.userId = userData.id;
-        if (this.productDetails && this.productDetails.product[0].id) {
+        if (this.productDetails && this.productDetails.id) {
           this.checkIfProductInWishlist();
-          // No need to call a method to check/set isInCart, computed signal handles it.
         }
       }
     }
+  }
+
+  // Update carousel options when RTL mode changes
+  private updateCarouselRtlSetting(): void {
+    const isRtl = this.isRtlMode();
+    this.mainCarouselOptions = {
+      ...this.mainCarouselOptions,
+      rtl: isRtl,
+    };
+
+    this.thumbnailOptions = {
+      ...this.thumbnailOptions,
+      rtl: isRtl,
+    };
+
+    // Force update on carousel after setting RTL
+    setTimeout(() => {
+      if (this.mainCarousel) {
+        try {
+          // Trick to force carousel update - destroy and initialize again
+          const mainElement = document.querySelector(
+            '.carousel-wrapper .owl-carousel'
+          );
+          if (mainElement) {
+            mainElement.classList.add('owl-refresh');
+            setTimeout(() => {
+              mainElement.classList.remove('owl-refresh');
+            }, 10);
+          }
+        } catch (e) {
+          console.error('Error refreshing main carousel', e);
+        }
+      }
+
+      if (this.thumbnailCarousel) {
+        try {
+          // Trick to force carousel update - destroy and initialize again
+          const thumbElement = document.querySelector(
+            '.thumbnail-gallery .owl-carousel'
+          );
+          if (thumbElement) {
+            thumbElement.classList.add('owl-refresh');
+            setTimeout(() => {
+              thumbElement.classList.remove('owl-refresh');
+            }, 10);
+          }
+        } catch (e) {
+          console.error('Error refreshing thumbnail carousel', e);
+        }
+      }
+    }, 100);
+  }
+
+  subscriptResolverToProductDetails(): void {
+    this._route.data.subscribe((next) => {
+      this.productDetails = next['productDetails'].product;
+      this.relatedProducts = next['productDetails'].relatedProducts;
+      // Add test images if none exist (for testing purposes)
+      if (
+        !this.productDetails.additional_images ||
+        (Array.isArray(this.productDetails.additional_images) &&
+          this.productDetails.additional_images.length === 0)
+      ) {
+        console.log('No additional images found, adding test images');
+        // Adding test images with the same format as the main image
+        this.productDetails.additional_images = [
+          { img: this.productDetails.main_image } as any,
+          { img: this.productDetails.main_image } as any,
+        ];
+      }
+    });
   }
 
   incrementQuantity(): void {
@@ -285,8 +379,9 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   setActiveIndex(index: number): void {
     this.activeIndex.set(index);
-    if (this.mainCarousel) {
-      this.mainCarousel.to(`slide_${index}`);
+    if (this.mainCarousel && this.processedImages().length > index) {
+      const imageId = this.processedImages()[index].id;
+      this.mainCarousel.to(`slide_${imageId}`);
     }
   }
 
@@ -294,66 +389,92 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     // Add event listener to sync main carousel with thumbnails
     if (this.mainCarousel) {
       this.mainCarousel.translated.subscribe((event: any) => {
-        const slideId = event.id; // Format: 'slide_X'
-        const slideIndex = parseInt(slideId.split('_')[1], 10);
-
-        if (!isNaN(slideIndex) && slideIndex !== this.activeIndex()) {
-          this.activeIndex.set(slideIndex);
+        // Check if event and event.id exist before trying to split
+        if (event && event.id && typeof event.id === 'string') {
+          const parts = event.id.split('_');
+          if (parts.length > 1) {
+            const slideIndex = parseInt(parts[1], 10);
+            if (!isNaN(slideIndex) && slideIndex !== this.activeIndex()) {
+              this.activeIndex.set(slideIndex);
+            }
+          }
         }
       });
     }
+
+    // Apply RTL settings again after view initialization to ensure they're applied
+    setTimeout(() => {
+      this.updateCarouselRtlSetting();
+    }, 0);
   }
 
   // Process product images from backend response
   processProductImages(): void {
+    console.log('Processing product images');
+    console.log(
+      'Main Image:',
+      this.productDetails && this.productDetails.main_image
+    );
+
     const images: Array<{ id: number; url: string; alt: string }> = [];
+
     // Add main image as the first image
-    if (this.productDetails && this.productDetails.product[0].main_image) {
+    if (this.productDetails && this.productDetails.main_image) {
       images.push({
         id: 0,
-        url: this.productDetails.product[0].main_image,
+        url: this.productDetails.main_image,
         alt: 'Product main image',
       });
     }
 
-    // Add additional images if they exist
+    // Try to process actual additional images if they exist
     if (
       this.productDetails &&
-      this.productDetails.product[0].additional_images &&
-      Array.isArray(this.productDetails.product[0].additional_images) &&
-      this.productDetails.product[0].additional_images.length > 0
+      this.productDetails.additional_images &&
+      Array.isArray(this.productDetails.additional_images) &&
+      this.productDetails.additional_images.length > 0
     ) {
-      // Process additional images array
-      this.productDetails.product[0].additional_images.forEach(
-        (additionalImageGroup: any, groupIndex: number) => {
-          if (Array.isArray(additionalImageGroup)) {
-            additionalImageGroup.forEach(
-              (imageObj: any, imageIndex: number) => {
-                if (imageObj && imageObj.img) {
-                  images.push({
-                    id: (groupIndex + 1) * 100 + imageIndex,
-                    url: imageObj.img,
-                    alt: `Additional image ${
-                      (groupIndex + 1) * 100 + imageIndex
-                    }`,
-                  });
-                }
-              }
-            );
+      try {
+        // Go through the additional images
+        this.productDetails.additional_images.forEach(
+          (imgData: any, index: number) => {
+            if (imgData && typeof imgData === 'object' && imgData.img) {
+              images.push({
+                id: index + 1,
+                url: imgData.img,
+                alt: `Additional image ${index + 1}`,
+              });
+            } else if (typeof imgData === 'string') {
+              images.push({
+                id: index + 1,
+                url: imgData,
+                alt: `Additional image ${index + 1}`,
+              });
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        console.error('Error processing additional images:', error);
+      }
     }
 
-    // If no images were found, add the main image as a fallback
-    if (images.length === 0 && this.productDetails) {
-      images.push({
-        id: 0,
-        url: this.productDetails.product[0].main_image || '',
-        alt: 'Product image',
-      });
+    // Ensure we have at least 3 images for demo purposes by duplicating the main image
+    if (
+      images.length < 3 &&
+      this.productDetails &&
+      this.productDetails.main_image
+    ) {
+      // Add duplicate copies of the main image as additional images for the demo
+      for (let i = images.length; i < 3; i++) {
+        images.push({
+          id: i,
+          url: this.productDetails.main_image,
+          alt: `Additional image ${i}`,
+        });
+      }
     }
 
+    console.log('Final processed images:', images);
     this.processedImages.set(images);
   }
 
@@ -398,10 +519,10 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     // Get product title based on available data
     if (this.productDetails) {
       // Get localized property based on product details
-      if (this.productDetails.product[0].ar_name) {
-        return this.productDetails.product[0].ar_name;
-      } else if (this.productDetails.product[0].en_name) {
-        return this.productDetails.product[0].en_name;
+      if (this.productDetails.ar_name) {
+        return this.productDetails.ar_name;
+      } else if (this.productDetails.en_name) {
+        return this.productDetails.en_name;
       } else {
         return 'Product';
       }
@@ -426,7 +547,7 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   addToWishlist(): void {
     if (this.isInWishlist() || this.isAddingToWishlist()) return;
-    if (!this.productDetails?.product[0].id || !this.userId) {
+    if (!this.productDetails.id || !this.userId) {
       if (!this.userId) {
         this._languageService
           .getLanguage()
@@ -439,50 +560,48 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     }
     this.isAddingToWishlist.set(true);
 
-    this._wishlistService
-      .addToWishlist(this.productDetails.product[0].id)
-      .subscribe({
-        next: () => {
-          this.isInWishlist.set(true);
-          this.isAddingToWishlist.set(false);
-          this._wishlistService.loadWishlistCount();
+    this._wishlistService.addToWishlist(this.productDetails.id).subscribe({
+      next: () => {
+        this.isInWishlist.set(true);
+        this.isAddingToWishlist.set(false);
+        this._wishlistService.loadWishlistCount();
 
-          // Show success notification alert (no buttons)
-          this._alertService.showNotification({
-            imagePath: '/images/common/wishlist.gif',
-            translationKeys: {
-              title: 'alerts.wishlist.add_success.title',
-            },
-          });
-        },
-        error: (err) => {
-          this.isAddingToWishlist.set(false);
-          if (err.status === 401) {
-            this._languageService
-              .getLanguage()
-              .pipe(take(1))
-              .subscribe((lang) => {
-                this._router.navigate(['/', lang, 'login']);
-              });
-          }
+        // Show success notification alert (no buttons)
+        this._alertService.showNotification({
+          imagePath: '/images/common/wishlist.gif',
+          translationKeys: {
+            title: 'alerts.wishlist.add_success.title',
+          },
+        });
+      },
+      error: (err) => {
+        this.isAddingToWishlist.set(false);
+        if (err.status === 401) {
+          this._languageService
+            .getLanguage()
+            .pipe(take(1))
+            .subscribe((lang) => {
+              this._router.navigate(['/', lang, 'login']);
+            });
+        }
 
-          // Show error notification
-          this._alertService.showNotification({
-            imagePath: '/images/common/error.png',
-            translationKeys: {
-              title: 'alerts.wishlist.add_error.title',
-              message: 'alerts.wishlist.add_error.message',
-            },
-          });
-          console.error('Error adding to wishlist:', err);
-        },
-      });
+        // Show error notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/error.png',
+          translationKeys: {
+            title: 'alerts.wishlist.add_error.title',
+            message: 'alerts.wishlist.add_error.message',
+          },
+        });
+        console.error('Error adding to wishlist:', err);
+      },
+    });
   }
 
   removeFromWishlist(): void {
-    if (!this.isInWishlist() || !this.productDetails?.product[0].id) return;
+    if (!this.isInWishlist() || !this.productDetails?.id) return;
     const wishId = this._wishlistService.getWishIdForProduct(
-      this.productDetails.product[0].id
+      this.productDetails.id
     );
     if (!wishId) return;
 
@@ -545,11 +664,23 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   }
 
   private checkIfProductInWishlist(): void {
-    if (!this.productDetails || !this.productDetails.product[0].id) return;
+    if (!this.productDetails || !this.productDetails.id) return;
+
+    // Check if product is in wishlist using service method
     const isInWishlist = this._wishlistService.isProductInWishlist(
-      this.productDetails.product[0].id
+      this.productDetails.id
     );
+
+    // Get current wishlist items to ensure we're up to date
+    this._wishlistService.loadWishlistCount();
+
     this.isInWishlist.set(isInWishlist);
+    console.log(
+      'Product in wishlist:',
+      isInWishlist,
+      'Product ID:',
+      this.productDetails.id
+    );
   }
 
   // Set active tab

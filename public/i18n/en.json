@@ -58,6 +58,24 @@
   "add_to_cart": "add to cart",
   "add_to_wishlist": "add to wishlist",
   "alerts": {
+    "cart": {
+      "add_success": {
+        "title": "success"
+      },
+      "remoce_success": {
+        "title": "product removed from cart"
+      },
+      "remove_confirm": {
+        "cancel": "cancel",
+        "message": "make sure want to remove this product from your cart",
+        "title": "remove product from cart",
+        "yes": "yes"
+      },
+      "remove_error": {
+        "message": "failed to remove product from cart",
+        "title": "error"
+      }
+    },
     "wishlist": {
       "add_success": {
         "title": "wishlist addedd sucess"
@@ -184,6 +202,10 @@
             "postalCode": {
               "label": "Zip Code ",
               "placeholder": "Enter Your Country's Postal Code"
+            },
+            "location": {
+              "label": "Location ",
+              "placeholder": "Select Your Location"
             }
           },
           "title": "Add Address",
@@ -217,6 +239,9 @@
             },
             "state": {
               "required": "State is required"
+            },
+            "location_id": {
+              "required": "Location is required"
             }
           }
         },
@@ -282,6 +307,7 @@
       "delete-all": "delete all items",
       "discount-code": "discount code"
     },
+    "cart_cleared": "Cart cleared successfully",
     "empty": {
       "message": "Looks like you haven't added any items to your cart yet",
       "shop-now": "Shop Now",
@@ -298,7 +324,6 @@
       "title": "shopping cart"
     },
     "item_removed": "Item removed from cart successfully",
-    "cart_cleared": "Cart cleared successfully",
     "promo-code": {
       "enter-valid-code": "Please enter a valid promo code",
       "error-applying": "Error applying promo code. Please try again.",
@@ -506,6 +531,7 @@
     "requests": "my requests"
   },
   "navbar": {
+    "cart": "Cart",
     "languages": {
       "ar": "Arabic",
       "en": "English",
@@ -533,10 +559,9 @@
       }
     },
     "profile": "Profile",
-    "cart": "Cart",
-    "wishlist": "Wishlist",
     "search": "Search",
-    "search_placeholder": "Search for products..."
+    "search_placeholder": "Search for products...",
+    "wishlist": "Wishlist"
   },
   "newProducts": {
     "alt-description": "Radiant skin and exceptional freshness.",
@@ -664,6 +689,10 @@
   "related-blog": {
     "subtitle": "Related News & Articles",
     "title": "Related News & Articles"
+  },
+  "related-products": {
+    "explore": "explore",
+    "title": "related products"
   },
   "reorder": "reorder",
   "routes": {
@@ -841,5 +870,13 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
+  },
+  "common": {
+    "loading": "Loading...",
+    "no_locations_available": "No locations available",
+    "no_locations_available_message": "Please contact support if you need assistance with locations"
+  },
+  "reset": {
+    "form": "Reset Form"
   }
 }

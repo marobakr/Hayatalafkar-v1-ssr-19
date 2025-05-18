@@ -6,12 +6,12 @@ import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { IGetWishlist } from '@core/interfaces/wishlist.interfaces';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { WishlistService } from '../../core/services/wishlist/wishlist.service';
-import { ButtonComponent } from '../../shared/components/button/button.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { TalentImageCardComponent } from '../../shared/components/talent-image-card/talent-image-card.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 
 @Component({

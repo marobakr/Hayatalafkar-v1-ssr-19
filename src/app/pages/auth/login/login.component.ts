@@ -16,11 +16,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '@core/services/auth/auth.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../../../core/services/auth/auth.service';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { ArticlesHeaderComponent } from '../../articles/components/articles-header/articles-header.component';
 
 @Component({

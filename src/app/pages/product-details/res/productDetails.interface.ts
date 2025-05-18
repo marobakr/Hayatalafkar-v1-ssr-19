@@ -1,8 +1,9 @@
-export interface IProduct {
-  product: Product[];
+export interface IProductDetails {
+  product: IProduct;
+  relatedProducts: IProduct[];
 }
 
-export interface Product {
+export interface IProduct {
   id: number;
   category_id: number;
   subcategory_id: number;

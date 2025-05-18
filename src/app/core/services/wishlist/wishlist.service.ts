@@ -107,11 +107,10 @@ export class WishlistService {
   // Remove product from wishlist
   removeFromWishlist(wishIdOrAll: number | string): Observable<any> {
     // Create FormData object
-    const formData = new FormData();
-    formData.append('product_id', wishIdOrAll.toString());
-
     return this.apiService
-      .post(`${API_CONFIG.WISHLIST.REMOVE_WISH}${this.userId}`, formData)
+      .post(`${API_CONFIG.WISHLIST.REMOVE_WISH}${wishIdOrAll}`, {
+        user_id: this.userId,
+      })
       .pipe(
         tap((response) => {
           if (wishIdOrAll === 'all') {

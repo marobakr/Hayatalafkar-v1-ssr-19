@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BigCardOfferComponent } from '../../../../shared/components/big-card-offer/big-card-offer.component';
+import { BigCardOfferComponent } from '@shared/components/big-card-offer/big-card-offer.component';
 import { Offer } from '../../res/home.interfaces';
 
 @Component({

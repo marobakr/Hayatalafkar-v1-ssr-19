@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
+import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/lang/language.service';
-import { TalentImageCardComponent } from '../../../../shared/components/talent-image-card/talent-image-card.component';
+import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { BestProduct } from '../../res/home.interfaces';
 import { SharedBestSellerComponent } from '../best-seller/components/shared-best-seller/shared-best-seller.component';
 @Component({

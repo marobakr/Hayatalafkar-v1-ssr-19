@@ -64,22 +64,19 @@ export class OrdersService {
   /**
    * Remove item from cart
    */
-  removeFromCart(productId: string | number): Observable<IGetCartOrOrder> {
-    const formData = new FormData();
-    formData.append('product_id', productId.toString());
-
+  removeFromCart(detailId: string | number): Observable<IGetCartOrOrder> {
     return this.api.post<IGetCartOrOrder>(
-      `${API_CONFIG.ORDERS.REMOVE_FROM_CART}${this.userId}`,
-      formData
+      `${API_CONFIG.ORDERS.REMOVE_FROM_CART}${detailId}`,
+      {}
     );
   }
 
   /**
    * Remove all items from cart
    */
-  removeAllFromCart(): Observable<IGetCartOrOrder> {
+  removeAllFromCart(orderId: string | number): Observable<IGetCartOrOrder> {
     return this.api.post<IGetCartOrOrder>(
-      `${API_CONFIG.ORDERS.REMOVE_ALL}${this.userId}`,
+      `${API_CONFIG.ORDERS.REMOVE_ALL}${orderId}`,
       {}
     );
   }

@@ -76,4 +76,15 @@ export class UserService {
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.LOCATION}`
     );
   }
+
+  updateUserInfo(userData: {
+    phone: string;
+    email: string;
+    password: string;
+  }): Observable<any> {
+    return this._http.post(
+      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.UPDATE_USER_INFO}`,
+      userData
+    );
+  }
 }

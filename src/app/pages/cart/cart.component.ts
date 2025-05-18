@@ -145,7 +145,7 @@ export class CartComponent implements OnInit {
     if (item.quantity > 1) {
       this.updateQuantity(item.product_id, item.quantity - 1);
     } else {
-      this.removeItem(item.product_id);
+      this.removeItem(item);
     }
   }
 
@@ -153,6 +153,13 @@ export class CartComponent implements OnInit {
    * Update the quantity of an item directly
    */
   updateQuantity(productId: string | number, quantity: number) {
+    // Get the order detail object for this product
+    const cartItem = this._cartState.getCartItemForProduct(productId);
+    if (!cartItem) {
+      console.warn('Cannot update item: Product not found in cart');
+      return;
+    }
+
     if (quantity > 0) {
       this.isAddingItem = true;
       this.updatingItemId = productId;
@@ -179,20 +186,20 @@ export class CartComponent implements OnInit {
         },
       });
     } else {
-      this.removeItem(productId);
+      this.removeItem(cartItem);
     }
   }
 
   /**
    * Remove an item from the cart
    */
-  removeItem(productId: string | number) {
+  removeItem(orderDetail: OrderDetail) {
     this.isRemovingItem = true;
-    this.removingItemId = productId;
+    this.removingItemId = orderDetail.id;
     this.cartUpdateSuccess = null;
     this.removeItemError = null;
 
-    this._cartState.removeItem(productId).subscribe({
+    this._cartState.removeItem(orderDetail.id).subscribe({
       next: () => {
         this.isRemovingItem = false;
         this.removingItemId = null;
@@ -277,12 +284,4 @@ export class CartComponent implements OnInit {
   }
 
   /* Calculate Total Price */
-
-  calculateTotal() {
-    return (
-      Number(this.order().subtotal) +
-      Number(this.order().tax) -
-      Number(this.order().promo_code_value)
-    );
-  }
 }

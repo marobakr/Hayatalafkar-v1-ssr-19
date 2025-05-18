@@ -19,11 +19,11 @@ import { IQuotes } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { API_CONFIG } from '@core/services/conf/api.config';
 import { TranslateModule } from '@ngx-translate/core';
+import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
+import { BannerComponent } from '@shared/components/banner/banner.component';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { ArrowButtonComponent } from '../../shared/components/arrow-button/arrow-button.component';
-import { BannerComponent } from '../../shared/components/banner/banner.component';
 import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
 import {
   IContactUs,

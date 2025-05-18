@@ -141,3 +141,117 @@ section::before {
     height: 35px;
   }
 }
+
+/* Add these styles for the thumbnail gallery */
+.thumbnail-gallery.rtl .owl-stage-outer {
+  direction: rtl;
+}
+
+.thumbnail-gallery.rtl .owl-stage {
+  direction: rtl;
+}
+
+/* Make sure navigation arrows are positioned correctly in RTL mode */
+.thumbnail-gallery.rtl ::ng-deep .owl-nav {
+  direction: ltr;
+}
+
+.thumbnail-gallery .thumbnail-item {
+  transition: all 0.3s ease;
+  height: 100px;
+  overflow: hidden;
+}
+
+.thumbnail-gallery .thumbnail-active {
+  border-color: #cbac8d !important;
+}
+
+/* Additional RTL fix for main carousel */
+::ng-deep [dir="rtl"] .owl-carousel .owl-nav .owl-prev i::before {
+  content: "\f054"; /* fa-chevron-right */
+}
+
+::ng-deep [dir="rtl"] .owl-carousel .owl-nav .owl-next i::before {
+  content: "\f053"; /* fa-chevron-left */
+}
+
+/* RTL styles for main carousel */
+.carousel-wrapper.rtl ::ng-deep .owl-stage-outer {
+  direction: rtl;
+}
+
+.carousel-wrapper.rtl ::ng-deep .owl-stage {
+  direction: rtl;
+}
+
+/* Make sure navigation arrows are positioned correctly in RTL mode */
+.carousel-wrapper.rtl ::ng-deep .owl-nav {
+  direction: ltr;
+}
+
+/* Thumbnail gallery styles */
+.thumbnail-gallery ::ng-deep .owl-stage {
+  display: flex;
+  gap: 10px;
+}
+
+/* Style for the refresh trick */
+::ng-deep .owl-carousel.owl-refresh {
+  opacity: 0.1;
+  transition: opacity 0.1s;
+}
+
+/* Owl Carousel Navigation Styling */
+::ng-deep .owl-nav {
+  button.owl-prev,
+  button.owl-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  button.owl-prev:hover,
+  button.owl-next:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  button.owl-prev svg,
+  button.owl-next svg {
+    stroke: #666;
+  }
+
+  button.owl-prev:hover svg,
+  button.owl-next:hover svg {
+    stroke: #333;
+  }
+
+  .owl-prev {
+    left: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .owl-next {
+    right: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+/* Responsive adjustments for the carousel */
+@media (max-width: 768px) {
+  ::ng-deep .owl-nav {
+    button.owl-prev,
+    button.owl-next {
+      width: 35px;
+      height: 35px;
+    }
+  }
+}

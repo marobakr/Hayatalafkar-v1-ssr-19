@@ -39,12 +39,9 @@
               class="flex justify-start lg:ltr:pr-15 lg:rtl:pl-15 lg:justify-between items-center capitalize gap-[10px] mb-5 md:mb-0"
             >
               <!-- Remove Item -->
-              <div
-                class="close cursor-pointer"
-                (click)="removeItem(item.product_id)"
-              >
+              <div class="close cursor-pointer" (click)="removeItem(item)">
                 <figure class="mx-0 remove-icon">
-                  @if(isRemovingItem && removingItemId === item.product_id) {
+                  @if(isRemovingItem && removingItemId === item.id) {
                   <div
                     class="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
                   ></div>
@@ -400,7 +397,7 @@
               "summary.total" | translate
             }}</span>
             <span class="text-black text-category-size font-medium"
-              >{{ calculateTotal() }} {{ "shared.currency" | translate }}</span
+              >{{ order().subtotal }} {{ "shared.currency" | translate }}</span
             >
           </div>
 

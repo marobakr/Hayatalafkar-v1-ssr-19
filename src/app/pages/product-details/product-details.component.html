@@ -6,11 +6,6 @@
   @fadeIn
 ></app-articles-header>
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-/>
-
 <section @fadeIn>
   <div class="container mx-auto overflow-hidden">
     @if (!isLoading()) {
@@ -20,22 +15,27 @@
       <!-- Left Side: Product Images Carousel -->
       <div class="product-images">
         <!-- Main Carousel -->
-        <div class="carousel-wrapper overflow-hidden rounded-lg mb-4">
+        <div
+          class="carousel-wrapper overflow-hidden rounded-lg mb-4"
+          [class.rtl]="isRtlMode()"
+        >
           <owl-carousel-o [options]="mainCarouselOptions" #mainCarousel>
             @for (image of processedImages(); track image.id) {
             <ng-template carouselSlide [id]="'slide_' + image.id">
               <img
-                src="https://digitalbondmena.com/mesoshop/uploads/products/1746524248GNH7Ra3Sbt.webp"
+                [appImageUrl]="image.url"
+                [imageEndpoint]="''"
                 [alt]="image.alt"
-                class="w-full h-auto"
+                class="w-full h-auto object-cover"
               />
             </ng-template>
             }
           </owl-carousel-o>
         </div>
 
-        <!-- Thumbnail Gallery -->
-        <div class="thumbnail-gallery mt-4">
+        <!-- Thumbnail Gallery - Only show when there are additional images -->
+        @if (processedImages().length > 1) {
+        <div class="thumbnail-gallery mt-4" [class.rtl]="isRtlMode()">
           <owl-carousel-o [options]="thumbnailOptions" #thumbnailCarousel>
             @for (image of processedImages(); track image.id; let i = $index) {
             <ng-template carouselSlide [id]="'thumb_' + image.id">
@@ -45,7 +45,8 @@
                 class="thumbnail-item cursor-pointer p-1 border rounded-md"
               >
                 <img
-                  src="https://digitalbondmena.com/mesoshop/uploads/products/1746524248GNH7Ra3Sbt.webp"
+                  [appImageUrl]="image.url"
+                  [imageEndpoint]="''"
                   [alt]="image.alt"
                   class="w-full h-full object-cover rounded"
                 />
@@ -54,24 +55,25 @@
             }
           </owl-carousel-o>
         </div>
+        }
       </div>
 
       <!-- Right Side: Product Details -->
       <div class="product-info rtl:text-right ltr:text-left">
         <!-- Product Title -->
         <h1 class="text-[16px] mb-4">
-          {{ productDetails.product[0] | customTranslate : "name" }}
+          {{ productDetails | customTranslate : "name" }}
         </h1>
 
         <!-- Stock Status & Rating -->
         <div class="mb-2 flex gap-4 items-center">
           <h2 class="text-2xl font-bold">
-            {{ productDetails.product[0] | customTranslate : "slug" }}
+            {{ productDetails | customTranslate : "slug" }}
           </h2>
           <div
             class="text-xs py-1 px-3 rounded-full bg-gray-100 text-[#CBAC8D]"
           >
-            @if (productDetails.product[0].stock_status) {
+            @if (productDetails.stock_status) {
             {{ "in_stock" | translate }}
             } @else {
             {{ "out_of_stock" | translate }}
@@ -79,21 +81,15 @@
           </div>
         </div>
 
-        <!-- Rating -->
-        <div class="flex items-center mb-5">
-          <span class="text-yellow-400">★</span>
-          <span class="black mr-1">4.8</span>
-        </div>
-
         <!-- Product Price -->
         <div class="price-container flex items-center gap-4 mb-6">
           <span class="text-lg font-bold">
-            {{ productDetails.product[0].price }}
+            {{ productDetails.price }}
             {{ "shared.currency" | translate }}
           </span>
-          @if (productDetails.product[0].sale_price) {
+          @if (productDetails.sale_price) {
           <span class="text-gray-500 line-through">
-            {{ productDetails.product[0].price_after_sale }}
+            {{ productDetails.price_after_sale }}
             {{ "shared.currency" | translate }}
           </span>
           }
@@ -102,9 +98,7 @@
         <!-- Product Description -->
         <div class="text-gray-600 mb-6 leading-relaxed text-right">
           <app-safe-html
-            [content]="
-              productDetails.product[0] | customTranslate : 'description'
-            "
+            [content]="productDetails | customTranslate : 'description'"
           ></app-safe-html>
         </div>
 
@@ -186,26 +180,41 @@
             <span class="sr-only">Add to wishlist</span>
             @if (isAddingToWishlist()) {
             <span class="animate-spin">
-              <i class="fas fa-spinner"></i>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
             </span>
             } @else {
-            <i
-              class="fas"
-              [class.fa-heart]="true"
-              [style.color]="isInWishlist() ? '#ef4444' : '#9ca3af'"
-            ></i>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              [style.fill]="isInWishlist() ? '#ef4444' : 'none'"
+              [style.stroke]="isInWishlist() ? '#ef4444' : '#9ca3af'"
+            >
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              ></path>
+            </svg>
             }
           </button>
-        </div>
-
-        <!-- Product Code -->
-        <div class="mt-8 text-gray-500 text-sm">
-          {{ "product_code" | translate }}: QRFR857k331
-        </div>
-
-        <!-- Product Categories -->
-        <div class="mt-2 text-gray-500 text-sm">
-          كلمات صلة: العناية بالبشرة, لوشن, مرطب
         </div>
 
         <!-- Social Share -->
@@ -273,17 +282,20 @@
     <!-- Product Description NavTaps -->
     <div class="my-16">
       <div>
-        <nav class="flex justify-between flex-rows-reverce">
+        <nav class="flex justify-center gap-4 flex-rows-reverce">
           @for (tab of productTabs; track tab.id; let i = $index) {
           <button
             (click)="setActiveTab(i)"
+            [ngClass]="{
+              'underline': activeTab() === i,
+              'border-[#CBAC8D]': activeTab() === i,
+              'text-[#CBAC8D]': activeTab() === i,
+              'border-transparent': activeTab() !== i,
+              'text-gray-500': activeTab() !== i,
+              'hover:text-gray-700': activeTab() !== i,
+              'hover:border-gray-300': activeTab() !== i,
+            }"
             class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out"
-            [class.border-[#CBAC8D]]="activeTab() === i"
-            [class.text-[#CBAC8D]]="activeTab() === i"
-            [class.border-transparent]="activeTab() !== i"
-            [class.text-gray-500]="activeTab() !== i"
-            [class.hover:text-gray-700]="activeTab() !== i"
-            [class.hover:border-gray-300]="activeTab() !== i"
             class="text-price-size font-bold cursor-pointer"
           >
             {{ tab.title | translate }}
@@ -300,9 +312,7 @@
           class="prose max-w-none text-gray-600 leading-relaxed"
         >
           <app-safe-html
-            [content]="
-              productDetails.product[0] | customTranslate : 'description'
-            "
+            [content]="productDetails | customTranslate : 'description'"
           ></app-safe-html>
         </div>
         }
@@ -314,62 +324,62 @@
             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
               <div class="text-lg font-medium text-gray-900 mb-4">
                 <app-safe-html
-                  [content]="
-                    productDetails.product[0] | customTranslate : 'description'
-                  "
+                  [content]="productDetails | customTranslate : 'description'"
                 ></app-safe-html>
               </div>
               <!-- <ul class="space-y-3">
-                  @if (productDetails.product[0].brand) {
+                  @if (productDetails.brand) {
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
                       "product_details.brand" | translate
                     }}</span>
                     <span class="text-gray-600">{{
-                      productDetails.product[0].brand
+                      productDetails.brand
                     }}</span>
                   </li>
-                  } @if (productDetails.product[0].sku) {
+                  } @if (productDetails.sku) {
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
                       "product_details.sku" | translate
                     }}</span>
                     <span class="text-gray-600">{{
-                      productDetails.product[0].sku
+                      productDetails.sku
                     }}</span>
                   </li>
-                  } @if (productDetails.product[0].weight) {
+                  } @if (productDetails.weight) {
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
                       "product_details.weight" | translate
                     }}</span>
                     <span class="text-gray-600">{{
-                      productDetails.product[0].weight
+                      productDetails.weight
                     }}</span>
                   </li>
-                  } @if (productDetails.product[0].dimensions) {
+                  } @if (productDetails.dimensions) {
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
                       "product_details.dimensions" | translate
                     }}</span>
                     <span class="text-gray-600">{{
-                      productDetails.product[0].dimensions
+                      productDetails.dimensions
                     }}</span>
                   </li>
                   }
                 </ul> -->
             </div>
             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">
-                {{ "product_details.shipping" | translate }}
-              </h3>
+              <app-safe-html
+                [content]="
+                  productDetails | customTranslate : 'more_information'
+                "
+              ></app-safe-html>
               <!-- <ul class="space-y-3">
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
                       "product_details.availability" | translate
                     }}</span>
                     <span class="text-gray-600">{{
-                      productDetails.product[0].stock_status
+                      productDetails.stock_status
                         ? ("product_details.in_stock" | translate)
                         : ("product_details.out_of_stock" | translate)
                     }}</span>
@@ -392,6 +402,12 @@
                   </li>
                 </ul> -->
             </div>
+
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <app-safe-html
+                [content]="productDetails | customTranslate : 'ingredient'"
+              ></app-safe-html>
+            </div>
           </div>
         </div>
         }
@@ -401,7 +417,7 @@
         <div @fadeSlideInOut class="prose max-w-none">
           <div class="flex flex-col md:flex-row gap-8">
             <!-- Overall Rating Summary -->
-            <div class="md:w-1/3">
+            <!-- <div class="md:w-1/3">
               <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
                 <h3 class="text-xl font-bold text-gray-900">4.8</h3>
                 <div class="flex justify-center my-2">
@@ -416,10 +432,10 @@
                 <p class="text-sm text-gray-600">
                   {{ "product_details.based_on" | translate }} 24
                   {{ "product_details.reviews" | translate }}
-                </p>
+                </p> -->
 
-                <!-- Rating Breakdown -->
-                <div class="mt-4 space-y-2">
+            <!-- Rating Breakdown -->
+            <!-- <div class="mt-4 space-y-2">
                   <div class="flex items-center">
                     <span class="text-sm w-8">5★</span>
                     <div
@@ -480,9 +496,9 @@
                     </div>
                     <span class="text-sm w-8">0%</span>
                   </div>
-                </div>
-              </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
+            <!-- </div> -->
 
             <!-- Reviews List -->
             <div class="md:w-2/3">
@@ -547,5 +563,29 @@
     } @else {
     <app-loading class="loading-spinner"></app-loading>
     }
+
+    <div class="mb-6 text-center">
+      <p
+        class="text-black text-base sm:text-lg md:text-price-size mb-3 sm:mb-6"
+      >
+        {{ "related-products.title" | translate }}
+      </p>
+      <h2
+        class="text-xl sm:text-2xl md:text-start-size font-semibold mb-6 sm:mb-9"
+      >
+        {{ "related-products.explore" | translate }}
+
+        <span class="text-muted-rose">
+          {{ "related-products.title" | translate }}
+        </span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-15">
+      @for (product of relatedProducts; track product.id) {
+
+      <app-shared-best-seller [productData]="product"></app-shared-best-seller>
+
+      }
+    </div>
   </div>
 </section>

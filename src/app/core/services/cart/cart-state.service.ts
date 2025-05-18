@@ -91,21 +91,17 @@ export class CartStateService {
       return;
     }
 
-    // Use ordersService.checkCart() to get current cart items
     this.ordersService.checkCart().subscribe({
       next: (response) => {
-        // Check if response has orderDetails and if it has items
-        const hasItems =
-          response &&
+        const hasConfirmed =
           response.orderDetails &&
-          Array.isArray(response.orderDetails) &&
+          response.orderDetails &&
           response.orderDetails.length > 0;
-
-        console.log('Cart has items:', hasItems);
-        this.hasConfirmedOrdersSignal.set(hasItems);
+        console.log(hasConfirmed);
+        this.hasConfirmedOrdersSignal.set(hasConfirmed);
       },
       error: (err) => {
-        console.error('Error checking cart items:', err);
+        console.error('Error checking confirmed orders:', err);
         this.hasConfirmedOrdersSignal.set(false);
       },
     });
@@ -276,20 +272,40 @@ export class CartStateService {
     );
   }
 
-  removeItem(productId: string | number) {
+  /**
+   * Remove an item from the cart by detail ID
+   * @param detailId The ID of the order detail item to remove
+   */
+  removeItem(detailId: string | number) {
     // Prevent removing items if user is not authenticated
     if (!this.authService.isAuthenticated()) {
       console.warn('User must be authenticated to remove items from cart');
       return EMPTY;
     }
 
-    return this.ordersService.removeFromCart(productId).pipe(
+    return this.ordersService.removeFromCart(detailId).pipe(
       tap((cart) => this.cartState.set(cart)),
       catchError((err) => {
         console.error('Error removing item from cart', err);
         return EMPTY;
       })
     );
+  }
+
+  /**
+   * Remove a product from the cart by finding its detail ID
+   * @param productId The ID of the product to remove
+   */
+  removeProductFromCart(productId: string | number) {
+    // First find the cart item detail for this product
+    const cartItem = this.getCartItemForProduct(productId);
+    if (!cartItem) {
+      console.warn('Cannot remove item: Product not found in cart');
+      return EMPTY;
+    }
+
+    // Then remove it using the detail ID
+    return this.removeItem(cartItem.id);
   }
 
   clearCart() {
@@ -299,7 +315,14 @@ export class CartStateService {
       return EMPTY;
     }
 
-    return this.ordersService.removeAllFromCart().pipe(
+    // Get the order ID from the current cart state
+    const orderId = this.order()?.id;
+    if (!orderId) {
+      console.warn('Cannot clear cart: No active order found');
+      return EMPTY;
+    }
+
+    return this.ordersService.removeAllFromCart(orderId).pipe(
       tap((cart) => this.cartState.set(cart)),
       catchError((err) => {
         console.error('Error clearing cart', err);

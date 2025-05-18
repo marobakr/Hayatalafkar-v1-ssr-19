@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { AuthService } from '@core/services/auth/auth.service';
+import { LanguageService } from '@core/services/lang/language.service';
+import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '../../../../core/services/auth/auth.service';
-import { LanguageService } from '../../../../core/services/lang/language.service';
-import { UserService } from '../../../../core/services/user/user.service';
-import { AlertService } from '../../../../shared/alert/alert.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AlertService } from '@shared/alert/alert.service';
+import { ButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
   selector: 'app-account-management',
