@@ -79,12 +79,18 @@ export class UserService {
 
   updateUserInfo(userData: {
     phone: string;
-    email: string;
+    name: string;
     password: string;
   }): Observable<any> {
+    const user = this._authService.getUserData();
+    const userId = user?.id || '';
+    const data = new FormData();
+    data.append('phone', userData.phone);
+    data.append('name', userData.name);
+    data.append('password', userData.password);
     return this._http.post(
-      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.UPDATE_USER_INFO}`,
-      userData
+      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.UPDATE_USER_INFO}/${userId}`,
+      data
     );
   }
 }

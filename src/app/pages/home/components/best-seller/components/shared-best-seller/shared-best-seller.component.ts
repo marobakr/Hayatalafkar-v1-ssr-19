@@ -1,4 +1,4 @@
-import { AsyncPipe, PercentPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe, PercentPipe } from '@angular/common';
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
@@ -28,6 +28,7 @@ const cartLoadingMap = new Map<number, boolean>();
     RouterLink,
     ImageUrlDirective,
     SafeHtmlComponent,
+    JsonPipe,
   ],
   templateUrl: './shared-best-seller.component.html',
   styleUrl: './shared-best-seller.component.css',

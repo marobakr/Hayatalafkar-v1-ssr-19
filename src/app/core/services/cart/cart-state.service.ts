@@ -45,12 +45,7 @@ export class CartStateService {
       return 0;
     }
 
-    // Don't calculate cart count if there are no confirmed orders
-    const hasConfirmedOrders = this.hasConfirmedOrders();
-    if (!hasConfirmedOrders) {
-      return 0;
-    }
-
+    // Get the items directly from cart state
     const items = this.orderDetails();
     if (!items || items.length === 0) return 0;
 
@@ -94,11 +89,17 @@ export class CartStateService {
     this.ordersService.checkCart().subscribe({
       next: (response) => {
         const hasConfirmed =
-          response.orderDetails &&
-          response.orderDetails &&
-          response.orderDetails.length > 0;
-        console.log(hasConfirmed);
+          response.orderDetails && response.orderDetails.length > 0;
+
+        console.log('hasConfirmed', hasConfirmed);
+
+        // Update the signal
         this.hasConfirmedOrdersSignal.set(hasConfirmed);
+
+        // If we have items, update the cart state directly
+        if (hasConfirmed) {
+          this.cartState.set(response);
+        }
       },
       error: (err) => {
         console.error('Error checking confirmed orders:', err);
@@ -107,44 +108,55 @@ export class CartStateService {
     });
   }
 
-  fetchCart() {
-    // Don't fetch cart for unauthenticated users
-    if (!this.authService.isAuthenticated()) {
-      // Initialize with empty cart
-      this.cartState.set({
-        orderDetails: [],
-        promocode: null,
-        order: null as any,
-        user: null as any,
-      });
-      return;
-    }
+  fetchCart(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      // Don't fetch cart for unauthenticated users
+      if (!this.authService.isAuthenticated()) {
+        // Initialize with empty cart
+        this.cartState.set({
+          orderDetails: [],
+          promocode: null,
+          order: null as any,
+          user: null as any,
+        });
+        resolve();
+        return;
+      }
 
-    // Don't fetch cart if user has no confirmed orders
-    if (!this.hasConfirmedOrders()) {
-      // Initialize with empty cart
-      this.cartState.set({
-        orderDetails: [],
-        promocode: null,
-        order: null as any,
-        user: null as any,
-      });
-      return;
-    }
+      // Always fetch the cart for authenticated users
+      // Even if hasConfirmedOrders() is false, we still want to get the latest data
+      this.ordersService
+        .checkCart()
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          tap((cart) => {
+            // Update the cart state with the response
+            this.cartState.set(cart);
 
-    this.ordersService
-      .checkCart()
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        tap((cart) => {
-          this.cartState.set(cart);
-        }),
-        catchError((err) => {
-          console.error('Error fetching cart', err);
-          return EMPTY;
-        })
-      )
-      .subscribe();
+            // Update hasConfirmedOrders based on cart contents
+            const hasItems = cart.orderDetails && cart.orderDetails.length > 0;
+            this.hasConfirmedOrdersSignal.set(hasItems);
+
+            // Resolve the promise when data is received
+            resolve();
+          }),
+          catchError((err) => {
+            console.error('Error fetching cart', err);
+            // Initialize with empty cart on error
+            this.cartState.set({
+              orderDetails: [],
+              promocode: null,
+              order: null as any,
+              user: null as any,
+            });
+
+            // Resolve the promise even on error
+            resolve();
+            return EMPTY;
+          })
+        )
+        .subscribe();
+    });
   }
 
   /**
@@ -193,6 +205,22 @@ export class CartStateService {
         (item) => item.product_id.toString() === searchProductId
       ) || null
     );
+  }
+
+  /**
+   * Update the order details with the provided items
+   * Used primarily for updating animation states
+   * @param items The updated order details to set
+   */
+  setOrderDetails(items: OrderDetail[]): void {
+    // Get the current cart state
+    const currentState = this.cartState();
+
+    // Update only the orderDetails property, preserving other properties
+    this.cartState.set({
+      ...currentState,
+      orderDetails: items,
+    });
   }
 
   addToCart(
@@ -258,13 +286,29 @@ export class CartStateService {
       return EMPTY;
     }
 
+    // Get the order detail object for this product to get its ID
+    const cartItem = this.getCartItemForProduct(productId);
+    if (!cartItem) {
+      console.warn('Cannot update item: Product not found in cart');
+      return EMPTY;
+    }
+
     const item = {
-      productId: productId,
+      orderDetailId: cartItem.id,
       quantity: quantity,
     };
 
     return this.ordersService.updateQuantity(item).pipe(
-      tap((cart) => this.cartState.set(cart)),
+      tap((cart) => {
+        // Ensure cart has all required properties before updating state
+        if (cart && cart.orderDetails) {
+          this.cartState.set(cart);
+        } else {
+          // If response is incomplete, fetch the full cart
+          console.warn('Incomplete cart response, fetching full cart');
+          this.fetchCart();
+        }
+      }),
       catchError((err) => {
         console.error('Error updating cart quantity', err);
         return EMPTY;
@@ -284,7 +328,16 @@ export class CartStateService {
     }
 
     return this.ordersService.removeFromCart(detailId).pipe(
-      tap((cart) => this.cartState.set(cart)),
+      tap((cart) => {
+        // Ensure cart has all required properties before updating state
+        if (cart && cart.orderDetails) {
+          this.cartState.set(cart);
+        } else {
+          // If response is incomplete, fetch the full cart
+          console.warn('Incomplete cart response, fetching full cart');
+          this.fetchCart();
+        }
+      }),
       catchError((err) => {
         console.error('Error removing item from cart', err);
         return EMPTY;
@@ -323,7 +376,16 @@ export class CartStateService {
     }
 
     return this.ordersService.removeAllFromCart(orderId).pipe(
-      tap((cart) => this.cartState.set(cart)),
+      tap((cart) => {
+        // Ensure cart has all required properties before updating state
+        if (cart && cart.hasOwnProperty('orderDetails')) {
+          this.cartState.set(cart);
+        } else {
+          // If response is incomplete, fetch the full cart
+          console.warn('Incomplete cart response, fetching full cart');
+          this.fetchCart();
+        }
+      }),
       catchError((err) => {
         console.error('Error clearing cart', err);
         return EMPTY;
@@ -349,5 +411,19 @@ export class CartStateService {
         return EMPTY;
       })
     );
+  }
+
+  /**
+   * Update only the cart count without fetching the full cart
+   * This is useful for quick updates to the navbar
+   */
+  updateCartCount(): void {
+    // Don't update for unauthenticated users
+    if (!this.authService.isAuthenticated()) {
+      return;
+    }
+
+    // Always fetch the cart to get the latest count
+    this.fetchCart();
   }
 }

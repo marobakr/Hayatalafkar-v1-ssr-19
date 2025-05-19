@@ -74,10 +74,12 @@
 
   <div class="flex justify-between items-center">
     <app-button
+      class="cursor-pointer"
       [px]="'px-[58px]'"
       [py]="'py-[9px]'"
       [title]="'save_changes' | translate"
-      type="'submit'"
+      [isLoading]="loading()"
+      type="submit"
     >
     </app-button>
   </div>

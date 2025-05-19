@@ -1,4 +1,5 @@
 {
+  "Complete_order": "Complete the application",
   "FAQ": {
     "Accordions": {
       "Accordion-1": "What departments do you offer?",
@@ -61,6 +62,10 @@
     "cart": {
       "add_success": {
         "title": "success"
+      },
+
+      "update_success": {
+        "title": "cart updated successfully"
       },
       "remoce_success": {
         "title": "product removed from cart"
@@ -195,6 +200,10 @@
               "label": "Last Name ",
               "placeholder": "Write Your Last Name"
             },
+            "location": {
+              "label": "Location ",
+              "placeholder": "Select Your Location"
+            },
             "phone": {
               "label": "Phone Number ",
               "placeholder": "You Must Enter The Correct Phone Number"
@@ -202,10 +211,6 @@
             "postalCode": {
               "label": "Zip Code ",
               "placeholder": "Enter Your Country's Postal Code"
-            },
-            "location": {
-              "label": "Location ",
-              "placeholder": "Select Your Location"
             }
           },
           "title": "Add Address",
@@ -229,6 +234,9 @@
             "last_name": {
               "required": "Last name is required"
             },
+            "location_id": {
+              "required": "Location is required"
+            },
             "phone": {
               "pattern": "Please enter a valid phone number",
               "required": "Phone number is required"
@@ -239,9 +247,6 @@
             },
             "state": {
               "required": "State is required"
-            },
-            "location_id": {
-              "required": "Location is required"
             }
           }
         },
@@ -334,6 +339,16 @@
   "change": {
     "address": "change address",
     "password": "change password"
+  },
+  "checkout": {
+    "header": {
+      "subtitle": "Complete your application and fill out all the required information"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "no_locations_available": "No locations available",
+    "no_locations_available_message": "Please contact support if you need assistance with locations"
   },
   "contact-us": {
     "cards": {
@@ -695,6 +710,9 @@
     "title": "related products"
   },
   "reorder": "reorder",
+  "reset": {
+    "form": "Reset Form"
+  },
   "routes": {
     "about": "about",
     "blog": "blog",
@@ -740,6 +758,9 @@
     "shopping_now": "shopping now",
     "show-products": "buying the product ",
     "success": "Success",
+    "updating": "Updating...",
+    "adding": "Adding...",
+    "update_cart": "update product quantity",
     "update_cart_quantity": "Update cart quantity"
   },
   "shopping": {
@@ -819,6 +840,8 @@
   },
   "track-order": " track order",
   "unavailability": "Unavailable Products",
+  "update_password_success": "update password success",
+  "update_profile_success": "personal information hase been changed",
   "validation": {
     "email-format": "Email or phone must be a valid email address",
     "email-required": "Email or phone is required",
@@ -870,13 +893,5 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
-  },
-  "common": {
-    "loading": "Loading...",
-    "no_locations_available": "No locations available",
-    "no_locations_available_message": "Please contact support if you need assistance with locations"
-  },
-  "reset": {
-    "form": "Reset Form"
   }
 }

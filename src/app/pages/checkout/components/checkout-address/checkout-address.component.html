@@ -1,0 +1,370 @@
+<div class="checkout-address-container">
+  <!-- Loading state -->
+  @if(loading()) {
+  <div class="flex justify-center items-center py-8">
+    <app-loading></app-loading>
+  </div>
+  } @else {
+  <!-- Address Selection Section (shown when user has addresses and not adding new) -->
+  @if(hasAddresses() && !showAddAddressForm()) {
+  <div class="mb-6">
+    <h2 class="text-title-size text-black font-bold mb-[20px]">
+      {{ "checkout.shipping_address" | translate }}
+    </h2>
+
+    <div class="address-list grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      @for(addr of addresses(); track addr.id) {
+      <div
+        class="flex justify-start items-center pt-[23px] px-6 pb-[22px] gap-[15px] border rounded-[15px] cursor-pointer address-item"
+        [class.selected-address]="selectedAddressId() === addr.id"
+        [class.border-[#CBAC8D]]="selectedAddressId() === addr.id"
+        [class.border-[#AFA8A8]]="selectedAddressId() !== addr.id"
+        (click)="selectAddress(addr)"
+      >
+        <figure class="hidden sm:block">
+          <img
+            class="max-w-[60px] max-h-[60px] sm:max-w-[80px] sm:max-h-[80px] rounded-[15px] box-shadow-sm"
+            loading="lazy"
+            src="/images/common/maps.png"
+            alt="address"
+          />
+        </figure>
+        <div class="title w-full">
+          <div class="flex justify-between items-center">
+            <h3
+              class="text-black text-sm sm:text-description-size font-semibold capitalize mb-[13px]"
+            >
+              {{ addr.first_name + " " + addr.last_name }}
+            </h3>
+          </div>
+          <p
+            class="text-[#333] text-xs sm:text-category-size capitalize truncate"
+          >
+            {{ addr.address }}, {{ addr.city }}
+          </p>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Action buttons for address section -->
+    <div class="flex justify-between items-center mb-6">
+      <button
+        (click)="toggleAddressForm()"
+        class="text-[#CBAC8D] text-description-size border border-[#CBAC8D] rounded-full py-2 px-6 hover:bg-[#CBAC8D] hover:text-white transition-colors duration-200"
+      >
+        {{ "checkout.add_new_address" | translate }}
+      </button>
+
+      <app-button
+        [title]="'checkout.continue' | translate"
+        [isLoading]="loading()"
+        (click)="continueToNextStep()"
+        [disabled]="!selectedAddressId() || loading()"
+        [px]="'px-6'"
+        [py]="'py-3'"
+        type="button"
+      ></app-button>
+    </div>
+
+    <!-- Note about selected address -->
+    @if(selectedAddressId()) {
+    <div
+      class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-md"
+    >
+      <p>{{ "checkout.address.address_selected_note" | translate }}</p>
+    </div>
+    }
+  </div>
+  }
+
+  <!-- Address Form (shown when user has no addresses or clicked "Add New Address") -->
+  @if(showAddAddressForm()) {
+  <div>
+    <h2 class="text-title-size text-black font-bold mb-[20px]">
+      {{
+        hasAddresses()
+          ? "checkout.add_new_address"
+          : ("checkout.shipping_address" | translate)
+      }}
+    </h2>
+
+    <!-- Location selection warning if no locations available -->
+    @if(locations().length === 0) {
+    <div
+      class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-md mb-6"
+    >
+      <p>{{ "checkout.address.no_locations_message" | translate }}</p>
+    </div>
+    }
+
+    <form [formGroup]="addressForm" (ngSubmit)="submitNewAddress()">
+      <!-- Full Name  -->
+      <div
+        class="flex flex-col md:flex-row justify-between items-center gap-y-6 md:gap-x-[23px] mb-[44px]"
+      >
+        <!-- First Name  -->
+        <div class="w-full md:flex-1">
+          <label
+            for="first_name"
+            class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+          >
+            {{ "checkout.form.first_name.label" | translate }}
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            formControlName="first_name"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('first_name') }"
+            class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+            [placeholder]="'checkout.form.first_name.placeholder' | translate"
+          />
+          @if(isFieldInvalid('first_name')) {
+          <div class="text-red-500 text-sm mt-1">
+            {{ getErrorMessage("first_name") }}
+          </div>
+          }
+        </div>
+
+        <!-- Last Name  -->
+        <div class="w-full md:flex-1">
+          <label
+            for="last-name"
+            class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+          >
+            {{ "checkout.form.last_name.label" | translate }}
+          </label>
+          <input
+            type="text"
+            id="last-name"
+            formControlName="last_name"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('last_name') }"
+            class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+            [placeholder]="'checkout.form.last_name.placeholder' | translate"
+          />
+          @if(isFieldInvalid('last_name')) {
+          <div class="text-red-500 text-sm mt-1">
+            {{ getErrorMessage("last_name") }}
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Location - Highlight as required/important -->
+      <div class="mb-[41px] relative">
+        <label
+          id="location-label"
+          for="location_id"
+          class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+        >
+          {{ "checkout.form.location.label" | translate }}
+        </label>
+
+        <div class="relative">
+          <select
+            id="location_id"
+            formControlName="location_id"
+            [ngClass]="{
+              'border-red-500': isFieldInvalid('location_id'),
+              'border-[#CBAC8D] ring-2 ring-[#CBAC8D]':
+                addressForm.get('location_id')?.value
+            }"
+            class="appearance-none bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full focus:outline-none focus:ring-2 focus:ring-[#CBAC8D] focus:border-[#CBAC8D] hover:border-[#CBAC8D] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            aria-labelledby="location-label"
+            [attr.disabled]="loading() ? '' : null"
+            [title]="
+              currentLang() === 'ar'
+                ? locations().length > 0
+                  ? locations()[0].ar_name
+                  : ''
+                : locations().length > 0
+                ? locations()[0].en_name
+                : ''
+            "
+          >
+            <option value="" disabled selected>
+              @if(loading()) {
+              {{ "common.loading" | translate }}
+              } @else if(locations().length === 0) {
+              {{ "common.no_locations_available" | translate }}
+              } @else {
+              {{ "checkout.form.location.placeholder" | translate }}
+              }
+            </option>
+            @for(location of locations(); track location.id) {
+            <option [value]="location.id">
+              {{ currentLang() === "ar" ? location.ar_name : location.en_name }}
+            </option>
+            }
+          </select>
+
+          <!-- Custom dropdown arrow or loading indicator -->
+          <div
+            class="pointer-events-none absolute inset-y-0 ltr:right-0 rtl:left-0 flex items-center px-4 text-gray-500"
+          >
+            @if(loading()) {
+            <div
+              class="animate-spin h-5 w-5 border-2 border-[#CBAC8D] border-t-transparent rounded-full"
+            ></div>
+            } @else {
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            }
+          </div>
+        </div>
+
+        <!-- Special emphasis for location selection -->
+        @if(isFieldInvalid('location_id')) {
+        <div class="text-red-500 text-sm mt-1">
+          {{ getErrorMessage("location_id") }}
+        </div>
+        } @else {
+        <div class="text-[#CBAC8D] text-xs mt-1">
+          {{ "checkout.form.location.help_text" | translate }}
+        </div>
+        }
+      </div>
+
+      <!-- address -->
+      <div class="mb-[41px]">
+        <label
+          for="address"
+          class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+        >
+          {{ "checkout.form.address.label" | translate }}
+        </label>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          [ngClass]="{ 'border-red-500': isFieldInvalid('address') }"
+          class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+          [placeholder]="'checkout.form.address.placeholder' | translate"
+        />
+        @if(isFieldInvalid('address')) {
+        <div class="text-red-500 text-sm mt-1">
+          {{ getErrorMessage("address") }}
+        </div>
+        }
+      </div>
+
+      <!-- City -->
+      <div class="mb-[41px]">
+        <label
+          for="city"
+          class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+        >
+          {{ "checkout.form.city.label" | translate }}
+        </label>
+        <input
+          type="text"
+          id="city"
+          formControlName="city"
+          [ngClass]="{ 'border-red-500': isFieldInvalid('city') }"
+          class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+          [placeholder]="'checkout.form.city.placeholder' | translate"
+        />
+        @if(isFieldInvalid('city')) {
+        <div class="text-red-500 text-sm mt-1">
+          {{ getErrorMessage("city") }}
+        </div>
+        }
+      </div>
+
+      <!-- phone -->
+      <div class="mb-[41px]">
+        <label
+          for="phone"
+          class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+        >
+          {{ "checkout.form.phone.label" | translate }}
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          [ngClass]="{ 'border-red-500': isFieldInvalid('phone') }"
+          class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+          [placeholder]="'checkout.form.phone.placeholder' | translate"
+        />
+        @if(isFieldInvalid('phone')) {
+        <div class="text-red-500 text-sm mt-1">
+          {{ getErrorMessage("phone") }}
+        </div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="mb-[41px]">
+        <label
+          for="email"
+          class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-[30px]"
+        >
+          {{ "checkout.form.email.label" | translate }}
+        </label>
+        <input
+          type="email"
+          formControlName="email"
+          id="email"
+          [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
+          class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
+          [placeholder]="'checkout.form.email.placeholder' | translate"
+        />
+        @if(isFieldInvalid('email')) {
+        <div class="text-red-500 text-sm mt-1">
+          {{ getErrorMessage("email") }}
+        </div>
+        }
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <app-button
+          [px]="'px-[40px] sm:px-[84px]'"
+          [py]="'py-[9px]'"
+          [title]="
+            hasAddresses()
+              ? 'checkout.add_address'
+              : ('checkout.save_address' | translate)
+          "
+          [disabled]="loading()"
+          [isLoading]="loading()"
+          type="submit"
+        >
+        </app-button>
+
+        @if(hasAddresses()) {
+        <button
+          type="button"
+          (click)="toggleAddressForm()"
+          class="text-[#CBAC8D] text-description-size border border-[#CBAC8D] rounded-full py-2 px-6 hover:bg-[#CBAC8D] hover:text-white transition-colors duration-200"
+        >
+          {{ "checkout.cancel" | translate }}
+        </button>
+        } @else {
+        <!-- If this is the first address, also show a continue button -->
+        <app-button
+          [title]="'checkout.save_and_continue' | translate"
+          [isLoading]="loading()"
+          (click)="submitNewAddress(); continueToNextStep()"
+          [disabled]="!addressForm.valid || loading()"
+          [px]="'px-4'"
+          [py]="'py-2'"
+          type="button"
+        ></app-button>
+        }
+      </div>
+    </form>
+  </div>
+  } }
+</div>

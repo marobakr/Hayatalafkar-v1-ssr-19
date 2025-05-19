@@ -48,15 +48,14 @@ export class OrdersService {
    * Update item quantity in cart
    */
   updateQuantity(item: {
-    productId: string | number;
+    orderDetailId: string | number;
     quantity: number;
   }): Observable<IGetCartOrOrder> {
+    console.log(item);
     const data = new FormData();
-    data.append('product_id', item.productId.toString());
     data.append('quantity', item.quantity.toString());
-    let userId = this.authService.getUserId();
     return this.api.post<IGetCartOrOrder>(
-      `${API_CONFIG.ORDERS.UPDATE_QUANTITY}${userId}`,
+      `${API_CONFIG.ORDERS.UPDATE_QUANTITY}${item.orderDetailId}`,
       data
     );
   }

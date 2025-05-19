@@ -171,7 +171,8 @@
     } @else if (+productData.price === 0) {
     <!-- Price is 0, show message about product with choices -->
     <span class="text-muted-rose font-medium">
-      {{ productData.first_choice }}
+      {{ productData.first_choice?.cuurent_value }}
+      {{ "shared.currency" | translate }}
     </span>
     } @else {
     <!-- Show regular price when no sale and price not zero -->

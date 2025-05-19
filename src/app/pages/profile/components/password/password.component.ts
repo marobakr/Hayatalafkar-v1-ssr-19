@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlertService, AlertType } from '@shared/alert/alert.service';
+import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 @Component({
   selector: 'app-password',
@@ -21,6 +21,7 @@ export class PasswordComponent implements OnInit {
   fb = inject(FormBuilder);
 
   passwordForm!: FormGroup;
+  isLoading = false;
 
   private _userService = inject(UserService);
 
@@ -36,8 +37,9 @@ export class PasswordComponent implements OnInit {
   private initializeForm(): void {
     this.passwordForm = this.fb.group(
       {
-        phoneNumber: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
+        name: ['', Validators.required],
+        phone: ['', Validators.required],
+        email: ['', Validators.required],
         currentPassword: ['', [Validators.required]],
         newPassword: [
           '',
@@ -64,8 +66,10 @@ export class PasswordComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response && response.row) {
+            console.log(response.row);
             this.passwordForm.patchValue({
-              phoneNumber: response.row.phone,
+              name: response.row.name,
+              phone: response.row.phone,
               email: response.row.email,
             });
           }
@@ -85,8 +89,10 @@ export class PasswordComponent implements OnInit {
   onSubmit(): void {
     console.log(this.passwordForm.value);
     if (this.passwordForm.valid) {
+      this.isLoading = true;
       const finalData = {
-        phone: this.passwordForm.value.phoneNumber,
+        name: this.passwordForm.value.name,
+        phone: this.passwordForm.value.phone,
         email: this.passwordForm.value.email,
         password: this.passwordForm.value.newPassword,
       };
@@ -95,13 +101,22 @@ export class PasswordComponent implements OnInit {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
           next: (response) => {
-            this._alertService.show({
-              title: 'Update Password',
-              message: 'Are you sure you want to update your password?',
-              confirmText: 'Update',
-              cancelText: 'Cancel',
-              alertType: AlertType.NOTIFICATION,
-            });
+            console.log(response);
+            this.isLoading = false;
+            if (response.success) {
+              // Show success notification (without buttons)
+              this._alertService.showNotification({
+                imagePath: '/images/common/password_success.gif',
+                translationKeys: {
+                  title: 'update_password_success',
+                },
+              });
+              this.passwordForm.reset();
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error updating password:', error);
           },
         });
     } else {

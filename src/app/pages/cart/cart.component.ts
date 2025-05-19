@@ -1,3 +1,4 @@
+import { AnimationEvent } from '@angular/animations';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import {
@@ -13,13 +14,15 @@ import {
   OrderDetail,
 } from '@core/interfaces/cart.interfaces';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CartStateService } from '@core/services/cart/cart-state.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
-import { CartStateService } from '../../core/services/cart/cart-state.service';
+import { ArticlesHeaderComponent } from '../../pages/articles/components/articles-header/articles-header.component';
 import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
-import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
-
+import { cartItemAnimations } from './cart.animations';
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -34,9 +37,11 @@ import { ArticlesHeaderComponent } from '../articles/components/articles-header/
     TranslateModule,
     ServiceCardComponent,
     SafeHtmlComponent,
+    LoadingComponent,
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
+  animations: cartItemAnimations,
 })
 export class CartComponent implements OnInit {
   _cartState = inject(CartStateService);
@@ -46,6 +51,11 @@ export class CartComponent implements OnInit {
   formBuilder = inject(FormBuilder);
 
   _translateService = inject(TranslateService);
+
+  _alertService = inject(AlertService);
+
+  // Loading state to show loading indicator
+  isLoading = true;
 
   // Expose computed signals for template usage
   order = this._cartState.order;
@@ -81,7 +91,30 @@ export class CartComponent implements OnInit {
   promoCodeSuccess: string | null = null;
 
   ngOnInit(): void {
-    this._cartState.fetchCart();
+    // Start with loading state
+    this.isLoading = true;
+
+    // First check if user has confirmed orders
+    this._cartState.checkConfirmedOrders();
+
+    // Then fetch the cart
+    this._cartState.fetchCart().then(() => {
+      // Once cart data is loaded, disable loading state
+      this.isLoading = false;
+
+      // Initialize cart data with animation states
+      const cartDetails = this.orderDetails();
+
+      // Set all items to visible animation state
+      if (cartDetails && cartDetails.length > 0) {
+        this._cartState.setOrderDetails(
+          cartDetails.map((item) => ({
+            ...item,
+            animationState: 'visible',
+          }))
+        );
+      }
+    });
   }
 
   /**
@@ -104,13 +137,21 @@ export class CartComponent implements OnInit {
 
     this._cartState.addToCart(item).subscribe({
       next: () => {
-        this.isAddingItem = false;
-        this.cartUpdateSuccess = this._translateService.instant(
-          'shared.added_to_cart_success'
-        );
-        setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        // Set loading state while fetching updated cart
+        this.isLoading = true;
+
+        // Refresh both the cart in this component and the count in navbar
+        this._cartState.fetchCart().then(() => {
+          this.isLoading = false;
+          this.isAddingItem = false;
+          this.cartUpdateSuccess = this._translateService.instant(
+            'shared.added_to_cart_success'
+          );
+          setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        });
       },
       error: (err) => {
+        this.isLoading = false;
         this.isAddingItem = false;
         this.removeItemError = this._translateService.instant(
           'cart.error.add_failed'
@@ -168,14 +209,22 @@ export class CartComponent implements OnInit {
 
       this._cartState.updateQuantity(productId, quantity).subscribe({
         next: () => {
-          this.isAddingItem = false;
-          this.updatingItemId = null;
-          this.cartUpdateSuccess = this._translateService.instant(
-            'shared.update_cart_quantity'
-          );
-          setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+          // Set loading state while fetching updated cart
+          this.isLoading = true;
+
+          // Refresh cart to get updated data
+          this._cartState.fetchCart().then(() => {
+            this.isLoading = false;
+            this.isAddingItem = false;
+            this.updatingItemId = null;
+            this.cartUpdateSuccess = this._translateService.instant(
+              'shared.update_cart_quantity'
+            );
+            setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+          });
         },
         error: (err) => {
+          this.isLoading = false;
           this.isAddingItem = false;
           this.updatingItemId = null;
           this.removeItemError = this._translateService.instant(
@@ -194,20 +243,45 @@ export class CartComponent implements OnInit {
    * Remove an item from the cart
    */
   removeItem(orderDetail: OrderDetail) {
-    this.isRemovingItem = true;
+    // Set the animation state to trigger fadeOut
+    this.setItemAnimationState(orderDetail.id, 'fadeOut');
+
+    // Mark item as being removed
     this.removingItemId = orderDetail.id;
     this.cartUpdateSuccess = null;
     this.removeItemError = null;
 
+    // Visual state is handled by the animation,
+    // actual removal happens in performItemRemoval after animation completes
+  }
+
+  /**
+   * Perform the actual API call to remove an item
+   */
+  performItemRemoval(orderDetail: OrderDetail) {
+    this.isRemovingItem = true;
+
     this._cartState.removeItem(orderDetail.id).subscribe({
       next: () => {
-        this.isRemovingItem = false;
-        this.removingItemId = null;
-        this.cartUpdateSuccess =
-          this._translateService.instant('cart.item_removed');
-        setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        // Set loading state while fetching updated cart
+        this.isLoading = true;
+
+        // Refresh cart to get updated data
+        this._cartState.fetchCart().then(() => {
+          this.isLoading = false;
+          this.isRemovingItem = false;
+          this.removingItemId = null;
+
+          this._alertService.showNotification({
+            imagePath: '/images/common/remove.gif',
+            translationKeys: {
+              title: 'alerts.cart.remove_success.title',
+            },
+          }); // Show success notification (without buttons)
+        });
       },
       error: (err) => {
+        this.isLoading = false;
         this.isRemovingItem = false;
         this.removingItemId = null;
         this.removeItemError = this._translateService.instant(
@@ -229,12 +303,20 @@ export class CartComponent implements OnInit {
 
     this._cartState.clearCart().subscribe({
       next: () => {
-        this.isClearingCart = false;
-        this.cartUpdateSuccess =
-          this._translateService.instant('cart.cart_cleared');
-        setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        // Set loading state while fetching updated cart
+        this.isLoading = true;
+
+        // Refresh cart to get updated data
+        this._cartState.fetchCart().then(() => {
+          this.isLoading = false;
+          this.isClearingCart = false;
+          this.cartUpdateSuccess =
+            this._translateService.instant('cart.cart_cleared');
+          setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        });
       },
       error: (err) => {
+        this.isLoading = false;
         this.isClearingCart = false;
         this.removeItemError = this._translateService.instant(
           'cart.error.clear_failed'
@@ -259,10 +341,17 @@ export class CartComponent implements OnInit {
         next: (response) => {
           this.isPromoCodeLoading = false;
           if (response.valid) {
-            this.promoCodeSuccess = this._translateService.instant(
-              'cart.promo-code.success'
-            );
-            this.promoCodeForm.reset();
+            // Set loading state while fetching updated cart
+            this.isLoading = true;
+
+            // Refresh cart to get updated data with the applied promo code
+            this._cartState.fetchCart().then(() => {
+              this.isLoading = false;
+              this.promoCodeSuccess = this._translateService.instant(
+                'cart.promo-code.success'
+              );
+              this.promoCodeForm.reset();
+            });
           } else {
             this.promoCodeError =
               response.message ||
@@ -270,6 +359,7 @@ export class CartComponent implements OnInit {
           }
         },
         error: (err) => {
+          this.isLoading = false;
           this.isPromoCodeLoading = false;
           this.promoCodeError = this._translateService.instant(
             'cart.promo-code.error-applying'
@@ -280,6 +370,29 @@ export class CartComponent implements OnInit {
     } else {
       // Mark form controls as touched to show validation errors
       this.promoCodeForm.markAllAsTouched();
+    }
+  }
+
+  // Helper method to set animation state on an item
+  setItemAnimationState(id: number, state: 'visible' | 'fadeOut'): void {
+    const items = this.orderDetails();
+    if (items) {
+      const updatedItems = items.map((item) => {
+        if (item.id === id) {
+          return { ...item, animationState: state };
+        }
+        return item;
+      });
+
+      this._cartState.setOrderDetails(updatedItems);
+    }
+  }
+
+  // Handle animation completion
+  onAnimationDone(event: AnimationEvent, item: OrderDetail): void {
+    if (event.toState === 'fadeOut') {
+      // Now proceed with the actual item removal
+      this.performItemRemoval(item);
     }
   }
 

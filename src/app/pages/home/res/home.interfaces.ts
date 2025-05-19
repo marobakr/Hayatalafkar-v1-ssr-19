@@ -200,5 +200,5 @@ export interface BestProduct {
   product_counter: number;
   created_at: string;
   updated_at: string;
-  first_choice: string;
+  first_choice: any;
 }

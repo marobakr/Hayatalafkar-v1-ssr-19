@@ -159,6 +159,32 @@ export const routes: Routes = [
           ),
         data: { titleKey: 'routes.privacy' },
       },
+      /* Checkout */
+      {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./pages/checkout/checkout.component').then(
+            (c) => c.CheckoutComponent
+          ),
+        data: { titleKey: 'routes.checkout' },
+        children: [
+          {
+            path: 'checkout-address',
+            loadComponent: () =>
+              import(
+                './pages/checkout/components/checkout-address/checkout-address.component'
+              ).then((c) => c.CheckoutAddressComponent),
+          },
+          {
+            path: 'order-summary',
+            loadComponent: () =>
+              import(
+                './pages/checkout/components/order-summary/order-summary.component'
+              ).then((c) => c.OrderSummaryComponent),
+          },
+        ],
+        canActivate: [authGuard],
+      },
     ],
   },
 

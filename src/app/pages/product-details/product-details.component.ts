@@ -12,9 +12,13 @@ import { isPlatformBrowser, NgClass } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
+  effect,
   inject,
+  Injector,
   OnInit,
   PLATFORM_ID,
+  runInInjectionContext,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -22,9 +26,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { AuthService } from '@core/services/auth/auth.service';
+import { CartStateService } from '@core/services/cart/cart-state.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { WishlistService } from '@core/services/wishlist/wishlist.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@shared/alert/alert.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import {
@@ -54,6 +59,7 @@ import { IProduct } from './res/productDetails.interface';
     SafeHtmlComponent,
     SharedBestSellerComponent,
     NgClass,
+    CustomTranslatePipe,
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
@@ -191,6 +197,12 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   _productsService = inject(ProductsService);
 
+  _cartStateService = inject(CartStateService);
+
+  _translateService = inject(TranslateService);
+
+  private injector = inject(Injector);
+
   productDetails!: IProduct;
 
   relatedProducts: IAllProduct[] = [];
@@ -199,14 +211,18 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   isLoading = signal(false);
 
-  selectedSize = signal('30 مل');
+  // Direction for layout (RTL or LTR)
+  isRtlMode = signal(false);
+
+  // Selected size (string instead of number)
+  selectedSize = signal<string>('');
+
+  // Track the selected choice
+  private selectedChoice = signal<any>(null);
 
   quantity = signal(4);
 
   activeIndex = signal(0);
-
-  // Direction for layout (RTL or LTR)
-  isRtlMode = signal(false);
 
   // Process product images
   processedImages = signal<Array<{ id: number; url: string; alt: string }>>([]);
@@ -224,8 +240,8 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     nav: true,
     rtl: false,
     navText: [
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+      '<i class="fa fa-chevron-left"></i>',
+      '<i class="fa fa-chevron-right"></i>',
     ],
   };
 
@@ -250,10 +266,6 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
         items: 4,
       },
     },
-    navText: [
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
-    ],
   };
 
   // Product tabs configuration
@@ -265,6 +277,11 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
   // Active tab index
   activeTab = signal(0);
+
+  /* Cart */
+  isAddingToCart = signal(false);
+
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // Check language direction
@@ -287,9 +304,28 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
         this.userId = userData.id;
         if (this.productDetails && this.productDetails.id) {
           this.checkIfProductInWishlist();
+          this.checkIfProductInCart();
         }
       }
     }
+
+    // Create an effect that watches cart changes
+    this.setupCartWatcher();
+  }
+
+  /**
+   * Set up a watcher for cart changes
+   */
+  private setupCartWatcher(): void {
+    // Use runInInjectionContext with the component's injector
+    runInInjectionContext(this.injector, () => {
+      effect(() => {
+        // This will re-run whenever auth state or cart state changes
+        if (this._authService.isAuthenticated() && this.productDetails?.id) {
+          this.checkIfProductInCart();
+        }
+      });
+    });
   }
 
   // Update carousel options when RTL mode changes
@@ -347,6 +383,16 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     this._route.data.subscribe((next) => {
       this.productDetails = next['productDetails'].product;
       this.relatedProducts = next['productDetails'].relatedProducts;
+
+      // Initialize the selected size from the first choice if available
+      if (
+        this.productDetails?.choices &&
+        this.productDetails.choices.length > 0
+      ) {
+        const firstChoice = this.productDetails.choices[0];
+        this.setSelectedSizeFromChoice(firstChoice);
+      }
+
       // Add test images if none exist (for testing purposes)
       if (
         !this.productDetails.additional_images ||
@@ -370,6 +416,77 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   decrementQuantity(): void {
     if (this.quantity() > 1) {
       this.quantity.update((qty) => qty - 1);
+    }
+  }
+
+  /**
+   * Get the translated name of a choice
+   */
+  getChoiceName(choice: any): string {
+    // First try to get from customTranslate
+    if (choice) {
+      let currentLang = 'ar'; // Default to Arabic
+      // Get current language
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang) => {
+          currentLang = lang;
+        });
+
+      if (currentLang === 'ar' && choice.ar_name) {
+        return choice.ar_name;
+      } else if (currentLang === 'en' && choice.en_name) {
+        return choice.en_name;
+      } else if (choice?.cuurent_value) {
+        return choice?.cuurent_value;
+      }
+    }
+    return '';
+  }
+
+  /**
+   * Return the price of the currently selected choice
+   */
+  activeChoicePrice(): string {
+    // If no choice is selected or choices don't exist, return 0
+    if (
+      !this.productDetails?.choices ||
+      this.productDetails.choices.length === 0
+    ) {
+      return '0';
+    }
+
+    // Find the selected choice based on current selectedSize
+    const currentSize = this.selectedSize();
+    const choice = this.productDetails.choices.find(
+      (c: any) =>
+        c.cuurent_value === currentSize || this.getChoiceName(c) === currentSize
+    );
+
+    // Return the price of the selected choice or the first choice as default
+    if (choice && (choice as any).price) {
+      return (choice as any).price;
+    } else if (
+      this.productDetails.choices[0] &&
+      (this.productDetails.choices[0] as any).price
+    ) {
+      return (this.productDetails.choices[0] as any).price;
+    }
+
+    return '0';
+  }
+
+  /**
+   * Set selected size from a choice object
+   */
+  setSelectedSizeFromChoice(choice: any): void {
+    this.selectedChoice.set(choice);
+    const sizeName = this.getChoiceName(choice);
+    if (sizeName) {
+      this.selectedSize.set(sizeName);
+    } else if (choice?.cuurent_value) {
+      this.selectedSize.set(choice?.cuurent_value);
     }
   }
 
@@ -683,8 +800,275 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     );
   }
 
+  /* Cart */
+  /**
+   * Toggle cart: add or update product in cart based on current state
+   * This function updates quantity rather than removing the item when it's already in cart
+   */
+  toggleCart(): void {
+    if (this.isInCart()) {
+      this.updateCartQuantity();
+    } else {
+      this.addToCart();
+    }
+  }
+
+  /**
+   * Check if product is in cart
+   */
+  isInCart(): boolean {
+    if (!this.productDetails?.id) return false;
+    return this._cartStateService.isProductInCart(this.productDetails.id);
+  }
+
+  /**
+   * Check if product is in cart or currently being updated
+   * This helps prevent UI flicker during cart operations
+   */
+  isInCartOrUpdating(): boolean {
+    // If we're in the process of adding to cart, and it was previously in cart,
+    // we should still show it as in cart
+    if (this.isAddingToCart()) {
+      return true;
+    }
+    return this.isInCart();
+  }
+
+  /**
+   * Add the current product to cart
+   */
+  addToCart(): void {
+    if (this.isAddingToCart()) return;
+
+    // Check if user is authenticated
+    if (!this._authService.isAuthenticated()) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang) => {
+          this._router.navigate(['/', lang, 'login']);
+        });
+      return;
+    }
+
+    // Get product ID
+    if (!this.productDetails || !this.productDetails.id) {
+      console.error('Cannot add to cart: Product ID is missing');
+      return;
+    }
+
+    this.isAddingToCart.set(true);
+
+    // Create cart item data
+    const formData = new FormData();
+    formData.append('product_id', this.productDetails.id.toString());
+    formData.append('quantity', this.quantity().toString());
+
+    // Get the currently selected choice
+    const choice = this.selectedChoice();
+
+    // If there's a selected choice, add its ID to the form data
+    if (choice && choice.id) {
+      console.log('Adding with choice_id:', choice.id);
+    }
+
+    // Call cart service to add item
+    this._cartStateService.addToCart(formData).subscribe({
+      next: () => {
+        this.isAddingToCart.set(false);
+
+        // Show success notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/addtocart.gif',
+          translationKeys: {
+            title: 'alerts.cart.add_success.title',
+          },
+        });
+      },
+      error: (err) => {
+        this.isAddingToCart.set(false);
+        this.handleCartError(err);
+      },
+    });
+  }
+
+  /**
+   * Update cart item quantity
+   */
+  updateCartQuantity(): void {
+    if (!this.isInCart() || !this.productDetails?.id) return;
+    if (this.isAddingToCart()) return;
+
+    this.isAddingToCart.set(true);
+
+    // Get the currently selected choice
+    const choice = this.selectedChoice();
+
+    // If a choice is selected and it's different from what's in the cart,
+    // remove the old item and add a new one with the correct choice
+    const cartItem = this._cartStateService.getCartItemForProduct(
+      this.productDetails.id
+    );
+    if (cartItem && choice && choice.id) {
+      const cartChoiceId = cartItem.product_choice_id;
+
+      // If choice is different, remove the item and add a new one
+      if (cartChoiceId !== choice.id) {
+        this.executeRemoveFromCart(cartItem.id);
+        // Add new item with correct choice after a short delay
+        setTimeout(() => {
+          this.addToCart();
+        }, 300);
+        return;
+      }
+    }
+
+    // Otherwise just update the quantity
+    this._cartStateService
+      .updateQuantity(this.productDetails.id, this.quantity())
+      .subscribe({
+        next: () => {
+          this.isAddingToCart.set(false);
+
+          // Refresh the cart state to ensure UI is updated correctly
+          this._cartStateService.fetchCart();
+
+          // Show success notification
+          this._alertService.showNotification({
+            imagePath: '/images/common/addtocart.gif',
+            translationKeys: {
+              title: 'alerts.cart.update_success.title',
+            },
+          });
+        },
+        error: (err) => {
+          this.isAddingToCart.set(false);
+          this.handleCartError(err);
+        },
+      });
+  }
+
+  /**
+   * Execute cart item removal after confirmation
+   */
+  private executeRemoveFromCart(detailId: number): void {
+    this._cartStateService.removeItem(detailId).subscribe({
+      next: () => {
+        this.isAddingToCart.set(false);
+
+        // Refresh the cart state
+        this._cartStateService.fetchCart();
+
+        // Show success notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/remove.gif',
+          translationKeys: {
+            title: 'alerts.cart.remove_success.title',
+          },
+        });
+      },
+      error: (err) => {
+        this.isAddingToCart.set(false);
+        this.handleCartError(err);
+      },
+    });
+  }
+
+  /**
+   * Common error handler for cart operations
+   */
+  private handleCartError(error: any): void {
+    if (error.status === 401) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang: string) => {
+          this._router.navigate(['/', lang, 'login']);
+        });
+    }
+
+    // Show error notification
+    this._alertService.showNotification({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.cart.error.title',
+        message: 'alerts.cart.error.message',
+      },
+    });
+
+    console.error('Cart operation error:', error);
+  }
+
+  /**
+   * Check if the current product is already in user's cart
+   */
+  private checkIfProductInCart(): void {
+    if (!this.productDetails || !this.productDetails.id) return;
+
+    // If product is in cart, set the quantity to match what's in the cart
+    if (this.isInCart()) {
+      const cartItem = this._cartStateService.getCartItemForProduct(
+        this.productDetails.id
+      );
+      if (cartItem && cartItem.quantity) {
+        this.quantity.set(cartItem.quantity);
+      }
+    }
+  }
+
   // Set active tab
   setActiveTab(index: number): void {
     this.activeTab.set(index);
+  }
+
+  /**
+   * Check if a choice is currently active/selected
+   */
+  isChoiceActive(choice: any): boolean {
+    if (!choice) return false;
+
+    // Check if this is the currently selected choice by comparing with the stored selectedChoice
+    const currentChoice = this.selectedChoice();
+    if (currentChoice && currentChoice.id && choice.id) {
+      return currentChoice.id === choice.id;
+    }
+
+    // Fallback to comparing by name if IDs don't match
+    const choiceName = this.getChoiceName(choice);
+    return this.selectedSize() === choiceName;
+  }
+
+  /**
+   * Remove product from cart with confirmation
+   */
+  removeFromCart(): void {
+    if (!this.isInCart() || !this.productDetails?.id) return;
+    if (this.isAddingToCart()) return;
+
+    // Get the cart item detail for this product
+    const cartItem = this._cartStateService.getCartItemForProduct(
+      this.productDetails.id
+    );
+    if (!cartItem) return;
+
+    this.isAddingToCart.set(true);
+
+    // Show confirmation alert before removing
+    this._alertService.showConfirmation({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.cart.remove_confirm.title',
+        message: 'alerts.cart.remove_confirm.message',
+        confirmText: 'alerts.cart.remove_confirm.yes',
+        cancelText: 'alerts.cart.remove_confirm.cancel',
+      },
+      onConfirm: () => {
+        // Proceed with removal
+        this.executeRemoveFromCart(cartItem.id);
+      },
+      onCancel: () => {
+        this.isAddingToCart.set(false);
+      },
+    });
   }
 }

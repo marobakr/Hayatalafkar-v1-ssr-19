@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlertService, AlertType } from '@shared/alert/alert.service';
+import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
@@ -64,6 +64,7 @@ export class ProfileDetailsComponent implements OnInit {
         next: (response) => {
           this.loading.set(false);
           if (response && response.row) {
+            console.log(response);
             this.populateForm(response.row);
           }
         },
@@ -96,10 +97,11 @@ export class ProfileDetailsComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.loading.set(false);
-            this._alertService.show({
-              title: 'Update Profile',
-              message: 'Profile updated successfully',
-              alertType: AlertType.NOTIFICATION,
+            this._alertService.showNotification({
+              imagePath: '/images/common/settings.gif',
+              translationKeys: {
+                title: 'update_profile_success',
+              },
             });
           },
         });

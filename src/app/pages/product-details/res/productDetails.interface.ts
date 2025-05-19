@@ -34,6 +34,18 @@ export interface IProduct {
   updated_at: string;
   category: Category;
   subcategory: Subcategory;
+  choices: Choice[];
+}
+
+export interface Choice {
+  id: number;
+  product_id: number;
+  en_name: string;
+  ar_name: string;
+  cuurent_value: number;
+  active_status: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Category {

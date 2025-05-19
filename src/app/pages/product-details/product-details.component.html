@@ -83,6 +83,12 @@
 
         <!-- Product Price -->
         <div class="price-container flex items-center gap-4 mb-6">
+          @if (productDetails.choices && productDetails.choices.length > 0) {
+          <span class="text-lg font-bold">
+            {{ activeChoicePrice() }}
+            {{ "shared.currency" | translate }}
+          </span>
+          } @else {
           <span class="text-lg font-bold">
             {{ productDetails.price }}
             {{ "shared.currency" | translate }}
@@ -92,7 +98,7 @@
             {{ productDetails.price_after_sale }}
             {{ "shared.currency" | translate }}
           </span>
-          }
+          } }
         </div>
 
         <!-- Product Description -->
@@ -106,38 +112,16 @@
         <div class="mb-6">
           <h3 class="text-lg font-semibold mb-3">الحجم</h3>
           <div class="flex flex-wrap gap-3">
+            @for(choice of productDetails.choices; track choice.id) {
             <button
-              (click)="setSelectedSize('30 مل')"
-              [class.bg-[#CBAC8D]]="selectedSize() === '30 مل'"
-              [class.text-white]="selectedSize() === '30 مل'"
-              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
+              (click)="setSelectedSizeFromChoice(choice)"
+              [class.bg-[#CBAC8D]]="isChoiceActive(choice)"
+              [class.text-white]="isChoiceActive(choice)"
+              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors hover:bg-gray-100"
             >
-              30 مل
+              {{ getChoiceName(choice) }}
             </button>
-            <button
-              (click)="setSelectedSize('60 مل')"
-              [class.bg-[#CBAC8D]]="selectedSize() === '60 مل'"
-              [class.text-white]="selectedSize() === '60 مل'"
-              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
-            >
-              60 مل
-            </button>
-            <button
-              (click)="setSelectedSize('80 مل')"
-              [class.bg-[#CBAC8D]]="selectedSize() === '80 مل'"
-              [class.text-white]="selectedSize() === '80 مل'"
-              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
-            >
-              80 مل
-            </button>
-            <button
-              (click)="setSelectedSize('100 مل')"
-              [class.bg-[#CBAC8D]]="selectedSize() === '100 مل'"
-              [class.text-white]="selectedSize() === '100 مل'"
-              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors"
-            >
-              100 مل
-            </button>
+            }
           </div>
         </div>
 
@@ -150,6 +134,7 @@
             <button
               (click)="decrementQuantity()"
               class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+              [disabled]="isAddingToCart()"
             >
               -
             </button>
@@ -157,6 +142,7 @@
             <button
               (click)="incrementQuantity()"
               class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+              [disabled]="isAddingToCart()"
             >
               +
             </button>
@@ -164,10 +150,95 @@
 
           <!-- Add to Cart Button -->
           <button
-            class="cursor-pointer bg-[#111111] text-white px-6 py-3 rounded-md hover:opacity-90 transition-opacity"
+            (click)="isInCart() ? updateCartQuantity() : addToCart()"
+            [disabled]="isAddingToCart() || !productDetails.stock_status"
+            class="cursor-pointer bg-[#111111] text-white px-6 py-3 rounded-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            [class.opacity-70]="
+              isAddingToCart() || !productDetails.stock_status
+            "
+            [class.cursor-not-allowed]="
+              isAddingToCart() || !productDetails.stock_status
+            "
           >
+            @if (isAddingToCart()) {
+            <span
+              class="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+            ></span>
+            <span class="ml-2">
+              {{
+                isInCart()
+                  ? ("shared.updating" | translate)
+                  : ("shared.adding" | translate)
+              }}
+            </span>
+            } @else if (isInCart()) {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2"
+            >
+              <path d="M20 6L9 17l-5-5"></path>
+            </svg>
+            {{ "shared.update_cart" | translate }}
+            } @else {
             {{ "shared.add_to_cart" | translate }}
+            }
           </button>
+
+          <!-- Remove from Cart Button (only visible when product is in cart or being updated) -->
+          @if (isInCartOrUpdating()) {
+          <button
+            (click)="removeFromCart()"
+            [disabled]="isAddingToCart()"
+            class="cursor-pointer flex items-center justify-center w-10 h-10 bg-white text-red-500 rounded-full shadow-md hover:bg-red-50 transition-colors duration-200"
+            aria-label="Remove from cart"
+          >
+            <span class="sr-only">Remove from cart</span>
+            @if (isAddingToCart()) {
+            <span class="animate-spin">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </span>
+            } @else {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            }
+          </button>
+          }
 
           <!-- Wishlist Button -->
           <button

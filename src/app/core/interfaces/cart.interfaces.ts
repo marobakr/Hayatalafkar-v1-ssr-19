@@ -61,6 +61,7 @@ export interface OrderDetail {
   created_at: string;
   updated_at: string;
   product: IAllProduct;
+  animationState?: 'visible' | 'fadeOut';
 }
 
 export interface IUpdateQuantity {

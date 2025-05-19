@@ -1,0 +1,74 @@
+<app-articles-header
+  [title]="'checkout.header.title' | translate"
+  [subTitle]="'checkout.header.subtitle' | translate"
+  [showRotateImage]="false"
+  [marginBottom]="'9'"
+></app-articles-header>
+
+<div class="checkout-container">
+  <h2 class="page-title">{{ "CHECKOUT" | translate }}</h2>
+
+  <!-- Checkout Progress Steps -->
+  <div class="checkout-steps">
+    <ng-container *ngIf="currentLang$ | async as lang">
+      <div
+        class="step"
+        [class.active]="isActiveRoute('/checkout/checkout-address')"
+      >
+        <div class="step-number">1</div>
+        <div class="step-label">{{ "checkout.steps.address" | translate }}</div>
+      </div>
+      <div class="step-line"></div>
+      <div
+        class="step"
+        [class.active]="isActiveRoute('/checkout/order-summary')"
+      >
+        <div class="step-number">2</div>
+        <div class="step-label">{{ "checkout.steps.summary" | translate }}</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" [class.active]="isActiveRoute('/checkout/payment')">
+        <div class="step-number">3</div>
+        <div class="step-label">{{ "checkout.steps.payment" | translate }}</div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="checkout-content">
+    <div class="checkout-main">
+      <!-- Child Route Content -->
+      <router-outlet></router-outlet>
+
+      <!-- Back Links -->
+      <div class="back-link">
+        <ng-container *ngIf="currentLang$ | async as lang">
+          <!-- Conditional back links based on current route -->
+          <ng-container *ngIf="isActiveRoute('/checkout/checkout-address')">
+            <a [routerLink]="['/', lang, 'cart']">
+              ← {{ "BACK_TO_CART" | translate }}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="isActiveRoute('/checkout/order-summary')">
+            <a [routerLink]="['/', lang, 'checkout', 'checkout-address']">
+              ← {{ "checkout.back_to_address" | translate }}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="isActiveRoute('/checkout/payment')">
+            <a [routerLink]="['/', lang, 'checkout', 'order-summary']">
+              ← {{ "checkout.back_to_summary" | translate }}
+            </a>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="checkout-sidebar">
+      <!-- Order Summary Component -->
+      <app-order-summary
+        [selectedAddress]="selectedAddress"
+      ></app-order-summary>
+    </div>
+  </div>
+</div>
