@@ -252,7 +252,7 @@
                   alt="Wishlist"
                 />
                 @if (wishlistCount() > 0) {
-                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {{ wishlistCount() }}
                 </span>
                 }
@@ -263,7 +263,7 @@
           <li class="cursor-pointer" role="menuitem">
             <a
               [routerLink]="['/', currentLang$ | async, 'cart']"
-              class="block py-2 px-3 xl:p-0"
+              class="block py-2 px-3 xl:p-0 relative"
               [attr.aria-label]="'navbar.cart' | translate"
             >
               <figure class="max-w-[25px] max-h-[25px]">
@@ -273,6 +273,11 @@
                   height="25"
                   alt="Cart"
                 />
+                @if (cartCount() > 0) {
+                <span class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {{ cartCount() }}
+                </span>
+                }
               </figure>
             </a>
           </li>
@@ -546,7 +551,17 @@
               (click)="toggleMobileMenu()"
             >
               <figure class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2">
-                <img src="/images/navbar/7.webp" width="25" height="25" alt="Cart" />
+                <img
+                  ngSrc="/images/navbar/7.webp"
+                  width="25"
+                  height="25"
+                  alt="Cart"
+                />
+                @if (cartCount() > 0) {
+                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {{ cartCount() }}
+                </span>
+                }
               </figure>
               {{ "navbar.cart" | translate }}
             </a>

@@ -7,9 +7,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserService } from '../../../../core/services/user/user.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AlertService } from '@shared/alert/alert.service';
+import { ButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
   selector: 'app-profile-details',
@@ -25,12 +26,19 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 })
 export class ProfileDetailsComponent implements OnInit {
   private _fb = inject(FormBuilder);
+
   private _userService = inject(UserService);
+
   private _destroyRef = inject(DestroyRef);
 
+  private _alertService = inject(AlertService);
+
   loginForm!: FormGroup;
+
   loading = signal(false);
+
   errorMessage = signal('');
+
   successMessage = signal('');
 
   ngOnInit(): void {
@@ -56,6 +64,7 @@ export class ProfileDetailsComponent implements OnInit {
         next: (response) => {
           this.loading.set(false);
           if (response && response.row) {
+            console.log(response);
             this.populateForm(response.row);
           }
         },
@@ -82,14 +91,20 @@ export class ProfileDetailsComponent implements OnInit {
     if (this.loginForm.valid) {
       this.loading.set(true);
       const userData = this.loginForm.value;
-
-      // In a real implementation, you would have an update user endpoint
-      // For now, we'll just show a success message
-      setTimeout(() => {
-        this.loading.set(false);
-        this.successMessage.set('Profile updated successfully');
-        setTimeout(() => this.successMessage.set(''), 3000);
-      }, 1000);
+      this._userService
+        .updateUserInfo(userData)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe({
+          next: (response) => {
+            this.loading.set(false);
+            this._alertService.showNotification({
+              imagePath: '/images/common/settings.gif',
+              translationKeys: {
+                title: 'update_profile_success',
+              },
+            });
+          },
+        });
     } else {
       this.loginForm.markAllAsTouched();
       this.errorMessage.set('Please fill all required fields correctly');

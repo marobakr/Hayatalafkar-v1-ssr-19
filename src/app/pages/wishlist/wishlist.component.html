@@ -4,12 +4,64 @@
   [showRotateImage]="false"
   [marginBottom]="'15'"
 ></app-articles-header>
+
+<!-- Login screen when not authenticated -->
+@if (!isAuthenticated()) {
+<section class="mb-[64px] overflow-hidden">
+  <div class="container mx-auto">
+    <div
+      class="flex flex-col items-center justify-center min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
+    >
+      <div class="text-center py-12 max-w-[500px]">
+        <svg
+          class="mx-auto mb-6 w-[80px] h-[80px] text-warm-tan"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          />
+        </svg>
+        <h3 class="text-2xl font-bold text-[#333] mb-4">
+          {{ "wishlist.auth.title" | translate }}
+        </h3>
+        <p class="text-[#666] mb-6">
+          {{ "wishlist.auth.message" | translate }}
+        </p>
+        <div class="flex gap-4 justify-center">
+          <a
+            [routerLink]="['/', currectlang$ | async, 'login']"
+            class="bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+          >
+            {{ "routes.login" | translate }}
+          </a>
+          <a
+            [routerLink]="['/', currectlang$ | async, 'register']"
+            class="bg-white border border-warm-tan text-warm-tan px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+          >
+            {{ "routes.register" | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+} @else {
+<!-- Loading spinner when authenticated user's data is loading -->
+@if (isLoading) {
+<app-loading></app-loading>
+} @else {
 <!-- Items  -->
-<section class="mb-[64px]">
+<section class="mb-[64px] overflow-hidden">
   <div class="container mx-auto">
     <div class="grid grid-cols-15">
       <div class="col-span-15 lg:col-span-11">
-        <!-- Wishlist Items Header -->
+        <!-- Wishlist Items Header - Show only when items exist -->
         @if (wishlistItem.length > 0) {
         <div
           class="header hidden md:flex items-center justify-between rounded-[15px] bg-warm-tan py-6 px-12 text-white text-description-size"
@@ -19,9 +71,6 @@
           </span>
           <span class="capitalize">
             {{ "wishlist.orderList.price" | translate }}
-          </span>
-          <span class="capitalize">
-            {{ "wishlist.orderList.quantity" | translate }}
           </span>
 
           <span class="capitalize">
@@ -37,12 +86,12 @@
         >
           <!-- Image && Product Name -->
           <div
-            class="flex justify-start md:ltr:pr-15 md:rtl:pl-15 md:justify-between items-center capitalize gap-[10px] mb-5 md:mb-0"
+            class="flex justify-start md:ltr:pr-15 md:rtl:pl-15 items-center capitalize gap-[10px] mb-5 md:mb-0 flex-grow-1"
           >
             <!-- Remove Item -->
             <div
               class="close cursor-pointer"
-              (click)="removeItem($index, item.id)"
+              (click)="removeItem(item.product_id, $index)"
             >
               <figure class="mx-0 remove-icon">
                 <img src="/images/wishlist/remove.svg" alt="remove item" />
@@ -78,9 +127,9 @@
               </p>
             </div>
           </div>
-          <!-- Price & Quantity -->
+          <!-- Price  -->
           <div
-            class="flex justify-between items-center flex-grow-1 flex-row-reverse md:flex-row mb-5 md:mb-0"
+            class="flex justify-between items-center flex-row-reverse md:flex-row mb-5 md:mb-0 flex-grow-1"
           >
             @if (+item.product.price === 0) {
             <!-- Price is 0, show message about product with choices -->
@@ -103,43 +152,7 @@
               {{ item.product.price }}
             </div>
             }
-
-            <!-- Quantity -->
-
-            <form class="max-w-xs flex-grow-1">
-              <div class="relative flex items-center gap-0 max-w-[8rem]">
-                <button
-                  type="button"
-                  id="decrement-button"
-                  data-input-counter-decrement="quantity-input"
-                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-l-2xl rtl:rounded-r-2xl px-[13px] h-[42px] flex items-center justify-center"
-                >
-                  <span class="text-xl font-medium">−</span>
-                </button>
-                <input
-                  type="text"
-                  id="quantity-input"
-                  data-input-counter
-                  data-input-counter-min="1"
-                  data-input-counter-max="100000"
-                  aria-describedby="helper-text-explanation"
-                  class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
-                  placeholder="999"
-                  [value]="item.product.product_counter"
-                  required
-                />
-                <button
-                  type="button"
-                  id="increment-button"
-                  data-input-counter-increment="quantity-input"
-                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-r-2xl rtl:rounded-l-2xl px-[13px] h-[42px] flex items-center justify-center"
-                >
-                  <span class="text-xl font-medium">+</span>
-                </button>
-              </div>
-            </form>
           </div>
-
           <!-- Add To Cart -->
           <button
             type="button"
@@ -169,70 +182,71 @@
             ></app-button>
           </div>
 
-          <span
+          <button
             (click)="removeAllItems()"
-            class="text-muted-rose text-description-size font-bold capitalize underline"
+            class="cursor-pointer text-muted-rose text-description-size font-bold capitalize underline"
           >
             {{ "wishlist.wishlist-footer.delete-all" | translate }}
-          </span>
-        </div>
-        }@else {
-        <div
-          class="flex items-center justify-end min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
-          [@emptyWishlistAnimation]
-        >
-          <div class="text-center py-12">
-            <svg
-              class="mx-auto mb-6 w-[200px] h-[200px]"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2 3H4.5L6.5 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM6.07142 14H18L21 5H4.78571M11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"
-                stroke="#A4907C"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <circle cx="9" cy="19" r="2" fill="#A4907C" opacity="0.3" />
-              <circle cx="17" cy="19" r="2" fill="#A4907C" opacity="0.3" />
-              <path
-                d="M4 5H21L18 14H6.07142L4 5Z"
-                fill="#A4907C"
-                opacity="0.3"
-              />
-              <path
-                d="M7 8L8 12M11 8L11.5 12M15 8L14 12"
-                stroke="white"
-                stroke-linecap="round"
-              />
-            </svg>
-            <h3 class="text-2xl font-bold text-[#333] mb-4">
-              {{ "cart.empty.title" | translate }}
-            </h3>
-            <p class="text-[#666] mb-6">
-              {{ "cart.empty.message" | translate }}
-            </p>
-            <button
-              routerLink="/shopping"
-              class="bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
-            >
-              {{ "cart.empty.shop-now" | translate }}
-            </button>
-          </div>
+          </button>
         </div>
         }
       </div>
       <!-- this acts as an offset -->
       <div class="hidden lg:block lg:col-span-1"></div>
       @if (wishlistItem.length > 0) {
-      <div class="hidden lg:block lg:col-span-3">
+      <div class="hidden max-h-[1000px] lg:block lg:col-span-3">
         <app-talent-image-card
-          [imagePath]="'/images/news/13.png'"
+          class="items-stretch"
+          [imagePath]="'/images/best-Seller/7.png'"
         ></app-talent-image-card>
       </div>
       }
     </div>
+
+    <!-- Empty Wishlist State - Show only when authenticated but no items -->
+    @if(wishlistItem.length < 1) {
+    <div
+      class="flex items-center justify-center min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
+      [@emptyWishlistAnimation]
+    >
+      <div class="text-center py-12">
+        <svg
+          class="mx-auto mb-6 w-[200px] h-[200px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2 3H4.5L6.5 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM6.07142 14H18L21 5H4.78571M11 19C11 20.1046 10.1046 21 9 21C7.89543 21 7 20.1046 7 19C7 17.8954 7.89543 17 9 17C10.1046 17 11 17.8954 11 19Z"
+            stroke="#A4907C"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="9" cy="19" r="2" fill="#A4907C" opacity="0.3" />
+          <circle cx="17" cy="19" r="2" fill="#A4907C" opacity="0.3" />
+          <path d="M4 5H21L18 14H6.07142L4 5Z" fill="#A4907C" opacity="0.3" />
+          <path
+            d="M7 8L8 12M11 8L11.5 12M15 8L14 12"
+            stroke="white"
+            stroke-linecap="round"
+          />
+        </svg>
+        <h3 class="text-2xl font-bold text-[#333] mb-4">
+          {{ "wishlist.empty.title" | translate }}
+        </h3>
+        <p class="text-[#666] mb-6">
+          {{ "wishlist.empty.message" | translate }}
+        </p>
+        <a
+          [routerLink]="['/', currectlang$ | async, 'shopping']"
+          class="bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+        >
+          {{ "wishlist.empty.shop-now" | translate }}
+        </a>
+      </div>
+    </div>
+    }
   </div>
 </section>
+} }

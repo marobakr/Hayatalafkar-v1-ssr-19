@@ -30,17 +30,47 @@ export class FilterHtmlPipe implements PipeTransform {
     'tr',
     'td',
     'th',
+    'br',
+  ];
+
+  // Tags to replace with paragraphs - to maintain consistent structure
+  private tagsToReplace: string[] = [
+    'div',
+    'section',
+    'article',
+    'header',
+    'footer',
+  ];
+
+  // Tags to completely remove
+  private tagsToRemove: string[] = [
+    'script',
+    'style',
+    'iframe',
+    'object',
+    'embed',
   ];
 
   // Tags to unwrap (keep content but remove the tag)
-  private tagsToUnwrap: string[] = ['strong', 'b', 'em'];
+  private tagsToUnwrap: string[] = [
+    'strong',
+    'b',
+    'em',
+    'i',
+    'u',
+    'strike',
+    'code',
+    'pre',
+  ];
 
   private allowedAttributes: string[] = [
     'src',
     'alt',
     'width',
+    'height',
     'href',
     'title',
+    'target',
   ];
 
   transform(value: string | null | undefined): SafeHtml {
@@ -48,47 +78,39 @@ export class FilterHtmlPipe implements PipeTransform {
       return this.sanitizer.bypassSecurityTrustHtml('');
     }
 
-    // Pre-process HTML to remove formatting tags using regex
-    value = this.removeFormattingTags(value);
-
-    // For server-side rendering, use simple regex-based filtering
-    if (!this.isBrowser) {
-      // Apply a simplified version of HTML cleaning for SSR
-      const simpleCleaned = this.simpleCleanHtml(value);
-      return this.sanitizer.bypassSecurityTrustHtml(simpleCleaned);
-    }
-
-    // For browser rendering, use the DOM API
-    try {
-      // Parse HTML
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(value, 'text/html');
-
-      // Clean the HTML
-      this.cleanNode(doc.body);
-
-      // Remove empty tags
-      this.removeEmptyTags(doc.body);
-
-      // Remove all classes
-      this.removeAllClasses(doc.body);
-
-      // Get cleaned HTML content
-      const cleanedHtml = doc.body.innerHTML;
-
-      // Return as SafeHtml for binding
-      return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
-    } catch (error) {
-      console.error('Error parsing HTML:', error);
-      // Fallback to simple cleaning
-      const simpleCleaned = this.simpleCleanHtml(value);
-      return this.sanitizer.bypassSecurityTrustHtml(simpleCleaned);
-    }
+    // Use the same cleaning approach for both server and client
+    // This helps avoid hydration mismatches
+    const cleanedHtml = this.cleanHtml(value);
+    return this.sanitizer.bypassSecurityTrustHtml(cleanedHtml);
   }
 
-  // Server-side simple HTML cleaning using regex
-  private simpleCleanHtml(html: string): string {
-    // Remove disallowed tags
+  private cleanHtml(html: string): string {
+    // Step 1: Remove all HTML comments
+    html = html.replace(/<!--[\s\S]*?-->/g, '');
+
+    // Step 2: Remove tags that should be completely removed
+    for (const tag of this.tagsToRemove) {
+      const regex = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'gi');
+      html = html.replace(regex, '');
+    }
+
+    // Step 3: Convert specific tags into paragraphs (helps with consistent structure)
+    for (const tag of this.tagsToReplace) {
+      const openRegex = new RegExp(`<${tag}[^>]*>`, 'gi');
+      const closeRegex = new RegExp(`<\\/${tag}>`, 'gi');
+      html = html.replace(openRegex, '<p>');
+      html = html.replace(closeRegex, '</p>');
+    }
+
+    // Step 4: Unwrap tags (keep content but remove the tag)
+    for (const tag of this.tagsToUnwrap) {
+      const openRegex = new RegExp(`<${tag}[^>]*>`, 'gi');
+      const closeRegex = new RegExp(`<\\/${tag}>`, 'gi');
+      html = html.replace(openRegex, '');
+      html = html.replace(closeRegex, '');
+    }
+
+    // Step 5: Remove disallowed tags
     const allowedTagsPattern = this.allowedTags.join('|');
     const tagRegex = new RegExp(
       `<(?!\\/?(${allowedTagsPattern})\\b)[^>]+>`,
@@ -96,120 +118,50 @@ export class FilterHtmlPipe implements PipeTransform {
     );
     html = html.replace(tagRegex, '');
 
-    // Remove classes
-    html = html.replace(/\sclass="[^"]*"/gi, '');
+    // Step 6: Remove all attributes except allowed ones
+    html = this.processAttributes(html);
 
-    // Remove style attributes
-    html = html.replace(/\sstyle="[^"]*"/gi, '');
+    // Step 7: Ensure all paragraphs are properly closed (important for hydration)
+    html = this.ensureClosedTags(html);
 
-    // Remove other disallowed attributes (keep only allowed ones)
-    const allowedAttributesStr = this.allowedAttributes.join('|');
-    const attrRegex = new RegExp(
-      `\\s(?!(${allowedAttributesStr})\\b)[^\\s>]+(?:=(?:"[^"]*"|'[^']*'))?`,
-      'gi'
-    );
-    html = html.replace(attrRegex, '');
+    // Step 8: Add extra wrapper to help with hydration issues
+    html = `<div class="safe-html-wrapper">${html}</div>`;
 
     return html;
   }
 
-  private removeFormattingTags(html: string): string {
-    // Remove opening and closing strong tags
-    html = html.replace(/<\/?strong[^>]*>/gi, '');
+  private processAttributes(html: string): string {
+    // Extract all tags
+    const tagRegex = /<[^>]+>/g;
+    return html.replace(tagRegex, (tag) => {
+      // Skip closing tags
+      if (tag.match(/^<\//)) return tag;
 
-    // Remove opening and closing b tags
-    html = html.replace(/<\/?b[^>]*>/gi, '');
-
-    // Remove opening and closing em tags
-    html = html.replace(/<\/?em[^>]*>/gi, '');
-
-    return html;
-  }
-
-  private cleanNode(node: Element): void {
-    // Process all child nodes
-    Array.from(node.children).forEach((child) => {
-      const tagName = child.tagName.toLowerCase();
-
-      // Check if this tag should be unwrapped (keep content, remove tag)
-      if (this.tagsToUnwrap.includes(tagName)) {
-        // Create a document fragment to hold the child's content
-        const fragment = document.createDocumentFragment();
-
-        // Move all child nodes to the fragment
-        while (child.firstChild) {
-          fragment.appendChild(child.firstChild);
-        }
-
-        // Replace the child with its content
-        if (child.parentNode) {
-          child.parentNode.replaceChild(fragment, child);
-        }
-
-        // Skip further processing for this node since it's been replaced
-        return;
+      // For each tag, remove all attributes except allowed ones
+      for (const attr of this.allowedAttributes) {
+        const attrRegex = new RegExp(`\\s${attr}=["'][^"']*["']`, 'gi');
+        tag = tag.replace(attrRegex, (match) => {
+          return match.toLowerCase();
+        });
       }
 
-      // Check if this tag is allowed, if not, replace with its content
-      if (!this.allowedTags.includes(tagName)) {
-        // Create a document fragment to hold the child's content
-        const fragment = document.createDocumentFragment();
-
-        // Move all child nodes to the fragment
-        while (child.firstChild) {
-          fragment.appendChild(child.firstChild);
-        }
-
-        // Replace the child with its content
-        if (child.parentNode) {
-          child.parentNode.replaceChild(fragment, child);
-        }
-
-        // Skip further processing for this node since it's been replaced
-        return;
-      }
-
-      // Keep only allowed attributes and remove all others
-      Array.from(child.attributes).forEach((attr) => {
-        if (!this.allowedAttributes.includes(attr.name)) {
-          child.removeAttribute(attr.name);
-        }
-      });
-
-      // Always remove style attribute
-      child.removeAttribute('style');
-
-      // Process children recursively
-      this.cleanNode(child);
+      // Remove all other attributes
+      return tag.replace(/\s\w+=(["'])[^"']*\1/g, '');
     });
   }
 
-  private removeEmptyTags(node: Element): void {
-    const childNodes = Array.from(node.children);
+  private ensureClosedTags(html: string): string {
+    // Check and fix unclosed paragraph tags
+    let processedHtml = html;
+    let openCount = (processedHtml.match(/<p[^>]*>/gi) || []).length;
+    let closeCount = (processedHtml.match(/<\/p>/gi) || []).length;
 
-    for (let i = childNodes.length - 1; i >= 0; i--) {
-      const child = childNodes[i];
-
-      // Recursively clean child nodes first
-      this.removeEmptyTags(child);
-
-      // Check if the node is empty (no text content and no children)
-      const isEmpty = !child.textContent?.trim() && child.children.length === 0;
-
-      // Remove empty nodes, but preserve img tags even if they're "empty"
-      if (isEmpty && child.tagName.toLowerCase() !== 'img') {
-        child.remove();
-      }
+    // Add missing closing tags
+    while (openCount > closeCount) {
+      processedHtml += '</p>';
+      closeCount++;
     }
-  }
 
-  private removeAllClasses(node: Element): void {
-    // Remove class attribute from current node
-    node.removeAttribute('class');
-
-    // Process all child nodes recursively
-    Array.from(node.children).forEach((child) => {
-      this.removeAllClasses(child);
-    });
+    return processedHtml;
   }
 }

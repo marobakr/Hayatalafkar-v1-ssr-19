@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
+import { IGetOrders } from 'src/app/pages/profile/components/orders/res/order.interface';
 import { AuthService } from '../auth/auth.service';
 import { API_CONFIG } from '../conf/api.config';
 
@@ -25,11 +26,11 @@ export class UserService {
     );
   }
 
-  getUserOrders(): Observable<any> {
+  getUserOrders(): Observable<IGetOrders> {
     const userData = this._authService.getUserData();
     const userId = userData?.id || '';
 
-    return this._http.get(
+    return this._http.get<IGetOrders>(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.GET_USER_ORDERS}/${userId}`
     );
   }
@@ -54,7 +55,7 @@ export class UserService {
     const userData = this._authService.getUserData();
     const userId = userData?.id || '';
 
-    return this._http.put(
+    return this._http.post(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.DEACTIVATE_USER}${userId}`,
       {}
     );
@@ -64,14 +65,32 @@ export class UserService {
     const userData = this._authService.getUserData();
     const userId = userData?.id || '';
 
-    return this._http.delete(
-      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.DELETE_USER}${userId}`
+    return this._http.post(
+      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.DELETE_USER}${userId}`,
+      {}
     );
   }
 
   getLocations(): Observable<any> {
     return this._http.get(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.LOCATION}`
+    );
+  }
+
+  updateUserInfo(userData: {
+    phone: string;
+    name: string;
+    password: string;
+  }): Observable<any> {
+    const user = this._authService.getUserData();
+    const userId = user?.id || '';
+    const data = new FormData();
+    data.append('phone', userData.phone);
+    data.append('name', userData.name);
+    data.append('password', userData.password);
+    return this._http.post(
+      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.UPDATE_USER_INFO}/${userId}`,
+      data
     );
   }
 }

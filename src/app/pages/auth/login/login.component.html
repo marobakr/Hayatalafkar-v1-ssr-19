@@ -1,4 +1,4 @@
-<section aria-labelledby="login-heading">
+<section aria-labelledby="login-heading" @formAnimation>
   <app-articles-header
     [title]="'auth.login.header.title' | translate"
     [subTitle]="'auth.login.header.subtitle' | translate"
@@ -12,7 +12,13 @@
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 lg:col-span-8">
           <!-- Left Section: Form -->
-          <form [formGroup]="loginForm" (ngSubmit)="submition()" novalidate>
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="submition()"
+            novalidate
+            @inputAnimation
+            [@shake]="shakeState()"
+          >
             <!-- Email/Phone Number -->
             <div class="mb-[30px]">
               <label
@@ -114,7 +120,7 @@
           </form>
         </div>
         <div class="hidden lg:block lg:col-span-4">
-          <figure>
+          <figure @imageAnimation>
             <img
               class="rtl:mr-auto ltr:ml-auto"
               loading="lazy"

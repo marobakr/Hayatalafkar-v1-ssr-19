@@ -1,36 +1,81 @@
-<section class="min-w-[60%] mx-auto">
-  <div class="container">
-    <div
-      class="wrapper relative z-10 flex flex-col items-center justify-center py-[40px] px-15"
-    >
-      <figure class="flex justify-center items-center mb-[35px]">
-        <img
-          loading="lazy"
-          src="/images/common/before-remove.png"
-          alt="Alert"
-          class="max-w-[150px] max-h-[150px]"
-        />
-      </figure>
-      <h3 class="text-title-size text-black mb">
-        {{ (alertConfig$ | async)?.title }}
-      </h3>
-      <p>{{ (alertConfig$ | async)?.message }}</p>
+<div
+  class="fixed inset-0 bg-black/30 z-50 flex items-center justify-center"
+  [class.hidden]="!(showAlert$ | async)"
+  (click)="onBackdropClick($event)"
+  role="dialog"
+  aria-modal="true"
+  [@fadeAnimation]="(showAlert$ | async) ? 'visible' : 'hidden'"
+>
+  <div
+    class="alert-wrapper min-w-[80%] md:min-w-[60%] max-w-[90%] mx-auto bg-white rounded-lg shadow-xl"
+    tabindex="-1"
+    aria-labelledby="alertTitle"
+    [attr.aria-describedby]="
+      (alertConfig$ | async)?.message ? 'alertMessage' : null
+    "
+    [@slideAnimation]="(showAlert$ | async) ? 'visible' : 'hidden'"
+    [class.cursor-pointer]="isNotificationType()"
+    (click)="handleAlertClick($event)"
+  >
+    <div class="container">
       <div
-        class="flex justify-between items-center mb-[30px] gap-4 flex-wrap mt-[45px]"
+        class="relative z-10 flex flex-col items-center justify-center py-[40px] px-6 md:px-15"
+        [class.pb-[20px]]="isNotificationType()"
+        [class.pb-[40px]]="!isNotificationType()"
       >
-        <button
-          class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#CBAC8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
-          (click)="onConfirm()"
+        <!-- Alert Image -->
+        <figure
+          class="flex justify-center items-center mb-[35px] animate-fadeIn"
         >
-          {{ (alertConfig$ | async)?.confirmText }}
-        </button>
-        <button
-          class="block w-full md:w-auto md:inline bg-white text-black cursor-pointer border border-[#8D8D8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
-          (click)="onCancel()"
+          <img
+            loading="lazy"
+            [src]="
+              (alertConfig$ | async)?.imagePath ||
+              '/images/common/before-remove.png'
+            "
+            [alt]="translatedTitle$ | async"
+            class="max-w-[150px] max-h-[150px]"
+          />
+        </figure>
+
+        <!-- Alert Title -->
+        <h3
+          id="alertTitle"
+          class="text-title-size text-black mb-2 text-center animate-fadeIn"
         >
-          {{ (alertConfig$ | async)?.cancelText }}
-        </button>
+          {{ translatedTitle$ | async }}
+        </h3>
+
+        <!-- Alert Message (if present) -->
+        @if (translatedMessage$ | async) {
+        <p id="alertMessage" class="text-center mb-6 animate-fadeIn">
+          {{ translatedMessage$ | async }}
+        </p>
+        }
+
+        <!-- Action Buttons (only for confirmation alerts) -->
+        @if (!isNotificationType()) {
+        <div
+          class="flex justify-center items-center gap-4 flex-wrap mt-[30px] mb-[30px]"
+        >
+          <!-- Confirm Button -->
+          <button
+            class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#CBAC8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 hover:bg-[#B99C7D] transition-colors duration-200"
+            (click)="onConfirm()"
+          >
+            {{ translatedConfirmText$ | async }}
+          </button>
+
+          <!-- Cancel Button -->
+          <button
+            class="block w-full md:w-auto md:inline bg-white text-black cursor-pointer border border-[#8D8D8D] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 hover:bg-gray-100 transition-colors duration-200"
+            (click)="onCancel()"
+          >
+            {{ translatedCancelText$ | async }}
+          </button>
+        </div>
+        }
       </div>
     </div>
   </div>
-</section>
+</div>

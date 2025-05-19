@@ -10,7 +10,7 @@ export const API_CONFIG = {
     GET_ALL: 'menu/products',
     GET_WITH_CATEGORY: 'menu/category/',
     GET_WITH_SUBCATEGORY: 'menu/subcategory/',
-    GET_WITH_SLUG: 'menu/product',
+    GET_WITH_SLUG: 'menu/products',
   },
 
   CATEGORY: {
@@ -40,9 +40,7 @@ export const API_CONFIG = {
     UPDATE_QUANTITY: 'orders/updateQuantity/',
     /* REMOVE FROM CART */
     REMOVE_FROM_CART: 'orders/removeFromCart/',
-    /* REMOVE ALL */
     REMOVE_ALL: 'orders/removeAllCart/',
-    /* PROMO CODE */
     PROMO_CODE: 'orders/checkPromoCode',
 
     /* CHECK CART */
@@ -57,17 +55,15 @@ export const API_CONFIG = {
     /* Pending */
     GET_USER_LAST_ORDER: 'users/neworders',
     ADD_NEW_ADDRESS: 'users/addNewAddress',
-    /* Pending */
     DEACTIVATE_USER: 'users/deactiveuser/',
-    /* Pending */
     DELETE_USER: 'users/deleteuser/',
-    /* Pending */
     LOCATION: 'menu/locations',
+    UPDATE_USER_INFO: 'updateprofile',
   },
 
-  /* Pending */
   WISHLIST: {
     STORE_WISH: 'wish',
     GET_USER_WISH: 'wish',
+    REMOVE_WISH: 'wish/delete/',
   },
 };

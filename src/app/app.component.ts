@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { NotificationComponent } from './shared/components/notification/notification.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { AlertComponent } from './shared/alert/alert.component';
     NavbarComponent,
     FooterComponent,
     AlertComponent,
+    NotificationComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

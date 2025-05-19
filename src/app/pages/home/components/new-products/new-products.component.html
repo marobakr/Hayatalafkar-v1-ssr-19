@@ -3,17 +3,17 @@
     <div class="flex items-center justify-between mb-6">
       <div>
         @if (_languageService.getIsArabic() | async) {
-        <h2 class="text-title-size font-bold">
+        <h3 class="text-title-size font-bold">
           <span class="text-muted-rose">
             {{ "newProducts.title" | translate }}
           </span>
           {{ "newProducts.subtitle" | translate }}
-        </h2>
+        </h3>
 
         } @else {
-        <h2 class="text-title-size text-[#333] font-light">
+        <h3 class="text-title-size text-[#333] font-light">
           {{ "newProducts.title" | translate }}
-        </h2>
+        </h3>
         }
       </div>
       <p class="title">

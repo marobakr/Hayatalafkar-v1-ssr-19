@@ -34,7 +34,7 @@ export interface Order {
   user_id: number;
   user_address_id: any;
   promo_code_id: any;
-  promo_code_value: string;
+  promo_code_value: number;
   subtotal: string;
   tax: any;
   shipping: any;
@@ -61,6 +61,7 @@ export interface OrderDetail {
   created_at: string;
   updated_at: string;
   product: IAllProduct;
+  animationState?: 'visible' | 'fadeOut';
 }
 
 export interface IUpdateQuantity {

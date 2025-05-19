@@ -42,6 +42,7 @@ export interface LatestProduct {
   product_counter: number;
   created_at: string;
   updated_at: string;
+  first_choice: string;
 }
 
 export interface Slider {
@@ -199,4 +200,5 @@ export interface BestProduct {
   product_counter: number;
   created_at: string;
   updated_at: string;
+  first_choice: any;
 }

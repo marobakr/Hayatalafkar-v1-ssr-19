@@ -9,6 +9,7 @@ import { IAboutUsOne, IAboutUsTwo } from './about-us.interface';
 })
 export class AboutUsService {
   apiService = inject(ApiService);
+
   getAboutUs(): Observable<IAboutUsOne> {
     return this.apiService.get<IAboutUsOne>(API_CONFIG.HOME.GET);
   }

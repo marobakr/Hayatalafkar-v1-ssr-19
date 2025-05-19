@@ -1,5 +1,5 @@
 <div
-  class="card-wrapper bg-white border border-gray-200 overflow-hidden relative"
+  class="card-wrapper h-full bg-white border border-gray-200 overflow-hidden relative"
 >
   <div class="btns absolute top-[30px] right-[25px] z-1 flex flex-col">
     <button
@@ -55,16 +55,17 @@
     </button>
     <button
       class="cursor-pointer relative"
-      (click)="addToCart()"
+      (click)="toggleCart()"
       [disabled]="isAddingToCart()"
       [class.opacity-50]="isAddingToCart()"
       [attr.aria-label]="
-        isInCart()
-          ? ('shared.update_cart_quantity' | translate)
+        isAddingToCart()
+          ? ('shared.loading' | translate)
+          : isInCart()
+          ? ('shared.remove_from_cart' | translate)
           : ('shared.add_to_cart' | translate)
       "
     >
-      {{ isAddingToCart() }}
       <figure>
         @if (isAddingToCart()) {
         <svg
@@ -88,9 +89,9 @@
           ></path>
         </svg>
         } @else if (isInCart()) {
-        <!-- Cart icon with check mark to indicate product is in cart -->
+        <!-- Cart icon with check mark to indicate product is in cart (clickable to remove) -->
         <svg
-          class="h-9 w-9 text-warm-tan"
+          class="h-9 w-9 text-warm-tan hover:text-muted-rose transition-colors"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
@@ -115,14 +116,23 @@
     </button>
   </div>
   <div class="img relative cursor-pointer">
-    <figure class="h-[386px] md:h-[334px]">
-      <img
-        class="w-full h-full"
-        [appImageUrl]="productData.main_image"
-        [imageEndpoint]="'uploads/products'"
-        alt="product image"
-      />
-    </figure>
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'product-details',
+        productData | customTranslate : 'slug'
+      ]"
+    >
+      <figure class="h-[386px] md:h-[334px]">
+        <img
+          class="w-full h-full"
+          [appImageUrl]="productData.main_image"
+          [imageEndpoint]="'uploads/products'"
+          alt="product image"
+        />
+      </figure>
+    </a>
     <!-- Offer Title -->
     @if (productData.sale_price) {
     <div
@@ -161,7 +171,8 @@
     } @else if (+productData.price === 0) {
     <!-- Price is 0, show message about product with choices -->
     <span class="text-muted-rose font-medium">
-      {{ "shared.price_varies" | translate }}
+      {{ productData.first_choice?.cuurent_value }}
+      {{ "shared.currency" | translate }}
     </span>
     } @else {
     <!-- Show regular price when no sale and price not zero -->

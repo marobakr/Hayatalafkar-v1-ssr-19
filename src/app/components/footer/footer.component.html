@@ -1,6 +1,6 @@
 <footer class="bg-white relative border-t border-gray-200 pb-[65px]">
   <div class="container mx-auto px-4 pt-8 sm:px-6 lg:px-8 relative z-10">
-    <div class="grid md:grid-cols-5 gap-8 ltr:text-left rtl:text-right">
+    <div class="grid lg:grid-cols-5 gap-8 ltr:text-left rtl:text-right">
       <!-- Column 1: Logo + Description -->
       <div class="space-y-4">
         <img
@@ -9,7 +9,9 @@
           class="h-8 mx-auto md:mx-0"
         />
         <p class="text-sm text-footer-color leading-relaxed">
-          {{ "footer.description" | translate }}
+          <app-safe-html
+            [content]="footerTitle | customTranslate : 'footer_for_text'"
+          ></app-safe-html>
         </p>
       </div>
 
@@ -96,14 +98,14 @@
         <ul class="space-y-2 text-sm text-footer-color">
           <li class="flex items-center">
             <a
-              href="https://api.whatsapp.com/send?phone=201278746444"
+              href="https://api.whatsapp.com/send?phone=984858584949949"
               target="_blank"
               rel="noopener noreferrer"
               class="text-footer-color hover:underline cursor-pointer flex items-center w-full"
               [attr.aria-label]="'footer.contact.whatsapp_chat' | translate"
             >
               <span class="mr-1">{{ "footer.contact.phone" | translate }}</span>
-              <span class="mx-1">01278746444</span>
+              <span class="mx-1">984858584949949 </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-4 ml-1 text-green-500"

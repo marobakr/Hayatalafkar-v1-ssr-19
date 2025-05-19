@@ -1,4 +1,5 @@
 {
+  "Complete_order": "Complete the application",
   "FAQ": {
     "Accordions": {
       "Accordion-1": "What departments do you offer?",
@@ -40,6 +41,15 @@
     },
     "slogan-text": "Shine with confidence, shop with care and safety"
   },
+  "account_management": {
+    "deactivate_button": "Deactivate Account",
+    "deactivate_description": "Temporarily disable your account. You can reactivate it later by logging in again.",
+    "deactivate_title": "Deactivate Account",
+    "delete_button": "Delete Account",
+    "delete_description": "Permanently delete your account and all associated data. This action cannot be undone.",
+    "delete_title": "Delete Account",
+    "title": "Account Management"
+  },
   "add": {
     "address": "add address",
     "new": {
@@ -48,6 +58,48 @@
   },
   "add_to_cart": "add to cart",
   "add_to_wishlist": "add to wishlist",
+  "alerts": {
+    "cart": {
+      "add_success": {
+        "title": "success"
+      },
+
+      "update_success": {
+        "title": "cart updated successfully"
+      },
+      "remoce_success": {
+        "title": "product removed from cart"
+      },
+      "remove_confirm": {
+        "cancel": "cancel",
+        "message": "make sure want to remove this product from your cart",
+        "title": "remove product from cart",
+        "yes": "yes"
+      },
+      "remove_error": {
+        "message": "failed to remove product from cart",
+        "title": "error"
+      }
+    },
+    "wishlist": {
+      "add_success": {
+        "title": "wishlist addedd sucess"
+      },
+      "remove_confirm": {
+        "cancel": "cancel",
+        "message": "make sure want to remove this product from your wishlist",
+        "title": "remove product from wishlist",
+        "yes": "yes"
+      },
+      "remove_error": {
+        "message": "failed to remove product from wishlist",
+        "title": "error"
+      },
+      "remove_success": {
+        "title": "product removed from wishlist"
+      }
+    }
+  },
   "all-total-price": "all total price",
   "articles": {
     "blogs": {
@@ -76,10 +128,9 @@
       "subtitle": "our latest news and articles",
       "title": "News & blogs"
     },
-
     "sidebar": {
-      "new-products-title": "new-products",
       "new-products": "best selling",
+      "new-products-title": "new-products",
       "newProducts": {
         "product-1": {
           "dates": "23 , jan 2025",
@@ -149,6 +200,10 @@
               "label": "Last Name ",
               "placeholder": "Write Your Last Name"
             },
+            "location": {
+              "label": "Location ",
+              "placeholder": "Select Your Location"
+            },
             "phone": {
               "label": "Phone Number ",
               "placeholder": "You Must Enter The Correct Phone Number"
@@ -158,39 +213,42 @@
               "placeholder": "Enter Your Country's Postal Code"
             }
           },
+          "title": "Add Address",
           "validation": {
-            "first_name": {
-              "required": "First name is required"
-            },
-            "last_name": {
-              "required": "Last name is required"
-            },
             "address": {
               "required": "Address is required"
             },
             "city": {
               "required": "City is required"
             },
-            "state": {
-              "required": "State is required"
-            },
             "country": {
               "required": "Country is required"
             },
-            "phone": {
-              "required": "Phone number is required",
-              "pattern": "Please enter a valid phone number"
-            },
             "email": {
-              "required": "Email is required",
-              "invalid": "Please enter a valid email address"
+              "invalid": "Please enter a valid email address",
+              "required": "Email is required"
+            },
+            "first_name": {
+              "required": "First name is required"
+            },
+            "last_name": {
+              "required": "Last name is required"
+            },
+            "location_id": {
+              "required": "Location is required"
+            },
+            "phone": {
+              "pattern": "Please enter a valid phone number",
+              "required": "Phone number is required"
             },
             "postalCode": {
-              "required": "Postal code is required",
-              "pattern": "Please enter a valid postal code"
+              "pattern": "Please enter a valid postal code",
+              "required": "Postal code is required"
+            },
+            "state": {
+              "required": "State is required"
             }
-          },
-          "title": "Add Address"
+          }
         },
         "password": {
           "button": "add password",
@@ -220,9 +278,6 @@
     }
   },
   "availability": "Available Products",
-  "unavailability": "Unavailable Products",
-  "page": "Page",
-  "of": "of",
   "banner": {
     "banner-about-us-1": "We believe that beauty begins with care, which is why we offer products designed to enhance your natural glow with confidence.",
     "banner-about-us-2": "Because your beauty is unique, we provide cosmetics that combine luxury and quality to give you lasting radiance.",
@@ -247,6 +302,9 @@
     "title": "our best",
     "viewAllProducts": "View All Products"
   },
+  "blogs": {
+    "title": "News and Articles"
+  },
   "cancel-order": "cancel order",
   "cart": {
     "cart-footer": {
@@ -254,19 +312,43 @@
       "delete-all": "delete all items",
       "discount-code": "discount code"
     },
+    "cart_cleared": "Cart cleared successfully",
+    "empty": {
+      "message": "Looks like you haven't added any items to your cart yet",
+      "shop-now": "Shop Now",
+      "title": "Your Cart is Empty"
+    },
+    "error": {
+      "add_failed": "Failed to add item to cart. Please try again.",
+      "clear_failed": "Failed to clear cart. Please try again.",
+      "remove_failed": "Failed to remove item from cart. Please try again.",
+      "update_failed": "Failed to update quantity. Please try again."
+    },
     "header": {
       "subtitle": "view all the products you need and would like to order and complete your order with us",
       "title": "shopping cart"
     },
-    "empty": {
-      "title": "Your Cart is Empty",
-      "message": "Looks like you haven't added any items to your cart yet",
-      "shop-now": "Shop Now"
+    "item_removed": "Item removed from cart successfully",
+    "promo-code": {
+      "enter-valid-code": "Please enter a valid promo code",
+      "error-applying": "Error applying promo code. Please try again.",
+      "invalid-code": "Invalid promo code. Please check and try again.",
+      "success": "Promo code applied successfully!"
     }
   },
   "change": {
     "address": "change address",
     "password": "change password"
+  },
+  "checkout": {
+    "header": {
+      "subtitle": "Complete your application and fill out all the required information"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "no_locations_available": "No locations available",
+    "no_locations_available_message": "Please contact support if you need assistance with locations"
   },
   "contact-us": {
     "cards": {
@@ -334,8 +416,6 @@
       "title": "Sections"
     }
   },
-  "newProducts.title": "products",
-  "newProducts.subtitle": "new products",
   "form": {
     "send": "send"
   },
@@ -363,19 +443,116 @@
     "title": "Beauty begins with an idea",
     "title-btn": "Shop Now"
   },
+  "in_stock": "in stock",
   "invoice": "invoice",
   "maps-subtitle": "riyadh 12244, saudi arabia 2567777, riyadh as aulaymaniyah",
+  "mega_menu": {
+    "beauty_accessories": {
+      "items": {
+        "artificial_nails": "Artificial Nails",
+        "eyelashes_adhesive": "Eyelashes Adhesive",
+        "false_eyelashes": "False Eyelashes"
+      },
+      "title": "Beauty Accessories"
+    },
+    "beauty_devices": {
+      "items": {
+        "body_hair_removal": "Body Hair Removal",
+        "facial_hair_removal": "Facial Hair Removal",
+        "nail_art": "Nail Art"
+      },
+      "title": "Beauty Devices"
+    },
+    "dental_care": {
+      "items": {
+        "breath_freshners": "Breath Freshners",
+        "dental_care_accessories": "Dental Care Accessories",
+        "tooth_brushes": "Tooth Brushes"
+      },
+      "title": "Dental Care"
+    },
+    "dietary_supplements": {
+      "items": {
+        "hair_supplements": "vitamins and dietary supplements for hair",
+        "skin_supplements": "vitamins and dietary supplements for skin"
+      },
+      "title": "Dietary Supplements"
+    },
+    "hair_care": {
+      "items": {
+        "antidandruff": "Antidandruff",
+        "antihair_loss": "Antihair Loss",
+        "antilice": "Antilice"
+      },
+      "title": "Hair Care"
+    },
+    "hair_styling": {
+      "items": {
+        "hair_colors": "Hair Colors",
+        "hair_frizing": "Hair Frizing",
+        "hair_straightening": "Hair Straightening"
+      },
+      "title": "Hair Styling"
+    },
+    "makeup": {
+      "items": {
+        "face_makeup": "Face Makeup",
+        "foundations": "Foundations",
+        "primers": "Primers"
+      },
+      "title": "Makeup"
+    },
+    "medical_equipments": {
+      "items": {
+        "face_masks": "Face Masks",
+        "hand_sanitizers": "Hand Sanitizers"
+      },
+      "title": "Medical Equipments"
+    },
+    "men_care": {
+      "items": {
+        "condoms": "Condoms",
+        "lubricants": "Lubricants",
+        "men_special_care": "Men Special Care"
+      },
+      "title": "Men Care"
+    },
+    "perfumes": {
+      "items": {
+        "eau_de_perfume": "Eau De Perfume",
+        "eau_de_toilette": "Eau De Toilette",
+        "perfume": "Perfume"
+      },
+      "title": "Perfumes"
+    },
+    "skin_care": {
+      "items": {
+        "facial_moisturisation": "Facial Moisturisation",
+        "facial_whitening": "Facial Whitening",
+        "sunscreens": "Sunscreens"
+      },
+      "title": "Skin Care"
+    },
+    "women_care": {
+      "items": {
+        "hair_removal": "Hair Removal",
+        "vaginal_washes": "Vaginal Washes",
+        "women_special_care": "Women Special Care"
+      },
+      "title": "Women Care"
+    }
+  },
   "my": {
     "requests": "my requests"
   },
   "navbar": {
+    "cart": "Cart",
     "languages": {
       "ar": "Arabic",
       "en": "English",
       "lang": "Language"
     },
     "logout": "Logout",
-    "profile": "Profile",
     "pages_Title": {
       "articles": {
         "title": "Articles"
@@ -396,8 +573,10 @@
         "title": "about us"
       }
     },
+    "profile": "Profile",
     "search": "Search",
-    "search_placeholder": "Search for products..."
+    "search_placeholder": "Search for products...",
+    "wishlist": "Wishlist"
   },
   "newProducts": {
     "alt-description": "Radiant skin and exceptional freshness.",
@@ -405,6 +584,8 @@
     "subtitle": "",
     "title": "New Products"
   },
+  "newProducts.subtitle": "new products",
+  "newProducts.title": "products",
   "news-articles": {
     "card-1": {
       "date": "March 19, 2025",
@@ -414,6 +595,7 @@
     "subtitle": "View All News",
     "title": "News and Articles"
   },
+  "of": "of",
   "offer-day": {
     "altTitle": "Special Offers",
     "card-1": {
@@ -461,14 +643,31 @@
     "order-status": "order status",
     "value": "pending"
   },
-  "profile": {
-    "title": "My Profile",
-    "subtitle": "follow your profile and register your data",
+  "out_of_stock": "out of stock",
+  "page": "Page",
+  "privacy": {
+    "title": "Privacy Policy"
+  },
+  "product_code": "product code ",
+  "product_details": {
     "tabs": {
-      "profile": "Personal Details",
-      "orders": "My Orders",
-      "address": "Manage Addresses",
-      "account": "Account Management"
+      "additional_info": "addition information",
+      "description": "description",
+      "reviews": "rating"
+    }
+  },
+  "profile": {
+    "address": {
+      "address_added_success": "Address added successfully",
+      "address_error": "Error adding address",
+      "error_title": "Error",
+      "form_invalid": "Please fill all required fields correctly",
+      "form_reset": "Form has been reset",
+      "info_title": "Information",
+      "locations_error": "Error fetching locations",
+      "success_title": "Success",
+      "user_info_error": "Error fetching user information",
+      "validation_title": "Validation Error"
     },
     "password": {
       "confirm-password": "Confirm Password",
@@ -479,43 +678,41 @@
       "placeholder-new-password": "Enter your new password",
       "update": "Update Password"
     },
-    "address": {
-      "success_title": "Success",
-      "error_title": "Error",
-      "validation_title": "Validation Error",
-      "info_title": "Information",
-      "address_added_success": "Address added successfully",
-      "address_error": "Error adding address",
-      "form_invalid": "Please fill all required fields correctly",
-      "user_info_error": "Error fetching user information",
-      "form_reset": "Form has been reset",
-      "locations_error": "Error fetching locations"
-    }
+    "subtitle": "follow your profile and register your data",
+    "tabs": {
+      "account": "Account Management",
+      "address": "Manage Addresses",
+      "orders": "My Orders",
+      "profile": "Personal Details"
+    },
+    "title": "My Profile"
   },
   "profile.orders": {
-    "title": "My Orders",
-    "order_number": "Order Number",
     "date": "Date",
-    "total": "Total",
-    "payment_method": "Payment Method",
     "items": "Items",
-    "view_details": "View Details",
     "no_orders": {
-      "title": "No Orders Yet",
-      "message": "You haven't placed any orders yet"
+      "message": "You haven't placed any orders yet",
+      "title": "No Orders Yet"
     },
-    "start_shopping": "Start Shopping"
+    "order_number": "Order Number",
+    "payment_method": "Payment Method",
+    "start_shopping": "Start Shopping",
+    "title": "My Orders",
+    "total": "Total",
+    "view_details": "View Details"
   },
-  "account_management": {
-    "title": "Account Management",
-    "deactivate_title": "Deactivate Account",
-    "deactivate_description": "Temporarily disable your account. You can reactivate it later by logging in again.",
-    "deactivate_button": "Deactivate Account",
-    "delete_title": "Delete Account",
-    "delete_description": "Permanently delete your account and all associated data. This action cannot be undone.",
-    "delete_button": "Delete Account"
+  "related-blog": {
+    "subtitle": "Related News & Articles",
+    "title": "Related News & Articles"
+  },
+  "related-products": {
+    "explore": "explore",
+    "title": "related products"
   },
   "reorder": "reorder",
+  "reset": {
+    "form": "Reset Form"
+  },
   "routes": {
     "about": "about",
     "blog": "blog",
@@ -550,70 +747,73 @@
     ]
   },
   "shared": {
+    "add_to_cart": "Add to cart",
+    "added_to_cart_success": "Item added to cart successfully",
+    "continue_shopping": "Continue Shopping",
     "currency": "SAR",
+    "go_to_cart": "Go to Cart",
     "offer": "25% Discount",
     "price_varies": "Price varies based on options",
     "readMore": "Read More",
     "shopping_now": "shopping now",
     "show-products": "buying the product ",
     "success": "Success",
-    "added_to_cart_success": "Item added to cart successfully",
-    "continue_shopping": "Continue Shopping",
-    "go_to_cart": "Go to Cart",
-    "add_to_cart": "Add to cart",
+    "updating": "Updating...",
+    "adding": "Adding...",
+    "update_cart": "update product quantity",
     "update_cart_quantity": "Update cart quantity"
   },
   "shopping": {
-    "header": {
-      "title": "All products",
-      "subtitle": "Shop the most recent products"
-    },
-    "view-category": "View category",
     "filter": {
-      "selected-filter": "selected filters",
-      "products-counts": "Products Count",
-      "items": "items",
       "active": "active",
+      "category": "Category",
       "filter-type": {
         "clear-all": "clear all"
       },
+      "items": "items",
       "price": {
-        "title": "price",
         "currency": "USD",
-        "reset": "Reset prices"
+        "reset": "Reset prices",
+        "title": "price"
       },
-      "category": "Category",
+      "products-counts": "Products Count",
+      "selected-filter": "selected filters",
       "subcategory": "Subcategory",
       "view-all-products": "View All Products"
     },
     "filter-box": {
       "title": "categories"
     },
-    "search": {
-      "placeholder": "Search for products",
-      "hint": "Looking for something specific?",
-      "button": "Search",
-      "no-results": "No products found",
-      "suggestions": "Try different keywords"
-    },
     "grid": {
-      "sort-by": "Sort by",
       "newest": "Newest",
-      "price-low-high": "Price: Low to High",
+      "popularity": "Popularity",
       "price-high-low": "Price: High to Low",
-      "popularity": "Popularity"
+      "price-low-high": "Price: Low to High",
+      "sort-by": "Sort by"
     },
-    "pagination": {
-      "previous": "Previous",
-      "next": "Next",
-      "page": "Page",
-      "of": "of"
+    "header": {
+      "subtitle": "Shop the most recent products",
+      "title": "All products"
     },
     "no-products": {
-      "title": "No products found",
+      "button": "Clear filters",
       "description": "Try clearing some filters or try a different search term",
-      "button": "Clear filters"
+      "title": "No products found"
     },
+    "pagination": {
+      "next": "Next",
+      "of": "of",
+      "page": "Page",
+      "previous": "Previous"
+    },
+    "search": {
+      "button": "Search",
+      "hint": "Looking for something specific?",
+      "no-results": "No products found",
+      "placeholder": "Search for products",
+      "suggestions": "Try different keywords"
+    },
+    "view-category": "View category",
     "view-options": {
       "grid": "Grid view",
       "list": "List view"
@@ -623,12 +823,48 @@
     "product": "show product"
   },
   "signOut": "sign Out",
+  "submit-button-aria-label": "submit button",
+  "summary": {
+    "complete-the-order": "complete the order",
+    "delivery": "delivery",
+    "discount-coupon": "discount coupon",
+    "items": "items",
+    "subtotal": "subtotal",
+    "summary": "summary",
+    "tax": "tax",
+    "total": "total"
+  },
   "total-price": {
     "total-price": "total price",
     "value": "2000 SAR"
   },
   "track-order": " track order",
+  "unavailability": "Unavailable Products",
+  "update_password_success": "update password success",
+  "update_profile_success": "personal information hase been changed",
+  "validation": {
+    "email-format": "Email or phone must be a valid email address",
+    "email-required": "Email or phone is required",
+    "name-min-length": "Name must be at least 3 characters long",
+    "name-required": "Name is required",
+    "password-min-length": "Password must be at least 6 characters long",
+    "password-mismatch": "Passwords do not match",
+    "password-required": "Password is required",
+    "phone-format": "Phone must be a valid number",
+    "phone-required": "Phone is required",
+    "your-msg-min-length": "Your message must be at least 10 characters long",
+    "your-msg-required": "Your message is required"
+  },
   "wishlist": {
+    "auth": {
+      "message": "You need to be logged in to view and manage your wishlist items.",
+      "title": "Please Login to Access Your Wishlist"
+    },
+    "empty": {
+      "message": "Looks like you haven't added any items to your wishlist yet",
+      "shop-now": "Start Shopping",
+      "title": "Your Wishlist is Empty"
+    },
     "header": {
       "subtitle": "show your favorite products",
       "title": "favourite"
@@ -656,137 +892,6 @@
       "add-all": "add all",
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
-    },
-    "empty": {
-      "title": "Your Wishlist is Empty",
-      "message": "Looks like you haven't added any items to your wishlist yet",
-      "shop-now": "Start Shopping"
     }
-  },
-  "summary": {
-    "items": "items",
-    "subtotal": "subtotal",
-    "delivery": "delivery",
-    "tax": "tax",
-    "discount-coupon": "discount coupon",
-    "total": "total",
-    "summary": "summary",
-    "complete-the-order": "complete the order"
-  },
-  "mega_menu": {
-    "dietary_supplements": {
-      "title": "Dietary Supplements",
-      "items": {
-        "hair_supplements": "vitamins and dietary supplements for hair",
-        "skin_supplements": "vitamins and dietary supplements for skin"
-      }
-    },
-    "perfumes": {
-      "title": "Perfumes",
-      "items": {
-        "perfume": "Perfume",
-        "eau_de_perfume": "Eau De Perfume",
-        "eau_de_toilette": "Eau De Toilette"
-      }
-    },
-    "skin_care": {
-      "title": "Skin Care",
-      "items": {
-        "sunscreens": "Sunscreens",
-        "facial_moisturisation": "Facial Moisturisation",
-        "facial_whitening": "Facial Whitening"
-      }
-    },
-    "hair_care": {
-      "title": "Hair Care",
-      "items": {
-        "antihair_loss": "Antihair Loss",
-        "antidandruff": "Antidandruff",
-        "antilice": "Antilice"
-      }
-    },
-    "hair_styling": {
-      "title": "Hair Styling",
-      "items": {
-        "hair_colors": "Hair Colors",
-        "hair_frizing": "Hair Frizing",
-        "hair_straightening": "Hair Straightening"
-      }
-    },
-    "men_care": {
-      "title": "Men Care",
-      "items": {
-        "men_special_care": "Men Special Care",
-        "condoms": "Condoms",
-        "lubricants": "Lubricants"
-      }
-    },
-    "women_care": {
-      "title": "Women Care",
-      "items": {
-        "vaginal_washes": "Vaginal Washes",
-        "women_special_care": "Women Special Care",
-        "hair_removal": "Hair Removal"
-      }
-    },
-    "medical_equipments": {
-      "title": "Medical Equipments",
-      "items": {
-        "face_masks": "Face Masks",
-        "hand_sanitizers": "Hand Sanitizers"
-      }
-    },
-    "dental_care": {
-      "title": "Dental Care",
-      "items": {
-        "dental_care_accessories": "Dental Care Accessories",
-        "tooth_brushes": "Tooth Brushes",
-        "breath_freshners": "Breath Freshners"
-      }
-    },
-    "makeup": {
-      "title": "Makeup",
-      "items": {
-        "face_makeup": "Face Makeup",
-        "primers": "Primers",
-        "foundations": "Foundations"
-      }
-    },
-    "beauty_accessories": {
-      "title": "Beauty Accessories",
-      "items": {
-        "artificial_nails": "Artificial Nails",
-        "false_eyelashes": "False Eyelashes",
-        "eyelashes_adhesive": "Eyelashes Adhesive"
-      }
-    },
-    "beauty_devices": {
-      "title": "Beauty Devices",
-      "items": {
-        "nail_art": "Nail Art",
-        "facial_hair_removal": "Facial Hair Removal",
-        "body_hair_removal": "Body Hair Removal"
-      }
-    }
-  },
-  "validation": {
-    "name-required": "Name is required",
-    "name-min-length": "Name must be at least 3 characters long",
-    "phone-required": "Phone is required",
-    "phone-format": "Phone must be a valid number",
-    "email-required": "Email or phone is required",
-    "email-format": "Email or phone must be a valid email address",
-    "your-msg-required": "Your message is required",
-    "your-msg-min-length": "Your message must be at least 10 characters long",
-    "password-required": "Password is required",
-    "password-min-length": "Password must be at least 6 characters long",
-    "password-mismatch": "Passwords do not match"
-  },
-  "submit-button-aria-label": "submit button",
-  "blogs": {
-    "title": "News and Articles"
-  },
-  "privacy": {
-    "title": "Privacy Policy"
   }
 }

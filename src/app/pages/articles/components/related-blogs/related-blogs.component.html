@@ -1,45 +1,54 @@
-<section class="container mx-auto px-4 my-[60px]">
+<section class="container mx-auto my-[60px]" @fadeIn>
   <!-- Section Header -->
   @if (lightLabel) {
-  <div class="flex items-center justify-between mb-[35px] font-bold">
-    <h2 class="text-[8px] md:text-title-size">
+  <div
+    class="flex flex-col sm:flex-row items-center sm:justify-between mb-[35px] font-bold"
+  >
+    <h4 class="text-[8px] sm:text-base md:text-title-size mb-4 sm:mb-0">
       {{ "news-articles.main-title" | translate }}
 
       <span class="text-muted-rose">
         {{ "news-articles.title" | translate }}
       </span>
-    </h2>
+    </h4>
 
     <a
       [routerLink]="['/', currentLang$ | async, 'blogs']"
-      class="text-[5px] md:text-subtitle-size text-white bg-warm-tan rounded-full py-[13px] px-[35px]"
+      class="text-[5px] sm:text-xs md:text-subtitle-size text-white bg-warm-tan rounded-full py-[8px] sm:py-[13px] px-[20px] sm:px-[35px] transition-all hover:bg-[#b99979] focus:outline-none focus:ring-2 focus:ring-[#cbac8d]"
     >
       {{ "news-articles.title" | translate }}
     </a>
   </div>
   } @else {
-  <div class="mb-[35px]">
-    <h2 class="">
+  <div class="mb-6 text-center">
+    <p class="text-black text-base sm:text-lg md:text-price-size mb-3 sm:mb-6">
+      {{ "related-blog.title" | translate }}
+    </p>
+    <h2
+      class="text-xl sm:text-2xl md:text-start-size font-semibold mb-6 sm:mb-9"
+    >
       {{ "news-articles.main-title" | translate }}
 
-      <span class="text-black text-[24px]">
-        {{ "blogs.title" | translate }}
+      <span class="text-muted-rose">
+        {{ "related-blog.subtitle" | translate }}
       </span>
     </h2>
-
-    <a
-      class="text-[5px] md:text-subtitle-size text-white bg-warm-tan rounded-full py-[13px] px-[35px]"
-    >
-      {{ "news-articles.title" | translate }}
-    </a>
   </div>
   }
 
   <!-- Responsive Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 related-blogs-grid"
+    @blogAnimation
+  >
     @if (relatedBlogs && relatedBlogs.length > 0) { @for (blog of relatedBlogs;
     track blog.id) {
-    <div class="bg-white">
+    <div
+      class="bg-white rounded-xl shadow-sm hover:shadow-md blog-card transition-all"
+      [@hoverAnimation]="blogHoverStates[blog.id]"
+      (mouseenter)="onBlogMouseEnter(blog.id)"
+      (mouseleave)="onBlogMouseLeave(blog.id)"
+    >
       <a
         [routerLink]="[
           '/',
@@ -47,21 +56,29 @@
           'blog',
           blog | customTranslate : 'slug'
         ]"
+        class="block focus:outline-none focus:ring-2 focus:ring-warm-tan"
       >
-        <figure class="mb-[15px] rounded-2xl overflow-hidden cursor-pointer">
+        <figure
+          class="mb-[15px] rounded-t-xl overflow-hidden cursor-pointer h-[200px] sm:h-[220px] md:h-[250px]"
+        >
           <img
             loading="lazy"
             [appImageUrl]="blog.main_image"
             [imageEndpoint]="'uploads/blogs'"
             alt="article"
-            class="w-full h-[250px] object-cover"
+            class="w-full h-full object-cover"
+            [@imageAnimation]="imageHoverStates[blog.id]"
+            (mouseenter)="onImageMouseEnter(blog.id)"
+            (mouseleave)="onImageMouseLeave(blog.id)"
           />
         </figure>
       </a>
-      <div class="p-4">
+      <div class="p-4 blog-card-content">
         <!-- ArticleDate -->
-        <div class="built text-[14px] text-[#333] mb-[13px] relative">
-          <div class="classs text-[14px] text-[#333] mb-[13px]">
+        <div
+          class="built text-[12px] sm:text-[14px] text-[#333] mb-[8px] sm:mb-[13px] relative"
+        >
+          <div class="classs text-[12px] sm:text-[14px] text-[#333]">
             {{ blog.blog_date }}
           </div>
           <div
@@ -69,22 +86,20 @@
           ></div>
         </div>
         <!-- ArticleTitle -->
-        <h1 class="text-subtitle-size text-black mb-[15px] font-semibold">
+        <h2
+          class="text-sm sm:text-subtitle-size text-black mb-[10px] sm:mb-[15px] font-semibold line-clamp-2"
+        >
           {{ blog | customTranslate : "blog_title" }}
-        </h1>
+        </h2>
 
         <!-- ArticleDescription -->
-        <h3
-          [ngClass]="{
-            'mb-[23px]': true,
-            'mb-[10px]': !false
-          }"
-          class="text-description-size line-clamp-1 whitespace-normal leading-relaxed tracking-normal text-base"
+        <div
+          class="blog-description text-xs sm:text-description-size line-clamp-2 sm:line-clamp-1 whitespace-normal leading-relaxed tracking-normal text-base mb-[15px] sm:mb-[23px]"
         >
           <app-safe-html
             [content]="blog | customTranslate : 'blog_text'"
           ></app-safe-html>
-        </h3>
+        </div>
 
         <!-- Read More -->
         <a
@@ -94,8 +109,7 @@
             'blog',
             blog | customTranslate : 'slug'
           ]"
-          href="#"
-          class="text-muted-rose text-[14px] font-bold underline"
+          class="text-muted-rose text-[12px] sm:text-[14px] font-bold underline hover:text-[#b99979] transition-colors mt-auto"
         >
           {{ "shared.readMore" | translate }}
         </a>

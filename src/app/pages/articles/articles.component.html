@@ -11,9 +11,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-11 items-start">
       <div class="lg:col-span-8 text-justify order-2 lg:order-1">
         @if (loading) {
-        <div class="loading-spinner">
-          <div class="spinner"></div>
-        </div>
+        <app-loading></app-loading>
+
         } @else if (error) {
         <div class="text-center py-8">
           <p class="text-red-500">
@@ -85,7 +84,7 @@
           <!-- First Card  -->
           <div class="card md:flex flex-wrap justify-between block">
             @for (latestProduct of latestProducts.slice(0,4); track $index) {
-            <div class="flex gap-2 items-center mb-3">
+            <div class="flex gap-2 items-center mb-8">
               <a
                 class="cursor-pointer"
                 href="#"
@@ -112,7 +111,7 @@
                   {{ latestProduct | customTranslate : "name" }}
                 </p>
                 <div
-                  class="mb-1 text-description-size font-semibold text-black"
+                  class="mb-1 text-description-size font-semibold text-black line-clamp-2"
                 >
                   <app-safe-html
                     [content]="latestProduct | customTranslate : 'description'"
@@ -128,12 +127,11 @@
         </div>
 
         <!-- New  Products -->
-        <div class="newProducts mb-[60px]">
+        <!-- <div class="newProducts mb-[60px]">
           <app-section-heading
             class="mb-3"
             [sectionName]="'articles.sidebar.new-products' | translate"
           ></app-section-heading>
-          <!-- First Card  -->
           @for (latestProduct of latestProducts.slice(0, 4); track $index) {
           <div class="flex gap-2 items-center mb-3">
             <figure>
@@ -152,10 +150,14 @@
               </p>
 
               <p class="mb-1 text-description-size font-semibold text-black">
+                {{ latestProduct | customTranslate : "name" }}
+              </p>
+
+              <div class="mb-1 text-description-size font-semibold text-black">
                 <app-safe-html
                   [content]="latestProduct | customTranslate : 'description'"
                 ></app-safe-html>
-              </p>
+              </div>
 
               <div class="date underline text-muted-rose font-semibold">
                 {{ latestProduct.created_at | date : "dd MMMM yyyy" }}
@@ -163,7 +165,7 @@
             </div>
           </div>
           }
-        </div>
+        </div> -->
 
         <app-talent-image-card
           [imagePath]="'/images/news/13.png'"

@@ -7,7 +7,7 @@
   >
     <!-- Image Column -->
     <div class="hidden lg:flex flex-col justify-between flex-grow-1">
-      <figure>
+      <figure class="main_Image_Animation">
         <img
           loading="lazy"
           [appImageUrl]="aboutUs.main_image"
@@ -64,9 +64,9 @@
 
     <!-- Text Column -->
     <div class="w-full lg:w-1/2 space-y-6">
-      <h1 class="text-black font-bold text-title-size mb-6 mt-8">
+      <h4 class="text-black font-bold text-title-size mb-6 mt-8">
         {{ "hero.about-us.title" | translate }}
-      </h1>
+      </h4>
       <h2 class="text-[2.8125rem] font-medium text-black mb-[35px]">
         {{ "hero.about-us.journey" | translate }}
         <span class="text-muted-rose">

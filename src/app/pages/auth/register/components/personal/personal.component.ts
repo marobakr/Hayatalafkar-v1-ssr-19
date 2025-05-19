@@ -1,5 +1,15 @@
+import {
+  animate,
+  keyframes,
+  query,
+  stagger,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -10,11 +20,11 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
-import { LanguageService } from '../../../../../core/services/lang/language.service';
-import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 
 // Custom validator to check if passwords match
 function passwordMatchValidator(
@@ -43,6 +53,76 @@ function passwordMatchValidator(
   ],
   templateUrl: './personal.component.html',
   styleUrl: './personal.component.css',
+  animations: [
+    trigger('formAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('fieldAnimation', [
+      transition(':enter', [
+        query(
+          '.flex-grow-1, div[class*=mb-]',
+          [
+            style({ opacity: 0, transform: 'translateY(15px)' }),
+            stagger(80, [
+              animate(
+                '400ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('iconAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.5) rotate(-10deg)' }),
+        animate(
+          '600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          style({ opacity: 1, transform: 'scale(1) rotate(0deg)' })
+        ),
+      ]),
+    ]),
+    trigger('pulse', [
+      transition(':enter', [
+        animate(
+          '1s',
+          keyframes([
+            style({ transform: 'scale(1)', offset: 0 }),
+            style({ transform: 'scale(1.05)', offset: 0.5 }),
+            style({ transform: 'scale(1)', offset: 1.0 }),
+          ])
+        ),
+      ]),
+    ]),
+    trigger('shake', [
+      state(
+        'idle',
+        style({
+          transform: 'translateX(0)',
+        })
+      ),
+      state(
+        'shake',
+        style({
+          transform: 'translateX(0)',
+        })
+      ),
+      transition('idle => shake', [
+        animate('50ms', style({ transform: 'translateX(-10px)' })),
+        animate('100ms', style({ transform: 'translateX(10px)' })),
+        animate('100ms', style({ transform: 'translateX(-10px)' })),
+        animate('100ms', style({ transform: 'translateX(10px)' })),
+        animate('50ms', style({ transform: 'translateX(0)' })),
+      ]),
+    ]),
+  ],
 })
 export class PersonalComponent implements OnInit {
   private _fb = inject(FormBuilder);
@@ -55,6 +135,9 @@ export class PersonalComponent implements OnInit {
 
   registerForm!: FormGroup;
   isLoading = false;
+
+  // Animation state
+  shakeState = signal('idle');
 
   ngOnInit(): void {
     this.initForm();
@@ -77,6 +160,7 @@ export class PersonalComponent implements OnInit {
   submition() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      this.triggerShakeAnimation();
       return;
     }
 
@@ -104,6 +188,7 @@ export class PersonalComponent implements OnInit {
             this._toastr.success('Registration successful');
           } else {
             this._toastr.error('Registration failed');
+            this.triggerShakeAnimation();
           }
         },
         error: (error) => {
@@ -127,8 +212,16 @@ export class PersonalComponent implements OnInit {
               error?.error?.message || 'Registration failed. Please try again.';
             this._toastr.error(errorMessage);
           }
+          this.triggerShakeAnimation();
         },
       });
+  }
+
+  triggerShakeAnimation() {
+    this.shakeState.set('shake');
+    setTimeout(() => {
+      this.shakeState.set('idle');
+    }, 500);
   }
 
   // Helper methods for template

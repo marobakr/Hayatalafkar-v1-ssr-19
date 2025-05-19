@@ -1,7 +1,7 @@
 <div class="bg-white">
   <div class="relative mb-[13px]">
     <!-- ArticleImage -->
-    <figure class="rounded-xl overflow-hidden">
+    <figure class="rounded-xl overflow-hidden main_Image_Animation">
       <img
         loading="lazy"
         [appImageUrl]="blogData.main_image"
@@ -24,12 +24,12 @@
       ></div>
     </div>
     <!-- ArticleTitle -->
-    <h1 class="text-subtitle-size text-black mb-[15px] font-semibold">
+    <h3 class="text-subtitle-size text-black mb-[15px] font-semibold">
       {{ blogData | customTranslate : "blog_title" }}
-    </h1>
+    </h3>
 
     <!-- ArticleDescription -->
-    <h3
+    <div
       [ngClass]="{
         'mb-[23px]': true,
         'mb-[10px]': !false
@@ -39,7 +39,7 @@
       <app-safe-html
         [content]="blogData | customTranslate : 'blog_text'"
       ></app-safe-html>
-    </h3>
+    </div>
 
     <!-- Read More -->
     <a

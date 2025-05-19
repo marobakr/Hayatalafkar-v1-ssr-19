@@ -28,26 +28,31 @@
             {{ "all-total-price" | translate }}
           </span>
         </div>
+        @if (isLoading) {
+        <app-loading></app-loading>
+        } @else {
         <!-- Cart Items -->
-        <div class="cart-items-container">
-          @for (item of items(); track item.product_id) {
+        <div class="cart-items-container" [@listAnimation]>
+          @for (item of orderDetails(); track item.product_id) {
           <div
             class="cart-item block md:flex items-center justify-between flex-wrap mb-8 py-6 px-[23px] pb-6 border-b-1 border-[#8D8D8D]"
+            [@itemState]="item.animationState || 'visible'"
+            (@itemState.done)="onAnimationDone($event, item)"
           >
             <!-- Image && Product Name -->
             <div
               class="flex justify-start lg:ltr:pr-15 lg:rtl:pl-15 lg:justify-between items-center capitalize gap-[10px] mb-5 md:mb-0"
             >
               <!-- Remove Item -->
-              <div
-                class="close cursor-pointer"
-                (click)="removeItem(item.product_id)"
-              >
+              <div class="close cursor-pointer" (click)="removeItem(item)">
                 <figure class="mx-0 remove-icon">
-                  <img
-                    src="./assets/images/wishlist/remove.svg"
-                    alt="remove item"
-                  />
+                  @if(isRemovingItem && removingItemId === item.id) {
+                  <div
+                    class="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+                  ></div>
+                  } @else {
+                  <img src="/images/wishlist/remove.svg" alt="remove item" />
+                  }
                 </figure>
               </div>
 
@@ -67,6 +72,7 @@
                 />
                 }
               </figure>
+
               <div class="details">
                 <h3
                   [title]="item.product | customTranslate : 'name'"
@@ -74,45 +80,65 @@
                 >
                   {{ item.product | customTranslate : "name" }}
                 </h3>
-                <p class="text-[#333] text-[14px]">
-                  {{ item.product | customTranslate : "description" }}
-                </p>
+                <div class="text-[#333] text-[14px] max-w-[150px] text-wrap">
+                  <app-safe-html
+                    [content]="item.product | customTranslate : 'description'"
+                  ></app-safe-html>
+                </div>
               </div>
             </div>
-            <!-- Price & Quantity -->
 
+            <!-- Price & Quantity -->
             <div
-              class="flex justify-between items-center flex-grow-1 flex-row-reverse md:flex-row mb-5 md:mb-0"
+              class="flex justify-between items-center flex-row-reverse md:flex-row mb-5 md:mb-0"
             >
               <!-- Price -->
-              <div class="text-[#333] text-category-size font-bold flex-grow-1">
+              <div class="text-[#333] text-category-size font-bold">
                 {{ formatPrice(item.unit_price) }}
                 {{ "shared.currency" | translate }}
               </div>
-              <!-- Quantity -->
+            </div>
 
-              <div class="relative flex items-center gap-0 max-w-[8rem]">
-                <button
-                  type="button"
-                  (click)="decreaseQuantity(item)"
-                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-l-2xl rtl:rounded-r-2xl px-[13px] h-[42px] flex items-center justify-center"
-                >
-                  <span class="text-xl font-medium">−</span>
-                </button>
-                <input
-                  type="text"
-                  [value]="item.quantity"
-                  readonly
-                  class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
-                />
-                <button
-                  type="button"
-                  (click)="increaseQuantity(item)"
-                  class="bg-transparent border border-[#8D8D8D] ltr:rounded-r-2xl rtl:rounded-l-2xl px-[13px] h-[42px] flex items-center justify-center"
-                >
-                  <span class="text-xl font-medium">+</span>
-                </button>
-              </div>
+            <!-- Quantity -->
+            <div class="relative flex items-center gap-0 max-w-[8rem]">
+              <button
+                type="button"
+                [disabled]="
+                  isAddingItem &&
+                  (updatingItemId === item.product_id ||
+                    removingItemId === item.product_id)
+                "
+                (click)="decreaseQuantity(item)"
+                class="cursor-pointer bg-transparent border border-[#8D8D8D] ltr:rounded-l-2xl rtl:rounded-r-2xl px-[13px] h-[42px] flex items-center justify-center"
+              >
+                <span class="text-xl font-medium">−</span>
+              </button>
+
+              <input
+                type="text"
+                [value]="item.quantity"
+                readonly
+                class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
+              />
+
+              <button
+                type="button"
+                [disabled]="
+                  isAddingItem &&
+                  (updatingItemId === item.product_id ||
+                    removingItemId === item.product_id)
+                "
+                (click)="increaseQuantity(item)"
+                class="cursor-pointer bg-transparent border border-[#8D8D8D] ltr:rounded-r-2xl rtl:rounded-l-2xl px-[13px] h-[42px] flex items-center justify-center"
+              >
+                @if(isAddingItem && updatingItemId === item.product_id) {
+                <div
+                  class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+                ></div>
+                } @else {
+                <span class="text-xl font-medium">+</span>
+                }
+              </button>
             </div>
 
             <!-- Item Total -->
@@ -120,11 +146,12 @@
               class="flex justify-between items-center text-description-size text-[#333] font-semibold"
             >
               <p>{{ "shared.currency" | translate }}</p>
-              <p>{{ formatPrice(calculateItemTotal(item)) }}</p>
+              <p>{{ formatPrice(item.subtotal) }}</p>
             </div>
           </div>
           }
         </div>
+        }
         <!-- Cart Footer -->
         <div class="flex items-center justify-between">
           <div
@@ -133,7 +160,7 @@
             <form
               [formGroup]="promoCodeForm"
               (ngSubmit)="applyPromoCode()"
-              class="flex items-center justify-between w-full"
+              class="flex items-center justify-between w-full flex-wrap"
             >
               <input
                 formControlName="code"
@@ -141,13 +168,75 @@
                 class="bg-transparent border-0 outline-none flex-grow text-[#333] text-category-size"
                 [placeholder]="'cart.cart-footer.discount-code' | translate"
               />
+
               <button
                 type="submit"
                 [disabled]="!promoCodeForm.valid || isPromoCodeLoading"
-                class="text-white bg-warm-tan rounded-[50px] border text-description-size py-[8px] px-[16px]"
+                class="cursor-pointer text-white bg-warm-tan rounded-[50px] border text-description-size py-[8px] px-[16px]"
               >
+                @if (isPromoCodeLoading) {
+                <span
+                  class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                ></span>
+                } @else {
                 {{ "cart.cart-footer.active-the-code" | translate }}
+                }
               </button>
+
+              <div class="w-full">
+                @if (promoCodeError) {
+                <div class="flex items-center text-muted-rose text-sm">
+                  <svg
+                    class="w-4 h-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>{{ promoCodeError }}</span>
+                </div>
+                } @if (promoCodeSuccess) {
+                <div class="flex items-center text-green-600 text-sm">
+                  <svg
+                    class="w-4 h-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>{{ promoCodeSuccess }}</span>
+                </div>
+                } @if (promoCodeForm.get('code')?.invalid &&
+                promoCodeForm.get('code')?.touched) {
+                <div class="flex items-center text-muted-rose text-sm">
+                  <svg
+                    class="w-4 h-4 mr-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span>{{
+                    "cart.promo-code.enter-valid-code" | translate
+                  }}</span>
+                </div>
+                }
+              </div>
             </form>
           </div>
 
@@ -155,10 +244,59 @@
             class="text-end rtl:text-end text-muted-rose text-description-size font-bold capitalize underline flex-grow-1 cursor-pointer"
             (click)="clearCart()"
           >
+            @if(isClearingCart) {
+            <div
+              class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+            ></div>
+            } @else {
             {{ "wishlist.wishlist-footer.delete-all" | translate }}
+            }
           </span>
         </div>
-        } @else {
+
+        <!-- Cart Status Messages -->
+        @if(cartUpdateSuccess || removeItemError) {
+        <div class="mt-4">
+          @if(cartUpdateSuccess) {
+          <div
+            class="flex items-center text-green-600 text-sm bg-green-50 p-2 rounded"
+          >
+            <svg
+              class="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ cartUpdateSuccess }}</span>
+          </div>
+          } @if(removeItemError) {
+          <div
+            class="flex items-center text-muted-rose text-sm bg-red-50 p-2 rounded"
+          >
+            <svg
+              class="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ removeItemError }}</span>
+          </div>
+          }
+        </div>
+        } } @else {
+        <!-- Empty Cart -->
         <div
           class="flex items-center justify-end min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
         >
@@ -205,6 +343,7 @@
         </div>
         }
       </div>
+
       <!-- this acts as an offset -->
       <div class="hidden lg:block lg:col-span-1 pb-6 xl:pb-0"></div>
 
@@ -223,14 +362,15 @@
             class="flex items-center justify-between pb-[38px] pt-[23px] text-[#333] text-category-size font-medium"
           >
             <span> {{ "summary.items" | translate }} </span>
-            <span> {{ itemCount() }} </span>
+            <span> {{ orderDetails().length }} </span>
           </div>
           <div
             class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
           >
             <span> {{ "summary.subtotal" | translate }} </span>
             <span>
-              {{ formatPrice(subtotal()) }} {{ "shared.currency" | translate }}
+              {{ formatPrice(order()?.subtotal) }}
+              {{ "shared.currency" | translate }}
             </span>
           </div>
           <div
@@ -238,7 +378,8 @@
           >
             <span> {{ "summary.delivery" | translate }} </span>
             <span>
-              {{ formatPrice(shipping()) }} {{ "shared.currency" | translate }}
+              {{ formatPrice(order()?.promo_code_id) }}
+              {{ "shared.currency" | translate }}
             </span>
           </div>
           <div
@@ -246,16 +387,18 @@
           >
             <span> {{ "summary.tax" | translate }} </span>
             <span>
-              {{ formatPrice(tax()) }} {{ "shared.currency" | translate }}
+              {{ formatPrice(order()?.tax) }}
+              {{ "shared.currency" | translate }}
             </span>
           </div>
-          @if (discount() !== '0') {
+          @if (order()?.promo_code_value !== 0) {
           <div
             class="flex items-center justify-between pb-[44px] text-[#333] text-category-size font-medium border-b border-[#8D8D8D]"
           >
             <span> {{ "summary.discount-coupon" | translate }} </span>
             <span class="text-[#C00000]">
-              -{{ formatPrice(discount()) }} {{ "shared.currency" | translate }}
+              -{{ formatPrice(order()?.promo_code_value) }}
+              {{ "shared.currency" | translate }}
             </span>
           </div>
           }
@@ -267,8 +410,7 @@
               "summary.total" | translate
             }}</span>
             <span class="text-black text-category-size font-medium"
-              >{{ formatPrice(total()) }}
-              {{ "shared.currency" | translate }}</span
+              >{{ order().subtotal }} {{ "shared.currency" | translate }}</span
             >
           </div>
 

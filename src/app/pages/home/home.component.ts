@@ -1,9 +1,17 @@
+import {
+  animate,
+  query,
+  stagger,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component, inject, OnInit } from '@angular/core';
 import { ICategory, IQuotes } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
-import { AboutSharedComponent } from '../../shared/components/about-shared/about-shared.component';
-import { BannerComponent } from '../../shared/components/banner/banner.component';
+import { AboutSharedComponent } from '@shared/components/about-shared/about-shared.component';
+import { BannerComponent } from '@shared/components/banner/banner.component';
 import { RelatedBlogsComponent } from '../articles/components/related-blogs/related-blogs.component';
 import { IRelatedBlogs } from '../articles/res/interfaces/singleBlog';
 import { BestSellerComponent } from './components/best-seller/best-seller.component';
@@ -39,6 +47,67 @@ import { HomeService } from './res/home.service';
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate(
+          '400ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('sectionAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+    ]),
+    trigger('staggerAnimation', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(20px)' }),
+            stagger('100ms', [
+              animate(
+                '400ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+    trigger('bannerAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, scale: 0.95 }),
+        animate('600ms ease-out', style({ opacity: 1, scale: 1 })),
+      ]),
+    ]),
+    trigger('slideInRight', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(30px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateX(0)' })
+        ),
+      ]),
+    ]),
+    trigger('slideInLeft', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(-30px)' }),
+        animate(
+          '500ms ease-out',
+          style({ opacity: 1, transform: 'translateX(0)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class HomeComponent implements OnInit {
   _homeService = inject(HomeService);

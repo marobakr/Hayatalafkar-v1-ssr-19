@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { API_CONFIG } from '../conf/api.config';
 import { ApiService } from '../conf/api.service';
+import { UserService } from '../user/user.service';
 
 export interface WishlistItem {
   id: number;
@@ -19,6 +20,7 @@ export interface WishlistItem {
 export class WishlistService {
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
+  private userService = inject(UserService);
 
   // Signal for wishlist count
   private wishlistCountSignal = signal<number>(0);
@@ -29,12 +31,22 @@ export class WishlistService {
   // Map to track which products are in wishlist
   private productsInWishlist = signal<Map<number, number>>(new Map());
 
+  readonly userId = this.authService.getUserId();
+
   constructor() {
-    this.loadWishlistCount();
+    this.userService.getUserOrders().subscribe((next) => {
+      if (next.row.confirmed_orders.length > 0) {
+        this.loadWishlistCount();
+      }
+    });
   }
 
   // Get the wishlist count signal
   getWishlistCountSignal() {
+    // Return 0 if user is not authenticated
+    if (!this.authService.isAuthenticated()) {
+      return signal<number>(0);
+    }
     return this.wishlistCountSignal;
   }
 
@@ -60,7 +72,7 @@ export class WishlistService {
   }
 
   // Add product to wishlist
-  addToWishlist(productId: number, userId: number): Observable<any> {
+  addToWishlist(productId: number): Observable<any> {
     if (!this.authService.isAuthenticated()) {
       // If user is not authenticated, handle accordingly
       console.warn('User must be authenticated to add items to wishlist');
@@ -73,7 +85,7 @@ export class WishlistService {
     // Create FormData object
     const formData = new FormData();
     formData.append('product_id', productId.toString());
-    formData.append('user_id', userId.toString());
+    formData.append('user_id', this.userId.toString());
 
     return this.apiService.post(API_CONFIG.WISHLIST.STORE_WISH, formData).pipe(
       tap((response: any) => {
@@ -93,40 +105,50 @@ export class WishlistService {
   }
 
   // Remove product from wishlist
-  removeFromWishlist(wishId: number): Observable<any> {
+  removeFromWishlist(wishIdOrAll: number | string): Observable<any> {
+    // Create FormData object
     return this.apiService
-      .delete(`${API_CONFIG.WISHLIST.GET_USER_WISH}/${wishId}`)
+      .post(`${API_CONFIG.WISHLIST.REMOVE_WISH}${wishIdOrAll}`, {
+        user_id: this.userId,
+      })
       .pipe(
         tap((response) => {
-          // Decrement the wishlist count
-          const currentCount = this.wishlistCountSignal();
-          if (currentCount > 0) {
-            this.wishlistCountSignal.set(currentCount - 1);
-            this.wishlistCount$.next(currentCount - 1);
-          }
-
-          // Remove from the map of products in wishlist
-          const currentMap = this.productsInWishlist();
-          const newMap = new Map(currentMap);
-
-          // Find the product_id that has this wishId
-          for (const [productId, wId] of currentMap.entries()) {
-            if (wId === wishId) {
-              newMap.delete(productId);
-              break;
+          if (wishIdOrAll === 'all') {
+            // If removing all, reset everything
+            this.wishlistCountSignal.set(0);
+            this.wishlistCount$.next(0);
+            this.productsInWishlist.set(new Map());
+          } else {
+            // Decrement the wishlist count
+            const currentCount = this.wishlistCountSignal();
+            if (currentCount > 0) {
+              this.wishlistCountSignal.set(currentCount - 1);
+              this.wishlistCount$.next(currentCount - 1);
             }
-          }
 
-          this.productsInWishlist.set(newMap);
+            // Remove from the map of products in wishlist
+            const currentMap = this.productsInWishlist();
+            const newMap = new Map(currentMap);
+
+            // Find the product_id that has this wishId
+            for (const [productId, wId] of currentMap.entries()) {
+              if (wId === +wishIdOrAll) {
+                newMap.delete(productId);
+                break;
+              }
+            }
+
+            this.productsInWishlist.set(newMap);
+          }
         })
       );
   }
 
   // Get all wishlist items
-  getWishlistItems(userId?: number): Observable<any> {
+  getWishlistItems(): Observable<any> {
     // If userId is provided, use it; otherwise use a generic endpoint
-    const endpoint = userId
-      ? `${API_CONFIG.WISHLIST.GET_USER_WISH}/${userId}`
+    const endpoint = this.userId
+      ? `${API_CONFIG.WISHLIST.GET_USER_WISH}/${this.userId}`
       : API_CONFIG.WISHLIST.GET_USER_WISH;
 
     return this.apiService.get(endpoint);
@@ -134,44 +156,50 @@ export class WishlistService {
 
   // Load wishlist count from API if user is authenticated
   loadWishlistCount(): void {
-    if (this.authService.isAuthenticated()) {
-      const userData = this.authService.getUserData();
-      if (!userData || !userData.id) {
-        return;
-      }
+    if (!this.authService.isAuthenticated()) {
+      // Reset counts for unauthenticated users
+      this.wishlistCountSignal.set(0);
+      this.wishlistCount$.next(0);
+      this.productsInWishlist.set(new Map());
+      return;
+    }
 
-      this.getWishlistItems(userData.id).subscribe({
-        next: (response) => {
-          // Build a map of products in wishlist
-          const productMap = new Map<number, number>();
+    const userData = this.authService.getUserData();
+    if (!userData || !userData.id) {
+      return;
+    }
 
-          // Handle different API response formats
-          const wishlistItems = response.wishs || response.data || [];
+    this.getWishlistItems().subscribe({
+      next: (response) => {
+        // Build a map of products in wishlist
+        const productMap = new Map<number, number>();
 
-          if (Array.isArray(wishlistItems)) {
-            wishlistItems.forEach((item: WishlistItem) => {
-              if (item.product_id) {
-                productMap.set(item.product_id, item.id);
-              }
-            });
+        // Handle different API response formats
+        const wishlistItems = response.wishs || response.data || [];
 
-            const count = wishlistItems.length;
-            this.wishlistCountSignal.set(count);
-            this.wishlistCount$.next(count);
-            this.productsInWishlist.set(productMap);
-          } else {
-            this.wishlistCountSignal.set(0);
-            this.wishlistCount$.next(0);
-            this.productsInWishlist.set(new Map());
-          }
-        },
-        error: () => {
-          // Reset count on error
+        if (Array.isArray(wishlistItems)) {
+          wishlistItems.forEach((item: WishlistItem) => {
+            if (item.product_id) {
+              productMap.set(item.product_id, item.id);
+            }
+          });
+
+          const count = wishlistItems.length;
+          this.wishlistCountSignal.set(count);
+          this.wishlistCount$.next(count);
+          this.productsInWishlist.set(productMap);
+        } else {
           this.wishlistCountSignal.set(0);
           this.wishlistCount$.next(0);
           this.productsInWishlist.set(new Map());
-        },
-      });
-    }
+        }
+      },
+      error: () => {
+        // Reset count on error
+        this.wishlistCountSignal.set(0);
+        this.wishlistCount$.next(0);
+        this.productsInWishlist.set(new Map());
+      },
+    });
   }
 }

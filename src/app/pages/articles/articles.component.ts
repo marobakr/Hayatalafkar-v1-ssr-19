@@ -3,15 +3,16 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { CommonService } from '@core/services/common/common.service';
 import { API_CONFIG } from '@core/services/conf/api.config';
+import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ArticlesCardSharedComponent } from '@shared/components/articles-card-shared/articles-card-shared.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { SectionHeadingComponent } from '@shared/components/section-heading/section-heading.component';
+import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
-import { LanguageService } from '../../core/services/lang/language.service';
-import { ArticlesCardSharedComponent } from '../../shared/components/articles-card-shared/articles-card-shared.component';
-import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
-import { TalentImageCardComponent } from '../../shared/components/talent-image-card/talent-image-card.component';
 import { LatestProduct } from '../home/res/home.interfaces';
 import { HomeService } from '../home/res/home.service';
 import { ArticlesHeaderComponent } from './components/articles-header/articles-header.component';
@@ -32,6 +33,7 @@ import { BlogsService } from './res/service/blogs.service';
     RouterLink,
     SafeHtmlComponent,
     ImageUrlDirective,
+    LoadingComponent,
   ],
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css',

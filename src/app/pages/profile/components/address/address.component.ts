@@ -7,23 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Locations } from '@core/interfaces/common.model';
+import { IAddress, ILocation } from '@core/interfaces/user.interface';
+import { UserService } from '@core/services/user/user.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ButtonComponent } from '@shared/components/button/button.component';
+import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { ToastrService } from 'ngx-toastr';
-import { UserService } from '../../../../core/services/user/user.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-
-interface ValidationErrors {
-  [key: string]:
-    | {
-        en: string;
-        ar: string;
-      }
-    | {
-        required: { en: string; ar: string };
-        email: { en: string; ar: string };
-      };
-}
 
 @Component({
   selector: 'app-address',
@@ -33,6 +22,7 @@ interface ValidationErrors {
     TranslateModule,
     ReactiveFormsModule,
     ButtonComponent,
+    LoadingComponent,
   ],
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.css'],
@@ -50,7 +40,7 @@ export class AddressComponent implements OnInit {
 
   addressForm!: FormGroup;
 
-  locations = signal<Locations>({} as Locations);
+  locations = signal<ILocation[]>([]);
 
   loading = signal(false);
 
@@ -61,6 +51,8 @@ export class AddressComponent implements OnInit {
   isFormSubmitted = signal(false);
 
   currentLang = signal(this._translateService.currentLang || 'en');
+
+  address: IAddress[] = [];
 
   ngOnInit(): void {
     this.initForm();
@@ -83,6 +75,8 @@ export class AddressComponent implements OnInit {
         next: (response) => {
           this.loading.set(false);
           if (response && response.row) {
+            this.address = response.row.addresses;
+            console.log(response.row);
             this.populateForm(response.row);
           }
         },
@@ -109,7 +103,7 @@ export class AddressComponent implements OnInit {
       city: ['', [Validators.required]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
       email: ['', [Validators.required, Validators.email]],
-      location_id: [''],
+      location_id: ['', [Validators.required]],
       user_id: [''],
     });
   }
@@ -154,6 +148,7 @@ export class AddressComponent implements OnInit {
       address: userInformation.address || '',
       city: userInformation.city || '',
       phone: userInformation.phone || '',
+      location_id: userInformation.location_id || '',
       email: userInformation.email || '',
       user_id: userInformation.id || '',
     });
@@ -174,7 +169,6 @@ export class AddressComponent implements OnInit {
 
     // Using translate service to get messages from i18n files
     if (control.hasError('required')) {
-      console.log(field);
       return this._translateService.instant(
         `auth.register.register-form.address.validation.${field}.required`
       );
@@ -203,7 +197,6 @@ export class AddressComponent implements OnInit {
     if (this.addressForm.valid) {
       this.loading.set(true);
       const addressData = this.addressForm.value;
-      addressData.location_id = this.locations().id;
       this._userService
         .addNewAddress(addressData)
         .pipe(takeUntilDestroyed(this._destroyRef))

@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { AuthService } from '@core/services/auth/auth.service';
+import { LanguageService } from '@core/services/lang/language.service';
+import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '../../../../core/services/auth/auth.service';
-import { LanguageService } from '../../../../core/services/lang/language.service';
-import { UserService } from '../../../../core/services/user/user.service';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AlertService } from '@shared/alert/alert.service';
+import { ButtonComponent } from '@shared/components/button/button.component';
 
 @Component({
   selector: 'app-account-management',
@@ -87,72 +88,129 @@ export class AccountManagementComponent {
   private _router = inject(Router);
   private _languageService = inject(LanguageService);
   private _destroyRef = inject(DestroyRef);
+  private _alertService = inject(AlertService);
 
   loading = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
 
   deactivateAccount(): void {
-    if (
-      confirm(
-        'Are you sure you want to deactivate your account? You can reactivate it later.'
-      )
-    ) {
-      this.loading.set(true);
-      this._userService
-        .deactivateUser()
-        .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe({
-          next: () => {
-            this.loading.set(false);
-            this.successMessage.set('Your account has been deactivated.');
+    this._alertService.showConfirmation({
+      title: 'Deactivate Account',
+      message:
+        'Are you sure you want to deactivate your account? You can reactivate it later.',
+      confirmText: 'Deactivate',
+      cancelText: 'Cancel',
+      imagePath: '/images/common/account-deactivate.png',
+      translationKeys: {
+        title: 'account_management.alerts.deactivate.title',
+        message: 'account_management.alerts.deactivate.message',
+        confirmText: 'account_management.alerts.deactivate.confirm',
+        cancelText: 'account_management.alerts.cancel',
+      },
+      onConfirm: () => {
+        this.loading.set(true);
+        this._userService
+          .deactivateUser()
+          .pipe(takeUntilDestroyed(this._destroyRef))
+          .subscribe({
+            next: (res) => {
+              // this.loading.set(false);
+              this.successMessage.set(res.success);
 
-            // Log out the user after deactivation
-            setTimeout(() => {
-              this._authService.logout().subscribe(() => {
-                // Navigate to home page after logout
-                let lang = '';
-                this._languageService
-                  .getLanguage()
-                  .subscribe((l) => (lang = l));
-                this._router.navigate(['/', lang]);
+              // Show success notification before logout
+              this._alertService.showNotification({
+                title: 'Account Deactivated',
+                message:
+                  'Your account has been deactivated successfully. You will be logged out now.',
+                confirmText: 'OK',
+                imagePath: '/images/common/account-deactivated.png',
+                translationKeys: {
+                  title: 'account_management.alerts.deactivate_success.title',
+                  message:
+                    'account_management.alerts.deactivate_success.message',
+                  confirmText: 'account_management.alerts.ok',
+                },
               });
-            }, 2000);
-          },
-          error: (error) => {
-            this.loading.set(false);
-            this.errorMessage.set(
-              error?.message || 'Error deactivating account'
-            );
-            console.error('Error deactivating account:', error);
-            setTimeout(() => this.errorMessage.set(''), 3000);
-          },
-        });
-    }
+
+              // Log out the user after deactivation
+              setTimeout(() => {
+                this._authService.logout().subscribe(() => {
+                  // Navigate to home page after logout
+                  let lang = '';
+                  this._languageService
+                    .getLanguage()
+                    .subscribe((l) => (lang = l));
+                  this._router.navigate(['/', lang]);
+                });
+              }, 2000);
+            },
+            error: (error) => {
+              this.loading.set(false);
+              this.errorMessage.set(
+                error?.message || 'Error deactivating account'
+              );
+
+              // Show error notification
+              this._alertService.showNotification({
+                title: 'Error',
+                message:
+                  error?.message ||
+                  'Error deactivating account. Please try again.',
+                confirmText: 'OK',
+                imagePath: '/images/common/error.png',
+                translationKeys: {
+                  title: 'account_management.alerts.error.title',
+                  message: 'account_management.alerts.deactivate_error.message',
+                  confirmText: 'account_management.alerts.ok',
+                },
+              });
+
+              console.error('Error deactivating account:', error);
+              setTimeout(() => this.errorMessage.set(''), 3000);
+            },
+          });
+      },
+    });
   }
 
   deleteAccount(): void {
-    if (
-      confirm(
-        'Are you absolutely sure you want to delete your account? This action cannot be undone.'
-      )
-    ) {
-      // Double confirmation for permanent deletion
-      if (
-        confirm(
-          'All your data will be permanently deleted. This action CANNOT be undone. Continue?'
-        )
-      ) {
+    this._alertService.showConfirmation({
+      title: 'Delete Account',
+      message:
+        'Are you absolutely sure you want to delete your account? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      imagePath: '/images/common/account-delete.png',
+      translationKeys: {
+        title: 'account_management.alerts.delete.title',
+        message: 'account_management.alerts.delete.message',
+        confirmText: 'account_management.alerts.delete.confirm',
+        cancelText: 'account_management.alerts.cancel',
+      },
+      onConfirm: () => {
         this.loading.set(true);
         this._userService
           .deleteUser()
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe({
-            next: () => {
+            next: (response) => {
               this.loading.set(false);
-              this.successMessage.set(
-                'Your account has been permanently deleted.'
-              );
+              this.successMessage.set(response.success);
+
+              // Show success notification before logout
+              this._alertService.showNotification({
+                title: 'Account Deleted',
+                message:
+                  'Your account has been permanently deleted. You will be logged out now.',
+                confirmText: 'OK',
+                imagePath: '/images/common/account-deleted.png',
+                translationKeys: {
+                  title: 'account_management.alerts.delete_success.title',
+                  message: 'account_management.alerts.delete_success.message',
+                  confirmText: 'account_management.alerts.ok',
+                },
+              });
 
               // Log out the user after deletion
               setTimeout(() => {
@@ -169,11 +227,26 @@ export class AccountManagementComponent {
             error: (error) => {
               this.loading.set(false);
               this.errorMessage.set(error?.message || 'Error deleting account');
+
+              // Show error notification
+              this._alertService.showNotification({
+                title: 'Error',
+                message:
+                  error?.message || 'Error deleting account. Please try again.',
+                confirmText: 'OK',
+                imagePath: '/images/common/error.png',
+                translationKeys: {
+                  title: 'account_management.alerts.error.title',
+                  message: 'account_management.alerts.delete_error.message',
+                  confirmText: 'account_management.alerts.ok',
+                },
+              });
+
               console.error('Error deleting account:', error);
               setTimeout(() => this.errorMessage.set(''), 3000);
             },
           });
-      }
-    }
+      },
+    });
   }
 }

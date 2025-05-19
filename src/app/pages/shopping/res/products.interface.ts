@@ -1,4 +1,6 @@
 export interface IAllProduct {
+  first_choice: string;
+
   id: number;
   category_id: number;
   subcategory_id: number;
