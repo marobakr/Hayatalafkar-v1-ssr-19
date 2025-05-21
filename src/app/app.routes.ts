@@ -183,6 +183,20 @@ export const routes: Routes = [
                 './pages/checkout/components/payment/payment.component'
               ).then((c) => c.PaymentComponent),
           },
+          {
+            path: 'success-order',
+            loadComponent: () =>
+              import('./pages/order-details/order-details.component').then(
+                (c) => c.OrderDetailsComponent
+              ),
+          },
+          {
+            path: 'track-order',
+            loadComponent: () =>
+              import(
+                './pages/checkout/components/track-orders/track-orders.component'
+              ).then((c) => c.TrackOrdersComponent),
+          },
         ],
         canActivate: [authGuard],
       },

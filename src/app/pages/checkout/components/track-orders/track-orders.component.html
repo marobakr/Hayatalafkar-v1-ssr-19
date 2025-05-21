@@ -1,0 +1,284 @@
+<!-- Order Tracking Header -->
+<div class="max-w-4xl mx-auto my-8">
+  <h1 class="text-center text-2xl font-bold mb-6">
+    {{ "track.order" | translate }}
+  </h1>
+  <p class="text-center text-sm text-gray-600 mb-2">
+    {{ "order.number" | translate }}: #{{ orderDetails()?.order?.order_number }}
+  </p>
+
+  <!-- Order Tracking Steps -->
+  <div class="relative mt-12 mb-16">
+    <!-- Progress Line -->
+    <div class="absolute top-1/4 left-0 w-full h-2 bg-gray-200 z-0">
+      <div
+        class="h-full bg-[#CBAC8D] transition-all duration-500"
+        [style.width]="'80%'"
+      ></div>
+    </div>
+
+    <!-- Step Icons -->
+    <div class="flex justify-between relative z-10">
+      <!-- Order Placed -->
+      <div class="flex flex-col items-center">
+        <div
+          class="w-16 h-16 rounded-md bg-white flex items-center justify-center border border-gray-200 mb-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-[#CBAC8D]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
+          </svg>
+        </div>
+        <p class="text-xs text-center">{{ "order.placed" | translate }}</p>
+        <p class="text-xs text-gray-500">
+          {{ orderDetails()?.order?.order_date | date : "MMM d, yyyy" }}
+        </p>
+        <p class="text-xs text-gray-500">
+          {{ orderDetails()?.order?.order_time }}
+        </p>
+      </div>
+
+      <!-- Order In Transit -->
+      <div class="flex flex-col items-center">
+        <div
+          class="w-16 h-16 rounded-md bg-white flex items-center justify-center border border-gray-200 mb-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-[#CBAC8D]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
+            />
+          </svg>
+        </div>
+        <p class="text-xs text-center">{{ "in.transit" | translate }}</p>
+        <p class="text-xs text-gray-500">
+          {{ orderDetails()?.order?.order_date | date : "MMM d, yyyy" }}
+        </p>
+        <p class="text-xs text-gray-500">11:00 م</p>
+      </div>
+
+      <!-- Out for Delivery -->
+      <div class="flex flex-col items-center">
+        <div
+          class="w-16 h-16 rounded-md bg-white flex items-center justify-center border border-gray-200 mb-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-[#CBAC8D]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+            />
+          </svg>
+        </div>
+        <p class="text-xs text-center">{{ "out.for.delivery" | translate }}</p>
+        <p class="text-xs text-gray-500">
+          {{ orderDetails()?.order?.order_date | date : "MMM d, yyyy" }}
+        </p>
+        <p class="text-xs text-gray-500">13:30 ص</p>
+      </div>
+
+      <!-- Delivered -->
+      <div class="flex flex-col items-center">
+        <div
+          class="w-16 h-16 rounded-md bg-white flex items-center justify-center border border-gray-200 mb-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <p class="text-xs text-center">{{ "delivered" | translate }}</p>
+        <p class="text-xs text-gray-500">
+          {{ orderDetails()?.order?.order_date | date : "MMM d, yyyy" }}
+        </p>
+        <p class="text-xs text-gray-500">15:00 ص</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Information Tabs -->
+  <div class="border rounded-lg overflow-hidden">
+    <!-- Tab Headers -->
+    <div class="flex bg-warm-tan text-white">
+      <button class="flex-1 py-4 text-center font-medium">
+        {{ "order.status" | translate }}
+      </button>
+      <button
+        class="flex-1 py-4 text-center font-medium bg-opacity-80 bg-[#CBAC8D]"
+      >
+        {{ "order.summary" | translate }}
+      </button>
+      <button class="flex-1 py-4 text-center font-medium">
+        {{ "delivery.address" | translate }}
+      </button>
+      <button class="flex-1 py-4 text-center font-medium">
+        {{ "order.details" | translate }}
+      </button>
+    </div>
+
+    <!-- Order Details Section -->
+    <div class="p-6">
+      <h2 class="text-xl font-semibold mb-6">
+        {{ "order.details" | translate }}
+      </h2>
+
+      <!-- Products List -->
+      <div class="space-y-6">
+        @if(orderDetails() && orderDetails()?.order) {
+        <div class="flex items-center border-b pb-6">
+          <div
+            class="w-16 h-16 overflow-hidden rounded-md bg-gray-100 flex-shrink-0"
+          >
+            <img
+              [appImageUrl]="'products/1.jpg'"
+              imageEndpoint="assets/images"
+              alt="Product"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="ml-4 flex-grow">
+            <h3 class="font-medium">{{ "lotus.facial.cream" | translate }}</h3>
+            <p class="text-sm text-gray-600">
+              {{ "beauty.category" | translate }}
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="font-medium"
+              >{{ "200" | translate }} {{ "currency" | translate }}</span
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center border-b pb-6">
+          <div
+            class="w-16 h-16 overflow-hidden rounded-md bg-gray-100 flex-shrink-0"
+          >
+            <img
+              [appImageUrl]="'products/2.jpg'"
+              imageEndpoint="assets/images"
+              alt="Product"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="ml-4 flex-grow">
+            <h3 class="font-medium">{{ "face.moisturizer" | translate }}</h3>
+            <p class="text-sm text-gray-600">
+              {{ "beauty.category" | translate }}
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="font-medium"
+              >{{ "200" | translate }} {{ "currency" | translate }}</span
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center border-b pb-6">
+          <div
+            class="w-16 h-16 overflow-hidden rounded-md bg-gray-100 flex-shrink-0"
+          >
+            <img
+              [appImageUrl]="'products/3.jpg'"
+              imageEndpoint="assets/images"
+              alt="Product"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="ml-4 flex-grow">
+            <h3 class="font-medium">{{ "serum.vitamins" | translate }}</h3>
+            <p class="text-sm text-gray-600">
+              {{ "beauty.category" | translate }}
+            </p>
+          </div>
+          <div class="text-right">
+            <span class="font-medium"
+              >{{ "200" | translate }} {{ "currency" | translate }}</span
+            >
+          </div>
+        </div>
+        }
+
+        <!-- Order Summary -->
+        <div class="mt-8 space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-600">{{ "subtotal" | translate }}</span>
+            <span>{{ "30" | translate }} {{ "currency" | translate }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">{{ "shipping" | translate }}</span>
+            <span>{{ "4" | translate }} {{ "currency" | translate }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">{{ "coupon" | translate }}</span>
+            <span>{{ "30" | translate }} {{ "currency" | translate }}</span>
+          </div>
+          <div class="flex justify-between font-bold pt-4 border-t mt-2">
+            <span>{{ "total" | translate }}</span>
+            <span>{{ "1250" | translate }} {{ "currency" | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Cancel Order Button -->
+        <div class="mt-10 text-center">
+          <button
+            class="bg-white text-red-500 hover:bg-red-50 border border-red-500 rounded-full px-10 py-2 font-medium transition-colors"
+          >
+            {{ "cancel.order" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+@if(loading()) {
+<div class="flex justify-center items-center min-h-[300px]">
+  <app-loading></app-loading>
+</div>
+}
+
+<!-- Error State -->
+@if(errorMessage()) {
+<div class="bg-red-50 text-red-600 p-4 rounded-lg my-4 max-w-4xl mx-auto">
+  {{ errorMessage() }}
+</div>
+}

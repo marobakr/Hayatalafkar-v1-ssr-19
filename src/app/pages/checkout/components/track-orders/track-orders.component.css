@@ -1,0 +1,100 @@
+/* Styles for track orders component */
+.bg-warm-tan {
+  background-color: #cbac8d;
+}
+
+.text-muted-rose {
+  color: #a48374;
+}
+
+/* Progress styles */
+.progress-line {
+  height: 2px;
+  background-color: #e5e7eb;
+  position: relative;
+  margin: 2rem 0;
+  z-index: 0;
+}
+
+.progress-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #cbac8d;
+  transition: width 0.3s ease;
+}
+
+/* Step icons */
+.step-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  z-index: 1;
+  position: relative;
+}
+
+.step-active {
+  background-color: #cbac8d;
+  color: white;
+  border-color: #cbac8d;
+}
+
+.step-completed {
+  background-color: #cbac8d;
+  color: white;
+  border-color: #cbac8d;
+}
+
+/* Tab styles */
+.tab-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+  padding: 1rem;
+  flex: 1;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+.tab-button.active {
+  background-color: #cbac8d;
+  color: white;
+}
+
+/* Product card styles */
+.product-card {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.product-image {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .tab-header {
+    flex-direction: column;
+  }
+}

@@ -1,3 +1,23 @@
+<div class="container mx-auto mt-3 mb-7">
+  <div class="header p-9 text-center rounded-2xl relative" role="banner">
+    <!-- <img
+      src="/images/common/check.gif"
+      alt="order-details-bg w-20px h-20px"
+      class="absolute top-0 left-0 object-cover"
+    /> -->
+
+    <h1
+      id="order-details-title"
+      class="text-title-size font-bold text-white mb-3 capitalize"
+    >
+      {{ "orderDetailsTitle" | translate }}
+    </h1>
+    <p class="text-white text-description-size">
+      {{ "orderDetailsSubtitle" | translate }}
+    </p>
+  </div>
+</div>
+
 <!-- Current order -->
 <div class="mb-[35px]">
   @if(!loading()){
@@ -89,72 +109,3 @@
   <app-loading></app-loading>
   }
 </div>
-
-@if(!loading()){
-<!-- Have been Delivered -->
-<div>
-  <div
-    class="bg-warm-tan text-white flex flex-col md:flex-row-reverse justify-between items-center rounded-t-[20px] pb-[17px] pt-[18px] px-[42px] text-description-size capitalize text-center"
-  >
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order.date.date" | translate }}</p>
-      <p class="font-bold">
-        {{ lastOrder()?.order?.order_date | date : "dd/MM/yyyy" }}
-      </p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
-      <p class="font-bold">
-        {{ lastOrder()?.order?.order_status | titlecase }}
-      </p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "total-price.total-price" | translate }}</p>
-      <p class="font-bold">${{ lastOrder()?.order?.total }}</p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order-number" | translate }}</p>
-      <p class="font-bold">{{ lastOrder()?.order?.order_number }}</p>
-    </div>
-    <button
-      class="bg-white text-muted-rose rounded-[50px] px-[27px] py-[9px] text-description-size font-bold capitalize cursor-pointer"
-    >
-      {{ "reorder" | translate }}
-    </button>
-  </div>
-
-  <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
-    <div
-      class="flex items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
-    >
-      <img
-        class="w-[80px] h-[80px] rounded-[15px]"
-        src="/images/wishlist/3.png"
-        alt="Product Image"
-      />
-      <div class="flex-grow rtl:pr-4 ltr:pl-4">
-        <p class="text-description-size font-bold mb-[15px]">
-          {{ "footer.sections.items.skincare" | translate }}
-        </p>
-        <p class="text-category-size text-[#333]">
-          {{ "wishlist.productsItem.item-1.subtitle" | translate }}
-        </p>
-      </div>
-      <p class="text-lg font-semibold">
-        ${{ lastOrder()?.order?.total }}
-        {{ "wishlist.productsItem.item-1.price" | translate }}
-      </p>
-    </div>
-
-    <div class="flex justify-between items-center mb-[30px] gap-4 flex-wrap">
-      <button
-        class="bg-[#E4FFE9] block w-full md:inline md:w-auto cursor-pointer text-[#2B841F] border border-[#2B841F] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize"
-      >
-        {{ "order.delivered" | translate }}
-      </button>
-    </div>
-  </div>
-</div>
-}@else {
-<app-loading></app-loading>
-}

@@ -148,7 +148,9 @@ export class PaymentComponent implements OnInit {
 
           // Navigate to order confirmation
           this._languageService.getLanguage().subscribe((lang) => {
-            this._router.navigate(['/', lang, 'profile', 'orders']);
+            this._router.navigate(['/', lang, 'profile', 'orders'], {
+              queryParams: { order_id: orderId },
+            });
           });
         },
         error: (error) => {
