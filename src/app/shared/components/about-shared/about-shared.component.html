@@ -6,9 +6,12 @@
     class="flex flex-col lg:flex-row items-start justify-between gap-10 relative z-10"
   >
     <!-- Image Column -->
-    <div class="hidden lg:flex flex-col justify-between flex-grow-1">
-      <figure class="main_Image_Animation">
+    <div
+      class="hidden lg:flex flex-col justify-between flex-grow-1 self-stretch"
+    >
+      <figure class="main_Image_Animation h-full">
         <img
+          class="h-full"
           loading="lazy"
           [appImageUrl]="aboutUs.main_image"
           [imageEndpoint]="''"
@@ -68,15 +71,15 @@
         {{ "hero.about-us.title" | translate }}
       </h4>
       <h2 class="text-[2.8125rem] font-medium text-black mb-[35px]">
-        {{ "hero.about-us.journey" | translate }}
+        {{ getMainTitleWithoutLastWord() }}
         <span class="text-muted-rose">
-          {{ "hero.about-us.elegance" | translate }}
+          {{ getLastWordOfMainTitle() }}
         </span>
       </h2>
       <p class="text-[#474747] text-description-size leading-relaxed mb-[50px]">
         <!-- Static -->
         <!-- {{ "hero.about-us.description" | translate }} -->
-        {{ aboutUs | customTranslate : "main_title" }}
+        {{ aboutUs | customTranslate : "main_text" }}
       </p>
       <!-- Stats -->
       <div

@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationStart, Router } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IGetOrders, ILastOrderResponse } from './res/order.interface';
 
 @Component({
@@ -24,6 +27,10 @@ import { IGetOrders, ILastOrderResponse } from './res/order.interface';
 export class OrdersComponent implements OnInit {
   private _userService = inject(UserService);
   private _destroyRef = inject(DestroyRef);
+  private _router = inject(Router);
+
+  // Create a subject that emits when navigation starts
+  private _navigationStart = new Subject<void>();
 
   orders = signal<IGetOrders>({} as IGetOrders);
   lastOrder = signal<ILastOrderResponse | null>(null);
@@ -31,6 +38,17 @@ export class OrdersComponent implements OnInit {
   errorMessage = signal('');
 
   ngOnInit(): void {
+    // Subscribe to navigation events to cancel pending requests
+    this._router.events
+      .pipe(
+        filter((event) => event instanceof NavigationStart),
+        takeUntilDestroyed(this._destroyRef)
+      )
+      .subscribe(() => {
+        // When navigation starts, emit to cancel pending requests
+        this._navigationStart.next();
+      });
+
     this.getUserOrders();
     this.getLastOrder();
   }
@@ -39,7 +57,11 @@ export class OrdersComponent implements OnInit {
     this.loading.set(true);
     this._userService
       .getUserOrders()
-      .pipe(takeUntilDestroyed(this._destroyRef))
+      .pipe(
+        // Complete the subscription when navigation starts OR component is destroyed
+        takeUntil(this._navigationStart),
+        takeUntilDestroyed(this._destroyRef)
+      )
       .subscribe({
         next: (response: IGetOrders) => {
           console.log('all users orders ', response);
@@ -53,6 +75,10 @@ export class OrdersComponent implements OnInit {
           this.errorMessage.set(error?.message || 'Error fetching orders');
           console.error('Error fetching orders:', error);
         },
+        complete: () => {
+          // Ensure loading is turned off when the subscription completes
+          this.loading.set(false);
+        },
       });
   }
 
@@ -60,20 +86,26 @@ export class OrdersComponent implements OnInit {
     this.loading.set(true);
     this._userService
       .getUserLastOrder()
-      .pipe(takeUntilDestroyed(this._destroyRef))
+      .pipe(
+        // Complete the subscription when navigation starts OR component is destroyed
+        takeUntil(this._navigationStart),
+        takeUntilDestroyed(this._destroyRef)
+      )
       .subscribe({
         next: (response: ILastOrderResponse) => {
           this.loading.set(false);
           if (response && response.order) {
             this.lastOrder.set(response);
-            // You can add logic here to highlight or scroll to the last order
-            // For example, you could emit an event or use a ViewChild to scroll
           }
         },
         error: (error) => {
           this.loading.set(false);
           this.errorMessage.set(error?.message || 'Error fetching last order');
           console.error('Error fetching last order:', error);
+        },
+        complete: () => {
+          // Ensure loading is turned off when the subscription completes
+          this.loading.set(false);
         },
       });
   }

@@ -353,6 +353,8 @@ export class CartComponent implements OnInit {
               this.promoCodeForm.reset();
             });
           } else {
+            this.isPromoCodeLoading = false;
+            this.isLoading = false;
             this.promoCodeError =
               response.message ||
               this._translateService.instant('cart.promo-code.invalid-code');

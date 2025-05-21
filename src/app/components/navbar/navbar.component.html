@@ -230,6 +230,7 @@
                   id="desktop-search"
                   class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
                   [attr.placeholder]="'navbar.search_placeholder' | translate"
+                  (input)="onSearchInput($event)"
                   required
                 />
               </div>
@@ -378,6 +379,30 @@
 
     <!-- Mobile Menu Links -->
     <ul class="py-4 px-6 space-y-4">
+      <!-- Mobile Search Input -->
+      <li class="mb-6">
+        <div class="relative">
+          <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+            </div>
+            <input
+              type="search"
+              id="mobile-search"
+              class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-warm-tan focus:border-warm-tan"
+              [attr.placeholder]="'navbar.search_placeholder' | translate"
+              (input)="onSearchInput($event)"
+              aria-label="Search products"
+            />
+          </div>
+          <div class="text-xs text-gray-500 mt-2">
+            {{ "navbar.mobile_search_hint" | translate }}
+          </div>
+        </div>
+      </li>
+
       <li>
         <a
           [routerLink]="['/', currentLang$ | async, 'home']"
@@ -460,6 +485,7 @@
           {{ "navbar.pages_Title.contact_Us.title" | translate }}
         </a>
       </li>
+
 
       <!-- Language Selector Mobile -->
       <li class="border-t border-gray-200 pt-4 mt-4">

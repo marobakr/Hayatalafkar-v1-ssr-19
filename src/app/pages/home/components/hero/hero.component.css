@@ -10,7 +10,7 @@
 ::ng-deep .owl-carousel {
   width: 100%;
   position: relative;
-  min-height: 400px;
+  min-height: 300px;
 }
 
 ::ng-deep .owl-stage-outer {
@@ -34,50 +34,21 @@
   opacity: 1;
 }
 
-/* Navigation Arrows */
+/* Navigation Arrows - Hide them */
 ::ng-deep .owl-nav {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  padding: 0 15px;
-  z-index: 10;
-  pointer-events: none;
-}
-
-::ng-deep .owl-prev,
-::ng-deep .owl-next {
-  background-color: rgba(203, 172, 141, 0.6) !important;
-  width: 40px;
-  height: 40px;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  pointer-events: auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-::ng-deep .owl-prev:hover,
-::ng-deep .owl-next:hover {
-  background-color: rgba(203, 172, 141, 0.9) !important;
-  transform: scale(1.1);
+  display: none !important;
 }
 
 /* Fix for Font Awesome icons */
 ::ng-deep .owl-prev i,
 ::ng-deep .owl-next i {
-  color: white;
-  font-size: 18px;
+  display: none !important;
 }
 
 /* Remove default arrow text if any exists */
 ::ng-deep .owl-prev span,
 ::ng-deep .owl-next span {
-  display: none;
+  display: none !important;
 }
 
 /* Ensure loop transition is smooth */
@@ -97,12 +68,9 @@
   float: right;
 }
 
-::ng-deep .owl-carousel.owl-rtl .owl-prev i:before {
-  content: "\f054"; /* fa-chevron-right */
-}
-
+::ng-deep .owl-carousel.owl-rtl .owl-prev i:before,
 ::ng-deep .owl-carousel.owl-rtl .owl-next i:before {
-  content: "\f053"; /* fa-chevron-left */
+  display: none !important;
 }
 
 /* Dots/Pagination */
@@ -208,13 +176,13 @@
   height: 100%;
 }
 
-/* Make sure images are properly contained */
+/* Make sure images are properly contained with max height */
 img[appImageUrl] {
   max-width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
-  max-height: 400px;
+  max-height: 400px !important; /* Set max height only for images */
   margin: 0 auto;
 }
 
@@ -237,7 +205,7 @@ img[appImageUrl] {
 /* Fix for responsive layout */
 @media (max-width: 768px) {
   img[appImageUrl] {
-    max-height: 300px;
+    max-height: 300px !important;
   }
 
   .slide-container {
@@ -408,4 +376,12 @@ img[appImageUrl] {
 /* Make all transitions smoother */
 ::ng-deep .owl-carousel * {
   transition-timing-function: ease-in-out !important;
+}
+
+/* Hide navigation buttons completely */
+::ng-deep .owl-nav,
+::ng-deep .owl-prev,
+::ng-deep .owl-next {
+  display: none !important;
+  visibility: hidden !important;
 }

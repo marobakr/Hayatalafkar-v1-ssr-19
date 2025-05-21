@@ -23,7 +23,7 @@
             >
               <!-- Text Column -->
               <div
-                class="w-full md:w-1/2 lg:w-1/2 text-center rtl:text-right ltr:text-left py-4"
+                class="w-full md:w-1/2 lg:w-1/2 text-center md:rtl:text-right md:ltr:text-left py-4"
               >
                 <!-- Small Title -->
                 <app-slogan
@@ -82,7 +82,7 @@
                   [appImageUrl]="slide.main_image"
                   [imageEndpoint]="''"
                   [alt]="slide | customTranslate : 'title'"
-                  class="w-full max-w-md h-auto object-contain"
+                  class="w-full max-w-md h-auto object-contain max-h-[400px]"
                   width="600"
                   height="400"
                   loading="eager"

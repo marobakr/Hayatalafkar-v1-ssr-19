@@ -64,10 +64,11 @@
   "alerts": {
     "cart": {
       "add_success": {
-        "title": "success"
+        "title": "Product added to cart successfully"
       },
-      "remoce_success": {
-        "title": "product removed from cart"
+      "error": {
+        "title": "Cart Error",
+        "message": "An error occurred while processing your request. Please try again"
       },
       "remove_confirm": {
         "cancel": "cancel",
@@ -79,13 +80,23 @@
         "message": "failed to remove product from cart",
         "title": "error"
       },
+      "remove_success": {
+        "title": "Product removed from cart successfully"
+      },
       "update_success": {
         "title": "cart updated successfully"
       }
     },
     "wishlist": {
       "add_success": {
-        "title": "wishlist addedd sucess"
+        "title": "Product added to wishlist successfully"
+      },
+      "remove_all_confirm": {
+        "title": "Remove all products from wishlist",
+        "message": "Are you sure you want to remove all products from your wishlist?"
+      },
+      "remove_all_success": {
+        "title": "All products removed from wishlist successfully"
       },
       "remove_confirm": {
         "cancel": "cancel",
@@ -98,7 +109,7 @@
         "title": "error"
       },
       "remove_success": {
-        "title": "product removed from wishlist"
+        "title": "Product removed from wishlist successfully"
       }
     }
   },
@@ -366,9 +377,13 @@
       "form_reset": "Form has been reset",
       "info_title": "Information",
       "invalid_address": "Invalid address selection",
+      "loading_addresses": "Loading addresses...",
+      "loading_locations": "Loading locations...",
       "locations_error": "Error fetching locations",
       "no_address_selected": "Please select an address to continue",
       "no_locations": "No delivery locations available",
+      "processing_address": "Processing address...",
+      "processing_order": "Processing order...",
       "refresh_error": "Error refreshing addresses",
       "success_title": "Success",
       "title": "Shipping Address | Hayat Alafkar",
@@ -381,8 +396,35 @@
     },
     "next_step": "next step",
     "payment": {
+      "card_name": "Name on Card",
+      "card_name_placeholder": "John Smith",
+      "card_number": "Card Number",
+      "card_number_placeholder": "1234 5678 9012 3456",
+      "cash_on_delivery_description": "Pay in cash when your order is delivered",
+      "cash_on_delivery_note": "Your order will be delivered to your address and you can pay directly to the courier",
+      "cvv": "CVV",
+      "cvv_placeholder": "123",
       "description": "Complete your purchase with secure payment",
-      "title": "Payment | Hayat Alafkar"
+      "error": "Payment Error",
+      "expiry_date": "Expiry Date",
+      "expiry_date_placeholder": "MM/YY",
+      "loading_payment": "Loading payment options...",
+      "method": "Payment Method",
+      "methods": {
+        "cash_on_delivery": "Cash on Delivery",
+        "credit_card": "Credit Card",
+        "paypal": "PayPal"
+      },
+      "no_address_selected": "No shipping address selected",
+      "no_order": "No active order",
+      "note": "Note",
+      "order_placed_error": "Error processing your order",
+      "order_placed_success": "Your order has been placed successfully",
+      "place_order": "Place Order",
+      "processing_payment": "Processing payment...",
+      "success": "Success",
+      "title": "Payment | Hayat Alafkar",
+      "validating_payment": "Validating payment information..."
     },
     "select_shipping_address": "select address",
     "shipping_address": "invoice details",
@@ -626,6 +668,7 @@
     "profile": "Profile",
     "search": "Search",
     "search_placeholder": "Search for products...",
+    "mobile_search_hint": "Search for products by name, category, or description",
     "wishlist": "Wishlist"
   },
   "newProducts": {
@@ -915,18 +958,27 @@
     "add_to_cart": "Add to cart",
     "added_to_cart_success": "Item added to cart successfully",
     "adding": "Adding...",
+    "buttons": {
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "saving": "Saving...",
+      "submitting": "Submitting..."
+    },
     "continue_shopping": "Continue Shopping",
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
+    "loading": "Loading...",
     "offer": "25% Discount",
     "price_varies": "Price varies based on options",
+    "processing": "Processing...",
     "readMore": "Read More",
     "shopping_now": "shopping now",
     "show-products": "buying the product ",
     "success": "Success",
     "update_cart": "update product quantity",
     "update_cart_quantity": "Update cart quantity",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "wait_response": "Please wait..."
   },
   "shopping": {
     "description": "Browse our collection of beauty and cosmetic products",
@@ -1062,5 +1114,6 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
-  }
+  },
+  "remove_from_cart": "remove from cart"
 }

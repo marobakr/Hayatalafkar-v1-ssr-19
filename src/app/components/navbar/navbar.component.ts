@@ -21,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, take } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { CartStateService } from '../../core/services/cart/cart-state.service';
 import { LanguageService } from '../../core/services/lang/language.service';
@@ -181,14 +181,14 @@ export class NavbarComponent implements OnDestroy, OnInit {
     this.showMobileSearch = false;
   }
 
-  toggleSearch(event: Event) {
+  toggleSearch(event: Event): void {
     event.stopPropagation();
     this.showSearch = !this.showSearch;
 
-    // Use the search service instead of EventEmitter
+    // Notify search service about search toggle state
     this._searchService.toggleSearch(this.showSearch);
 
-    // If search is shown, focus the input after a short delay to allow rendering
+    // If opening search, focus the input after a short delay
     if (this.showSearch) {
       setTimeout(() => {
         const searchInput = document.getElementById(
@@ -196,17 +196,6 @@ export class NavbarComponent implements OnDestroy, OnInit {
         ) as HTMLInputElement;
         if (searchInput) {
           searchInput.focus();
-
-          // Set up input event listener
-          const inputListener = () => {
-            this._searchService.updateSearchQuery(
-              searchInput.value.trim().toLowerCase()
-            );
-            // Remove event listener after first use to avoid duplication
-            searchInput.removeEventListener('input', inputListener);
-          };
-
-          searchInput.addEventListener('input', inputListener);
         }
       }, 100);
     }
@@ -268,6 +257,16 @@ export class NavbarComponent implements OnDestroy, OnInit {
     if (isPlatformBrowser(this.platformId)) {
       if (this.isMenuOpen) {
         document.body.classList.add('scroll-lock');
+
+        // Focus the mobile search input after a short delay to allow the menu to render
+        setTimeout(() => {
+          const mobileSearchInput = document.getElementById(
+            'mobile-search'
+          ) as HTMLInputElement;
+          if (mobileSearchInput) {
+            mobileSearchInput.focus();
+          }
+        }, 300);
       } else {
         document.body.classList.remove('scroll-lock');
       }
@@ -321,6 +320,36 @@ export class NavbarComponent implements OnDestroy, OnInit {
         console.error('Logout error:', error);
       },
     });
+  }
+
+  onSearchInput(event: Event): void {
+    const searchInput = event.target as HTMLInputElement;
+    const searchQuery = searchInput.value.trim().toLowerCase();
+
+    // Update search query in service
+    this._searchService.updateSearchQuery(searchQuery);
+
+    // If not already on shopping page and search has content, navigate there
+    if (searchQuery && !this._router.url.includes('/shopping')) {
+      // Get the current language and navigate to shopping page with search query parameter
+      this.currentLang$.pipe(take(1)).subscribe((lang) => {
+        this._router.navigate(['/', lang, 'shopping'], {
+          queryParams: { q: searchQuery },
+        });
+      });
+    } else if (searchQuery && this._router.url.includes('/shopping')) {
+      // If already on shopping page, just update the URL with the search query
+      this._router.navigate([], {
+        queryParams: { q: searchQuery },
+        queryParamsHandling: 'merge', // Keep other query parameters
+      });
+    } else if (!searchQuery && this._router.url.includes('/shopping')) {
+      // If search is cleared and we're on shopping page, remove the q parameter
+      this._router.navigate([], {
+        queryParams: { q: null },
+        queryParamsHandling: 'merge', // Keep other query parameters
+      });
+    }
   }
 
   ngOnDestroy(): void {

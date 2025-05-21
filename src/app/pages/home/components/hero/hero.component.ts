@@ -61,9 +61,9 @@ export class HeroComponent implements OnInit, AfterViewInit {
     items: 1,
     autoplay: true,
     autoplayTimeout: 5000,
-    autoplayHoverPause: true,
+    autoplayHoverPause: false,
     margin: 0,
-    smartSpeed: 800,
+    smartSpeed: 1000,
     center: true,
     stagePadding: 0,
     rewind: false,
@@ -72,21 +72,18 @@ export class HeroComponent implements OnInit, AfterViewInit {
     animateOut: 'fadeOut',
     lazyLoad: true,
     rtl: false,
-    navText: [
-      '<i class="fa fa-chevron-left"></i>',
-      '<i class="fa fa-chevron-right"></i>',
-    ],
+    navText: ['', ''],
     responsive: {
       0: {
         items: 1,
-        nav: true,
+        nav: false,
       },
       768: {
         items: 1,
-        nav: true,
+        nav: false,
       },
     },
-    nav: true,
+    nav: false,
   };
 
   ngOnInit(): void {
@@ -112,7 +109,7 @@ export class HeroComponent implements OnInit, AfterViewInit {
       // Fix carousel after it's fully initialized
       setTimeout(() => {
         this.fixDuplicatedDots();
-        this.ensureNavigationArrowsVisible();
+        this.hideNavigationArrows();
         this.enhanceLoopTransition();
       }, 300);
     }
@@ -128,13 +125,12 @@ export class HeroComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private ensureNavigationArrowsVisible(): void {
+  private hideNavigationArrows(): void {
     if (typeof document !== 'undefined') {
-      const navButtons = document.querySelectorAll('.owl-nav button');
-      navButtons.forEach((btn: Element) => {
-        (btn as HTMLElement).style.visibility = 'visible';
-        (btn as HTMLElement).style.opacity = '1';
-      });
+      const navContainer = document.querySelector('.owl-nav');
+      if (navContainer) {
+        (navContainer as HTMLElement).style.display = 'none';
+      }
     }
   }
 

@@ -174,20 +174,15 @@ input[type="radio"]:checked {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.filter-box:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
 /* Badge animation */
 .badge-animation {
   transition: all 0.3s ease;
 }
 
-.badge-animation:hover {
+/* .badge-animation:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+} */
 
 /* Checkbox pulse animation */
 .checkbox-pulse {

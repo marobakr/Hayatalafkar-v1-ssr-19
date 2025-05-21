@@ -91,7 +91,7 @@
             <!-- Remove Item -->
             <div
               class="close cursor-pointer"
-              (click)="removeItem(item.product_id, $index)"
+              (click)="removeItem(item.id, $index)"
             >
               <figure class="mx-0 remove-icon">
                 <img src="/images/wishlist/remove.svg" alt="remove item" />
@@ -157,9 +157,14 @@
           <button
             type="button"
             class="cursor-pointer text-white block md:inline bg-warm-tan font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none capitalize"
-            (click)="showCartAnimation($index)"
+            (click)="toggleCart(item.product, $index)"
+            [disabled]="isAddingToCart(item.product?.id || 0)"
           >
-            {{ "add_to_cart" | translate }}
+            {{
+              isInCart(item.product?.id || 0)
+                ? ("remove_from_cart" | translate)
+                : ("add_to_cart" | translate)
+            }}
           </button>
         </div>
         }

@@ -66,11 +66,19 @@
       "add_success": {
         "title": "تمت اضافة المنتج الى السلة بنجاح"
       },
+      "error": {
+        "title": "خطأ في العربة",
+        "message": "حدث خطأ أثناء معالجة طلبك. الرجاء المحاولة مرة أخرى"
+      },
       "remove_confirm": {
         "cancel": "إلغاء",
         "message": "هل أنت متأكد من رغبتك في إزالة هذا المنتج من السلة؟",
         "title": "حذف المنتج من السلة",
         "yes": "نعم"
+      },
+      "remove_error": {
+        "title": "خطأ في الإزالة",
+        "message": "فشل إزالة المنتج من السلة"
       },
       "remove_success": {
         "title": "تم إزالة المنتج من السلة بنجاح"
@@ -86,6 +94,13 @@
     "wishlist": {
       "add_success": {
         "title": "تمت اضافة المنتج الى المفضلة بنجاح"
+      },
+      "remove_all_confirm": {
+        "title": "حذف كل المنتجات من المفضلة",
+        "message": "هل أنت متأكد من رغبتك في إزالة جميع المنتجات من المفضلة؟"
+      },
+      "remove_all_success": {
+        "title": "تم إزالة جميع المنتجات من المفضلة بنجاح"
       },
       "remove_confirm": {
         "cancel": "إلغاء",
@@ -363,9 +378,13 @@
       "form_reset": "تم إعادة تعيين النموذج",
       "info_title": "معلومات",
       "invalid_address": "اختيار عنوان غير صالح",
+      "loading_addresses": "جاري تحميل العناوين...",
+      "loading_locations": "جاري تحميل المواقع...",
       "locations_error": "خطأ في استرجاع المواقع",
       "no_address_selected": "الرجاء اختيار عنوان للمتابعة",
       "no_locations": "لا توجد مواقع توصيل متاحة",
+      "processing_address": "جاري معالجة العنوان...",
+      "processing_order": "جاري معالجة الطلب...",
       "refresh_error": "خطأ في تحديث العناوين",
       "success_title": "تم بنجاح",
       "title": "عنوان الشحن | حياة الأفكار",
@@ -418,6 +437,7 @@
       "error": "خطأ في الدفع",
       "expiry_date": "تاريخ الانتهاء",
       "expiry_date_placeholder": "MM/YY",
+      "loading_payment": "جاري تحميل خيارات الدفع...",
       "method": "طريقة الدفع",
       "methods": {
         "cash_on_delivery": "الدفع عند الاستلام",
@@ -430,8 +450,10 @@
       "order_placed_error": "خطأ في معالجة طلبك",
       "order_placed_success": "تم وضع طلبك بنجاح",
       "place_order": "إتمام الطلب",
+      "processing_payment": "جاري معالجة الدفع...",
       "success": "تم بنجاح",
-      "title": "الدفع | حياة الأفكار"
+      "title": "الدفع | حياة الأفكار",
+      "validating_payment": "جاري التحقق من بيانات الدفع..."
     },
     "select_shipping_address": "الرجاء اختيار عنوان الشحن",
     "shipping_address": "عنوان الشحن"
@@ -667,6 +689,7 @@
     "profile": "الملف الشخصي",
     "search": "بحث",
     "search_placeholder": "ابحث عن المنتجات...",
+    "mobile_search_hint": "ابحث عن المنتجات بالاسم أو الفئة أو الوصف",
     "wishlist": "المفضلة"
   },
   "newProducts": {
@@ -951,18 +974,27 @@
     "add_to_cart": "أضف إلى السلة",
     "added_to_cart_success": "تمت إضافة المنتج إلى سلة التسوق بنجاح",
     "adding": "جاري الإضافة...",
+    "buttons": {
+      "loading": "جاري التحميل...",
+      "processing": "جاري المعالجة...",
+      "saving": "جاري الحفظ...",
+      "submitting": "جاري الإرسال..."
+    },
     "continue_shopping": "متابعة التسوق",
     "currency": "ر.س",
     "go_to_cart": "الذهاب إلى السلة",
+    "loading": "جاري التحميل...",
     "offer": "خصم 25%",
     "price_varies": "السعر يختلف حسب الخيارات",
+    "processing": "جاري المعالجة...",
     "readMore": "قراءة المزيد",
     "shopping_now": "تسوق الآن",
     "show-products": "شراء المنتج ",
     "success": "تم بنجاح",
     "update_cart": "تحديث كمية المنتج",
     "update_cart_quantity": "تحديث كمية المنتج في السلة",
-    "updating": "جاري التحديث..."
+    "updating": "جاري التحديث...",
+    "wait_response": "يرجى الانتظار..."
   },
   "shopping": {
     "description": "تصفح مجموعتنا من منتجات الجمال ومستحضرات التجميل",
@@ -1098,5 +1130,6 @@
       "add-new": "هل تريد وضع الكل في العربة؟",
       "delete-all": "حذف كل العناصر"
     }
-  }
+  },
+  "remove_from_cart": "إزالة من السلة"
 }
