@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IAddress, ILocation } from '@core/interfaces/user.interface';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CartStateService } from '@core/services/cart/cart-state.service';
@@ -56,6 +56,7 @@ export class CheckoutAddressComponent implements OnInit {
   private _languageService = inject(LanguageService);
   private _ordersService = inject(OrdersService);
   private _cartState = inject(CartStateService);
+  private _route = inject(ActivatedRoute);
 
   addressForm!: FormGroup;
   locations = signal<ILocation[]>([]);
@@ -82,8 +83,7 @@ export class CheckoutAddressComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.getUserInfo();
-    this.getLocations();
+    this.processResolverData();
 
     // Subscribe to language changes
     this._translateService.onLangChange
@@ -94,14 +94,55 @@ export class CheckoutAddressComponent implements OnInit {
   }
 
   /**
+   * Process data from resolvers
+   */
+  processResolverData(): void {
+    // Get user address data from resolver
+    const addressData = this._route.snapshot.data['addressData'];
+    if (addressData && addressData.row) {
+      // Process addresses
+      if (addressData.row.addresses) {
+        this.addresses.set(addressData.row.addresses);
+        const hasUserAddresses = addressData.row.addresses.length > 0;
+        this.hasAddresses.set(hasUserAddresses);
+
+        // Only show the form when user has no addresses
+        this.showAddAddressForm.set(!hasUserAddresses);
+
+        if (hasUserAddresses) {
+          // If addresses exist, select the first one by default
+          this.selectAddress(addressData.row.addresses[0]);
+        } else {
+          // No addresses, populate form with user info
+          this.populateForm(addressData.row);
+        }
+      }
+    }
+
+    // Get locations data from resolver
+    const locationsData = this._route.snapshot.data['locationsData'];
+    if (locationsData && locationsData.locations) {
+      this.locations.set(locationsData.locations);
+    } else {
+      // Fallback to service call if resolver data is not available
+      this.getLocations();
+    }
+  }
+
+  /**
    * Load user data: addresses and available locations
+   * This method serves as a fallback if resolver data is not available
    */
   getUserInfo(): void {
-    // First load locations
-    this.getLocations();
+    // First load locations if not already loaded
+    if (this.locations().length === 0) {
+      this.getLocations();
+    }
 
-    // Then get user addresses
-    this.getUserAddresses();
+    // Then get user addresses if not already loaded
+    if (this.addresses().length === 0) {
+      this.getUserAddresses();
+    }
   }
 
   getUserAddresses(): void {
