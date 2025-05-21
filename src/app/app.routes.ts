@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 import { productDetailsResolver } from './pages/product-details/res/product-details.resolver';
+
 export const routes: Routes = [
   { path: '', redirectTo: '/ar', pathMatch: 'full' },
 
@@ -17,9 +18,11 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () =>
           import('./pages/home/home.component').then((c) => c.HomeComponent),
-        data: { titleKey: 'routes.home' },
+        data: {
+          title: 'pages.home.title',
+          description: 'pages.home.description',
+        },
       },
-      /* don't forget the title for products 🔻🔻🔻🔻🔻🔻🔻 */
 
       /* Wishlist */
       {
@@ -28,9 +31,13 @@ export const routes: Routes = [
           import('./pages/wishlist/wishlist.component').then(
             (c) => c.WishlistComponent
           ),
-        data: { titleKey: 'routes.wishlist' },
+        data: {
+          title: 'pages.wishlist.title',
+          description: 'pages.wishlist.description',
+        },
         canActivate: [authGuard],
       },
+
       /* Blogs */
       {
         path: 'blogs',
@@ -38,8 +45,13 @@ export const routes: Routes = [
           import('./pages/articles/articles.component').then(
             (c) => c.ArticlesComponent
           ),
-        data: { titleKey: 'routes.blog' },
+        data: {
+          title: 'pages.blogs.title',
+          description: 'pages.blogs.description',
+        },
       },
+
+      /* Blog Details */
       {
         path: 'blog/:slug',
         loadComponent: () =>
@@ -47,8 +59,12 @@ export const routes: Routes = [
         resolve: {
           blogData: blogDetailsResolver,
         },
-        data: { titleKey: 'routes.blogDetails' },
+        data: {
+          title: 'pages.blog.title',
+          description: 'pages.blog.description',
+        },
       },
+
       /* Shopping */
       {
         path: 'shopping',
@@ -56,7 +72,10 @@ export const routes: Routes = [
           import('./pages/shopping/shopping.component').then(
             (c) => c.ShoppingComponent
           ),
-        data: { titleKey: 'routes.shopping' },
+        data: {
+          title: 'pages.shopping.title',
+          description: 'pages.shopping.description',
+        },
       },
 
       /* Product Details */
@@ -66,9 +85,12 @@ export const routes: Routes = [
           import('./pages/product-details/product-details.component').then(
             (c) => c.ProductDetailsComponent
           ),
-        data: { titleKey: 'routes.home' },
         resolve: {
           productDetails: productDetailsResolver,
+        },
+        data: {
+          title: 'pages.product.title',
+          description: 'pages.product.description',
         },
       },
 
@@ -79,8 +101,12 @@ export const routes: Routes = [
           import('./pages/about-us/about-us.component').then(
             (c) => c.AboutUsComponent
           ),
-        data: { titleKey: 'routes.about' },
+        data: {
+          title: 'pages.about.title',
+          description: 'pages.about.description',
+        },
       },
+
       /* Contact Us */
       {
         path: 'contact-us',
@@ -88,14 +114,21 @@ export const routes: Routes = [
           import('./pages/contact-us/contact-us.component').then(
             (c) => c.ContactUsComponent
           ),
-        data: { titleKey: 'routes.contact' },
+        data: {
+          title: 'pages.contact.title',
+          description: 'pages.contact.description',
+        },
       },
+
       /* Cart */
       {
         path: 'cart',
         loadComponent: () =>
           import('./pages/cart/cart.component').then((c) => c.CartComponent),
-        data: { titleKey: 'routes.home' },
+        data: {
+          title: 'pages.cart.title',
+          description: 'pages.cart.description',
+        },
         canActivate: [authGuard],
       },
 
@@ -115,6 +148,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/profile-details/profile-details.component'
               ).then((c) => c.ProfileDetailsComponent),
+            data: {
+              title: 'pages.profile.personal.title',
+              description: 'pages.profile.personal.description',
+            },
           },
           {
             path: 'orders',
@@ -122,6 +159,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/orders/orders.component'
               ).then((c) => c.OrdersComponent),
+            data: {
+              title: 'pages.profile.orders.title',
+              description: 'pages.profile.orders.description',
+            },
           },
           {
             path: 'address',
@@ -129,6 +170,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/address/address.component'
               ).then((c) => c.AddressComponent),
+            data: {
+              title: 'pages.profile.address.title',
+              description: 'pages.profile.address.description',
+            },
           },
           {
             path: 'password',
@@ -136,6 +181,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/password/password.component'
               ).then((c) => c.PasswordComponent),
+            data: {
+              title: 'pages.profile.password.title',
+              description: 'pages.profile.password.description',
+            },
           },
           {
             path: 'account-management',
@@ -143,11 +192,12 @@ export const routes: Routes = [
               import(
                 '../app/pages/profile/components/account-management/account-management.component'
               ).then((c) => c.AccountManagementComponent),
+            data: {
+              title: 'pages.profile.account.title',
+              description: 'pages.profile.account.description',
+            },
           },
         ],
-        data: {
-          titleKey: 'routes.profile',
-        },
       },
 
       /* Privacy */
@@ -157,8 +207,12 @@ export const routes: Routes = [
           import('./pages/privacy/privacy.component').then(
             (c) => c.PrivacyComponent
           ),
-        data: { titleKey: 'routes.privacy' },
+        data: {
+          title: 'pages.privacy.title',
+          description: 'pages.privacy.description',
+        },
       },
+
       /* Checkout */
       {
         path: 'checkout',
@@ -166,7 +220,6 @@ export const routes: Routes = [
           import('./pages/checkout/checkout.component').then(
             (c) => c.CheckoutComponent
           ),
-        data: { titleKey: 'routes.checkout' },
         children: [
           { path: '', redirectTo: 'checkout-address', pathMatch: 'full' },
           {
@@ -175,6 +228,10 @@ export const routes: Routes = [
               import(
                 './pages/checkout/components/checkout-address/checkout-address.component'
               ).then((c) => c.CheckoutAddressComponent),
+            data: {
+              title: 'pages.checkout.address.title',
+              description: 'pages.checkout.address.description',
+            },
           },
           {
             path: 'payment',
@@ -182,13 +239,21 @@ export const routes: Routes = [
               import(
                 './pages/checkout/components/payment/payment.component'
               ).then((c) => c.PaymentComponent),
+            data: {
+              title: 'pages.checkout.payment.title',
+              description: 'pages.checkout.payment.description',
+            },
           },
           {
             path: 'success-order',
             loadComponent: () =>
-              import('./pages/order-details/order-details.component').then(
-                (c) => c.OrderDetailsComponent
-              ),
+              import(
+                './pages/checkout/components/order-details/order-details.component'
+              ).then((c) => c.OrderDetailsComponent),
+            data: {
+              title: 'pages.checkout.success.title',
+              description: 'pages.checkout.success.description',
+            },
           },
           {
             path: 'track-order',
@@ -196,6 +261,10 @@ export const routes: Routes = [
               import(
                 './pages/checkout/components/track-orders/track-orders.component'
               ).then((c) => c.TrackOrdersComponent),
+            data: {
+              title: 'pages.checkout.track.title',
+              description: 'pages.checkout.track.description',
+            },
           },
         ],
         canActivate: [authGuard],
@@ -217,7 +286,8 @@ export const routes: Routes = [
             (c) => c.LoginComponent
           ),
         data: {
-          titleKey: 'routes.login',
+          title: 'pages.auth.login.title',
+          description: 'pages.auth.login.description',
         },
       },
       {
@@ -234,6 +304,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/auth/register/components/personal/personal.component'
               ).then((c) => c.PersonalComponent),
+            data: {
+              title: 'pages.auth.register.personal.title',
+              description: 'pages.auth.register.personal.description',
+            },
           },
           {
             path: 'password',
@@ -241,6 +315,10 @@ export const routes: Routes = [
               import(
                 '../app/pages/auth/register/components/password/password.component'
               ).then((c) => c.PasswordComponent),
+            data: {
+              title: 'pages.auth.register.password.title',
+              description: 'pages.auth.register.password.description',
+            },
           },
           {
             path: 'address',
@@ -248,11 +326,12 @@ export const routes: Routes = [
               import(
                 '../app/pages/auth/register/components/address/address.component'
               ).then((c) => c.AddressComponent),
+            data: {
+              title: 'pages.auth.register.address.title',
+              description: 'pages.auth.register.address.description',
+            },
           },
         ],
-        data: {
-          titleKey: 'routes.register',
-        },
       },
     ],
   },

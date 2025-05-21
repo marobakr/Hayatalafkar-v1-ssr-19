@@ -3,12 +3,12 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
-import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { ArticlesHeaderComponent } from '../../../articles/components/articles-header/articles-header.component';
 import {
   IGetOrders,
   ILastOrderResponse,
-} from '../profile/components/orders/res/order.interface';
+} from '../../../profile/components/orders/res/order.interface';
 
 @Component({
   selector: 'app-order-details',
