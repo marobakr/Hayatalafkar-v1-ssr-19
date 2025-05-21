@@ -1,5 +1,5 @@
 <div class="notifications-container">
-  @for(notification of notifications(); track trackById) {
+  @for(notification of notifications(); track $index) {
   <div
     class="notification"
     [ngClass]="getNotificationClasses(notification)"

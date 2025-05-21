@@ -43,8 +43,12 @@ export const API_CONFIG = {
     REMOVE_ALL: 'orders/removeAllCart/',
     PROMO_CODE: 'orders/checkPromoCode',
 
+    /* CHECKOUT */
+    CHECKOUT: 'orders/checkout/',
+
     /* CHECK CART */
     CHECK_CART: 'orders/cartcheck/',
+
     /* PLACE ORDER */
     PLACE_ORDER: 'orders/placeOrder/',
   },

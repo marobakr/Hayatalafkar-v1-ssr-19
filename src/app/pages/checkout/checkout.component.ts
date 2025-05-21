@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { IAddress } from '@core/interfaces/user.interface';
 import { CartStateService } from '@core/services/cart/cart-state.service';
@@ -10,9 +10,9 @@ import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { NotificationComponent } from '@shared/components/notification/notification.component';
 import { Observable } from 'rxjs';
+import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 import { CheckoutAddressComponent } from './components/checkout-address/checkout-address.component';
-import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 
 @Component({
   selector: 'app-checkout',
@@ -25,14 +25,14 @@ import { OrderSummaryComponent } from './components/order-summary/order-summary.
     RouterLink,
     RouterOutlet,
     CheckoutAddressComponent,
-    OrderSummaryComponent,
     NotificationComponent,
     ArticlesHeaderComponent,
+    ServiceCardComponent,
   ],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent {
   private _cartStateService = inject(CartStateService);
   private _notificationService = inject(NotificationService);
   private _router = inject(Router);
@@ -48,38 +48,6 @@ export class CheckoutComponent implements OnInit {
 
   // Selected address for shipping
   selectedAddress: IAddress | null = null;
-
-  ngOnInit(): void {
-    this.checkCartItems();
-    this.redirectToFirstStep();
-  }
-
-  /**
-   * Check if cart has items before proceeding with checkout
-   */
-  private checkCartItems(): void {
-    if (!this.orderDetails() || this.orderDetails().length === 0) {
-      this._notificationService.warning(
-        'checkout.cart_empty',
-        'checkout.warning'
-      );
-      this.languageService.getLanguage().subscribe((lang) => {
-        this._router.navigate(['/', lang, 'cart']);
-      });
-    }
-  }
-
-  /**
-   * Redirect to the first step if on the base checkout route
-   */
-  private redirectToFirstStep(): void {
-    // If we're on the base checkout route, redirect to the first step
-    if (this._router.url.endsWith('/checkout')) {
-      this.languageService.getLanguage().subscribe((lang) => {
-        this._router.navigate(['/', lang, 'checkout', 'checkout-address']);
-      });
-    }
-  }
 
   /**
    * Check if a given route is active

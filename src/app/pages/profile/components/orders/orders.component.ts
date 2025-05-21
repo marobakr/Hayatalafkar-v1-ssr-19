@@ -40,6 +40,7 @@ export class OrdersComponent implements OnInit {
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: (response: IGetOrders) => {
+          console.log('all users orders ', response);
           this.loading.set(false);
           if (response && response.row) {
             this.orders.set(response);

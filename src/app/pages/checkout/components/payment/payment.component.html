@@ -1,0 +1,62 @@
+<div class="checkout-content">
+  <div class="grid grid-cols-12 gap-6">
+    <div class="col-span-12 lg:col-span-8">
+      <div class="payment-container">
+        @if(isSubmitting()) {
+        <div class="flex justify-center items-center py-8">
+          <app-loading></app-loading>
+        </div>
+        } @else {
+        <div>
+          <h2 class="text-title-size text-black font-bold mb-[20px]">
+            {{ "checkout.payment.title" | translate }}
+          </h2>
+
+          <div class="cash-on-delivery-info mb-[41px]">
+            <div class="bg-white p-6 border border-[#CBAC8D] rounded-[15px]">
+              <h3 class="text-subtitle-size font-bold mb-[15px]">
+                {{ "checkout.payment.methods.cash_on_delivery" | translate }}
+              </h3>
+              <p class="text-category-size text-[#333] mb-[15px]">
+                {{
+                  "checkout.payment.cash_on_delivery_description" | translate
+                }}
+              </p>
+
+              <div
+                class="p-4 bg-[#FFF4E9] rounded-[10px] border border-[#CBAC8D] text-sm"
+              >
+                <strong>{{ "checkout.payment.note" | translate }}:</strong>
+                {{ "checkout.payment.cash_on_delivery_note" | translate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-center mt-10">
+            <app-button
+              [px]="'px-[40px] sm:px-[84px]'"
+              [py]="'py-[9px]'"
+              [title]="'checkout.payment.place_order' | translate"
+              [disabled]="isSubmitting()"
+              [isLoading]="isSubmitting()"
+              (click)="placeOrder()"
+              type="button"
+            >
+            </app-button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Order Summary Column -->
+    <div class="col-span-12 lg:col-span-4">
+      <app-order-summary
+        [selectedAddress]="selectedAddress()"
+        [showDeliveryFee]="true"
+        [showActionButton]="false"
+      ></app-order-summary>
+    </div>
+  </div>
+</div>

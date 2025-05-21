@@ -63,10 +63,6 @@
       "add_success": {
         "title": "success"
       },
-
-      "update_success": {
-        "title": "cart updated successfully"
-      },
       "remoce_success": {
         "title": "product removed from cart"
       },
@@ -79,6 +75,9 @@
       "remove_error": {
         "message": "failed to remove product from cart",
         "title": "error"
+      },
+      "update_success": {
+        "title": "cart updated successfully"
       }
     },
     "wishlist": {
@@ -341,8 +340,29 @@
     "password": "change password"
   },
   "checkout": {
+    "add_another_address": "another location",
+    "add_new_address": "add new address",
     "header": {
-      "subtitle": "Complete your application and fill out all the required information"
+      "subtitle": "Complete your application and fill out all the required information",
+      "title": "checkout track"
+    },
+    "select_shipping_address": "select address",
+    "shipping_address": "invoice details",
+    "address": {
+      "user_info_error": "Error fetching user information",
+      "error_title": "Error",
+      "warning_title": "Warning",
+      "success_title": "Success",
+      "no_locations": "No delivery locations available",
+      "locations_error": "Error fetching locations",
+      "address_added_success": "New address added successfully",
+      "address_error": "Error adding new address",
+      "refresh_error": "Error refreshing addresses",
+      "form_reset": "Form has been reset",
+      "info_title": "Information",
+      "invalid_address": "Invalid address selection",
+      "no_address_selected": "Please select an address to continue",
+      "address_selected_success": "Address selected and order updated successfully"
     }
   },
   "common": {
@@ -749,6 +769,7 @@
   "shared": {
     "add_to_cart": "Add to cart",
     "added_to_cart_success": "Item added to cart successfully",
+    "adding": "Adding...",
     "continue_shopping": "Continue Shopping",
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
@@ -758,10 +779,9 @@
     "shopping_now": "shopping now",
     "show-products": "buying the product ",
     "success": "Success",
-    "updating": "Updating...",
-    "adding": "Adding...",
     "update_cart": "update product quantity",
-    "update_cart_quantity": "Update cart quantity"
+    "update_cart_quantity": "Update cart quantity",
+    "updating": "Updating..."
   },
   "shopping": {
     "filter": {

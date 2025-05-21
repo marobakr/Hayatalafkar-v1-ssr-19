@@ -18,8 +18,7 @@ export class UserService {
   private userInfo = signal<any>(null);
 
   getUserInfo(): Observable<any> {
-    const userData = this._authService.getUserData();
-    const userId = userData?.id || '';
+    const userId = this._authService.getUserId();
 
     return this._http.get(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.GET_USER_INFO}/${userId}`
@@ -27,8 +26,7 @@ export class UserService {
   }
 
   getUserOrders(): Observable<IGetOrders> {
-    const userData = this._authService.getUserData();
-    const userId = userData?.id || '';
+    const userId = this._authService.getUserId();
 
     return this._http.get<IGetOrders>(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.GET_USER_ORDERS}/${userId}`
@@ -36,8 +34,7 @@ export class UserService {
   }
 
   getUserLastOrder(): Observable<any> {
-    const userData = this._authService.getUserData();
-    const userId = userData?.id || '';
+    const userId = this._authService.getUserId();
 
     return this._http.get(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.GET_USER_LAST_ORDER}/${userId}`
@@ -45,9 +42,19 @@ export class UserService {
   }
 
   addNewAddress(addressData: any): Observable<any> {
+    const userId = this._authService.getUserId();
+
+    const data = new FormData();
+    data.append('address', addressData.address);
+    data.append('city', addressData.city);
+    data.append('phone', addressData.phone);
+    data.append('last_name', addressData.last_name);
+    data.append('first_name', addressData.first_name);
+    data.append('location_id', addressData.location_id);
+    data.append('user_id', userId);
     return this._http.post(
       `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.ADD_NEW_ADDRESS}`,
-      addressData
+      data
     );
   }
 
