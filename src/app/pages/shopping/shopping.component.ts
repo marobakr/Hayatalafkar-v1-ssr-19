@@ -11,7 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ICategory } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CommonService } from '@core/services/common/common.service';
@@ -21,7 +21,7 @@ import { SearchService } from '@core/services/search/search.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DismissibleBadgesComponent } from '@shared/components/dismissible-badges/dismissible-badges.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { Subscription, fromEvent } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
@@ -161,6 +161,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
   private readonly route = inject(ActivatedRoute);
 
+  private readonly router = inject(Router);
+
   // ===== Constants =====
   readonly API_CONFIG_IMAGE = API_CONFIG.BASE_URL_IMAGE;
 
@@ -226,14 +228,33 @@ export class ShoppingComponent implements OnInit, OnDestroy {
       (isOpen) => this.onNavbarSearchToggle(isOpen)
     );
 
-    // Subscribe to search query events
-    this.searchQuerySubscription = this.searchService.searchQuery$.subscribe(
-      (query) => {
+    // Subscribe to search query events with debounce
+    this.searchQuerySubscription = this.searchService.searchQuery$
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((query) => {
+        // Update local search query state
         this.searchQuery.set(query);
-        this.resetPagination();
-        this.applyFilters();
-      }
-    );
+
+        // If query is empty, check if we need to clear filters
+        if (!query) {
+          // Only reset if this was the only filter
+          if (
+            this.selectedFilters().length === 0 &&
+            this.stockFilter() === 'all' &&
+            this.minPrice === 200 &&
+            this.maxPrice === 1000
+          ) {
+            this.resetFilters();
+          } else {
+            this.resetPagination();
+            this.applyFilters();
+          }
+        } else {
+          // Apply filters with the new search term
+          this.resetPagination();
+          this.applyFilters();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -263,10 +284,54 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Handles category and subcategory filtering from URL
    */
   private setupRouteParamsListener(): void {
+    // Track previous route parameters to avoid duplicate API calls
+    let previousCategoryId: string | null = null;
+    let previousSubcategoryId: string | null = null;
+    let previousSearchQuery: string | null = null;
+
     this.routeParamsSubscription = this.route.queryParams.subscribe(
       (params) => {
         const categoryId = params['categoryId'];
         const subcategoryId = params['subcategoryId'];
+        const searchQuery = params['q']; // Get search query from URL if present
+
+        // Only make API calls if parameters have changed
+        const categoryChanged = categoryId !== previousCategoryId;
+        const subcategoryChanged = subcategoryId !== previousSubcategoryId;
+        const searchQueryChanged = searchQuery !== previousSearchQuery;
+
+        // Update tracking variables
+        previousCategoryId = categoryId;
+        previousSubcategoryId = subcategoryId;
+        previousSearchQuery = searchQuery;
+
+        // If search query is present in URL, update the search state
+        if (searchQuery) {
+          this.searchQuery.set(searchQuery);
+          // Also update the search service to maintain consistency
+          this.searchService.updateSearchQuery(searchQuery);
+
+          // Update search input field if it exists
+          setTimeout(() => {
+            const searchInput = document.getElementById(
+              'desktop-search'
+            ) as HTMLInputElement;
+            if (searchInput) {
+              searchInput.value = searchQuery;
+            }
+          }, 100);
+        }
+
+        // If neither filter parameter changed, don't make a new API call
+        // Note: We still process the search query above even if no API call is needed
+        if (!categoryChanged && !subcategoryChanged) {
+          if (searchQueryChanged && this.products.length > 0) {
+            // If only search query changed and we already have products, just apply filters
+            this.resetPagination();
+            this.applyFilters();
+          }
+          return;
+        }
 
         this.isLoading.set(true);
 
@@ -274,17 +339,28 @@ export class ShoppingComponent implements OnInit, OnDestroy {
           // Set category ID parameter
           this.categoryId.set(categoryId);
 
+          // Reset subcategory filters
+          this.subcategoryId.set(null);
+          this.subcategoryName.set(null);
+
           // Call API to get products by category
           this.getProductsByCategory(categoryId);
         } else if (subcategoryId) {
           // Set subcategory ID parameter
           this.subcategoryId.set(subcategoryId);
 
+          // Reset category filters
+          this.categoryId.set(null);
+          this.categoryName.set(null);
+
           // Call API to get products by subcategory
           this.getProductsBySubcategory(subcategoryId);
         } else {
           // No category/subcategory filter, get all products
-          this.getAllProducts();
+          // Only fetch if we're transitioning from having a filter to no filter
+          if (categoryChanged || subcategoryChanged) {
+            this.getAllProducts();
+          }
         }
       }
     );
@@ -309,7 +385,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
           this.categoryName.set(categoryName);
 
-          // Add category to selected filters
+          // Add category to selected filters if not already present
           const currentFilters = this.selectedFilters();
           const categorySlug =
             currentLang === 'en'
@@ -318,6 +394,17 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
           if (categorySlug && !currentFilters.includes(categorySlug)) {
             this.selectedFilters.set([...currentFilters, categorySlug]);
+
+            // Check the corresponding checkbox for this category
+            setTimeout(() => {
+              const checkbox = document.querySelector(
+                `input[type="checkbox"][data-slug="${categorySlug}"]`
+              ) as HTMLInputElement;
+
+              if (checkbox) {
+                checkbox.checked = true;
+              }
+            }, 100);
           }
         } else {
           // Try to find category name from categories list if not in API response
@@ -326,11 +413,37 @@ export class ShoppingComponent implements OnInit, OnDestroy {
           );
           if (category) {
             const currentLang = this._translate.currentLang;
-            this.categoryName.set(
-              currentLang === 'en' ? category.en_name : category.ar_name
-            );
+            const categoryName =
+              currentLang === 'en' ? category.en_name : category.ar_name;
+            const categorySlug =
+              currentLang === 'en' ? category.en_slug : category.ar_slug;
+
+            this.categoryName.set(categoryName);
+
+            // Add category to selected filters if not already present
+            const currentFilters = this.selectedFilters();
+            if (categorySlug && !currentFilters.includes(categorySlug)) {
+              this.selectedFilters.set([...currentFilters, categorySlug]);
+
+              // Check the corresponding checkbox for this category
+              setTimeout(() => {
+                const checkbox = document.querySelector(
+                  `input[type="checkbox"][data-slug="${categorySlug}"]`
+                ) as HTMLInputElement;
+
+                if (checkbox) {
+                  checkbox.checked = true;
+                }
+              }, 100);
+            }
           }
         }
+
+        // Reset other filters when navigating from mega menu
+        this.stockFilter.set('all');
+        this.minPrice = 200;
+        this.maxPrice = 1000;
+        this.searchQuery.set('');
 
         // Update filters and pagination
         this.filteredProducts.set(this.products);
@@ -376,9 +489,46 @@ export class ShoppingComponent implements OnInit, OnDestroy {
               ? this.products[0].category.en_name
               : this.products[0].category.ar_name;
 
+          const categorySlug =
+            currentLang === 'en'
+              ? this.products[0].category.en_slug
+              : this.products[0].category.ar_slug;
+
+          const categoryId = this.products[0].category.id;
+
           this.categoryName.set(categoryName);
           this.subcategoryName.set(subcategoryName);
+
+          // When coming from subcategory navigation, we want to add the parent category
+          // to the selected filters, but not the subcategory (since it's not in the sidebar)
+          if (categorySlug) {
+            // First clear any existing filters to avoid conflicts
+            this.selectedFilters.set([]);
+
+            // Add parent category to selected filters
+            this.selectedFilters.set([categorySlug]);
+
+            // Reset all checkboxes first to ensure clean state
+            this.resetCheckboxes();
+
+            // Check only the parent category checkbox
+            setTimeout(() => {
+              const checkbox = document.querySelector(
+                `input[type="checkbox"][data-slug="${categorySlug}"]`
+              ) as HTMLInputElement;
+
+              if (checkbox) {
+                checkbox.checked = true;
+              }
+            }, 100);
+          }
         }
+
+        // Reset other filters when navigating from mega menu
+        this.stockFilter.set('all');
+        this.minPrice = 200;
+        this.maxPrice = 1000;
+        this.searchQuery.set('');
 
         // Update filters and pagination
         this.filteredProducts.set(this.products);
@@ -435,14 +585,13 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
     // If we found the input and haven't subscribed yet
     if (searchInput && !this.searchSubscription) {
-      // Set up input event listener with debounce
-      this.searchSubscription = fromEvent(searchInput, 'input')
-        .pipe(debounceTime(300), distinctUntilChanged())
-        .subscribe(() => {
-          this.searchQuery.set(searchInput.value.trim().toLowerCase());
-          this.resetPagination();
-          this.applyFilters();
-        });
+      // If we have an active search query, update the input field
+      if (this.searchQuery()) {
+        searchInput.value = this.searchQuery();
+      }
+
+      // We don't need to set up a local subscription for the input events
+      // since the navbar component already handles this through the search service
 
       // Check if there's a query parameter in the URL for search
       const urlParams = new URLSearchParams(window.location.search);
@@ -465,10 +614,22 @@ export class ShoppingComponent implements OnInit, OnDestroy {
   toggleFilter(category: ICategory, event: any): void {
     const isChecked = event.checked;
     const currentFilters = this.selectedFilters();
+    const currentLang = this._translate.currentLang;
     const categorySlug =
-      this._translate.currentLang === 'en'
-        ? category.en_slug
-        : category.ar_slug;
+      currentLang === 'en' ? category.en_slug : category.ar_slug;
+
+    // If a subcategory filter is active and we're checking a category filter,
+    // clear the subcategory filter from the route
+    if (isChecked && this.subcategoryId()) {
+      this.subcategoryId.set(null);
+      this.subcategoryName.set(null);
+
+      // Update URL to remove subcategory parameter, but maintain categoryId
+      this.router.navigate(['/' + currentLang + '/shopping'], {
+        queryParams: { categoryId: category.id },
+        replaceUrl: true,
+      });
+    }
 
     if (isChecked) {
       if (!currentFilters.includes(categorySlug)) {
@@ -582,6 +743,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Restores full product list
    */
   clearAllFilters(): void {
+    // Reset all filter state
     this.selectedFilters.set([]);
     this.stockFilter.set('all');
     this.minPrice = 200;
@@ -600,8 +762,20 @@ export class ShoppingComponent implements OnInit, OnDestroy {
       searchInput.value = '';
     }
 
+    // Also update the search service to maintain consistency
+    this.searchService.updateSearchQuery('');
+
+    // Reset all checkboxes in the UI
     this.resetCheckboxes();
     this.resetFilters();
+
+    // Update URL to remove all query parameters
+    this.router.navigate(['/' + this._translate.currentLang + '/shopping'], {
+      replaceUrl: true,
+      queryParams: {}, // Clear all query parameters
+    });
+
+    // Fetch all products since we've cleared both category and subcategory filters
     this.getAllProducts();
   }
 
@@ -617,6 +791,24 @@ export class ShoppingComponent implements OnInit, OnDestroy {
     );
 
     this.uncheckCategoryCheckbox(badge);
+
+    // Check if this badge corresponds to the current category or subcategory filter
+    const currentCategorySlug =
+      this.categories.find((cat) => cat.id.toString() === this.categoryId())
+        ?.en_slug ||
+      this.categories.find((cat) => cat.id.toString() === this.categoryId())
+        ?.ar_slug;
+
+    // If the removed badge matches the current category, clear URL parameters
+    if (badge === currentCategorySlug) {
+      this.categoryId.set(null);
+      this.categoryName.set(null);
+
+      // Update URL to remove the category ID parameter
+      this.router.navigate(['/' + this._translate.currentLang + '/shopping'], {
+        replaceUrl: true,
+      });
+    }
 
     // If we removed the last filter, reset to full product list
     if (
@@ -743,15 +935,25 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Clears only the search filter
    */
   clearSearchFilter(): void {
+    // Clear local search query state
     this.searchQuery.set('');
 
-    // Clear the search input field
+    // Also update the search service to maintain consistency
+    this.searchService.updateSearchQuery('');
+
+    // Clear the search input field in the UI
     const searchInput = document.getElementById(
       'desktop-search'
     ) as HTMLInputElement;
     if (searchInput) {
       searchInput.value = '';
     }
+
+    // Remove search query parameter from URL
+    this.router.navigate([], {
+      queryParams: { q: null },
+      queryParamsHandling: 'merge', // Keep other query parameters
+    });
 
     // If all filters are now removed, reset to show all products
     if (
@@ -798,9 +1000,11 @@ export class ShoppingComponent implements OnInit, OnDestroy {
 
     let filtered = this.products;
 
-    // Apply search filter
+    // Apply search filter first for better performance
+    // (reduce the dataset before applying other filters)
     if (searchQuery) {
       filtered = filtered.filter((product) => {
+        // Get language-specific name and description
         const productName =
           currentLang === 'en'
             ? product.en_name?.toLowerCase() || ''
@@ -811,15 +1015,48 @@ export class ShoppingComponent implements OnInit, OnDestroy {
             ? product.en_description?.toLowerCase() || ''
             : product.ar_description?.toLowerCase() || '';
 
+        // Get language-specific slugs for product and its category
+        const productSlug =
+          currentLang === 'en'
+            ? product.en_slug?.toLowerCase() || ''
+            : product.ar_slug?.toLowerCase() || '';
+
+        const categorySlug =
+          currentLang === 'en'
+            ? product.category?.en_slug?.toLowerCase() || ''
+            : product.category?.ar_slug?.toLowerCase() || '';
+
+        const subcategorySlug = product.subcategory
+          ? currentLang === 'en'
+            ? product.subcategory.en_slug?.toLowerCase() || ''
+            : product.subcategory.ar_slug?.toLowerCase() || ''
+          : '';
+
+        // More comprehensive search across multiple fields
         return (
           productName.includes(searchQuery) ||
-          productDescription.includes(searchQuery)
+          productDescription.includes(searchQuery) ||
+          productSlug.includes(searchQuery) ||
+          categorySlug.includes(searchQuery) ||
+          subcategorySlug.includes(searchQuery) ||
+          // Optional fields from any custom product properties
+          (product as any).sku?.toLowerCase()?.includes(searchQuery) ||
+          (product as any).barcode?.toLowerCase()?.includes(searchQuery)
         );
       });
     }
 
-    // Apply category filters
+    // Apply category filters - this takes precedence over subcategory filters
     if (selectedSlugs.length > 0) {
+      // If we have manual category filters applied, they should override subcategory context
+      if (this.subcategoryId() && !this.categoryId()) {
+        // Clear subcategory context since category filters take precedence
+        this.subcategoryId.set(null);
+        this.subcategoryName.set(null);
+
+        // Don't update URL here, as that was already handled in toggleFilter
+      }
+
       filtered = filtered.filter((product) => {
         const productSlug =
           currentLang === 'en'

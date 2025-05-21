@@ -31,6 +31,7 @@ export interface IAllProduct {
   updated_at: string;
   category: Category;
   subcategory: Subcategory;
+  size: string;
 }
 
 export interface Category {

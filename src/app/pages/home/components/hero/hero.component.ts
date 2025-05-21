@@ -4,8 +4,11 @@ import {
   Component,
   inject,
   Input,
+  OnChanges,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
@@ -20,6 +23,8 @@ import {
   CarouselModule,
   OwlOptions,
 } from 'ngx-owl-carousel-o';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Slider } from '../../res/home.interfaces';
 
 @Component({
@@ -37,7 +42,9 @@ import { Slider } from '../../res/home.interfaces';
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.css',
 })
-export class HeroComponent implements OnInit, AfterViewInit {
+export class HeroComponent
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy
+{
   @Input() heroSection: Slider[] = [];
   @ViewChild('owlCarousel') owlCarousel!: CarouselComponent;
 
@@ -45,6 +52,8 @@ export class HeroComponent implements OnInit, AfterViewInit {
   private languageService = inject(LanguageService);
   private isBrowser = isPlatformBrowser(this.platformId);
   private currentLanguage: string = 'en';
+  private destroy$ = new Subject<void>();
+  private isCarouselInitialized = false;
 
   currentLang$ = this.languageService.getLanguage();
 
@@ -61,49 +70,57 @@ export class HeroComponent implements OnInit, AfterViewInit {
     items: 1,
     autoplay: true,
     autoplayTimeout: 5000,
-    autoplayHoverPause: true,
+    autoplayHoverPause: false,
     margin: 0,
-    smartSpeed: 800,
+    smartSpeed: 1000,
     center: true,
     stagePadding: 0,
     rewind: false,
-    slideTransition: 'fade',
+    slideTransition: 'linear',
     animateIn: 'fadeIn',
     animateOut: 'fadeOut',
     lazyLoad: true,
     rtl: false,
-    navText: [
-      '<i class="fa fa-chevron-left"></i>',
-      '<i class="fa fa-chevron-right"></i>',
-    ],
+    navText: ['', ''],
     responsive: {
       0: {
         items: 1,
-        nav: true,
+        nav: false,
       },
       768: {
         items: 1,
-        nav: true,
+        nav: false,
       },
     },
-    nav: true,
+    nav: false,
   };
 
   ngOnInit(): void {
     // Subscribe to language changes to update RTL setting
     if (this.isBrowser) {
-      this.languageService.getLanguage().subscribe((lang) => {
-        this.currentLanguage = lang;
-        this.customOptions = {
-          ...this.customOptions,
-          rtl: lang === 'ar',
-        };
+      this.languageService
+        .getLanguage()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((lang) => {
+          this.currentLanguage = lang;
+          this.customOptions = {
+            ...this.customOptions,
+            rtl: lang === 'ar',
+          };
 
-        // Give time for DOM to update and then remove any duplicate dots
-        setTimeout(() => {
-          this.fixDuplicatedDots();
-        }, 100);
-      });
+          if (this.isCarouselInitialized && this.owlCarousel) {
+            this.resetCarousel();
+          }
+        });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['heroSection'] && !changes['heroSection'].firstChange) {
+      if (this.isBrowser && this.owlCarousel) {
+        // Reset the carousel when slider data changes
+        this.resetCarousel();
+      }
     }
   }
 
@@ -111,11 +128,49 @@ export class HeroComponent implements OnInit, AfterViewInit {
     if (this.isBrowser) {
       // Fix carousel after it's fully initialized
       setTimeout(() => {
+        this.isCarouselInitialized = true;
         this.fixDuplicatedDots();
-        this.ensureNavigationArrowsVisible();
-        this.enhanceLoopTransition();
+        this.hideNavigationArrows();
+        this.setupCarouselEventListeners();
       }, 300);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    // Remove any observers
+    if (this.isBrowser && typeof document !== 'undefined') {
+      const carouselElement = document.querySelector('.owl-carousel');
+      if (carouselElement && (carouselElement as any)._observer) {
+        (carouselElement as any)._observer.disconnect();
+      }
+    }
+  }
+
+  private resetCarousel(): void {
+    // Give time for DOM to update with new data
+    setTimeout(() => {
+      if (this.owlCarousel) {
+        // Update the carousel configuration
+        this.owlCarousel.options = { ...this.customOptions };
+
+        // Force refresh by triggering carousel refresh
+        const carouselElement = document.querySelector(
+          '.owl-carousel'
+        ) as HTMLElement;
+        if (carouselElement) {
+          // Remove and readd a class to force a refresh
+          carouselElement.classList.remove('owl-loaded');
+          setTimeout(() => {
+            carouselElement.classList.add('owl-loaded');
+            this.fixDuplicatedDots();
+            this.fixClonedSlides();
+          }, 50);
+        }
+      }
+    }, 50);
   }
 
   private fixDuplicatedDots(): void {
@@ -128,41 +183,60 @@ export class HeroComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private ensureNavigationArrowsVisible(): void {
+  private hideNavigationArrows(): void {
     if (typeof document !== 'undefined') {
-      const navButtons = document.querySelectorAll('.owl-nav button');
-      navButtons.forEach((btn: Element) => {
-        (btn as HTMLElement).style.visibility = 'visible';
-        (btn as HTMLElement).style.opacity = '1';
-      });
+      const navContainer = document.querySelector('.owl-nav');
+      if (navContainer) {
+        (navContainer as HTMLElement).style.display = 'none';
+      }
     }
   }
 
-  private enhanceLoopTransition(): void {
+  private setupCarouselEventListeners(): void {
     if (typeof document !== 'undefined') {
-      // Add class to help with custom looping animation
       const carouselElement = document.querySelector('.owl-carousel');
       if (carouselElement) {
         carouselElement.classList.add('enhanced-loop');
 
-        // Monitor for slide change to manage cloned slides appearance
-        const observer = new MutationObserver((mutations) => {
-          const owlStage = document.querySelector('.owl-stage');
-          if (owlStage) {
-            const clonedItems = document.querySelectorAll('.owl-item.cloned');
-            clonedItems.forEach((item: Element) => {
-              // Adjust opacity transition timing when changing from last to first
-              (item as HTMLElement).style.transition = 'opacity 0.8s ease';
+        // Listen for carousel initialization and translate events
+        if (this.owlCarousel) {
+          this.owlCarousel.translated
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+              this.fixClonedSlides();
             });
-          }
-        });
 
-        observer.observe(carouselElement, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-        });
+          this.owlCarousel.initialized
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+              this.fixClonedSlides();
+            });
+        }
       }
+    }
+  }
+
+  private fixClonedSlides(): void {
+    if (typeof document !== 'undefined') {
+      const clonedItems = document.querySelectorAll('.owl-item.cloned');
+      const activeItems = document.querySelectorAll('.owl-item.active');
+
+      // Make sure only one item is visible at a time
+      activeItems.forEach((item, index) => {
+        if (index > 0) {
+          (item as HTMLElement).style.opacity = '0';
+          (item as HTMLElement).style.visibility = 'hidden';
+        } else {
+          (item as HTMLElement).style.opacity = '1';
+          (item as HTMLElement).style.visibility = 'visible';
+        }
+      });
+
+      // Make cloned items invisible
+      clonedItems.forEach((item) => {
+        (item as HTMLElement).style.opacity = '0';
+        (item as HTMLElement).style.visibility = 'hidden';
+      });
     }
   }
 }

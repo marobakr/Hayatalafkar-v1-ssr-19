@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
+import { checkoutAddressResolver } from './pages/checkout/res/resolvers/checkout-address.resolver';
+import { checkoutLocationsResolver } from './pages/checkout/res/resolvers/checkout-locations.resolver';
 import { productDetailsResolver } from './pages/product-details/res/product-details.resolver';
 
 export const routes: Routes = [
@@ -228,6 +230,10 @@ export const routes: Routes = [
               import(
                 './pages/checkout/components/checkout-address/checkout-address.component'
               ).then((c) => c.CheckoutAddressComponent),
+            resolve: {
+              addressData: checkoutAddressResolver,
+              locationsData: checkoutLocationsResolver,
+            },
             data: {
               title: 'pages.checkout.address.title',
               description: 'pages.checkout.address.description',

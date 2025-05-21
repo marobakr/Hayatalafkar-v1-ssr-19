@@ -147,7 +147,12 @@
     class="flex flex-row rtl:flex-row-reverse justify-between items-center mt-[26px] mb-4"
   >
     <a
-      href="#"
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'product-details',
+        productData | customTranslate : 'slug'
+      ]"
       class="text-muted-rose hover:underline text-category-size underline font-bold"
     >
       {{ "shared.show-products" | translate }}

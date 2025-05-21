@@ -256,6 +256,7 @@ export class SharedBestSellerComponent implements OnInit {
       return;
     }
     this.isAddingToWishlist.set(true);
+    console.log(this.productData.id);
     this._wishlistService.addToWishlist(this.productData.id).subscribe({
       next: () => {
         this.isInWishlist.set(true);

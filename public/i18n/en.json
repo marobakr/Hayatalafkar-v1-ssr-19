@@ -14,6 +14,9 @@
     "main-title": "follow along",
     "title": "do you have any questions !?"
   },
+  "Login_failed": "Login failed",
+  "Login_successful": "login successfull",
+  "Registration_successful": "Registration successful",
   "about-us": {
     "cards": {
       "card-1": {
@@ -61,10 +64,11 @@
   "alerts": {
     "cart": {
       "add_success": {
-        "title": "success"
+        "title": "Product added to cart successfully"
       },
-      "remoce_success": {
-        "title": "product removed from cart"
+      "error": {
+        "message": "An error occurred while processing your request. Please try again",
+        "title": "Cart Error"
       },
       "remove_confirm": {
         "cancel": "cancel",
@@ -76,13 +80,23 @@
         "message": "failed to remove product from cart",
         "title": "error"
       },
+      "remove_success": {
+        "title": "Product removed from cart successfully"
+      },
       "update_success": {
         "title": "cart updated successfully"
       }
     },
     "wishlist": {
       "add_success": {
-        "title": "wishlist addedd sucess"
+        "title": "Product added to wishlist successfully"
+      },
+      "remove_all_confirm": {
+        "message": "Are you sure you want to remove all products from your wishlist?",
+        "title": "Remove all products from wishlist"
+      },
+      "remove_all_success": {
+        "title": "All products removed from wishlist successfully"
       },
       "remove_confirm": {
         "cancel": "cancel",
@@ -95,7 +109,7 @@
         "title": "error"
       },
       "remove_success": {
-        "title": "product removed from wishlist"
+        "title": "Product removed from wishlist successfully"
       }
     }
   },
@@ -159,6 +173,7 @@
   },
   "auth": {
     "login": {
+      "description": "Sign in to your account",
       "header": {
         "subtitle": "login with us easily",
         "title": "profile"
@@ -170,12 +185,13 @@
         "phone-number": "phone number or e-mail",
         "phone-number-placeholder": "please enter your phone number or e-mail address correctly"
       },
-      "title": "Login | Hayat Alafkar",
-      "description": "Sign in to your account"
+      "title": "Login | Hayat Alafkar"
     },
     "register": {
+      "description": "Create your account",
       "register-form": {
         "address": {
+          "description": "Create your account - Step 3: Add Address",
           "fields": {
             "address": {
               "label": "Address ",
@@ -214,7 +230,7 @@
               "placeholder": "Enter Your Country's Postal Code"
             }
           },
-          "title": "Add Address",
+          "title": "Register - Address | Hayat Alafkar",
           "validation": {
             "address": {
               "required": "Address is required"
@@ -249,9 +265,7 @@
             "state": {
               "required": "State is required"
             }
-          },
-          "title": "Register - Address | Hayat Alafkar",
-          "description": "Create your account - Step 3: Add Address"
+          }
         },
         "password": {
           "button": "add password",
@@ -259,26 +273,25 @@
             "label": "confirmation password ",
             "placeholder": "confirmation your password"
           },
+          "description": "Create your account - Step 2: Set Password",
           "newPassword": {
             "label": "password",
             "placeholder": "write password "
           },
-          "title": "Register - Password | Hayat Alafkar",
-          "description": "Create your account - Step 2: Set Password"
+          "title": "Register - Password | Hayat Alafkar"
         },
         "personal": {
+          "description": "Create your account - Step 1: Personal Information",
           "genders": {
             "female": "female",
             "gender": "gender",
             "haveAccount": "do you already have an account!?",
             "male": "male"
           },
-          "title": "Register - Personal Info | Hayat Alafkar",
-          "description": "Create your account - Step 1: Personal Information"
+          "title": "Register - Personal Info | Hayat Alafkar"
         }
       },
-      "title": "Register | Hayat Alafkar",
-      "description": "Create your account"
+      "title": "Register | Hayat Alafkar"
     },
     "taps": {
       "address": "Address",
@@ -312,8 +325,8 @@
     "viewAllProducts": "View All Products"
   },
   "blogs": {
-    "title": "Blog & Articles | Hayat Alafkar",
-    "description": "Latest news and articles about beauty, skincare, and wellness"
+    "description": "Latest news and articles about beauty, skincare, and wellness",
+    "title": "Blog & Articles | Hayat Alafkar"
   },
   "cancel-order": "cancel order",
   "cart": {
@@ -323,6 +336,7 @@
       "discount-code": "discount code"
     },
     "cart_cleared": "Cart cleared successfully",
+    "description": "View and manage your shopping cart items",
     "empty": {
       "message": "Looks like you haven't added any items to your cart yet",
       "shop-now": "Shop Now",
@@ -345,8 +359,7 @@
       "invalid-code": "Invalid promo code. Please check and try again.",
       "success": "Promo code applied successfully!"
     },
-    "title": "Shopping Cart | Hayat Alafkar",
-    "description": "View and manage your shopping cart items"
+    "title": "Shopping Cart | Hayat Alafkar"
   },
   "change": {
     "address": "change address",
@@ -359,37 +372,69 @@
       "address_added_success": "New address added successfully",
       "address_error": "Error adding new address",
       "address_selected_success": "Address selected and order updated successfully",
+      "description": "Enter your shipping details for order delivery",
       "error_title": "Error",
       "form_reset": "Form has been reset",
       "info_title": "Information",
       "invalid_address": "Invalid address selection",
+      "loading_addresses": "Loading addresses...",
+      "loading_locations": "Loading locations...",
       "locations_error": "Error fetching locations",
       "no_address_selected": "Please select an address to continue",
       "no_locations": "No delivery locations available",
+      "processing_address": "Processing address...",
+      "processing_order": "Processing order...",
       "refresh_error": "Error refreshing addresses",
       "success_title": "Success",
-      "user_info_error": "Error fetching user information",
-      "warning_title": "Warning",
       "title": "Shipping Address | Hayat Alafkar",
-      "description": "Enter your shipping details for order delivery"
+      "user_info_error": "Error fetching user information",
+      "warning_title": "Warning"
     },
     "header": {
       "subtitle": "Complete your application and fill out all the required information",
       "title": "checkout track"
     },
+    "next_step": "next step",
+    "payment": {
+      "card_name": "Name on Card",
+      "card_name_placeholder": "John Smith",
+      "card_number": "Card Number",
+      "card_number_placeholder": "1234 5678 9012 3456",
+      "cash_on_delivery_description": "Pay in cash when your order is delivered",
+      "cash_on_delivery_note": "Your order will be delivered to your address and you can pay directly to the courier",
+      "cvv": "CVV",
+      "cvv_placeholder": "123",
+      "description": "Complete your purchase with secure payment",
+      "error": "Payment Error",
+      "expiry_date": "Expiry Date",
+      "expiry_date_placeholder": "MM/YY",
+      "loading_payment": "Loading payment options...",
+      "method": "Payment Method",
+      "methods": {
+        "cash_on_delivery": "Cash on Delivery",
+        "credit_card": "Credit Card",
+        "paypal": "PayPal"
+      },
+      "no_address_selected": "No shipping address selected",
+      "no_order": "No active order",
+      "note": "Note",
+      "order_placed_error": "Error processing your order",
+      "order_placed_success": "Your order has been placed successfully",
+      "place_order": "Place Order",
+      "processing_payment": "Processing payment...",
+      "success": "Success",
+      "title": "Payment | Hayat Alafkar",
+      "validating_payment": "Validating payment information..."
+    },
     "select_shipping_address": "select address",
     "shipping_address": "invoice details",
-    "payment": {
-      "title": "Payment | Hayat Alafkar",
-      "description": "Complete your purchase with secure payment"
-    },
     "success": {
-      "title": "Order Confirmation | Hayat Alafkar",
-      "description": "Your order has been successfully placed"
+      "description": "Your order has been successfully placed",
+      "title": "Order Confirmation | Hayat Alafkar"
     },
     "track": {
-      "title": "Track Order | Hayat Alafkar",
-      "description": "Track the status of your order"
+      "description": "Track the status of your order",
+      "title": "Track Order | Hayat Alafkar"
     }
   },
   "common": {
@@ -600,6 +645,7 @@
       "lang": "Language"
     },
     "logout": "Logout",
+    "mobile_search_hint": "Search for products by name, category, or description",
     "pages_Title": {
       "articles": {
         "title": "Articles"
@@ -693,12 +739,118 @@
   "orderDetailsTitle": "your order reviced seccess",
   "out_of_stock": "out of stock",
   "page": "Page",
+  "pages": {
+    "about": {
+      "description": "Learn more about our mission and vision in beauty and wellness",
+      "title": "About Us | Hayat Alafkar"
+    },
+    "auth": {
+      "login": {
+        "description": "Sign in to your account",
+        "title": "Login | Hayat Alafkar"
+      },
+      "register": {
+        "address": {
+          "description": "Create your account - Step 3: Add Address",
+          "title": "Register - Address | Hayat Alafkar"
+        },
+        "password": {
+          "description": "Create your account - Step 2: Set Password",
+          "title": "Register - Password | Hayat Alafkar"
+        },
+        "personal": {
+          "description": "Create your account - Step 1: Personal Information",
+          "title": "Register - Personal Info | Hayat Alafkar"
+        }
+      }
+    },
+    "blog": {
+      "description": "Read our detailed articles about beauty and wellness",
+      "title": "Blog Details | Hayat Alafkar"
+    },
+    "blogs": {
+      "description": "Latest news and articles about beauty, skincare, and wellness",
+      "title": "Blog & Articles | Hayat Alafkar"
+    },
+    "cart": {
+      "description": "View and manage your shopping cart items",
+      "title": "Shopping Cart | Hayat Alafkar"
+    },
+    "checkout": {
+      "address": {
+        "description": "Enter your shipping details for order delivery",
+        "title": "Shipping Address | Hayat Alafkar"
+      },
+      "payment": {
+        "description": "Complete your purchase with secure payment",
+        "title": "Payment | Hayat Alafkar"
+      },
+      "success": {
+        "description": "Your order has been successfully placed",
+        "title": "Order Confirmation | Hayat Alafkar"
+      },
+      "track": {
+        "description": "Track the status of your order",
+        "title": "Track Order | Hayat Alafkar"
+      }
+    },
+    "contact": {
+      "description": "Get in touch with us for any inquiries or support",
+      "title": "Contact Us | Hayat Alafkar"
+    },
+    "home": {
+      "description": "Welcome to Hayat Alafkar - Your ultimate destination for beauty and cosmetics",
+      "title": "Home | Hayat Alafkar"
+    },
+    "privacy": {
+      "description": "Read our privacy policy and data protection guidelines",
+      "title": "Privacy Policy | Hayat Alafkar"
+    },
+    "product": {
+      "description": "View detailed product information and specifications",
+      "title": "Product Details | Hayat Alafkar"
+    },
+    "profile": {
+      "account": {
+        "description": "Manage your account settings and preferences",
+        "title": "Account Management | Hayat Alafkar"
+      },
+      "address": {
+        "description": "Manage your shipping and billing addresses",
+        "title": "My Addresses | Hayat Alafkar"
+      },
+      "orders": {
+        "description": "View and track your order history",
+        "title": "My Orders | Hayat Alafkar"
+      },
+      "password": {
+        "description": "Update your account password",
+        "title": "Change Password | Hayat Alafkar"
+      },
+      "personal": {
+        "description": "Manage your personal information and preferences",
+        "title": "Personal Details | Hayat Alafkar"
+      }
+    },
+    "shopping": {
+      "description": "Browse our collection of beauty and cosmetic products",
+      "title": "Shop | Hayat Alafkar"
+    },
+    "wishlist": {
+      "description": "View and manage your favorite products",
+      "title": "My Wishlist | Hayat Alafkar"
+    }
+  },
   "privacy": {
-    "title": "Privacy Policy | Hayat Alafkar",
-    "description": "Read our privacy policy and data protection guidelines"
+    "description": "Read our privacy policy and data protection guidelines",
+    "title": "Privacy Policy | Hayat Alafkar"
   },
   "product_code": "product code ",
   "product_details": {
+    "how_to_use": "how  to use",
+    "ingredient": "ingredient",
+    "more_information": "more information",
+    "size": "size",
     "tabs": {
       "additional_info": "addition information",
       "description": "description",
@@ -709,42 +861,41 @@
     "address": {
       "address_added_success": "Address added successfully",
       "address_error": "Error adding address",
+      "description": "Manage your shipping and billing addresses",
       "error_title": "Error",
       "form_invalid": "Please fill all required fields correctly",
       "form_reset": "Form has been reset",
       "info_title": "Information",
       "locations_error": "Error fetching locations",
       "success_title": "Success",
-      "user_info_error": "Error fetching user information",
-      "validation_title": "Validation Error",
       "title": "My Addresses | Hayat Alafkar",
-      "description": "Manage your shipping and billing addresses"
+      "user_info_error": "Error fetching user information",
+      "validation_title": "Validation Error"
     },
     "password": {
       "confirm-password": "Confirm Password",
       "current-password": "Current Password",
+      "description": "Update your account password",
       "new-password": "New Password",
       "placeholder-confirm-password": "Confirm your new password",
       "placeholder-current-password": "Enter your current password",
       "placeholder-new-password": "Enter your new password",
-      "update": "Update Password",
       "title": "Change Password | Hayat Alafkar",
-      "description": "Update your account password"
+      "update": "Update Password"
     },
     "subtitle": "follow your profile and register your data",
     "tabs": {
       "account": "Account Management | Hayat Alafkar",
       "address": "Manage Addresses",
-      "orders": "My Orders | Hayat Alafkar",
-      "profile": "Personal Details",
-      "personal": {
-        "title": "Personal Details | Hayat Alafkar",
-        "description": "Manage your personal information and preferences"
-      },
       "orders": {
-        "title": "My Orders | Hayat Alafkar",
-        "description": "View and track your order history"
-      }
+        "description": "View and track your order history",
+        "title": "My Orders | Hayat Alafkar"
+      },
+      "personal": {
+        "description": "Manage your personal information and preferences",
+        "title": "Personal Details | Hayat Alafkar"
+      },
+      "profile": "Personal Details"
     },
     "title": "My Profile"
   },
@@ -770,6 +921,7 @@
     "explore": "explore",
     "title": "related products"
   },
+  "remove_from_cart": "remove from cart",
   "reorder": "reorder",
   "reset": {
     "form": "Reset Form"
@@ -811,20 +963,30 @@
     "add_to_cart": "Add to cart",
     "added_to_cart_success": "Item added to cart successfully",
     "adding": "Adding...",
+    "buttons": {
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "saving": "Saving...",
+      "submitting": "Submitting..."
+    },
     "continue_shopping": "Continue Shopping",
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
+    "loading": "Loading...",
     "offer": "25% Discount",
     "price_varies": "Price varies based on options",
+    "processing": "Processing...",
     "readMore": "Read More",
     "shopping_now": "shopping now",
     "show-products": "buying the product ",
     "success": "Success",
     "update_cart": "update product quantity",
     "update_cart_quantity": "Update cart quantity",
-    "updating": "Updating..."
+    "updating": "Updating...",
+    "wait_response": "Please wait..."
   },
   "shopping": {
+    "description": "Browse our collection of beauty and cosmetic products",
     "filter": {
       "active": "active",
       "category": "Category",
@@ -874,13 +1036,12 @@
       "placeholder": "Search for products",
       "suggestions": "Try different keywords"
     },
+    "title": "Shop | Hayat Alafkar",
     "view-category": "View category",
     "view-options": {
       "grid": "Grid view",
       "list": "List view"
-    },
-    "title": "Shop | Hayat Alafkar",
-    "description": "Browse our collection of beauty and cosmetic products"
+    }
   },
   "show": {
     "product": "show product"
@@ -923,6 +1084,7 @@
       "message": "You need to be logged in to view and manage your wishlist items.",
       "title": "Please Login to Access Your Wishlist"
     },
+    "description": "View and manage your favorite products",
     "empty": {
       "message": "Looks like you haven't added any items to your wishlist yet",
       "shop-now": "Start Shopping",
@@ -951,114 +1113,11 @@
         "subtitle": "skin care"
       }
     },
+    "title": "My Wishlist | Hayat Alafkar",
     "wishlist-footer": {
       "add-all": "add all",
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
-    },
-    "title": "My Wishlist | Hayat Alafkar",
-    "description": "View and manage your favorite products"
-  },
-  "pages": {
-    "home": {
-      "title": "Home | Hayat Alafkar",
-      "description": "Welcome to Hayat Alafkar - Your ultimate destination for beauty and cosmetics"
-    },
-    "wishlist": {
-      "title": "My Wishlist | Hayat Alafkar",
-      "description": "View and manage your favorite products"
-    },
-    "blogs": {
-      "title": "Blog & Articles | Hayat Alafkar",
-      "description": "Latest news and articles about beauty, skincare, and wellness"
-    },
-    "blog": {
-      "title": "Blog Details | Hayat Alafkar",
-      "description": "Read our detailed articles about beauty and wellness"
-    },
-    "shopping": {
-      "title": "Shop | Hayat Alafkar",
-      "description": "Browse our collection of beauty and cosmetic products"
-    },
-    "product": {
-      "title": "Product Details | Hayat Alafkar",
-      "description": "View detailed product information and specifications"
-    },
-    "about": {
-      "title": "About Us | Hayat Alafkar",
-      "description": "Learn more about our mission and vision in beauty and wellness"
-    },
-    "contact": {
-      "title": "Contact Us | Hayat Alafkar",
-      "description": "Get in touch with us for any inquiries or support"
-    },
-    "cart": {
-      "title": "Shopping Cart | Hayat Alafkar",
-      "description": "View and manage your shopping cart items"
-    },
-    "profile": {
-      "personal": {
-        "title": "Personal Details | Hayat Alafkar",
-        "description": "Manage your personal information and preferences"
-      },
-      "orders": {
-        "title": "My Orders | Hayat Alafkar",
-        "description": "View and track your order history"
-      },
-      "address": {
-        "title": "My Addresses | Hayat Alafkar",
-        "description": "Manage your shipping and billing addresses"
-      },
-      "password": {
-        "title": "Change Password | Hayat Alafkar",
-        "description": "Update your account password"
-      },
-      "account": {
-        "title": "Account Management | Hayat Alafkar",
-        "description": "Manage your account settings and preferences"
-      }
-    },
-    "privacy": {
-      "title": "Privacy Policy | Hayat Alafkar",
-      "description": "Read our privacy policy and data protection guidelines"
-    },
-    "checkout": {
-      "address": {
-        "title": "Shipping Address | Hayat Alafkar",
-        "description": "Enter your shipping details for order delivery"
-      },
-      "payment": {
-        "title": "Payment | Hayat Alafkar",
-        "description": "Complete your purchase with secure payment"
-      },
-      "success": {
-        "title": "Order Confirmation | Hayat Alafkar",
-        "description": "Your order has been successfully placed"
-      },
-      "track": {
-        "title": "Track Order | Hayat Alafkar",
-        "description": "Track the status of your order"
-      }
-    },
-    "auth": {
-      "login": {
-        "title": "Login | Hayat Alafkar",
-        "description": "Sign in to your account"
-      },
-      "register": {
-        "personal": {
-          "title": "Register - Personal Info | Hayat Alafkar",
-          "description": "Create your account - Step 1: Personal Information"
-        },
-        "password": {
-          "title": "Register - Password | Hayat Alafkar",
-          "description": "Create your account - Step 2: Set Password"
-        },
-        "address": {
-          "title": "Register - Address | Hayat Alafkar",
-          "description": "Create your account - Step 3: Add Address"
-        }
-      }
     }
   }
 }

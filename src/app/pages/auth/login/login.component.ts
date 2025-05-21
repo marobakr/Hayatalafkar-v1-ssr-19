@@ -19,6 +19,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { ToastrService } from 'ngx-toastr';
 import { ArticlesHeaderComponent } from '../../articles/components/articles-header/articles-header.component';
@@ -100,7 +101,7 @@ export class LoginComponent implements OnInit {
   private _toastr = inject(ToastrService);
   private _router = inject(Router);
   private _languageService = inject(LanguageService);
-
+  private _alertService = inject(AlertService);
   currentLang$ = this._languageService.getLanguage();
   loginForm!: FormGroup;
   isLoading = signal(false);
@@ -163,18 +164,22 @@ export class LoginComponent implements OnInit {
         let lang = '';
         this.currentLang$.subscribe((next) => (lang = next));
         if (response.access_token) {
-          if (lang === 'ar') {
-            this._toastr.success('تم تسجيل الدخول بنجاح');
-          } else {
-            this._toastr.success('Login successful');
-          }
+          this._alertService.showNotification({
+            imagePath: '/images/common/settings.gif',
+            translationKeys: {
+              title: 'Login_successful',
+            },
+          });
+          this.loginForm.reset();
           this._router.navigate(['/', lang, 'home']);
         } else {
-          if (lang === 'ar') {
-            this._toastr.warning(response.ar_error);
-          } else {
-            this._toastr.warning(response.en_error);
-          }
+          this._alertService.showNotification({
+            imagePath: '/images/common/before-remove.png',
+            translationKeys: {
+              title: 'Login_failed',
+            },
+          });
+
           this.triggerShakeAnimation();
         }
       },
@@ -182,7 +187,12 @@ export class LoginComponent implements OnInit {
         this.isLoading.set(false);
         const errorMessage =
           error?.error?.message || 'Login failed. Please try again.';
-        this._toastr.error(errorMessage);
+        this._alertService.showNotification({
+          imagePath: '/images/common/before-remove.png',
+          translationKeys: {
+            title: errorMessage,
+          },
+        });
         this.triggerShakeAnimation();
       },
     });

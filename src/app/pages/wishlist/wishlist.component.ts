@@ -5,14 +5,20 @@ import { Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { IGetWishlist } from '@core/interfaces/wishlist.interfaces';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CartStateService } from '@core/services/cart/cart-state.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
+import { take } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { WishlistService } from '../../core/services/wishlist/wishlist.service';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
+
+// Module-level Map to track loading state by product ID for isAddingToCart
+const cartLoadingMap = new Map<number, boolean>();
 
 @Component({
   selector: 'app-wishlist',
@@ -70,6 +76,10 @@ export class WishlistComponent implements OnInit {
   _authService = inject(AuthService);
 
   _router = inject(Router);
+
+  _cartStateService = inject(CartStateService);
+
+  _alertService = inject(AlertService);
 
   currectlang$ = inject(LanguageService).getLanguage();
 
@@ -151,13 +161,50 @@ export class WishlistComponent implements OnInit {
     });
   }
 
+  /* WISHLIST MANAGEMENT */
+
   removeItem(wishId: number, index: number): void {
+    // Show confirmation alert before removing
+    this._alertService.showConfirmation({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.wishlist.remove_confirm.title',
+        message: 'alerts.wishlist.remove_confirm.message',
+        confirmText: 'alerts.wishlist.remove_confirm.yes',
+        cancelText: 'alerts.wishlist.remove_confirm.cancel',
+      },
+      onConfirm: () => {
+        // Proceed with removal
+        this.executeRemoveFromWishlist(wishId, index);
+      },
+    });
+  }
+
+  private executeRemoveFromWishlist(wishId: number, index: number): void {
     this._wishlistService.removeFromWishlist(wishId).subscribe({
       next: () => {
         this.wishlistItem = this.wishlistItem.filter((_, i) => i !== index);
+        this._wishlistService.loadWishlistCount();
+
+        // Show success notification (without buttons)
+        this._alertService.showNotification({
+          imagePath: '/images/common/remove.gif',
+          translationKeys: {
+            title: 'alerts.wishlist.remove_success.title',
+          },
+        });
       },
       error: (error) => {
         console.error('Error removing item from wishlist:', error);
+
+        // Show error notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/before-remove.png',
+          translationKeys: {
+            title: 'alerts.wishlist.remove_error.title',
+            message: 'alerts.wishlist.remove_error.message',
+          },
+        });
 
         // If unauthorized, redirect to login
         if (error.status === 401) {
@@ -170,6 +217,23 @@ export class WishlistComponent implements OnInit {
   }
 
   removeAllItems(): void {
+    // Show confirmation alert before removing all
+    this._alertService.showConfirmation({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.wishlist.remove_all_confirm.title',
+        message: 'alerts.wishlist.remove_all_confirm.message',
+        confirmText: 'alerts.wishlist.remove_confirm.yes',
+        cancelText: 'alerts.wishlist.remove_confirm.cancel',
+      },
+      onConfirm: () => {
+        // Proceed with removal of all items
+        this.executeRemoveAllItems();
+      },
+    });
+  }
+
+  private executeRemoveAllItems(): void {
     if (!this.isBrowser) {
       this.wishlistItem = [];
       return;
@@ -188,9 +252,27 @@ export class WishlistComponent implements OnInit {
         // After all items are removed, clear the array
         setTimeout(() => {
           this.wishlistItem = [];
+          this._wishlistService.loadWishlistCount();
+
+          // Show success notification
+          this._alertService.showNotification({
+            imagePath: '/images/common/remove.gif',
+            translationKeys: {
+              title: 'alerts.wishlist.remove_all_success.title',
+            },
+          });
         }, items.length * 100); // Wait for animations to complete
       },
       error: (error) => {
+        // Show error notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/before-remove.png',
+          translationKeys: {
+            title: 'alerts.wishlist.remove_error.title',
+            message: 'alerts.wishlist.remove_error.message',
+          },
+        });
+
         // If unauthorized, redirect to login
         if (error.status === 401) {
           this._authService.logout().subscribe(() => {
@@ -201,6 +283,198 @@ export class WishlistComponent implements OnInit {
     });
   }
 
+  /* CART MANAGEMENT */
+
+  /**
+   * Check if the product is in the cart
+   */
+  isInCart(productId: number): boolean {
+    if (!productId) return false;
+    return this._cartStateService.isProductInCart(productId);
+  }
+
+  /**
+   * Check if a product is being added to cart (loading state)
+   */
+  isAddingToCart(productId: number): boolean {
+    return cartLoadingMap.get(productId) || false;
+  }
+
+  /**
+   * Set loading state for a specific product
+   */
+  private setCartLoading(productId: number, loading: boolean): void {
+    if (!productId) return;
+    cartLoadingMap.set(productId, loading);
+  }
+
+  /**
+   * Add product to cart or toggle if already in cart
+   */
+  toggleCart(product: any, index: number): void {
+    if (!product?.id) return;
+
+    if (this.isInCart(product.id)) {
+      this.removeFromCart(product.id);
+    } else {
+      this.addToCart(product.id, index);
+    }
+  }
+
+  /**
+   * Add product to cart
+   */
+  addToCart(productId: number, index: number): void {
+    if (this.isAddingToCart(productId) || !productId) {
+      return;
+    }
+
+    if (!this._authService.isAuthenticated()) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang: string) => {
+          this._router.navigate(['/', lang, 'login']);
+        });
+      return;
+    }
+
+    this.setCartLoading(productId, true);
+    this.showCartAnimation(index);
+
+    const formData = new FormData();
+    formData.append('product_id', productId.toString());
+    formData.append('quantity', '1');
+
+    this._cartStateService.addToCart(formData).subscribe({
+      next: () => {
+        this.setCartLoading(productId, false);
+        this.showAddToCartSuccessAlert();
+      },
+      error: (error) => {
+        this.setCartLoading(productId, false);
+        this.handleCartError(error);
+      },
+    });
+  }
+
+  /**
+   * Remove product from cart
+   */
+  removeFromCart(productId: number): void {
+    if (!this.isInCart(productId) || !productId) return;
+
+    if (this.isAddingToCart(productId)) return;
+
+    // Get the cart item detail for this product
+    const cartItem = this._cartStateService.getCartItemForProduct(productId);
+    if (!cartItem) return;
+
+    this.setCartLoading(productId, true);
+
+    // Show confirmation alert before removing
+    this._alertService.showConfirmation({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.cart.remove_confirm.title',
+        message: 'alerts.cart.remove_confirm.message',
+        confirmText: 'alerts.cart.remove_confirm.yes',
+        cancelText: 'alerts.cart.remove_confirm.cancel',
+      },
+      onConfirm: () => {
+        // Proceed with removal
+        this.executeRemoveFromCart(cartItem.id, productId);
+      },
+      onCancel: () => {
+        this.setCartLoading(productId, false);
+      },
+    });
+  }
+
+  /**
+   * Execute cart removal after confirmation
+   */
+  private executeRemoveFromCart(detailId: number, productId: number): void {
+    this._cartStateService.removeItem(detailId).subscribe({
+      next: () => {
+        this.setCartLoading(productId, false);
+
+        // Refresh the cart state
+        this._cartStateService.fetchCart();
+
+        // Show success notification (without buttons)
+        this._alertService.showNotification({
+          imagePath: '/images/common/remove.gif',
+          translationKeys: {
+            title: 'alerts.cart.remove_success.title',
+          },
+        });
+      },
+      error: (err) => {
+        this.setCartLoading(productId, false);
+        if (err.status === 401) {
+          this._languageService
+            .getLanguage()
+            .pipe(take(1))
+            .subscribe((lang) => {
+              this._router.navigate(['/', lang, 'login']);
+            });
+        }
+
+        // Show error notification
+        this._alertService.showNotification({
+          imagePath: '/images/common/before-remove.png',
+          translationKeys: {
+            title: 'alerts.cart.remove_error.title',
+            message: 'alerts.cart.remove_error.message',
+          },
+        });
+        console.error('Error removing from cart:', err);
+      },
+    });
+  }
+
+  /**
+   * Handle cart errors
+   */
+  private handleCartError(error: any): void {
+    if (error.status === 401) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang: string) => {
+          this._router.navigate(['/', lang, 'login']);
+        });
+    }
+
+    // Show error notification
+    this._alertService.showNotification({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: 'alerts.cart.error.title',
+        message: 'alerts.cart.error.message',
+      },
+    });
+
+    console.error('Cart operation error:', error);
+  }
+
+  /**
+   * Show success alert for adding to cart
+   */
+  private showAddToCartSuccessAlert(): void {
+    // Show success notification for adding to cart
+    this._alertService.showNotification({
+      imagePath: '/images/common/addtocart.gif',
+      translationKeys: {
+        title: 'alerts.cart.add_success.title',
+      },
+    });
+  }
+
+  /**
+   * Display cart animation when adding to cart
+   */
   showCartAnimation(index: number): void {
     this.cartAnimationStates[index] = true;
     setTimeout(() => {

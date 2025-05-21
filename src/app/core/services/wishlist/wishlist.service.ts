@@ -33,14 +33,19 @@ export class WishlistService {
 
   readonly userId = this.authService.getUserId();
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      return;
+    }
     this.userService.getUserOrders().subscribe((next) => {
+      console.log(next.row.confirmed_orders);
       if (next.row.confirmed_orders.length > 0) {
         this.loadWishlistCount();
       }
     });
   }
-
   // Get the wishlist count signal
   getWishlistCountSignal() {
     // Return 0 if user is not authenticated
@@ -201,5 +206,15 @@ export class WishlistService {
         this.productsInWishlist.set(new Map());
       },
     });
+  }
+
+  /**
+   * Reset wishlist data completely (used during logout)
+   * This ensures all wishlist data is cleared when a user logs out
+   */
+  resetWishlist(): void {
+    this.wishlistCountSignal.set(0);
+    this.wishlistCount$.next(0);
+    this.productsInWishlist.set(new Map());
   }
 }

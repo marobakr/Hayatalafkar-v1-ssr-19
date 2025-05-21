@@ -23,8 +23,8 @@
             [routerLink]="[
               '/',
               currentLang$ | async,
-              'products',
-              randomProduct.id
+              'product-details',
+              randomProduct | customTranslate : 'slug'
             ]"
             [attr.aria-label]="
               (randomProduct | customTranslate : 'name') +
@@ -40,11 +40,14 @@
               class="w-full md:max-w-[220px] h-full"
             />
           </a>
+          @if(randomProduct.sale_price) {
+
           <span
             class="absolute top-[7px] right-[7px] bg-[#434645] text-white py-4 px-8 rounded-full text-category-size"
           >
             {{ +randomProduct.sale_price / 100 | percent : "0.0" }}
           </span>
+          }
         </div>
 
         <!-- Content -->

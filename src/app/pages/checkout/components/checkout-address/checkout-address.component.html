@@ -49,7 +49,7 @@
                     <h3
                       class="text-black text-sm sm:text-description-size font-semibold capitalize mb-[13px]"
                     >
-                      {{ addr.first_name + " " + addr.last_name }}
+                      {{ addr.first_name + "" + addr.last_name }}
                     </h3>
                   </div>
                   <p
@@ -57,16 +57,6 @@
                   >
                     {{ addr.address }}, {{ addr.city }}
                   </p>
-
-                  <!-- Show location name if available -->
-                  @if(addr.location_id) {
-                  <p class="text-[#333] text-xs sm:text-category-size mt-2">
-                    <span class="font-semibold">
-                      {{ "checkout.location" | translate }}:
-                    </span>
-                    {{ addr | customTranslate : "name" }}
-                  </p>
-                  }
                 </div>
               </div>
               } }
@@ -413,6 +403,12 @@
         [selectedAddress]="getSelectedAddress()"
         [showActionButton]="false"
       >
+        <!--
+        <button
+        class="cursor-pointer text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[60px] text-description-size mb-6"
+        (click)="continueToPayment()">
+          {{ "checkout.next_step" | translate }}
+        </button> -->
       </app-order-summary>
     </div>
   </div>

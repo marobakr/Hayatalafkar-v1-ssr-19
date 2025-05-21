@@ -62,6 +62,21 @@ export class CartStateService {
     return this.hasConfirmedOrdersSignal();
   }
 
+  /**
+   * Check if localStorage is available in the current browser
+   * @returns boolean indicating if localStorage is available
+   */
+  private isLocalStorageAvailable(): boolean {
+    try {
+      const testKey = '__storage_test__';
+      localStorage.setItem(testKey, testKey);
+      localStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   constructor() {
     // Check for confirmed orders first
     this.checkConfirmedOrders();
@@ -73,7 +88,7 @@ export class CartStateService {
     effect(() => {
       // This will trigger when the cart state changes
       const cart = this.cartState();
-      if (cart) {
+      if (cart && this.isLocalStorageAvailable()) {
         localStorage.setItem('cart-timestamp', Date.now().toString());
       }
     });
@@ -442,5 +457,22 @@ export class CartStateService {
       ...currentState,
       order: orderData,
     });
+  }
+
+  /**
+   * Reset the cart state completely (used during logout)
+   * This ensures all cart data is cleared when a user logs out
+   */
+  resetCart(): void {
+    // Initialize with empty cart
+    this.cartState.set({
+      orderDetails: [],
+      promocode: null,
+      order: null as any,
+      user: null as any,
+    });
+
+    // Make sure we don't think there are confirmed orders
+    this.hasConfirmedOrdersSignal.set(false);
   }
 }
