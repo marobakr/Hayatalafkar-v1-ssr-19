@@ -49,7 +49,7 @@
                     <h3
                       class="text-black text-sm sm:text-description-size font-semibold capitalize mb-[13px]"
                     >
-                      {{ addr.first_name + " " + addr.last_name }}
+                      {{ addr.first_name + "" + addr.last_name }}
                     </h3>
                   </div>
                   <p
@@ -57,16 +57,6 @@
                   >
                     {{ addr.address }}, {{ addr.city }}
                   </p>
-
-                  <!-- Show location name if available -->
-                  @if(addr.location_id) {
-                  <p class="text-[#333] text-xs sm:text-category-size mt-2">
-                    <span class="font-semibold">
-                      {{ "checkout.location" | translate }}:
-                    </span>
-                    {{ addr | customTranslate : "name" }}
-                  </p>
-                  }
                 </div>
               </div>
               } }

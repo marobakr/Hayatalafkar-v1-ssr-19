@@ -377,6 +377,7 @@
       "subtitle": "Complete your application and fill out all the required information",
       "title": "checkout track"
     },
+    "next_step": "next step",
     "select_shipping_address": "select address",
     "shipping_address": "invoice details",
     "payment": {
