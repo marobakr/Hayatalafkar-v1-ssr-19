@@ -63,9 +63,6 @@
       "add_success": {
         "title": "تمت اضافة المنتج الى السلة بنجاح"
       },
-      "update_success": {
-        "title": "تم تحديث السلة بنجاح"
-      },
       "remove_confirm": {
         "cancel": "إلغاء",
         "message": "هل أنت متأكد من رغبتك في إزالة هذا المنتج من السلة؟",
@@ -74,6 +71,9 @@
       },
       "remove_success": {
         "title": "تم إزالة المنتج من السلة بنجاح"
+      },
+      "update_success": {
+        "title": "تم تحديث السلة بنجاح"
       }
     },
     "remove_error": {
@@ -340,9 +340,104 @@
     "password": "تغير كلمه السر"
   },
   "checkout": {
+    "add_another_address": "عنوان اخر ",
+    "add_new_address": "اضافه عنوان جديد",
+    "address": {
+      "address_added_success": "تمت إضافة العنوان الجديد بنجاح",
+      "address_error": "خطأ في إضافة العنوان الجديد",
+      "address_selected_success": "تم اختيار العنوان وتحديث الطلب بنجاح",
+      "error_title": "خطأ",
+      "form_reset": "تم إعادة تعيين النموذج",
+      "info_title": "معلومات",
+      "invalid_address": "اختيار عنوان غير صالح",
+      "locations_error": "خطأ في استرجاع المواقع",
+      "no_address_selected": "الرجاء اختيار عنوان للمتابعة",
+      "no_locations": "لا توجد مواقع توصيل متاحة",
+      "refresh_error": "خطأ في تحديث العناوين",
+      "success_title": "تم بنجاح",
+      "user_info_error": "خطأ في استرجاع معلومات المستخدم",
+      "warning_title": "تحذير"
+    },
+    "form": {
+      "validation": {
+        "address": {
+          "required": "العنوان مطلوب"
+        },
+        "city": {
+          "required": "المدينة مطلوبة"
+        },
+        "email": {
+          "invalid": "الرجاء إدخال بريد إلكتروني صحيح",
+          "required": "البريد الإلكتروني مطلوب"
+        },
+        "first_name": {
+          "required": "الاسم الأول مطلوب"
+        },
+        "last_name": {
+          "required": "اسم العائلة مطلوب"
+        },
+        "location_id": {
+          "required": "الرجاء اختيار موقع"
+        },
+        "phone": {
+          "pattern": "الرجاء إدخال رقم هاتف صحيح",
+          "required": "رقم الهاتف مطلوب"
+        }
+      }
+    },
     "header": {
-      "subtitle": "قم باستكمال طلبك وقم بملئ كافه البيانات المطلوبه"
-    }
+      "subtitle": "قم باستكمال طلبك وقم بملئ كافه البيانات المطلوبه",
+      "title": "الدفع"
+    },
+    "location": "الموقع",
+    "next_step": "المتابعة إلى الدفع",
+    "payment": {
+      "card_name": "الاسم على البطاقة",
+      "card_name_placeholder": "محمد عبدالله",
+      "card_number": "رقم البطاقة",
+      "card_number_placeholder": "1234 5678 9012 3456",
+      "cash_on_delivery_description": "ادفع نقدًا عند استلام طلبك",
+      "cash_on_delivery_note": "سيتم توصيل طلبك إلى عنوانك ويمكنك الدفع مباشرة إلى ساعي البريد",
+      "cvv": "رمز التحقق",
+      "cvv_placeholder": "123",
+      "error": "خطأ في الدفع",
+      "expiry_date": "تاريخ الانتهاء",
+      "expiry_date_placeholder": "MM/YY",
+      "method": "طريقة الدفع",
+      "methods": {
+        "cash_on_delivery": "الدفع عند الاستلام",
+        "credit_card": "بطاقة ائتمان",
+        "paypal": "باي بال"
+      },
+      "no_address_selected": "لم يتم اختيار عنوان للشحن",
+      "no_order": "لا يوجد طلب نشط",
+      "note": "ملاحظة",
+      "order_placed_error": "خطأ في معالجة طلبك",
+      "order_placed_success": "تم وضع طلبك بنجاح",
+      "place_order": "إتمام الطلب",
+      "success": "تم بنجاح",
+      "title": "الدفع",
+      "validation": {
+        "cardName": {
+          "required": "الاسم على البطاقة مطلوب"
+        },
+        "cardNumber": {
+          "pattern": "الرجاء إدخال رقم بطاقة صحيح مكون من 16 رقم",
+          "required": "رقم البطاقة مطلوب"
+        },
+        "cvv": {
+          "pattern": "الرجاء إدخال رمز تحقق صحيح (3-4 أرقام)",
+          "required": "رمز التحقق مطلوب"
+        },
+        "expiryDate": {
+          "pattern": "الرجاء إدخال تاريخ انتهاء صحيح (MM/YY)",
+          "required": "تاريخ الانتهاء مطلوب"
+        }
+      },
+      "warning": "تحذير"
+    },
+    "select_shipping_address": "الرجاء اختيار عنوان الشحن",
+    "shipping_address": "عنوان الشحن"
   },
   "common": {
     "loading": "جاري التحميل...",
@@ -640,6 +735,8 @@
     "order-status": "حالة الطلب",
     "value": "تم الشحن"
   },
+  "orderDetailsSubtitle": "شكرا تم استلام طلبك بنجاح",
+  "orderDetailsTitle": "تم استكمال طلبك بنجاح",
   "out_of_stock": "غير متوفر في المخزون",
   "page": "صفحة",
   "privacy": {
@@ -747,20 +844,19 @@
   "shared": {
     "add_to_cart": "أضف إلى السلة",
     "added_to_cart_success": "تمت إضافة المنتج إلى سلة التسوق بنجاح",
+    "adding": "جاري الإضافة...",
     "continue_shopping": "متابعة التسوق",
     "currency": "ر.س",
     "go_to_cart": "الذهاب إلى السلة",
     "offer": "خصم 25%",
     "price_varies": "السعر يختلف حسب الخيارات",
     "readMore": "قراءة المزيد",
-    "updating": "جاري التحديث...",
-    "adding": "جاري الإضافة...",
     "shopping_now": "تسوق الآن",
     "show-products": "شراء المنتج ",
-
     "success": "تم بنجاح",
     "update_cart": "تحديث كمية المنتج",
-    "update_cart_quantity": "تحديث كمية المنتج في السلة"
+    "update_cart_quantity": "تحديث كمية المنتج في السلة",
+    "updating": "جاري التحديث..."
   },
   "shopping": {
     "filter": {
@@ -824,14 +920,14 @@
   "signOut": "تسجيل الخروج",
   "submit-button-aria-label": "إرسال البيانات",
   "summary": {
-    "complete-the-order": "استكمال الطلب",
-    "delivery": "التوصيل",
-    "discount-coupon": "الكوبون الخصمى",
+    "complete-the-order": "إكمال الطلب",
+    "delivery": "رسوم التوصيل",
+    "discount-coupon": "الخصم (الكوبون)",
     "items": "العناصر",
-    "subtotal": "المجموع الفرعى",
-    "summary": "الملخص",
+    "subtotal": "المجموع الفرعي",
+    "summary": "ملخص الطلب",
     "tax": "الضريبة",
-    "total": "الاجمالى"
+    "total": "الإجمالي"
   },
   "total-price": {
     "total-price": "السعر الاجمالي",

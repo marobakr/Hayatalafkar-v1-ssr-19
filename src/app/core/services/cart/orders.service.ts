@@ -93,6 +93,16 @@ export class OrdersService {
     );
   }
 
+  /* Checkout  */
+  checkout(address_id: string, order_id: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('address_id', address_id.toString());
+    return this.api.post<any>(
+      `${API_CONFIG.ORDERS.CHECKOUT}${order_id}`,
+      formData
+    );
+  }
+
   /**
    * Place order
    */

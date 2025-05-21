@@ -104,7 +104,6 @@ export class AddressComponent implements OnInit {
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
       email: ['', [Validators.required, Validators.email]],
       location_id: ['', [Validators.required]],
-      user_id: [''],
     });
   }
 
@@ -150,7 +149,6 @@ export class AddressComponent implements OnInit {
       phone: userInformation.phone || '',
       location_id: userInformation.location_id || '',
       email: userInformation.email || '',
-      user_id: userInformation.id || '',
     });
   }
 

@@ -116,7 +116,7 @@
           id="langDropdownButton"
           class="flex flex-row md:space-x-[5px] rtl:space-x rtl:ml-[35px] ltr:mr-[35px] cursor-pointer"
         >
-          <li>
+          <li class="relative cursor-pointer">
             <button
               class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
               (click)="toggleMenu()"
@@ -148,51 +148,51 @@
                 />
               </figure>
             </button>
+            <!-- Dropdown -->
+            @if (showMenu) {
+            <div
+              id="langDropdown"
+              class="z-50 bg-white divide-y divide-gray-100 rounded-2xl shadow w-28 absolute top-[20px] right-0 mt-2"
+              role="menu"
+            >
+              <ul class="py-4 text-sm text-gray-700 dark:text-gray-200">
+                <li role="menuitem">
+                  <button
+                    (click)="changeLang('ar')"
+                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                  >
+                    <figure class="max-w-[25px] max-h-[25px]">
+                      <img
+                        ngSrc="/images/navbar/10.webp"
+                        width="25"
+                        height="25"
+                        alt="العربية"
+                      />
+                    </figure>
+                    <span> العربية </span>
+                  </button>
+                </li>
+                <li role="menuitem">
+                  <button
+                    (click)="changeLang('en')"
+                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                  >
+                    <figure class="max-w-[25px] max-h-[25px]">
+                      <img
+                        ngSrc="/images/navbar/10.webp"
+                        width="25"
+                        height="25"
+                        alt="English"
+                      />
+                    </figure>
+                    <span> English </span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            }
           </li>
 
-          <!-- Dropdown -->
-          @if (showMenu) {
-          <div
-            id="langDropdown"
-            class="z-50 bg-white divide-y divide-gray-100 rounded-2xl shadow w-28 absolute top-[80px] right-0 mt-2"
-            role="menu"
-          >
-            <ul class="py-4 text-sm text-gray-700 dark:text-gray-200">
-              <li role="menuitem">
-                <button
-                  (click)="changeLang('ar')"
-                  class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
-                >
-                  <figure class="max-w-[25px] max-h-[25px]">
-                    <img
-                      ngSrc="/images/navbar/10.webp"
-                      width="25"
-                      height="25"
-                      alt="العربية"
-                    />
-                  </figure>
-                  <span> العربية </span>
-                </button>
-              </li>
-              <li role="menuitem">
-                <button
-                  (click)="changeLang('en')"
-                  class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
-                >
-                  <figure class="max-w-[25px] max-h-[25px]">
-                    <img
-                      ngSrc="/images/navbar/10.webp"
-                      width="25"
-                      height="25"
-                      alt="English"
-                    />
-                  </figure>
-                  <span> English </span>
-                </button>
-              </li>
-            </ul>
-          </div>
-          }
         </ul>
 
         <!-- Desktop Actions -->

@@ -168,6 +168,7 @@ export const routes: Routes = [
           ),
         data: { titleKey: 'routes.checkout' },
         children: [
+          { path: '', redirectTo: 'checkout-address', pathMatch: 'full' },
           {
             path: 'checkout-address',
             loadComponent: () =>
@@ -176,11 +177,25 @@ export const routes: Routes = [
               ).then((c) => c.CheckoutAddressComponent),
           },
           {
-            path: 'order-summary',
+            path: 'payment',
             loadComponent: () =>
               import(
-                './pages/checkout/components/order-summary/order-summary.component'
-              ).then((c) => c.OrderSummaryComponent),
+                './pages/checkout/components/payment/payment.component'
+              ).then((c) => c.PaymentComponent),
+          },
+          {
+            path: 'success-order',
+            loadComponent: () =>
+              import('./pages/order-details/order-details.component').then(
+                (c) => c.OrderDetailsComponent
+              ),
+          },
+          {
+            path: 'track-order',
+            loadComponent: () =>
+              import(
+                './pages/checkout/components/track-orders/track-orders.component'
+              ).then((c) => c.TrackOrdersComponent),
           },
         ],
         canActivate: [authGuard],

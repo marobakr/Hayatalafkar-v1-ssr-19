@@ -43,8 +43,12 @@ export const API_CONFIG = {
     REMOVE_ALL: 'orders/removeAllCart/',
     PROMO_CODE: 'orders/checkPromoCode',
 
+    /* CHECKOUT */
+    CHECKOUT: 'orders/checkout/',
+
     /* CHECK CART */
     CHECK_CART: 'orders/cartcheck/',
+
     /* PLACE ORDER */
     PLACE_ORDER: 'orders/placeOrder/',
   },
@@ -53,7 +57,7 @@ export const API_CONFIG = {
     GET_USER_INFO: 'users',
     GET_USER_ORDERS: 'users/showOrders',
     /* Pending */
-    GET_USER_LAST_ORDER: 'users/neworders',
+    GET_USER_LAST_ORDER: 'users/userneworders',
     ADD_NEW_ADDRESS: 'users/addNewAddress',
     DEACTIVATE_USER: 'users/deactiveuser/',
     DELETE_USER: 'users/deleteuser/',

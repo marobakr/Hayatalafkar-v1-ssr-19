@@ -426,4 +426,21 @@ export class CartStateService {
     // Always fetch the cart to get the latest count
     this.fetchCart();
   }
+
+  /**
+   * Update the order with new data from the API response
+   * @param orderData The updated order data from the API
+   */
+  updateOrder(orderData: any): void {
+    if (!orderData) return;
+
+    // Get the current cart state
+    const currentState = this.cartState();
+
+    // Update the order property while preserving other properties
+    this.cartState.set({
+      ...currentState,
+      order: orderData,
+    });
+  }
 }

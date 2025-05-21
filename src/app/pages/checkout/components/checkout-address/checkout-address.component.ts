@@ -17,11 +17,16 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IAddress, ILocation } from '@core/interfaces/user.interface';
+import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CartStateService } from '@core/services/cart/cart-state.service';
+import { OrdersService } from '@core/services/cart/orders.service';
+import { LanguageService } from '@core/services/lang/language.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { OrderSummaryComponent } from '@shared/components/order-summary/order-summary.component';
 
 @Component({
   selector: 'app-checkout-address',
@@ -32,6 +37,8 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
     ReactiveFormsModule,
     ButtonComponent,
     LoadingComponent,
+    OrderSummaryComponent,
+    CustomTranslatePipe,
   ],
   templateUrl: './checkout-address.component.html',
   styleUrls: ['./checkout-address.component.css'],
@@ -39,7 +46,6 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 export class CheckoutAddressComponent implements OnInit {
   @Output() addressSelected = new EventEmitter<IAddress | null>();
   @Output() newAddressAdded = new EventEmitter<IAddress>();
-  @Output() proceedToNextStep = new EventEmitter<void>();
 
   private _fb = inject(FormBuilder);
   private _userService = inject(UserService);
@@ -47,6 +53,9 @@ export class CheckoutAddressComponent implements OnInit {
   private _translateService = inject(TranslateService);
   private _notificationService = inject(NotificationService);
   private _router = inject(Router);
+  private _languageService = inject(LanguageService);
+  private _ordersService = inject(OrdersService);
+  private _cartState = inject(CartStateService);
 
   addressForm!: FormGroup;
   locations = signal<ILocation[]>([]);
@@ -64,15 +73,30 @@ export class CheckoutAddressComponent implements OnInit {
   // Show add new address form only when user has no addresses
   showAddAddressForm = signal(false);
 
+  // Add new signal for order submission
+  isSubmitting = signal(false);
+
+  // Get order data from cart state
+  order = this._cartState.order;
+  orderDetails = this._cartState.orderDetails;
+
   ngOnInit(): void {
     this.initForm();
-    this.loadUserData();
+    this.getUserInfo();
+    this.getLocations();
+
+    // Subscribe to language changes
+    this._translateService.onLangChange
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((event) => {
+        this.currentLang.set(event.lang);
+      });
   }
 
   /**
    * Load user data: addresses and available locations
    */
-  loadUserData(): void {
+  getUserInfo(): void {
     // First load locations
     this.getLocations();
 
@@ -122,10 +146,10 @@ export class CheckoutAddressComponent implements OnInit {
       last_name: ['', [Validators.required]],
       address: ['', [Validators.required]],
       city: ['', [Validators.required]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]],
+      phone: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      location_id: ['', [Validators.required]],
       user_id: [''],
+      location_id: ['', [Validators.required]],
     });
   }
 
@@ -161,20 +185,17 @@ export class CheckoutAddressComponent implements OnInit {
 
   populateForm(userInformation: any): void {
     if (!userInformation) return;
-
-    const nameArray = userInformation.name
-      ? userInformation.name.split(' ')
-      : ['', ''];
-    const first_name = nameArray[0] || '';
-    const last_name = nameArray.length > 1 ? nameArray.slice(1).join(' ') : '';
+    console.log(userInformation.name);
+    const first_name = userInformation.name.split(' ')[0];
+    const last_name = userInformation.name.split(' ')[1];
+    console.log(first_name, last_name);
 
     this.addressForm.patchValue({
-      first_name,
-      last_name,
+      first_name: first_name,
+      last_name: last_name,
       address: userInformation.address || '',
       city: userInformation.city || '',
       phone: userInformation.phone || '',
-      location_id: userInformation.location_id || '',
       email: userInformation.email || '',
       user_id: userInformation.id || '',
     });
@@ -217,17 +238,8 @@ export class CheckoutAddressComponent implements OnInit {
   }
 
   submitNewAddress(): void {
+    console.log(this.addressForm.value);
     this.isFormSubmitted.set(true);
-
-    // Check if location is selected
-    const locationId = this.addressForm.get('location_id')?.value;
-    if (!locationId) {
-      this._notificationService.warning(
-        'checkout.address.select_location',
-        'checkout.address.warning_title'
-      );
-      return;
-    }
 
     if (this.addressForm.valid) {
       this.loading.set(true);
@@ -237,23 +249,15 @@ export class CheckoutAddressComponent implements OnInit {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
           next: (response) => {
-            this.loading.set(false);
+            // Don't set loading to false yet - we need to get all addresses
             this._notificationService.success(
               'checkout.address.address_added_success',
               'checkout.address.success_title'
             );
 
-            // Add the new address to the addresses list
-            const newAddress = response.address;
-            this.addresses.update((addresses) => [...addresses, newAddress]);
-            this.hasAddresses.set(true);
-            this.showAddAddressForm.set(false);
-
-            // Select the newly added address
-            this.selectAddress(newAddress);
-
-            // Emit the new address to parent component
-            this.newAddressAdded.emit(newAddress);
+            // After successfully adding the address, fetch all addresses again
+            // This ensures we have the complete address data with correct location
+            this.refreshUserAddresses();
           },
           error: (error) => {
             this.loading.set(false);
@@ -266,50 +270,102 @@ export class CheckoutAddressComponent implements OnInit {
         });
     } else {
       this.addressForm.markAllAsTouched();
-      this._notificationService.warning(
-        'checkout.address.form_invalid',
-        'checkout.address.validation_title'
-      );
     }
+  }
+
+  /**
+   * Refresh addresses from backend after adding a new address
+   */
+  refreshUserAddresses(): void {
+    this._userService
+      .getUserInfo()
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.loading.set(false);
+          if (response && response.row && response.row.addresses) {
+            const allAddresses = response.row.addresses;
+            this.addresses.set(allAddresses);
+            this.hasAddresses.set(allAddresses.length > 0);
+            this.showAddAddressForm.set(false);
+
+            // Find the newly added address (should be the last one)
+            if (allAddresses.length > 0) {
+              const newAddress = allAddresses[allAddresses.length - 1];
+
+              // Select this address
+              this.selectAddress(newAddress);
+
+              // Emit the new address to parent component
+              this.newAddressAdded.emit(newAddress);
+            }
+          }
+        },
+        error: (error) => {
+          this.loading.set(false);
+          const errorMsg = error?.message || 'checkout.address.refresh_error';
+          this._notificationService.error(
+            errorMsg,
+            'checkout.address.error_title'
+          );
+        },
+      });
   }
 
   resetForm(): void {
     this.addressForm.reset();
     this.isFormSubmitted.set(false);
-    this._notificationService.info(
-      'checkout.address.form_reset',
-      'checkout.address.info_title'
-    );
+    // this._notificationService.info(
+    //   'checkout.address.form_reset',
+    //   'checkout.address.info_title'
+    // );
   }
 
   /**
-   * Method to select an address and proceed to next step
+   * Select address
    */
   selectAddress(address: IAddress): void {
-    this.selectedAddressId.set(address.id);
-    this.addressSelected.emit(address);
-  }
+    if (address && address.id) {
+      this.selectedAddressId.set(address.id);
 
-  /**
-   * Continue to the next step
-   */
-  continueToNextStep(): void {
-    if (!this.selectedAddressId()) {
+      // Call checkout endpoint to update order with the selected address
+      if (this.order() && this.order().id) {
+        const orderId = this.order().id.toString();
+        const addressId = address.id.toString();
+
+        this.isSubmitting.set(true);
+
+        this._ordersService
+          .checkout(addressId, orderId)
+          .pipe(takeUntilDestroyed(this._destroyRef))
+          .subscribe({
+            next: (response: any) => {
+              if (response && response.order) {
+                // Update order data in cart state
+                this._cartState.updateOrder(response.order);
+                this._notificationService.success(
+                  'checkout.address.address_selected_success',
+                  'checkout.address.success_title'
+                );
+              }
+              this.isSubmitting.set(false);
+            },
+            error: (err: any) => {
+              console.error('Error updating order with address:', err);
+              this._notificationService.error(
+                'checkout.address.refresh_error',
+                'checkout.address.error_title'
+              );
+              this.isSubmitting.set(false);
+            },
+          });
+      }
+    } else {
       this._notificationService.warning(
-        'checkout.address.select_address_to_continue',
+        'checkout.address.invalid_address',
         'checkout.address.warning_title'
       );
-      return;
     }
-
-    this.proceedToNextStep.emit();
-
-    // Navigate to the next step
-    this._translateService
-      .get('checkout.address.continuing_to_summary')
-      .subscribe((msg) => {
-        this._notificationService.info(msg, 'checkout.info');
-      });
   }
 
   toggleAddressForm(): void {
@@ -330,5 +386,49 @@ export class CheckoutAddressComponent implements OnInit {
 
   isAddressSelected(address: IAddress): boolean {
     return this.selectedAddressId() === address.id;
+  }
+
+  /**
+   * Get the location name for a given location ID
+   */
+
+  /**
+   * Get the currently selected address object
+   */
+  getSelectedAddress(): IAddress | null {
+    if (!this.selectedAddressId()) return null;
+
+    const address = this.addresses().find(
+      (addr) => addr.id === this.selectedAddressId()
+    );
+    return address || null;
+  }
+
+  /**
+   * Continue to the payment step with the selected address
+   */
+  continueToPayment(): void {
+    if (!this.selectedAddressId()) {
+      this._notificationService.warning(
+        'checkout.address.no_address_selected',
+        'checkout.address.warning'
+      );
+      return;
+    }
+
+    // Emit the selected address
+    const selectedAddress = this.getSelectedAddress();
+    if (selectedAddress) {
+      this.addressSelected.emit(selectedAddress);
+    }
+
+    // Navigate to payment step with address ID as query param
+    this._languageService.getLanguage().subscribe((lang) => {
+      this._router.navigate(['/', lang, 'checkout', 'payment'], {
+        queryParams: {
+          address_id: this.selectedAddressId(),
+        },
+      });
+    });
   }
 }

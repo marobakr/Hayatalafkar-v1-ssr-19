@@ -7,6 +7,9 @@
 
 <section>
   <div class="container mx-auto">
+    @if(isLoading) {
+    <app-loading></app-loading>
+    } @else {
     <div class="grid grid-cols-12 mb-15">
       <div class="col-span-12 xl:col-span-8 overflow-hidden">
         @if (!isEmpty()) {
@@ -28,9 +31,6 @@
             {{ "all-total-price" | translate }}
           </span>
         </div>
-        @if (isLoading) {
-        <app-loading></app-loading>
-        } @else {
         <!-- Cart Items -->
         <div class="cart-items-container" [@listAnimation]>
           @for (item of orderDetails(); track item.product_id) {
@@ -72,7 +72,6 @@
                 />
                 }
               </figure>
-
               <div class="details">
                 <h3
                   [title]="item.product | customTranslate : 'name'"
@@ -87,8 +86,8 @@
                 </div>
               </div>
             </div>
-
             <!-- Price & Quantity -->
+
             <div
               class="flex justify-between items-center flex-row-reverse md:flex-row mb-5 md:mb-0"
             >
@@ -98,8 +97,8 @@
                 {{ "shared.currency" | translate }}
               </div>
             </div>
-
             <!-- Quantity -->
+
             <div class="relative flex items-center gap-0 max-w-[8rem]">
               <button
                 type="button"
@@ -113,14 +112,12 @@
               >
                 <span class="text-xl font-medium">−</span>
               </button>
-
               <input
                 type="text"
                 [value]="item.quantity"
                 readonly
                 class="bg-transparent text-[#040404] border-y border-[#8D8D8D] border-x-0 px-[13px] text-center w-[50px] h-[42px] flex items-center justify-center"
               />
-
               <button
                 type="button"
                 [disabled]="
@@ -151,7 +148,6 @@
           </div>
           }
         </div>
-        }
         <!-- Cart Footer -->
         <div class="flex items-center justify-between">
           <div
@@ -168,7 +164,6 @@
                 class="bg-transparent border-0 outline-none flex-grow text-[#333] text-category-size"
                 [placeholder]="'cart.cart-footer.discount-code' | translate"
               />
-
               <button
                 type="submit"
                 [disabled]="!promoCodeForm.valid || isPromoCodeLoading"
@@ -182,7 +177,6 @@
                 {{ "cart.cart-footer.active-the-code" | translate }}
                 }
               </button>
-
               <div class="w-full">
                 @if (promoCodeError) {
                 <div class="flex items-center text-muted-rose text-sm">
@@ -296,7 +290,6 @@
           }
         </div>
         } } @else {
-        <!-- Empty Cart -->
         <div
           class="flex items-center justify-end min-h-[60vh] w-full bg-white rounded-[15px] mx-auto transition-all duration-300 ease-out"
         >
@@ -343,7 +336,6 @@
         </div>
         }
       </div>
-
       <!-- this acts as an offset -->
       <div class="hidden lg:block lg:col-span-1 pb-6 xl:pb-0"></div>
 
@@ -415,8 +407,8 @@
           </div>
 
           <button
-            routerLink="/checkout"
-            class="text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[60px] text-description-size mb-6"
+            [routerLink]="['/', currentLang$ | async, 'checkout','checkout-address']"
+            class="cursor-pointer text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[60px] text-description-size mb-6"
           >
             {{ "summary.complete-the-order" | translate }}
           </button>
@@ -452,5 +444,6 @@
         [isCenter]="true"
       ></app-service-card>
     </div>
+    }
   </div>
 </section>
