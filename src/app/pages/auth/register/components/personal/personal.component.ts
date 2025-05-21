@@ -22,10 +22,10 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
-
 // Custom validator to check if passwords match
 function passwordMatchValidator(
   control: AbstractControl
@@ -130,7 +130,7 @@ export class PersonalComponent implements OnInit {
   private _authService = inject(AuthService);
   private _toastr = inject(ToastrService);
   private _router = inject(Router);
-
+  private _alertService = inject(AlertService);
   currentLang$ = this._languageService.getLanguage();
 
   registerForm!: FormGroup;
@@ -184,10 +184,20 @@ export class PersonalComponent implements OnInit {
             lang = next;
           });
           if (response.user.message !== '') {
+            this._alertService.showNotification({
+              imagePath: '/images/common/settings.gif',
+              translationKeys: {
+                title: 'Registration_successful',
+              },
+            });
             this._router.navigate([`/${lang}/login`]);
-            this._toastr.success('Registration successful');
           } else {
-            this._toastr.error('Registration failed');
+            this._alertService.showNotification({
+              imagePath: '/images/common/before-remove.png',
+              translationKeys: {
+                title: 'Registration failed',
+              },
+            });
             this.triggerShakeAnimation();
           }
         },
@@ -199,18 +209,22 @@ export class PersonalComponent implements OnInit {
               if (Array.isArray(messages)) {
                 // Display each message for this key
                 messages.forEach((message) => {
-                  this._toastr.error(
-                    message,
-                    `${key.charAt(0).toUpperCase() + key.slice(1)} Error`
-                  );
+                  this._alertService.showNotification({
+                    imagePath: '/images/common/before-remove.png',
+                    translationKeys: {
+                      title: message,
+                    },
+                  });
                 });
               }
             });
           } else {
-            // Fallback to the previous error handling if errors object is not present
-            const errorMessage =
-              error?.error?.message || 'Registration failed. Please try again.';
-            this._toastr.error(errorMessage);
+            this._alertService.showNotification({
+              imagePath: '/images/common/before-remove.png',
+              translationKeys: {
+                title: 'Registration failed',
+              },
+            });
           }
           this.triggerShakeAnimation();
         },
