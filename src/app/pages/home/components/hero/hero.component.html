@@ -11,88 +11,91 @@
       {{ "hero.title" | translate }}
     </h1>
 
-    <!-- Owl Carousel with wrapper for better transition management -->
-    <div class="carousel-wrapper overflow-hidden">
-      <owl-carousel-o [options]="customOptions" #owlCarousel>
-        @for (slide of heroSection; track slide.main_image) {
-        <ng-template carouselSlide [id]="'slide_' + slide.main_image">
-          <!-- Slide Content Container -->
-          <div class="slide-container w-full px-2 py-4">
-            <div
-              class="slide-content flex flex-col md:flex-row-reverse items-center justify-between w-full gap-8"
-            >
-              <!-- Text Column -->
+    <!-- Owl Carousel with better overflow control -->
+    <div class="carousel-wrapper overflow-hidden relative">
+      <!-- Prevent flash of unstyled content -->
+      <div class="min-h-[400px]">
+        <owl-carousel-o [options]="customOptions" #owlCarousel>
+          @for (slide of heroSection; track slide.main_image) {
+          <ng-template carouselSlide [id]="'slide_' + slide.main_image">
+            <!-- Slide Content Container -->
+            <div class="slide-container w-full px-2 py-4">
               <div
-                class="w-full md:w-1/2 lg:w-1/2 text-center md:rtl:text-right md:ltr:text-left py-4"
+                class="slide-content flex flex-col md:flex-row-reverse items-center justify-between w-full gap-8"
               >
-                <!-- Small Title -->
-                <app-slogan
-                  [haveBg]="true"
-                  [sloganImage]="'/images/navbar/8.webp'"
-                  [sloganTitle]="slide | customTranslate : 'small_title'"
-                >
-                </app-slogan>
-
-                <!-- Main Title -->
-                <h2
-                  class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
-                >
-                  {{ slide | customTranslate : "title" }}
-                </h2>
-
-                <!-- Description Text -->
-                <div class="text-[#F5F5F5] leading-relaxed mb-8">
-                  <app-safe-html
-                    [content]="slide | customTranslate : 'text'"
-                  ></app-safe-html>
-                </div>
-
-                <!-- CTA Button -->
+                <!-- Text Column -->
                 <div
-                  class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+                  class="w-full md:w-1/2 lg:w-1/2 text-center md:rtl:text-right md:ltr:text-left py-4"
                 >
-                  <button
-                    class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
-                    aria-label="Call to action"
-                    [attr.title]="'hero.title-btn' | translate"
+                  <!-- Small Title -->
+                  <app-slogan
+                    [haveBg]="true"
+                    [sloganImage]="'/images/navbar/8.webp'"
+                    [sloganTitle]="slide | customTranslate : 'small_title'"
                   >
-                    <span>{{ "hero.title-btn" | translate }}</span>
-                    <figure
-                      class="direction-aware-rotate max-w-[24px] max-h-[24px]"
-                      aria-hidden="true"
-                    >
-                      <img
-                        class="w-full h-auto"
-                        width="24"
-                        height="24"
-                        loading="eager"
-                        [src]="'/images/navbar/9.webp'"
-                        alt="arrow icon"
-                      />
-                    </figure>
-                  </button>
-                </div>
-              </div>
+                  </app-slogan>
 
-              <!-- Image Column -->
-              <div
-                class="w-full md:w-1/2 lg:w-1/2 flex justify-center items-center"
-              >
-                <img
-                  [appImageUrl]="slide.main_image"
-                  [imageEndpoint]="''"
-                  [alt]="slide | customTranslate : 'title'"
-                  class="w-full max-w-md h-auto object-contain max-h-[400px]"
-                  width="600"
-                  height="400"
-                  loading="eager"
-                />
+                  <!-- Main Title -->
+                  <h2
+                    class="text-3xl md:text-4xl font-extrabold text-white leading-snug mt-6 mb-4"
+                  >
+                    {{ slide | customTranslate : "title" }}
+                  </h2>
+
+                  <!-- Description Text -->
+                  <div class="text-[#F5F5F5] leading-relaxed mb-8">
+                    <app-safe-html
+                      [content]="slide | customTranslate : 'text'"
+                    ></app-safe-html>
+                  </div>
+
+                  <!-- CTA Button -->
+                  <div
+                    class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+                  >
+                    <button
+                      class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
+                      aria-label="Call to action"
+                      [attr.title]="'hero.title-btn' | translate"
+                    >
+                      <span>{{ "hero.title-btn" | translate }}</span>
+                      <figure
+                        class="direction-aware-rotate max-w-[24px] max-h-[24px]"
+                        aria-hidden="true"
+                      >
+                        <img
+                          class="w-full h-auto"
+                          width="24"
+                          height="24"
+                          loading="eager"
+                          [src]="'/images/navbar/9.webp'"
+                          alt="arrow icon"
+                        />
+                      </figure>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Image Column -->
+                <div
+                  class="w-full md:w-1/2 lg:w-1/2 flex justify-center items-center"
+                >
+                  <img
+                    [appImageUrl]="slide.main_image"
+                    [imageEndpoint]="''"
+                    [alt]="slide | customTranslate : 'title'"
+                    class="w-full max-w-md h-auto object-contain max-h-[400px]"
+                    width="600"
+                    height="400"
+                    loading="eager"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </ng-template>
-        }
-      </owl-carousel-o>
+          </ng-template>
+          }
+        </owl-carousel-o>
+      </div>
     </div>
 
     <!-- Rotating image -->

@@ -37,6 +37,49 @@ export interface ConfirmedOrder {
   order_time: string;
   created_at: string;
   updated_at: string;
+  details: Detail[];
+}
+export interface Detail {
+  id: number;
+  order_id: number;
+  product_id: number;
+  product_choice_id: any;
+  quantity: number;
+  unit_price: string;
+  subtotal: string;
+  active_status: boolean;
+  created_at: string;
+  updated_at: string;
+  product: Product;
+}
+
+export interface Product {
+  id: number;
+  category_id: number;
+  subcategory_id: number;
+  en_name: string;
+  ar_name: string;
+  en_slug: string;
+  ar_slug: string;
+  en_description: string;
+  ar_description: string;
+  price: string;
+  sale_price: any;
+  price_after_sale: any;
+  stock_status: boolean;
+  main_image: string;
+  additional_images: any;
+  ar_small_descritpion: string;
+  en_small_descritpion: string;
+  size: string;
+  active_status: boolean;
+  en_more_information: string;
+  ar_more_information: string;
+  en_ingredient: string;
+  ar_ingredient: string;
+  en_how_to_use: string;
+  ar_how_to_use: string;
+  product_counter: number;
 }
 
 export interface ILastOrderResponse {
@@ -73,5 +116,6 @@ export interface ILastOrderResponse {
     order_time: string;
     created_at: string;
     updated_at: string;
+    details: Detail[];
   };
 }

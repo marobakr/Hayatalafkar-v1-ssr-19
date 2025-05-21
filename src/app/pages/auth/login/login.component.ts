@@ -170,6 +170,7 @@ export class LoginComponent implements OnInit {
               title: 'Login_successful',
             },
           });
+          this.loginForm.reset();
           this._router.navigate(['/', lang, 'home']);
         } else {
           this._alertService.showNotification({

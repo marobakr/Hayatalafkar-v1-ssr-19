@@ -35,6 +35,7 @@ export interface IProduct {
   category: Category;
   subcategory: Subcategory;
   choices: Choice[];
+  size: string;
 }
 
 export interface Choice {

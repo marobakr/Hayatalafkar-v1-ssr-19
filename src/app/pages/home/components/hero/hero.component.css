@@ -188,18 +188,11 @@ img[appImageUrl] {
 
 /* Additional styles for owl carousel items */
 ::ng-deep .owl-item {
-  visibility: visible !important;
-}
-
-/* Fix for any vertical movement */
-::ng-deep .owl-carousel .owl-stage {
-  display: flex;
-  align-items: center;
+  visibility: hidden;
 }
 
 ::ng-deep .owl-item.active {
-  display: flex;
-  align-items: center;
+  visibility: visible;
 }
 
 /* Fix for responsive layout */
@@ -228,7 +221,69 @@ img[appImageUrl] {
   display: none !important;
 }
 
-/* Ensuring consistent height to prevent vertical shift */
+/* Ensure only the first active item is visible when multiple are present */
+::ng-deep .owl-carousel .owl-item.active ~ .owl-item.active {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Prevent flicker during transitions */
+::ng-deep .owl-carousel .owl-stage {
+  display: flex;
+  align-items: center;
+  transition: transform 0.6s ease !important;
+}
+
+/* Prevent duplicate items during initializing/loading */
+::ng-deep .owl-carousel:not(.owl-loaded) > *:not(:first-child) {
+  display: none !important;
+}
+
+/* Ensure proper slide transition */
+::ng-deep .fadeIn {
+  animation-name: owlFadeIn;
+  animation-duration: 0.6s;
+}
+
+::ng-deep .fadeOut {
+  animation-name: owlFadeOut;
+  animation-duration: 0.6s;
+}
+
+/* Ensure carousel wrapper hides overflow content */
+.carousel-wrapper {
+  overflow: hidden !important;
+  position: relative;
+}
+
+/* Fix RTL slide transition */
+::ng-deep .owl-carousel.owl-rtl .owl-stage {
+  transition: transform 0.6s ease !important;
+}
+
+/* Fix cloned items and prevent duplicated slider issue */
+::ng-deep .owl-carousel .owl-item.cloned {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: none !important;
+}
+
+/* Force single item visibility */
+::ng-deep .owl-carousel .owl-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+::ng-deep .owl-carousel .owl-item.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ensure consistent height to prevent vertical shift */
 ::ng-deep .owl-stage-outer,
 ::ng-deep .owl-stage,
 ::ng-deep .owl-item {

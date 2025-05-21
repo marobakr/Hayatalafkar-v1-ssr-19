@@ -3,6 +3,7 @@ import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
+import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/components/button/button.component';
@@ -20,6 +21,7 @@ import { IGetOrders, ILastOrderResponse } from './res/order.interface';
     ButtonComponent,
     LoadingComponent,
     ImageUrlDirective,
+    CustomTranslatePipe,
   ],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],

@@ -1,91 +1,86 @@
 <!-- Current order -->
 <div class="mb-[35px]">
-  @if(!loading()){
-  <div
-    class="bg-warm-tan text-white flex flex-col md:flex-row-reverse justify-between items-center rounded-t-[20px] pb-[17px] pt-[18px] px-[42px] text-description-size capitalize text-center"
-  >
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order.date.date" | translate }}</p>
-      <p class="font-bold">
-        {{ lastOrder()?.order?.order_date | date : "dd/MM/yyyy" }}
-      </p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
-      <p class="font-bold">
-        {{ lastOrder()?.order?.order_status | titlecase }}
-      </p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "total-price.total-price" | translate }}</p>
-      <p class="font-bold">${{ lastOrder()?.order?.total }}</p>
-    </div>
-    <div class="mb-4 md:mb-0">
-      <p class="pb-[10px]">{{ "order-number" | translate }}</p>
-      <p class="font-bold">{{ lastOrder()?.order?.order_number }}</p>
-    </div>
-    <button
-      class="bg-white text-muted-rose rounded-[50px] px-[27px] py-[9px] text-description-size font-bold capitalize cursor-pointer"
-    >
-      {{ "reorder" | translate }}
-    </button>
-  </div>
-
-  <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
-    @for(order of orders()?.row?.confirmed_orders; track order.id){
+  @if(!loading()){ @for(allOrders of orders().row.confirmed_orders; track
+  allOrders.id){
+  <!-- ALL ORDERS -->
+  <div class="my-8">
     <div
-      class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
+      class="bg-warm-tan text-white flex flex-col md:flex-row-reverse justify-between items-center rounded-t-[20px] pb-[17px] pt-[18px] px-[42px] text-description-size capitalize text-center"
     >
-      <img
-        class="w-[80px] h-[80px] rounded-[15px] mb-4 md:mb-0"
-        src="/images/wishlist/3.png"
-        alt="Product Image"
-      />
-      <div class="flex-grow rtl:pr-4 ltr:pl-4">
-        <p class="text-description-size font-bold mb-[15px]">
-          {{ "footer.sections.items.skincare" | translate }}
-        </p>
-        <p class="text-category-size text-[#333]">
-          {{ "wishlist.productsItem.item-1.subtitle" | translate }}
+      <div class="mb-4 md:mb-0">
+        <p class="pb-[10px]">{{ "order.date.date" | translate }}</p>
+        <p class="font-bold">
+          {{ allOrders.order_date | date : "dd/MM/yyyy" }}
         </p>
       </div>
-      <p class="text-lg font-semibold">
-        ${{ order.total }}
-        {{ "wishlist.productsItem.item-1.price" | translate }}
-      </p>
+      <div class="mb-4 md:mb-0">
+        <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
+        <p class="font-bold">
+          {{ allOrders.order_status | titlecase }}
+        </p>
+      </div>
+      <div class="mb-4 md:mb-0">
+        <p class="pb-[10px]">{{ "total-price.total-price" | translate }}</p>
+        <p class="font-bold">${{ allOrders.total }}</p>
+      </div>
+      <div class="mb-4 md:mb-0">
+        <p class="pb-[10px]">{{ "order-number" | translate }}</p>
+        <p class="font-bold">{{ allOrders.order_number }}</p>
+      </div>
+      <button
+        class="bg-white text-muted-rose rounded-[50px] px-[27px] py-[9px] text-description-size font-bold capitalize cursor-pointer"
+      >
+        {{ "reorder" | translate }}
+      </button>
     </div>
-    }
 
-    <button
-      class="bg-[#FFF4E9] block w-full md:inline md:w-auto cursor-pointer text-muted-rose border border-[#A48374] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize mb-[30px]"
-    >
-      {{ "order.request-accepted" | translate }}
-    </button>
-    <div
-      class="flex flex-col md:flex-row justify-between items-center mb-[41px] flex-wrap"
-    >
+    <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
+      @for(order of allOrders.details; track order.id){
       <div
-        class="space-x-4 space-y-4 flex-grow-1 md:flex-grow-0 md:w-auto w-full mb-3 md:mb-0"
+        class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
       >
-        <button
-          class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#rgba(164, 131, 116, 0.00)] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
-        >
-          {{ "track-order" | translate }}
-        </button>
-        <!-- <button
-          class="block w-full md:w-auto md:inline bg-white text-[#A48374] cursor-pointer border border-[#A48374] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
-        >
-          {{ "invoice" | translate }}
-        </button> -->
+        <img
+          class="w-[80px] h-[80px] rounded-[15px] mb-4 md:mb-0"
+          [appImageUrl]="order.product.main_image"
+          [imageEndpoint]="''"
+          alt="Product Image"
+        />
+        <div class="flex-grow rtl:pr-4 ltr:pl-4">
+          <p class="text-description-size font-bold mb-[15px]">
+            {{ order.product | customTranslate : "name" }}
+          </p>
+          <p class="text-category-size text-[#333]">
+            {{ order.product | customTranslate : "descritpion" }}
+          </p>
+        </div>
+        <p class="text-lg font-semibold">
+          ${{ order.subtotal }}
+          {{ "wishlist.productsItem.item-1.price" | translate }}
+        </p>
       </div>
-      <!-- <button
-        class="text-red-600 underline description-size block mx-auto md:mx-0 md:inline"
+      }
+
+      <button
+        class="bg-[#FFF4E9] block w-full md:inline md:w-auto cursor-pointer text-muted-rose border border-[#A48374] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize mb-[30px]"
       >
-        {{ "cancel-order" | translate }}
-      </button> -->
+        {{ "order.request-accepted" | translate }}
+      </button>
+      <div
+        class="flex flex-col md:flex-row justify-between items-center mb-[41px] flex-wrap"
+      >
+        <div
+          class="space-x-4 space-y-4 flex-grow-1 md:flex-grow-0 md:w-auto w-full mb-3 md:mb-0"
+        >
+          <button
+            class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#rgba(164, 131, 116, 0.00)] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
+          >
+            {{ "track-order" | translate }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  } @else {
+  } } @else {
   <app-loading></app-loading>
   }
 </div>
@@ -122,30 +117,34 @@
       {{ "reorder" | translate }}
     </button>
   </div>
-
   <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
+    @for (deliveredOrder of lastOrder()?.order?.details; track
+    deliveredOrder.id){
+
     <div
       class="flex items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
     >
       <img
         class="w-[80px] h-[80px] rounded-[15px]"
-        src="/images/wishlist/3.png"
+        [appImageUrl]="deliveredOrder.product.main_image"
+        [imageEndpoint]="''"
         alt="Product Image"
       />
       <div class="flex-grow rtl:pr-4 ltr:pl-4">
         <p class="text-description-size font-bold mb-[15px]">
-          {{ "footer.sections.items.skincare" | translate }}
+          {{ deliveredOrder.product | customTranslate : "name" }}
         </p>
         <p class="text-category-size text-[#333]">
-          {{ "wishlist.productsItem.item-1.subtitle" | translate }}
+          {{ deliveredOrder.product | customTranslate : "descritpion" }}
         </p>
       </div>
       <p class="text-lg font-semibold">
-        ${{ lastOrder()?.order?.total }}
+        ${{ deliveredOrder.subtotal }}
         {{ "wishlist.productsItem.item-1.price" | translate }}
       </p>
     </div>
 
+    }
     <div class="flex justify-between items-center mb-[30px] gap-4 flex-wrap">
       <button
         class="bg-[#E4FFE9] block w-full md:inline md:w-auto cursor-pointer text-[#2B841F] border border-[#2B841F] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize"

@@ -304,12 +304,11 @@ export class NavbarComponent implements OnDestroy, OnInit {
   logout(): void {
     this._authService.logout().subscribe({
       next: () => {
-        // Reset wishlist count
-        this._wishlistService.loadWishlistCount();
+        // Explicitly reset wishlist data
+        this._wishlistService.resetWishlist();
 
-        // Reset cart state and count to zero for logged out user
-        this._cartStateService.checkConfirmedOrders();
-        this._cartStateService.fetchCart();
+        // Explicitly reset cart data
+        this._cartStateService.resetCart();
 
         // Closing mobile menu if open after logout
         if (this.isMenuOpen) {

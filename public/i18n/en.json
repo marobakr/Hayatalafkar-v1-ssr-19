@@ -67,8 +67,8 @@
         "title": "Product added to cart successfully"
       },
       "error": {
-        "title": "Cart Error",
-        "message": "An error occurred while processing your request. Please try again"
+        "message": "An error occurred while processing your request. Please try again",
+        "title": "Cart Error"
       },
       "remove_confirm": {
         "cancel": "cancel",
@@ -92,8 +92,8 @@
         "title": "Product added to wishlist successfully"
       },
       "remove_all_confirm": {
-        "title": "Remove all products from wishlist",
-        "message": "Are you sure you want to remove all products from your wishlist?"
+        "message": "Are you sure you want to remove all products from your wishlist?",
+        "title": "Remove all products from wishlist"
       },
       "remove_all_success": {
         "title": "All products removed from wishlist successfully"
@@ -645,6 +645,7 @@
       "lang": "Language"
     },
     "logout": "Logout",
+    "mobile_search_hint": "Search for products by name, category, or description",
     "pages_Title": {
       "articles": {
         "title": "Articles"
@@ -668,7 +669,6 @@
     "profile": "Profile",
     "search": "Search",
     "search_placeholder": "Search for products...",
-    "mobile_search_hint": "Search for products by name, category, or description",
     "wishlist": "Wishlist"
   },
   "newProducts": {
@@ -847,6 +847,10 @@
   },
   "product_code": "product code ",
   "product_details": {
+    "how_to_use": "how  to use",
+    "ingredient": "ingredient",
+    "more_information": "more information",
+    "size": "size",
     "tabs": {
       "additional_info": "addition information",
       "description": "description",
@@ -917,6 +921,7 @@
     "explore": "explore",
     "title": "related products"
   },
+  "remove_from_cart": "remove from cart",
   "reorder": "reorder",
   "reset": {
     "form": "Reset Form"
@@ -1114,6 +1119,5 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
-  },
-  "remove_from_cart": "remove from cart"
+  }
 }
