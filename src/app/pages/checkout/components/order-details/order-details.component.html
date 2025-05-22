@@ -1,3 +1,4 @@
+@if (lastOrder()?.order) {
 <div class="container mx-auto mt-3 mb-6">
   <div class="header p-9 text-center rounded-2xl relative" role="banner">
     <img
@@ -157,3 +158,8 @@
     }
   </div>
 </div>
+} @else {
+<div class="container mx-auto mt-3 mb-6">
+  <app-loading></app-loading>
+</div>
+}

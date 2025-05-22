@@ -79,13 +79,17 @@
               >
                 {{ "checkout.add_another_address" | translate }}
               </button>
-
               <app-button
+                [routerLink]="[
+                  '/',
+                  currentLang$ | async,
+                  'checkout',
+                  'payment'
+                ]"
                 [px]="'px-[40px] sm:px-[84px]'"
                 [py]="'py-[9px]'"
                 [title]="'checkout.next_step' | translate"
                 [disabled]="!selectedAddressId()"
-                (click)="continueToPayment()"
                 type="button"
               >
               </app-button>
@@ -196,7 +200,7 @@
                     aria-labelledby="location-label"
                     [attr.disabled]="loading() ? '' : null"
                     [title]="
-                      currentLang() === 'ar'
+                      (currentLang$ | async) === 'ar'
                         ? locations().length > 0
                           ? locations()[0].ar_name
                           : ''
@@ -220,7 +224,7 @@
                     @for(location of locations(); track location.id) {
                     <option [value]="location.id">
                       {{
-                        currentLang() === "ar"
+                        (currentLang$ | async) === "ar"
                           ? location.ar_name
                           : location.en_name
                       }}
@@ -415,12 +419,6 @@
           [selectedAddress]="getSelectedAddress()"
           [showActionButton]="false"
         >
-          <!--
-        <button
-        class="cursor-pointer text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[60px] text-description-size mb-6"
-        (click)="continueToPayment()">
-          {{ "checkout.next_step" | translate }}
-        </button> -->
         </app-order-summary>
       </div>
     </div>

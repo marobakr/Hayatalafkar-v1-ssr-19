@@ -4,6 +4,7 @@ import { AuthStorageService } from '../services/auth/auth-storage.service';
 import { LanguageService } from '../services/lang/language.service';
 
 export const authCheckResolver: ResolveFn<boolean> = () => {
+  console.log('can navigate');
   const authStorageService = inject(AuthStorageService);
   const router = inject(Router);
   const languageService = inject(LanguageService);

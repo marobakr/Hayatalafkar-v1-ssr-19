@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IGetCartOrOrder, OrderDetail } from '@core/interfaces/cart.interfaces';
-import { EMPTY, catchError, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from '../user/user.service';
 import { OrdersService } from './orders.service';
@@ -78,11 +78,21 @@ export class CartStateService {
   }
 
   constructor() {
-    // Check for confirmed orders first
-    this.checkConfirmedOrders();
-
-    // Initialize cart
-    this.fetchCart();
+    // Check for confirmed orders first, then initialize cart
+    this.checkConfirmedOrders()
+      .pipe(
+        // Only fetch cart if user is authenticated but has no confirmed orders
+        // If user has confirmed orders, the cart is already fetched in checkConfirmedOrders
+        switchMap((hasConfirmedOrders) => {
+          if (!this.authService.isAuthenticated() || hasConfirmedOrders) {
+            // We already have the cart data or user is not authenticated
+            return EMPTY;
+          }
+          // User is authenticated but has no confirmed orders yet, fetch an empty cart
+          return this.fetchCart();
+        })
+      )
+      .subscribe();
 
     // Set up effect to automatically persist cart changes
     effect(() => {
@@ -95,18 +105,16 @@ export class CartStateService {
   }
 
   // Check if the user has confirmed orders
-  checkConfirmedOrders(): void {
+  checkConfirmedOrders(): Observable<boolean> {
     if (!this.authService.isAuthenticated()) {
       this.hasConfirmedOrdersSignal.set(false);
-      return;
+      return of(false);
     }
 
-    this.ordersService.checkCart().subscribe({
-      next: (response) => {
+    return this.ordersService.checkCart().pipe(
+      map((response) => {
         const hasConfirmed =
           response.orderDetails && response.orderDetails.length > 0;
-
-        console.log('hasConfirmed', hasConfirmed);
 
         // Update the signal
         this.hasConfirmedOrdersSignal.set(hasConfirmed);
@@ -115,63 +123,58 @@ export class CartStateService {
         if (hasConfirmed) {
           this.cartState.set(response);
         }
-      },
-      error: (err) => {
+
+        return hasConfirmed;
+      }),
+      catchError((err) => {
         console.error('Error checking confirmed orders:', err);
         this.hasConfirmedOrdersSignal.set(false);
-      },
-    });
+        return of(false);
+      })
+    );
   }
 
-  fetchCart(): Promise<void> {
-    return new Promise<void>((resolve) => {
-      // Don't fetch cart for unauthenticated users
-      if (!this.authService.isAuthenticated()) {
-        // Initialize with empty cart
-        this.cartState.set({
+  fetchCart(): Observable<IGetCartOrOrder> {
+    // Don't fetch cart for unauthenticated users
+    if (!this.authService.isAuthenticated()) {
+      // Initialize with empty cart
+      const emptyCart: IGetCartOrOrder = {
+        orderDetails: [],
+        promocode: null,
+        order: null as any,
+        user: null as any,
+      };
+
+      this.cartState.set(emptyCart);
+      return of(emptyCart);
+    }
+
+    // Always fetch the cart for authenticated users
+    // Even if hasConfirmedOrders() is false, we still want to get the latest data
+    return this.ordersService.checkCart().pipe(
+      takeUntilDestroyed(this.destroyRef),
+      tap((cart) => {
+        // Update the cart state with the response
+        this.cartState.set(cart);
+
+        // Update hasConfirmedOrders based on cart contents
+        const hasItems = cart.orderDetails && cart.orderDetails.length > 0;
+        this.hasConfirmedOrdersSignal.set(hasItems);
+      }),
+      catchError((err) => {
+        console.error('Error fetching cart', err);
+        // Initialize with empty cart on error
+        const emptyCart: IGetCartOrOrder = {
           orderDetails: [],
           promocode: null,
           order: null as any,
           user: null as any,
-        });
-        resolve();
-        return;
-      }
+        };
 
-      // Always fetch the cart for authenticated users
-      // Even if hasConfirmedOrders() is false, we still want to get the latest data
-      this.ordersService
-        .checkCart()
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          tap((cart) => {
-            // Update the cart state with the response
-            this.cartState.set(cart);
-
-            // Update hasConfirmedOrders based on cart contents
-            const hasItems = cart.orderDetails && cart.orderDetails.length > 0;
-            this.hasConfirmedOrdersSignal.set(hasItems);
-
-            // Resolve the promise when data is received
-            resolve();
-          }),
-          catchError((err) => {
-            console.error('Error fetching cart', err);
-            // Initialize with empty cart on error
-            this.cartState.set({
-              orderDetails: [],
-              promocode: null,
-              order: null as any,
-              user: null as any,
-            });
-
-            // Resolve the promise even on error
-            resolve();
-            return EMPTY;
-          })
-        )
-        .subscribe();
-    });
+        this.cartState.set(emptyCart);
+        return of(emptyCart);
+      })
+    );
   }
 
   /**
@@ -321,7 +324,7 @@ export class CartStateService {
         } else {
           // If response is incomplete, fetch the full cart
           console.warn('Incomplete cart response, fetching full cart');
-          this.fetchCart();
+          this.fetchCart().subscribe();
         }
       }),
       catchError((err) => {
@@ -350,7 +353,7 @@ export class CartStateService {
         } else {
           // If response is incomplete, fetch the full cart
           console.warn('Incomplete cart response, fetching full cart');
-          this.fetchCart();
+          this.fetchCart().subscribe();
         }
       }),
       catchError((err) => {
@@ -398,7 +401,7 @@ export class CartStateService {
         } else {
           // If response is incomplete, fetch the full cart
           console.warn('Incomplete cart response, fetching full cart');
-          this.fetchCart();
+          this.fetchCart().subscribe();
         }
       }),
       catchError((err) => {
@@ -418,7 +421,7 @@ export class CartStateService {
     return this.ordersService.checkPromoCode(code).pipe(
       tap((response) => {
         if (response.valid && this.cartState()) {
-          this.fetchCart(); // Refetch cart to get updated totals
+          this.fetchCart().subscribe(); // Refetch cart to get updated totals
         }
       }),
       catchError((err) => {
@@ -439,7 +442,7 @@ export class CartStateService {
     }
 
     // Always fetch the cart to get the latest count
-    this.fetchCart();
+    this.fetchCart().subscribe();
   }
 
   /**

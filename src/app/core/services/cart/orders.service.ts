@@ -106,8 +106,10 @@ export class OrdersService {
   /**
    * Place order
    */
-  /* error hereeeeeeeeeeeeeeeeeeeeee */
-  placeOrder(orderData: any): Observable<any> {
-    return this.api.post<any>(API_CONFIG.ORDERS.PLACE_ORDER, orderData);
+  placeOrder(order_id: number): Observable<any> {
+    return this.api.post<any>(
+      `${API_CONFIG.ORDERS.PLACE_ORDER}${order_id}`,
+      {}
+    );
   }
 }

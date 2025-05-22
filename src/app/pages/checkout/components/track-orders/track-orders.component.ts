@@ -1,6 +1,7 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
@@ -31,14 +32,27 @@ import { ILastOrderResponse } from 'src/app/pages/profile/components/orders/res/
 export class TrackOrdersComponent implements OnInit {
   private _userService = inject(UserService);
   private _destroyRef = inject(DestroyRef);
+  private _route = inject(ActivatedRoute);
 
   currentLang$ = inject(LanguageService).getLanguage();
   lastOrder = signal<ILastOrderResponse | null>(null);
   loading = signal(false);
   errorMessage = signal('');
+  orderId = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.getLastOrder();
+    // Get order-id parameter from route if available
+    this._route.paramMap
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((params) => {
+        const orderIdParam = params.get('order-id');
+        if (orderIdParam) {
+          this.orderId.set(orderIdParam);
+          this.getOrderById(orderIdParam);
+        } else {
+          this.getLastOrder();
+        }
+      });
   }
 
   formatDate(date: string | undefined): string {
@@ -86,24 +100,84 @@ export class TrackOrdersComponent implements OnInit {
     }
   }
 
+  getOrderById(orderId: string): void {
+    this.loading.set(true);
+    this._userService
+      .getUserOrderById(orderId)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (response: ILastOrderResponse) => {
+          console.log(response);
+          this.loading.set(false);
+          if (response && response.order) {
+            this.lastOrder.set(response);
+          }
+        },
+        error: (error) => {
+          this.loading.set(false);
+          this.errorMessage.set(
+            error?.message || 'Error fetching order details'
+          );
+          console.error('Error fetching order details:', error);
+        },
+      });
+  }
+
   getLastOrder(): void {
     this.loading.set(true);
-    this._userService.getUserLastOrder().subscribe({
-      next: (response: ILastOrderResponse) => {
-        this.loading.set(false);
-        if (response && response.order) {
-          this.lastOrder.set(response);
-        }
-      },
-      error: (error) => {
-        this.loading.set(false);
-        this.errorMessage.set(error?.message || 'Error fetching last order');
-        console.error('Error fetching last order:', error);
-      },
-      complete: () => {
-        // Ensure loading is turned off when the subscription completes
-        this.loading.set(false);
-      },
-    });
+    this._userService
+      .getUserLastOrder()
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: (response: ILastOrderResponse) => {
+          this.loading.set(false);
+          if (response && response.order) {
+            this.lastOrder.set(response);
+          }
+        },
+        error: (error) => {
+          this.loading.set(false);
+          this.errorMessage.set(error?.message || 'Error fetching last order');
+          console.error('Error fetching last order:', error);
+        },
+        complete: () => {
+          // Ensure loading is turned off when the subscription completes
+          this.loading.set(false);
+        },
+      });
+  }
+
+  getOrderStatusProgress(): number {
+    const status = this.lastOrder()?.order?.order_status?.toLowerCase() || '';
+
+    // Define order stages and their progress percentage based on the specified statuses
+    const progressMap: Record<string, number> = {
+      pending: 0, // Initial stage (0%)
+      confirmed: 25, // Order confirmed (25%)
+      processing: 25, // Same as confirmed (25%)
+      preparation: 50, // In preparation (50%)
+      'on the way': 75, // On the way (75%)
+      shipping: 75, // Same as on the way (75%)
+      delivered: 100, // Delivered (100%)
+      completed: 100, // Same as delivered (100%)
+    };
+
+    // Return the progress percentage based on the status, default to 0 if status is not found
+    return progressMap[status] || 0;
+  }
+
+  isStepActive(stepIndex: number): boolean {
+    const progress = this.getOrderStatusProgress();
+
+    // Define the progress thresholds for each step
+    // Step 0: Order Submitted (0%)
+    // Step 1: Confirmed/Approved (25%)
+    // Step 2: In Preparation (50%)
+    // Step 3: On The Way (75%)
+    // Step 4: Delivered (100%)
+    const stepThresholds = [0, 25, 50, 75, 100];
+
+    // A step is active if the current order progress is equal to or greater than that step's threshold
+    return progress >= stepThresholds[stepIndex];
   }
 }

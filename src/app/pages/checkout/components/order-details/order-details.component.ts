@@ -49,7 +49,7 @@ export class OrderDetailsComponent {
     this._userService.getUserLastOrder().subscribe({
       next: (response: ILastOrderResponse) => {
         this.loading.set(false);
-        if (response && response.order) {
+        if (response && response.order !== null) {
           this.lastOrder.set(response);
         }
       },

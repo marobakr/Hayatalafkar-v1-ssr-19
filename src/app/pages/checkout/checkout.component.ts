@@ -1,34 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { IAddress } from '@core/interfaces/user.interface';
 import { CartStateService } from '@core/services/cart/cart-state.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonComponent } from '@shared/components/button/button.component';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
-import { NotificationComponent } from '@shared/components/notification/notification.component';
 import { Observable } from 'rxjs';
 import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
-import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
-import { CheckoutAddressComponent } from './components/checkout-address/checkout-address.component';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    ButtonComponent,
-    LoadingComponent,
-    RouterLink,
-    RouterOutlet,
-    CheckoutAddressComponent,
-    NotificationComponent,
-    ArticlesHeaderComponent,
-    ServiceCardComponent,
-  ],
+  imports: [CommonModule, TranslateModule, RouterOutlet, ServiceCardComponent],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css'],
 })
@@ -72,13 +56,13 @@ export class CheckoutComponent {
   /**
    * Navigate to the next step
    */
-  goToNextStep(currentStep: string): void {
-    this.languageService.getLanguage().subscribe((lang) => {
-      if (currentStep === 'checkout-address') {
-        this._router.navigate(['/', lang, 'checkout', 'order-summary']);
-      } else if (currentStep === 'order-summary') {
-        this._router.navigate(['/', lang, 'checkout', 'payment']);
-      }
-    });
-  }
+  // goToNextStep(currentStep: string): void {
+  //   this.languageService.getLanguage().subscribe((lang) => {
+  //     if (currentStep === 'checkout-address') {
+  //       this._router.navigate(['/', lang, 'checkout', 'order-summary']);
+  //     } else if (currentStep === 'order-summary') {
+  //       this._router.navigate(['/', lang, 'checkout', 'payment']);
+  //     }
+  //   });
+  // }
 }

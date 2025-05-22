@@ -31,12 +31,17 @@
   <div
     class="bg-white rounded-[15px] border-1 border-[#A48374] shadow-md mt-6 items-center p-[35px]"
   >
-    <div>
+    <!-- Desktop and Mobile Layouts -->
+    <div class="hidden md:block">
       <!-- Tracking Timeline -->
       <div class="relative">
         <!-- Steps -->
         <div class="flex justify-between mb-4 tracking-steps">
-          <div class="text-center w-1/5 relative">
+          <div
+            class="text-center w-1/5 relative tracking-step"
+            [class.active]="isStepActive(0)"
+            [class.inactive]="!isStepActive(0)"
+          >
             <div class="flex justify-center mb-2">
               <div class="z-10">
                 <img
@@ -51,7 +56,11 @@
             </p>
           </div>
 
-          <div class="text-center w-1/5 relative">
+          <div
+            class="text-center w-1/5 relative tracking-step"
+            [class.active]="isStepActive(1)"
+            [class.inactive]="!isStepActive(1)"
+          >
             <div class="flex justify-center mb-2">
               <div class="z-10">
                 <img
@@ -66,7 +75,11 @@
             </p>
           </div>
 
-          <div class="text-center w-1/5 relative">
+          <div
+            class="text-center w-1/5 relative tracking-step"
+            [class.active]="isStepActive(2)"
+            [class.inactive]="!isStepActive(2)"
+          >
             <div class="flex justify-center mb-2">
               <div class="z-10">
                 <img
@@ -81,7 +94,11 @@
             </p>
           </div>
 
-          <div class="text-center w-1/5 relative">
+          <div
+            class="text-center w-1/5 relative tracking-step"
+            [class.active]="isStepActive(3)"
+            [class.inactive]="!isStepActive(3)"
+          >
             <div class="flex justify-center mb-2">
               <div class="z-10">
                 <img
@@ -96,7 +113,11 @@
             </p>
           </div>
 
-          <div class="text-center w-1/5 relative">
+          <div
+            class="text-center w-1/5 relative tracking-step"
+            [class.active]="isStepActive(4)"
+            [class.inactive]="!isStepActive(4)"
+          >
             <div class="flex justify-center mb-2">
               <div class="z-10">
                 <img
@@ -113,12 +134,25 @@
         </div>
 
         <!-- Progress Bar -->
-        <div
-          class="absolute top-6 left-0 right-0 h-0.5 bg-gray-200 -z-10 progress-line"
-        ></div>
+        <div class="progress-container relative mt-4">
+          <div class="progress-line-bg w-[85%] mx-auto"></div>
+          <div
+            class="progress-line-fill"
+            [style.width.%]="getOrderStatusProgress()"
+          ></div>
 
-        <!-- Timestamps -->
-        <div class="flex justify-between mt-2 tracking-steps">
+          <!-- Checkmarks -->
+          <div class="checkmarks-container w-[85%] mx-auto">
+            <div class="checkmark" [class.active]="isStepActive(0)">✓</div>
+            <div class="checkmark" [class.active]="isStepActive(1)">✓</div>
+            <div class="checkmark" [class.active]="isStepActive(2)">✓</div>
+            <div class="checkmark" [class.active]="isStepActive(3)">✓</div>
+            <div class="checkmark" [class.active]="isStepActive(4)">✓</div>
+          </div>
+        </div>
+
+        <!-- Desktop Timestamps -->
+        <div class="flex justify-between mt-6 tracking-steps">
           <div class="text-center w-1/5">
             <p class="text-[#333]">
               {{ lastOrder()?.order?.order_date | date : "dd MMMM, yyyy" }}
@@ -162,6 +196,143 @@
             <p class="font-medium">
               {{ formatEstimatedDate(lastOrder()?.order?.order_date) }}
             </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Layout (below md) -->
+    <div class="block md:hidden px-4">
+      <div class="relative">
+        <!-- Mobile Steps -->
+        <div class="flex flex-col space-y-16">
+          <!-- Step 1 -->
+          <div class="flex flex-col items-center relative">
+            <!-- Icon -->
+            <div
+              class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
+            >
+              <img
+                src="/images/checkout/order-svgrepo-com 1.svg"
+                alt="Order Submitted"
+                class="w-[45px] h-[45px]"
+              />
+            </div>
+            <!-- Text Content -->
+            <div class="text-center w-full max-w-[200px]">
+              <p class="font-medium text-base mb-2">
+                {{ "order.tracking.submitted" | translate }}
+              </p>
+              <p class="text-sm text-[#333] mb-1">
+                {{ lastOrder()?.order?.order_date | date : "dd MMMM, yyyy" }}
+              </p>
+              <p class="text-sm font-medium">
+                {{ getOrderTime(0) || "11:00 A.M" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex flex-col items-center relative">
+            <div
+              class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
+            >
+              <img
+                src="/images/checkout/check-list-clipboard-list-svgrepo-com 1.svg"
+                alt="Approved"
+                class="w-[45px] h-[45px]"
+              />
+            </div>
+            <!-- Text Content -->
+            <div class="text-center w-full max-w-[200px]">
+              <p class="font-medium text-base mb-2">
+                {{ "order.tracking.approved" | translate }}
+              </p>
+              <p class="text-sm text-[#333] mb-1">
+                {{ lastOrder()?.order?.order_date | date : "dd MMMM, yyyy" }}
+              </p>
+              <p class="text-sm font-medium">
+                {{ getOrderTime(1) || "11:30 A.M" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex flex-col items-center relative">
+            <!-- Icon -->
+            <div
+              class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
+            >
+              <img
+                src="/images/checkout/box-minimalistic-svgrepo-com 1.svg"
+                alt="In Preparation"
+                class="w-[45px] h-[45px]"
+              />
+            </div>
+            <!-- Text Content -->
+            <div class="text-center w-full max-w-[200px]">
+              <p class="font-medium text-base mb-2">
+                {{ "order.tracking.preparation" | translate }}
+              </p>
+              <p class="text-sm text-[#333] mb-1">
+                {{ lastOrder()?.order?.order_date | date : "dd MMMM, yyyy" }}
+              </p>
+              <p class="text-sm font-medium">
+                {{ getOrderTime(2) || "1:00 P.M" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flex flex-col items-center relative">
+            <!-- Icon -->
+            <div
+              class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
+            >
+              <img
+                src="/images/checkout/delivery-truck-svgrepo-com 1.svg"
+                alt="On The Way"
+                class="w-[45px] h-[45px]"
+              />
+            </div>
+            <!-- Text Content -->
+            <div class="text-center w-full max-w-[200px]">
+              <p class="font-medium text-base mb-2">
+                {{ "order.tracking.way" | translate }}
+              </p>
+              <p class="text-sm text-[#333] mb-1">
+                {{ "order.tracking.estimated" | translate }}
+              </p>
+              <p class="text-sm font-medium">
+                {{ formatEstimatedDate(lastOrder()?.order?.order_date) }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flex flex-col items-center relative">
+            <!-- Icon -->
+            <div
+              class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
+            >
+              <img
+                src="/images/checkout/delivery-parcel-svgrepo-com 1.svg"
+                alt="Delivered"
+                class="w-[45px] h-[45px]"
+              />
+            </div>
+            <!-- Text Content -->
+            <div class="text-center w-full max-w-[200px]">
+              <p class="font-medium text-base mb-2">
+                {{ "order.tracking.delivered" | translate }}
+              </p>
+              <p class="text-sm text-[#333] mb-1">
+                {{ "order.tracking.estimated" | translate }}
+              </p>
+              <p class="text-sm font-medium">
+                {{ formatEstimatedDate(lastOrder()?.order?.order_date) }}
+              </p>
+            </div>
           </div>
         </div>
       </div>

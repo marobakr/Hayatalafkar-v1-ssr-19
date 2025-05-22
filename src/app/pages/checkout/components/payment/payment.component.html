@@ -42,6 +42,12 @@
             <!-- Submit Button -->
             <div class="flex justify-center mt-10">
               <app-button
+                [routerLink]="[
+                  '/',
+                  currentLang$ | async,
+                  'checkout',
+                  'success-order'
+                ]"
                 [px]="'px-[40px] sm:px-[84px]'"
                 [py]="'py-[9px]'"
                 [title]="'checkout.payment.place_order' | translate"
@@ -60,7 +66,6 @@
       <!-- Order Summary Column -->
       <div class="col-span-12 lg:col-span-4">
         <app-order-summary
-          [selectedAddress]="selectedAddress()"
           [showDeliveryFee]="true"
           [showActionButton]="false"
         ></app-order-summary>

@@ -28,7 +28,6 @@ export const checkoutAddressResolver: ResolveFn<Observable<any>> = (
         'checkout.address.user_info_error',
         'checkout.address.error_title'
       );
-
       // Return empty observable to continue navigation
       return of(null);
     })

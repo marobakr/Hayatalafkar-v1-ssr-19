@@ -310,6 +310,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
         // Explicitly reset cart data
         this._cartStateService.resetCart();
 
+        localStorage.removeItem('user_data');
         // Closing mobile menu if open after logout
         if (this.isMenuOpen) {
           this.toggleMobileMenu();

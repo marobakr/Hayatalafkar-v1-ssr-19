@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import {
   Component,
   DestroyRef,
@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IAddress, ILocation } from '@core/interfaces/user.interface';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CartStateService } from '@core/services/cart/cart-state.service';
@@ -41,6 +41,8 @@ import { ArticlesHeaderComponent } from '../../../articles/components/articles-h
     OrderSummaryComponent,
     CustomTranslatePipe,
     ArticlesHeaderComponent,
+    RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './checkout-address.component.html',
   styleUrls: ['./checkout-address.component.css'],
@@ -54,11 +56,11 @@ export class CheckoutAddressComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
   private _translateService = inject(TranslateService);
   private _notificationService = inject(NotificationService);
-  private _router = inject(Router);
-  private _languageService = inject(LanguageService);
+  private _languageService = inject(LanguageService).getLanguage();
   private _ordersService = inject(OrdersService);
   private _cartState = inject(CartStateService);
   private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
 
   addressForm!: FormGroup;
   locations = signal<ILocation[]>([]);
@@ -66,8 +68,7 @@ export class CheckoutAddressComponent implements OnInit {
   errorMessage = signal('');
   successMessage = signal('');
   isFormSubmitted = signal(false);
-  currentLang = signal(this._translateService.currentLang || 'en');
-
+  currentLang$ = inject(LanguageService).getLanguage();
   // Track if the user has existing addresses
   addresses = signal<IAddress[]>([]);
   hasAddresses = signal(false);
@@ -86,13 +87,6 @@ export class CheckoutAddressComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.processResolverData();
-
-    // Subscribe to language changes
-    this._translateService.onLangChange
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((event) => {
-        this.currentLang.set(event.lang);
-      });
   }
 
   /**
@@ -432,46 +426,14 @@ export class CheckoutAddressComponent implements OnInit {
   }
 
   /**
-   * Get the location name for a given location ID
-   */
-
-  /**
    * Get the currently selected address object
    */
   getSelectedAddress(): IAddress | null {
+    console.log(this.selectedAddressId());
     if (!this.selectedAddressId()) return null;
-
     const address = this.addresses().find(
       (addr) => addr.id === this.selectedAddressId()
     );
     return address || null;
-  }
-
-  /**
-   * Continue to the payment step with the selected address
-   */
-  continueToPayment(): void {
-    if (!this.selectedAddressId()) {
-      this._notificationService.warning(
-        'checkout.address.no_address_selected',
-        'checkout.address.warning'
-      );
-      return;
-    }
-
-    // Emit the selected address
-    const selectedAddress = this.getSelectedAddress();
-    if (selectedAddress) {
-      this.addressSelected.emit(selectedAddress);
-    }
-
-    // Navigate to payment step with address ID as query param
-    this._languageService.getLanguage().subscribe((lang) => {
-      this._router.navigate(['/', lang, 'checkout', 'payment'], {
-        queryParams: {
-          address_id: this.selectedAddressId(),
-        },
-      });
-    });
   }
 }

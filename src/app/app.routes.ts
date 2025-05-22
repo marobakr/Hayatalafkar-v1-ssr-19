@@ -350,6 +350,18 @@ export const routes: Routes = [
               description: 'pages.checkout.track.description',
             },
           },
+
+          {
+            path: 'track-order/:order-id',
+            loadComponent: () =>
+              import(
+                './pages/checkout/components/track-orders/track-orders.component'
+              ).then((c) => c.TrackOrdersComponent),
+            data: {
+              title: 'pages.checkout.track.title',
+              description: 'pages.checkout.track.description',
+            },
+          },
         ],
         canActivate: [authGuard],
       },

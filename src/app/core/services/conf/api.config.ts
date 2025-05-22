@@ -58,6 +58,7 @@ export const API_CONFIG = {
     GET_USER_ORDERS: 'users/showOrders',
     /* Pending */
     GET_USER_LAST_ORDER: 'users/userneworders',
+    GET_USER_ORDER: 'users/order',
     ADD_NEW_ADDRESS: 'users/addNewAddress',
     DEACTIVATE_USER: 'users/deactiveuser/',
     DELETE_USER: 'users/deleteuser/',
