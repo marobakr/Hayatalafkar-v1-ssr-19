@@ -85,6 +85,7 @@
     1 ? aboutUsOne.offers.slice(0,2) : [aboutUsOne.offers[0],
     aboutUsOne.offers[0]]; track $index) {
     <app-big-card-offer
+      [routerLink]="['/', currentLang$ | async, 'shopping']"
       [mainColor]="$even"
       [alt]="offer | customTranslate : 'title'"
       [imgPath]="`/images/categories/${$index}.webp`"

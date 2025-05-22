@@ -1,6 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { API_CONFIG } from '@core/services/conf/api.config';
+import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AboutSharedComponent } from '@shared/components/about-shared/about-shared.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
@@ -23,12 +26,16 @@ import { AboutUsService } from './res/about-us.service';
     FAQComponent,
     TranslateModule,
     CustomTranslatePipe,
+    RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.css',
 })
 export class AboutUsComponent implements OnInit {
   aboutUsService = inject(AboutUsService);
+  languageService = inject(LanguageService);
+  currentLang$ = this.languageService.getLanguage();
   API_CONFIG = API_CONFIG.BASE_URL_IMAGE;
 
   aboutUsOne: IAboutUsOne = {

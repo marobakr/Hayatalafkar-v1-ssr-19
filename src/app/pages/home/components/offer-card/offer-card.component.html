@@ -5,6 +5,7 @@
     @if(offers.length > 0){ @for (offer of offers.length > 1 ? offers.slice(0,2)
     : [offers[0], offers[0]]; track $index) {
     <app-big-card-offer
+      [routerLink]="['/', currentLang$ | async, 'shopping']"
       [mainColor]="$even"
       [alt]="offer | customTranslate : 'title'"
       [imgPath]="`/images/categories/${$index}.webp`"
