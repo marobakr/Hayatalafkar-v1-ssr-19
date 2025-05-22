@@ -8,6 +8,7 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -55,6 +56,8 @@ export class HeroComponent
   private destroy$ = new Subject<void>();
   private isCarouselInitialized = false;
 
+  // Signal to track carousel loading state
+  isCarouselLoading = signal(true);
   currentLang$ = this.languageService.getLanguage();
 
   // Configure owl carousel options
@@ -119,6 +122,7 @@ export class HeroComponent
     if (changes['heroSection'] && !changes['heroSection'].firstChange) {
       if (this.isBrowser && this.owlCarousel) {
         // Reset the carousel when slider data changes
+        this.isCarouselLoading.set(true);
         this.resetCarousel();
       }
     }
@@ -126,12 +130,32 @@ export class HeroComponent
 
   ngAfterViewInit(): void {
     if (this.isBrowser) {
+      // Set loading state to true while carousel initializes
+      this.isCarouselLoading.set(true);
+
       // Fix carousel after it's fully initialized
       setTimeout(() => {
         this.isCarouselInitialized = true;
         this.fixDuplicatedDots();
         this.hideNavigationArrows();
         this.setupCarouselEventListeners();
+
+        // Subscribe to carousel initialized event
+        if (this.owlCarousel) {
+          this.owlCarousel.initialized
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+              // Set loading to false when carousel is fully initialized
+              setTimeout(() => {
+                this.isCarouselLoading.set(false);
+              }, 300);
+            });
+        } else {
+          // If owlCarousel is not available for some reason, still hide loading
+          setTimeout(() => {
+            this.isCarouselLoading.set(false);
+          }, 500);
+        }
       }, 300);
     }
   }
@@ -150,6 +174,9 @@ export class HeroComponent
   }
 
   private resetCarousel(): void {
+    // Set loading to true while resetting
+    this.isCarouselLoading.set(true);
+
     // Give time for DOM to update with new data
     setTimeout(() => {
       if (this.owlCarousel) {
@@ -167,6 +194,11 @@ export class HeroComponent
             carouselElement.classList.add('owl-loaded');
             this.fixDuplicatedDots();
             this.fixClonedSlides();
+
+            // Set loading to false after reset is complete
+            setTimeout(() => {
+              this.isCarouselLoading.set(false);
+            }, 300);
           }, 50);
         }
       }

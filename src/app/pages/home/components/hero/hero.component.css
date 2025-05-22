@@ -6,11 +6,18 @@
   transform: rotate(180);
 }
 
+/* Loading overlay styles */
+.carousel-wrapper {
+  position: relative;
+  transition: opacity 0.5s ease;
+}
+
 /* Owl Carousel Custom Styles */
 ::ng-deep .owl-carousel {
   width: 100%;
   position: relative;
   min-height: 300px;
+  transition: opacity 0.5s ease-in-out;
 }
 
 ::ng-deep .owl-stage-outer {
@@ -145,6 +152,43 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Loading overlay animation */
+@keyframes fadeInCarousel {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading overlay */
+.absolute.inset-0 {
+  z-index: 100;
+  transition: opacity 0.5s ease-out;
+  animation: fadeOutOverlay 0.5s ease forwards;
+}
+
+@keyframes fadeOutOverlay {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
