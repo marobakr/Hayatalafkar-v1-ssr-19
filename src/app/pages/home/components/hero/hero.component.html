@@ -28,9 +28,14 @@
       [class.opacity-0]="isCarouselLoading()"
       [style.transition]="'opacity 0.5s ease-in-out'"
     >
-      <!-- Prevent flash of unstyled content -->
+      <!-- Ensure consistent height -->
       <div class="min-h-[400px]">
-        <owl-carousel-o [options]="customOptions" #owlCarousel>
+        <!-- Force the element to be visible with !important styles -->
+        <owl-carousel-o
+          [options]="customOptions"
+          #owlCarousel
+          style="display: block !important; visibility: visible !important"
+        >
           @for (slide of heroSection; track slide.main_image) {
           <ng-template carouselSlide [id]="'slide_' + slide.main_image">
             <!-- Slide Content Container -->
@@ -95,6 +100,7 @@
                 <div
                   class="w-full md:w-1/2 lg:w-1/2 flex justify-center items-center"
                 >
+                  <!-- Use eager loading and ensure the image is fully displayed -->
                   <img
                     [appImageUrl]="slide.main_image"
                     [imageEndpoint]="''"
@@ -103,6 +109,10 @@
                     width="600"
                     height="400"
                     loading="eager"
+                    style="
+                      display: block !important;
+                      visibility: visible !important;
+                    "
                   />
                 </div>
               </div>

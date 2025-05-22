@@ -10,80 +10,143 @@
 .carousel-wrapper {
   position: relative;
   transition: opacity 0.5s ease;
+  overflow: hidden !important;
 }
 
-/* Owl Carousel Custom Styles */
+/* Owl Carousel Custom Styles - Simplified */
 ::ng-deep .owl-carousel {
   width: 100%;
   position: relative;
   min-height: 300px;
-  transition: opacity 0.5s ease-in-out;
+  display: block !important;
+  overflow: hidden !important;
 }
 
 ::ng-deep .owl-stage-outer {
-  overflow: hidden;
+  overflow: hidden !important;
+  position: relative;
 }
 
 ::ng-deep .owl-stage {
   display: flex;
-  transition: all 0.5s ease !important;
+  position: relative;
 }
 
+/* Fix visibility of items */
 ::ng-deep .owl-item {
+  position: relative;
+  min-height: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s ease-in-out !important;
+  transition: all 0.5s ease !important;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* Initially hide all items */
+::ng-deep .owl-carousel .owl-item {
   opacity: 0;
+  visibility: hidden;
 }
 
-::ng-deep .owl-item.active {
-  opacity: 1;
+/* Show active items */
+::ng-deep .owl-carousel .owl-item.active {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* Navigation Arrows - Hide them */
-::ng-deep .owl-nav {
-  display: none !important;
+/* Force single active item */
+::ng-deep .owl-carousel .owl-item.active ~ .owl-item.active {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
-/* Fix for Font Awesome icons */
-::ng-deep .owl-prev i,
-::ng-deep .owl-next i {
-  display: none !important;
+/* Horizontal slide animations */
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-/* Remove default arrow text if any exists */
-::ng-deep .owl-prev span,
-::ng-deep .owl-next span {
-  display: none !important;
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 }
 
-/* Ensure loop transition is smooth */
-::ng-deep .owl-carousel.owl-loaded {
-  display: block;
-  transition: all 0.3s ease;
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
-::ng-deep .owl-carousel .owl-stage-outer {
-  overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
+@keyframes slideOutRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
-/* Fix for RTL navigation */
+/* Apply animations */
+::ng-deep .slideInRight {
+  animation-name: slideInRight;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+::ng-deep .slideOutLeft {
+  animation-name: slideOutLeft;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+::ng-deep .slideInLeft {
+  animation-name: slideInLeft;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+::ng-deep .slideOutRight {
+  animation-name: slideOutRight;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+/* Fix RTL support */
 ::ng-deep .owl-carousel.owl-rtl .owl-item {
   float: right;
 }
 
-::ng-deep .owl-carousel.owl-rtl .owl-prev i:before,
-::ng-deep .owl-carousel.owl-rtl .owl-next i:before {
-  display: none !important;
+/* Force hide cloned items */
+::ng-deep .owl-carousel .owl-item.cloned {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
-/* Dots/Pagination */
+/* Dots positioning */
 ::ng-deep .owl-dots {
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -106,36 +169,60 @@
   transform: scale(1.2);
 }
 
-/* Smooth transition for slides */
-::ng-deep .owl-carousel .animated {
-  animation-duration: 0.8s;
-  animation-fill-mode: both;
+/* Fix duplicate dots */
+::ng-deep .owl-carousel > .owl-dots:nth-of-type(n + 2),
+::ng-deep .owl-theme .owl-dots:not(:first-of-type),
+::ng-deep .owl-carousel .owl-dots + .owl-dots {
+  display: none !important;
 }
 
-::ng-deep .fadeIn {
-  animation-name: owlFadeIn;
+/* Carousel loading state */
+.carousel-wrapper {
+  position: relative;
+  transition: opacity 0.5s ease-in-out;
+  min-height: 300px;
 }
 
-::ng-deep .fadeOut {
-  animation-name: owlFadeOut;
+.carousel-wrapper.opacity-0 {
+  opacity: 0;
+  visibility: hidden;
 }
 
-@keyframes owlFadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+/* Loading spinner overlay */
+.absolute.inset-0 {
+  z-index: 100;
 }
 
-@keyframes owlFadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+/* Ensure consistent dimensions */
+.min-h-\[400px\] {
+  min-height: 400px;
+}
+
+/* Keep slide container styles */
+.slide-container {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0;
+}
+
+.slide-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+/* Image styling */
+img[appImageUrl] {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  max-height: 400px !important;
+  margin: 0 auto;
 }
 
 /* Rotating logo animation */
@@ -155,92 +242,21 @@
   }
 }
 
-/* Loading overlay animation */
-@keyframes fadeInCarousel {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+/* Direction-aware rotation for RTL support */
+.direction-aware-rotate {
+  transform: var(--direction-rotate, rotate(0deg));
 }
 
-/* Loading spinner animation */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Loading overlay */
-.absolute.inset-0 {
-  z-index: 100;
-  transition: opacity 0.5s ease-out;
-  animation: fadeOutOverlay 0.5s ease forwards;
-}
-
-@keyframes fadeOutOverlay {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-  ::ng-deep .owl-carousel {
-    min-height: 350px;
-  }
-
-  ::ng-deep .owl-dots {
-    bottom: 10px;
-  }
-}
-
-/* Slide container styles */
-.slide-container {
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 0;
-}
-
-.slide-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  height: 100%;
-}
-
-/* Make sure images are properly contained with max height */
-img[appImageUrl] {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-  max-height: 400px !important; /* Set max height only for images */
-  margin: 0 auto;
-}
-
-/* Additional styles for owl carousel items */
-::ng-deep .owl-item {
-  visibility: hidden;
-}
-
-::ng-deep .owl-item.active {
-  visibility: visible;
+:host-context([dir="rtl"]) .direction-aware-rotate {
+  --direction-rotate: rotate(180deg);
 }
 
 /* Fix for responsive layout */
 @media (max-width: 768px) {
+  .min-h-\[400px\] {
+    min-height: 300px;
+  }
+
   img[appImageUrl] {
     max-height: 300px !important;
   }
@@ -248,239 +264,8 @@ img[appImageUrl] {
   .slide-container {
     padding: 10px;
   }
-}
 
-/* Fix for duplicated dots - hide any extra pagination elements */
-::ng-deep .owl-carousel > .owl-dots:nth-of-type(n + 2) {
-  display: none !important;
-}
-
-/* Another approach to hide duplicated dots */
-::ng-deep .owl-theme .owl-dots:not(:first-of-type) {
-  display: none !important;
-}
-
-/* Ensure only one set of dots is visible */
-::ng-deep .owl-carousel .owl-dots + .owl-dots {
-  display: none !important;
-}
-
-/* Ensure only the first active item is visible when multiple are present */
-::ng-deep .owl-carousel .owl-item.active ~ .owl-item.active {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-/* Prevent flicker during transitions */
-::ng-deep .owl-carousel .owl-stage {
-  display: flex;
-  align-items: center;
-  transition: transform 0.6s ease !important;
-}
-
-/* Prevent duplicate items during initializing/loading */
-::ng-deep .owl-carousel:not(.owl-loaded) > *:not(:first-child) {
-  display: none !important;
-}
-
-/* Ensure proper slide transition */
-::ng-deep .fadeIn {
-  animation-name: owlFadeIn;
-  animation-duration: 0.6s;
-}
-
-::ng-deep .fadeOut {
-  animation-name: owlFadeOut;
-  animation-duration: 0.6s;
-}
-
-/* Ensure carousel wrapper hides overflow content */
-.carousel-wrapper {
-  overflow: hidden !important;
-  position: relative;
-}
-
-/* Fix RTL slide transition */
-::ng-deep .owl-carousel.owl-rtl .owl-stage {
-  transition: transform 0.6s ease !important;
-}
-
-/* Fix cloned items and prevent duplicated slider issue */
-::ng-deep .owl-carousel .owl-item.cloned {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: none !important;
-}
-
-/* Force single item visibility */
-::ng-deep .owl-carousel .owl-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.5s ease-in-out;
-  opacity: 0;
-  visibility: hidden;
-}
-
-::ng-deep .owl-carousel .owl-item.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Ensure consistent height to prevent vertical shift */
-::ng-deep .owl-stage-outer,
-::ng-deep .owl-stage,
-::ng-deep .owl-item {
-  height: auto !important;
-  min-height: 400px;
-}
-
-/* Fix last-to-first slide transition */
-::ng-deep .owl-carousel .owl-stage {
-  display: flex;
-  align-items: center;
-  transition: all 0.5s ease !important;
-}
-
-::ng-deep .owl-carousel.owl-drag .owl-item {
-  position: relative;
-  padding: 0;
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Create cloned items for seamless loop */
-::ng-deep .owl-carousel .owl-item.cloned {
-  opacity: 0; /* Initially hidden */
-  transition: opacity 0.5s ease-in-out;
-}
-
-::ng-deep .owl-carousel .owl-item.cloned.active {
-  opacity: 1; /* Show when active */
-}
-
-/* Improve stage animation */
-::ng-deep .owl-carousel .owl-stage-outer {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-}
-
-/* Use CSS animation for slides rather than transform for loop */
-::ng-deep .owl-carousel:not(.owl-loaded) {
-  opacity: 0;
-}
-
-::ng-deep .owl-carousel.owl-loaded {
-  opacity: 1;
-  transition: opacity 0.4s ease;
-}
-
-::ng-deep .owl-carousel.owl-refresh .owl-item {
-  visibility: hidden;
-}
-
-/* Smooth fade for looped transition */
-::ng-deep .owl-carousel.owl-drag .owl-stage {
-  -ms-touch-action: pan-y;
-  touch-action: manipulation;
-  -moz-backface-visibility: hidden; /* Fix Firefox animation */
-}
-
-/* Enhanced loop styling */
-::ng-deep .owl-carousel.enhanced-loop .owl-stage {
-  transition: all 0.8s ease !important;
-}
-
-::ng-deep .owl-carousel.enhanced-loop .owl-item {
-  transform-origin: center center;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  backface-visibility: hidden;
-}
-
-/* Special transition for last-to-first item */
-::ng-deep .owl-carousel.enhanced-loop .owl-item.cloned.active {
-  z-index: 1;
-}
-
-::ng-deep .owl-carousel.enhanced-loop .fadeIn {
-  animation-name: enhancedFadeIn;
-}
-
-::ng-deep .owl-carousel.enhanced-loop .fadeOut {
-  animation-name: enhancedFadeOut;
-}
-
-@keyframes enhancedFadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
+  ::ng-deep .owl-dots {
+    bottom: 5px;
   }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes enhancedFadeOut {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-}
-
-/* Carousel wrapper styles */
-.carousel-wrapper {
-  position: relative;
-  width: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-/* Improve transitions between all slides including first-to-last and last-to-first */
-::ng-deep .owl-carousel .owl-stage {
-  transition: all 0.8s ease !important;
-}
-
-/* Override Owl Carousel's default fast transitions */
-::ng-deep .owl-carousel.owl-loaded .owl-stage {
-  transition: all 0.8s ease !important;
-}
-
-/* More specific rule to handle looping behavior */
-::ng-deep .owl-carousel.owl-loaded.owl-drag .owl-stage {
-  transition: all 0.8s ease !important;
-}
-
-/* Hide the "jump" by applying a fade effect */
-::ng-deep .owl-carousel .owl-item {
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  transform: scale(0.95);
-}
-
-::ng-deep .owl-carousel .owl-item.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Make all transitions smoother */
-::ng-deep .owl-carousel * {
-  transition-timing-function: ease-in-out !important;
-}
-
-/* Hide navigation buttons completely */
-::ng-deep .owl-nav,
-::ng-deep .owl-prev,
-::ng-deep .owl-next {
-  display: none !important;
-  visibility: hidden !important;
 }
