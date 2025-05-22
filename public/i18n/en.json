@@ -1,5 +1,9 @@
 {
   "Complete_order": "Complete the application",
+  "no-orders-title": "No Orders Found",
+  "no-orders-message": "You haven't placed any orders yet. Start shopping to see your orders here.",
+  "no-last-order-title": "No Recent Order",
+  "no-last-order-message": "You don't have any recent orders to display.",
   "FAQ": {
     "Accordions": {
       "Accordion-1": "What departments do you offer?",

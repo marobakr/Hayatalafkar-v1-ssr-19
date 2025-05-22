@@ -46,7 +46,7 @@ export class OrdersComponent implements OnInit {
   private _navigationStart = new Subject<void>();
 
   orders = signal<IGetOrders>({} as IGetOrders);
-  lastOrder = signal<ILastOrderResponse | null>(null);
+  lastOrder = signal<ILastOrderResponse>({} as ILastOrderResponse);
   loading = signal(false);
   errorMessage = signal('');
 
