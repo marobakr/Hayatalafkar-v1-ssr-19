@@ -1,34 +1,27 @@
-<app-articles-header
-  [title]="'checkout.header.title' | translate"
-  [subTitle]="'checkout.header.subtitle' | translate"
-  [showRotateImage]="false"
-  [marginBottom]="'9'"
-></app-articles-header>
-
 <section>
-  <div class="container mx-auto">
-    <h2 class="sr-only">{{ "CHECKOUT" | translate }}</h2>
-    <router-outlet></router-outlet>
-  </div>
+  <h2 class="sr-only">{{ "CHECKOUT" | translate }}</h2>
+  <router-outlet></router-outlet>
 </section>
 <!-- Card Service -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-  <app-service-card
-    [cardDescription]="'about-us.service-card.card-3.description' | translate"
-    [cardImagePath]="'./assets/images/whoWeAre/8.webp'"
-    [cardTitle]="'about-us.service-card.card-3.title' | translate"
-    [isCenter]="true"
-  ></app-service-card>
-  <app-service-card
-    [cardDescription]="'about-us.service-card.card-2.description' | translate"
-    [cardImagePath]="'./assets/images/whoWeAre/7.webp'"
-    [cardTitle]="'about-us.service-card.card-2.title' | translate"
-    [isCenter]="true"
-  ></app-service-card>
-  <app-service-card
-    [cardDescription]="'about-us.service-card.card-1.description' | translate"
-    [cardImagePath]="'./assets/images/whoWeAre/9.webp'"
-    [cardTitle]="'about-us.service-card.card-1.title' | translate"
-    [isCenter]="true"
-  ></app-service-card>
+<div class="container mx-auto">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+    <app-service-card
+      [cardDescription]="'about-us.service-card.card-3.description' | translate"
+      [cardImagePath]="'./assets/images/whoWeAre/8.webp'"
+      [cardTitle]="'about-us.service-card.card-3.title' | translate"
+      [isCenter]="true"
+    ></app-service-card>
+    <app-service-card
+      [cardDescription]="'about-us.service-card.card-2.description' | translate"
+      [cardImagePath]="'./assets/images/whoWeAre/7.webp'"
+      [cardTitle]="'about-us.service-card.card-2.title' | translate"
+      [isCenter]="true"
+    ></app-service-card>
+    <app-service-card
+      [cardDescription]="'about-us.service-card.card-1.description' | translate"
+      [cardImagePath]="'./assets/images/whoWeAre/9.webp'"
+      [cardTitle]="'about-us.service-card.card-1.title' | translate"
+      [isCenter]="true"
+    ></app-service-card>
+  </div>
 </div>

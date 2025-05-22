@@ -1,6 +1,6 @@
 <!-- Current order -->
 <div class="mb-[35px]">
-  @if(!loading()){ @for(allOrders of orders().row.confirmed_orders; track
+  @if(!loading()){ @for(allOrders of orders().row?.confirmed_orders; track
   allOrders.id){
   <!-- ALL ORDERS -->
   <div class="my-8">
@@ -13,11 +13,69 @@
           {{ allOrders.order_date | date : "dd/MM/yyyy" }}
         </p>
       </div>
+
       <div class="mb-4 md:mb-0">
         <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
-        <p class="font-bold">
-          {{ allOrders.order_status | titlecase }}
-        </p>
+        @if (allOrders.order_status) { @let config =
+        getOrderStatusConfig(allOrders.order_status);
+        <div
+          [class]="
+            config.bgColor + ' rounded-full px-3 py-1 inline-flex items-center'
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            [class]="config.textColor + ' h-4 w-4 mr-1'"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            @switch(config.icon) { @case('check-circle') {
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
+            } @case('truck') {
+            <path
+              d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+            />
+            <path
+              d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"
+            />
+            } @case('clipboard-check') {
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <path
+              fill-rule="evenodd"
+              d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            />
+            } @case('x-circle') {
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+            } @case('refresh') {
+            <path
+              fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"
+            />
+            } @default {
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
+            } }
+          </svg>
+          <span [class]="config.textColor + ' font-bold'">{{
+            config.label
+          }}</span>
+        </div>
+        } @else {
+        <p class="font-bold">{{ "unknown" | translate }}</p>
+        }
       </div>
       <div class="mb-4 md:mb-0">
         <p class="pb-[10px]">{{ "total-price.total-price" | translate }}</p>
@@ -27,11 +85,12 @@
         <p class="pb-[10px]">{{ "order-number" | translate }}</p>
         <p class="font-bold">{{ allOrders.order_number }}</p>
       </div>
-      <button
+      <!-- <button
+        (click)="reorder(allOrders.id)"
         class="bg-white text-muted-rose rounded-[50px] px-[27px] py-[9px] text-description-size font-bold capitalize cursor-pointer"
       >
         {{ "reorder" | translate }}
-      </button>
+      </button> -->
     </div>
 
     <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
@@ -58,26 +117,84 @@
           {{ "wishlist.productsItem.item-1.price" | translate }}
         </p>
       </div>
-      }
-
-      <button
-        class="bg-[#FFF4E9] block w-full md:inline md:w-auto cursor-pointer text-muted-rose border border-[#A48374] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize mb-[30px]"
-      >
-        {{ "order.request-accepted" | translate }}
-      </button>
+      } @if (allOrders.order_status) { @let config =
+      getOrderStatusConfig(allOrders.order_status);
       <div
+        [class]="
+          config.bgColor +
+          ' rounded-full px-3 py-1 my-4 inline-flex items-center'
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          [class]="config.textColor + ' h-4 w-4 mr-1'"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          @switch(config.icon) { @case('check-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('truck') {
+          <path
+            d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+          />
+          <path
+            d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"
+          />
+          } @case('clipboard-check') {
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('x-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+          } @case('refresh') {
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+            clip-rule="evenodd"
+          />
+          } @default {
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
+          } }
+        </svg>
+        <span [class]="config.textColor + ' font-bold'">{{
+          config.label
+        }}</span>
+      </div>
+      } @else {
+      <p class="font-bold">{{ "unknown" | translate }}</p>
+      }
+      <!-- Track Order -->
+      <!-- <div
         class="flex flex-col md:flex-row justify-between items-center mb-[41px] flex-wrap"
       >
-        <div
-          class="space-x-4 space-y-4 flex-grow-1 md:flex-grow-0 md:w-auto w-full mb-3 md:mb-0"
+        <a
+          [routerLink]="[
+            '/',
+            currentLang | async,
+            'checkout',
+            'track-order',
+            allOrders.id
+          ]"
+          class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#rgba(164, 131, 116, 0.00)] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
         >
-          <button
-            class="block w-full md:w-auto md:inline bg-[#CBAC8D] text-white cursor-pointer border border-[#rgba(164, 131, 116, 0.00)] py-[9px] px-[54px] text-description-size rounded-[50px] capitalize"
-          >
-            {{ "track-order" | translate }}
-          </button>
-        </div>
-      </div>
+          {{ "track-order" | translate }}
+        </a>
+      </div> -->
     </div>
   </div>
   } } @else {
@@ -99,9 +216,67 @@
     </div>
     <div class="mb-4 md:mb-0">
       <p class="pb-[10px]">{{ "order-status.order-status" | translate }}</p>
-      <p class="font-bold">
-        {{ lastOrder()?.order?.order_status | titlecase }}
-      </p>
+      @if (lastOrder()?.order?.order_status) { @let orderStatus =
+      lastOrder()?.order?.order_status || ''; @let config =
+      getOrderStatusConfig(orderStatus);
+      <div
+        [class]="
+          config.bgColor + ' rounded-full px-3 py-1 inline-flex items-center'
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          [class]="config.textColor + ' h-4 w-4 mr-1'"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          @switch(config.icon) { @case('check-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('truck') {
+          <path
+            d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+          />
+          <path
+            d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"
+          />
+          } @case('clipboard-check') {
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('x-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+          } @case('refresh') {
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+            clip-rule="evenodd"
+          />
+          } @default {
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
+          } }
+        </svg>
+        <span [class]="config.textColor + ' font-bold'">{{
+          config.label
+        }}</span>
+      </div>
+      } @else {
+      <p class="font-bold">{{ "unknown" | translate }}</p>
+      }
     </div>
     <div class="mb-4 md:mb-0">
       <p class="pb-[10px]">{{ "total-price.total-price" | translate }}</p>
@@ -111,19 +286,17 @@
       <p class="pb-[10px]">{{ "order-number" | translate }}</p>
       <p class="font-bold">{{ lastOrder()?.order?.order_number }}</p>
     </div>
-    <button
+    <!-- <button
       class="bg-white text-muted-rose rounded-[50px] px-[27px] py-[9px] text-description-size font-bold capitalize cursor-pointer"
     >
       {{ "reorder" | translate }}
-    </button>
+    </button> -->
   </div>
   <div class="space-y-4 border border-[#AFA8A8] px-[42px] rounded-b-[15px]">
     @for (deliveredOrder of lastOrder()?.order?.details; track
     deliveredOrder.id){
 
-    <div
-      class="flex items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
-    >
+    <div class="flex items-center pb-[30px] pt-[54px]">
       <img
         class="w-[80px] h-[80px] rounded-[15px]"
         [appImageUrl]="deliveredOrder.product.main_image"
@@ -143,15 +316,71 @@
         {{ "wishlist.productsItem.item-1.price" | translate }}
       </p>
     </div>
+    <div>
+      <!-- @if (lastOrder()?.order?.order_status) { @let orderStatus =
+      lastOrder()?.order?.order_status || ''; @let config =
+      getOrderStatusConfig(orderStatus);
+      <div
+        [class]="
+          config.bgColor + ' rounded-full px-3 py-1 inline-flex items-center'
+        "
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          [class]="config.textColor + ' h-4 w-4 mr-1'"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          @switch(config.icon) { @case('check-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('truck') {
+          <path
+            d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+          />
+          <path
+            d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"
+          />
+          } @case('clipboard-check') {
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+          <path
+            fill-rule="evenodd"
+            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+          } @case('x-circle') {
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+          } @case('refresh') {
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+            clip-rule="evenodd"
+          />
+          } @default {
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
+          } }
+        </svg>
+        <span [class]="config.textColor + ' font-bold'">{{
+          config.label
+        }}</span>
+      </div>
+      } @else {
+      <p class="font-bold">{{ "unknown" | translate }}</p>
+      } -->
+    </div>
 
     }
-    <div class="flex justify-between items-center mb-[30px] gap-4 flex-wrap">
-      <button
-        class="bg-[#E4FFE9] block w-full md:inline md:w-auto cursor-pointer text-[#2B841F] border border-[#2B841F] py-[17px] px-[27px] text-description-size font-bold rounded-[50px] capitalize"
-      >
-        {{ "order.delivered" | translate }}
-      </button>
-    </div>
   </div>
 </div>
 }@else {

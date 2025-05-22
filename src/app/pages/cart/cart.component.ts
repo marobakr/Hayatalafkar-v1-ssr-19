@@ -95,25 +95,31 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
 
     // First check if user has confirmed orders
-    this._cartState.checkConfirmedOrders();
+    this._cartState.checkConfirmedOrders().subscribe();
 
     // Then fetch the cart
-    this._cartState.fetchCart().then(() => {
-      // Once cart data is loaded, disable loading state
-      this.isLoading = false;
+    this._cartState.fetchCart().subscribe({
+      next: () => {
+        // Once cart data is loaded, disable loading state
+        this.isLoading = false;
 
-      // Initialize cart data with animation states
-      const cartDetails = this.orderDetails();
+        // Initialize cart data with animation states
+        const cartDetails = this.orderDetails();
 
-      // Set all items to visible animation state
-      if (cartDetails && cartDetails.length > 0) {
-        this._cartState.setOrderDetails(
-          cartDetails.map((item) => ({
-            ...item,
-            animationState: 'visible',
-          }))
-        );
-      }
+        // Set all items to visible animation state
+        if (cartDetails && cartDetails.length > 0) {
+          this._cartState.setOrderDetails(
+            cartDetails.map((item) => ({
+              ...item,
+              animationState: 'visible',
+            }))
+          );
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error fetching cart during initialization', err);
+      },
     });
   }
 
@@ -141,13 +147,20 @@ export class CartComponent implements OnInit {
         this.isLoading = true;
 
         // Refresh both the cart in this component and the count in navbar
-        this._cartState.fetchCart().then(() => {
-          this.isLoading = false;
-          this.isAddingItem = false;
-          this.cartUpdateSuccess = this._translateService.instant(
-            'shared.added_to_cart_success'
-          );
-          setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        this._cartState.fetchCart().subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.isAddingItem = false;
+            this.cartUpdateSuccess = this._translateService.instant(
+              'shared.added_to_cart_success'
+            );
+            setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.isAddingItem = false;
+            console.error('Error fetching cart after adding item', err);
+          },
         });
       },
       error: (err) => {
@@ -213,14 +226,22 @@ export class CartComponent implements OnInit {
           this.isLoading = true;
 
           // Refresh cart to get updated data
-          this._cartState.fetchCart().then(() => {
-            this.isLoading = false;
-            this.isAddingItem = false;
-            this.updatingItemId = null;
-            this.cartUpdateSuccess = this._translateService.instant(
-              'shared.update_cart_quantity'
-            );
-            setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+          this._cartState.fetchCart().subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.isAddingItem = false;
+              this.updatingItemId = null;
+              this.cartUpdateSuccess = this._translateService.instant(
+                'shared.update_cart_quantity'
+              );
+              setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+            },
+            error: (err) => {
+              this.isLoading = false;
+              this.isAddingItem = false;
+              this.updatingItemId = null;
+              console.error('Error fetching cart after update', err);
+            },
           });
         },
         error: (err) => {
@@ -267,17 +288,25 @@ export class CartComponent implements OnInit {
         this.isLoading = true;
 
         // Refresh cart to get updated data
-        this._cartState.fetchCart().then(() => {
-          this.isLoading = false;
-          this.isRemovingItem = false;
-          this.removingItemId = null;
+        this._cartState.fetchCart().subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.isRemovingItem = false;
+            this.removingItemId = null;
 
-          this._alertService.showNotification({
-            imagePath: '/images/common/remove.gif',
-            translationKeys: {
-              title: 'alerts.cart.remove_success.title',
-            },
-          }); // Show success notification (without buttons)
+            this._alertService.showNotification({
+              imagePath: '/images/common/remove.gif',
+              translationKeys: {
+                title: 'alerts.cart.remove_success.title',
+              },
+            }); // Show success notification (without buttons)
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.isRemovingItem = false;
+            this.removingItemId = null;
+            console.error('Error fetching cart after removal', err);
+          },
         });
       },
       error: (err) => {
@@ -307,12 +336,19 @@ export class CartComponent implements OnInit {
         this.isLoading = true;
 
         // Refresh cart to get updated data
-        this._cartState.fetchCart().then(() => {
-          this.isLoading = false;
-          this.isClearingCart = false;
-          this.cartUpdateSuccess =
-            this._translateService.instant('cart.cart_cleared');
-          setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+        this._cartState.fetchCart().subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.isClearingCart = false;
+            this.cartUpdateSuccess =
+              this._translateService.instant('cart.cart_cleared');
+            setTimeout(() => (this.cartUpdateSuccess = null), 3000);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.isClearingCart = false;
+            console.error('Error fetching cart after clearing', err);
+          },
         });
       },
       error: (err) => {
@@ -345,12 +381,21 @@ export class CartComponent implements OnInit {
             this.isLoading = true;
 
             // Refresh cart to get updated data with the applied promo code
-            this._cartState.fetchCart().then(() => {
-              this.isLoading = false;
-              this.promoCodeSuccess = this._translateService.instant(
-                'cart.promo-code.success'
-              );
-              this.promoCodeForm.reset();
+            this._cartState.fetchCart().subscribe({
+              next: () => {
+                this.isLoading = false;
+                this.promoCodeSuccess = this._translateService.instant(
+                  'cart.promo-code.success'
+                );
+                this.promoCodeForm.reset();
+              },
+              error: (err) => {
+                this.isLoading = false;
+                console.error(
+                  'Error fetching cart after applying promo code',
+                  err
+                );
+              },
             });
           } else {
             this.isPromoCodeLoading = false;

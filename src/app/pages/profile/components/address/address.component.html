@@ -201,7 +201,7 @@
       </div>
     </div>
 
-    @if(locations() && !loading()) {
+    @if(locations().length === 0 && !loading()) {
     <div class="text-amber-600 text-sm mt-1 flex items-center gap-1">
       <svg
         class="h-4 w-4"

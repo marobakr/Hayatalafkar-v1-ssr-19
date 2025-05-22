@@ -743,11 +743,34 @@
   },
   "order": {
     "date": {
+      "code": "رقم الطلب",
       "date": "  ميعاد تاريخ الاورد",
+      "payment_method": "وسيله الدفع",
       "value": "20 march 2025"
     },
     "delivered": "تم تسليم الطلب",
-    "request-accepted": " تم قبول الطلب"
+    "detail": "تفاصيل الاوردر",
+    "details": {
+      "subtitle": "شكرا لك تم استلام طلبك بنجاح",
+      "title": "تم استكمال طلبك بنجاح"
+    },
+    "request-accepted": " تم قبول الطلب",
+    "substitle": "المنتجات",
+    "track": {
+      "back": "تتبع جميع الاوردرات",
+      "subtitle": "شكرا لك , لقد تم استلام طلبك بنجاح",
+      "title": "لقد تم اكمال طلبك بنجاح"
+    },
+    "track-order": "تتبع الطلب",
+    "tracking": {
+      "order": "تتبع الطلب",
+      "submitted": "تم تقديم الطلب",
+      "approved": "تمت الموافقة",
+      "preparation": "قيد التحضير",
+      "way": "في الطريق",
+      "delivered": "تم التوصيل",
+      "estimated": "الوقت المتوقع"
+    }
   },
   "order-number": "رقم الطلب",
   "order-number-value": "#5DGTIOPLKNBFD",
@@ -1000,6 +1023,14 @@
     "update_cart_quantity": "تحديث كمية المنتج في السلة",
     "updating": "جاري التحديث...",
     "wait_response": "يرجى الانتظار..."
+  },
+  "shipping": {
+    "costs": {
+      "copon": "كوبون الخصم",
+      "costs": "تكاليف الشحن",
+      "s": "تكاليف الشحن",
+      "tax": "الضريبه"
+    }
   },
   "shopping": {
     "description": "تصفح مجموعتنا من منتجات الجمال ومستحضرات التجميل",

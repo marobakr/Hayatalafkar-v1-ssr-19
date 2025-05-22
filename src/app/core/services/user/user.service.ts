@@ -41,6 +41,14 @@ export class UserService {
     );
   }
 
+  getUserOrderById(orderId: string): Observable<any> {
+    const userId = this._authService.getUserId();
+
+    return this._http.get(
+      `${this.baseUrl}${API_CONFIG.USER_MANAGEMENT.GET_USER_ORDER}/${userId}`
+    );
+  }
+
   addNewAddress(addressData: any): Observable<any> {
     const userId = this._authService.getUserId();
 

@@ -1,16 +1,24 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationStart, Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CartStateService } from '@core/services/cart/cart-state.service';
+import { LanguageService } from '@core/services/lang/language.service';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IGetOrders, ILastOrderResponse } from './res/order.interface';
+
+interface OrderStatusConfig {
+  textColor: string;
+  bgColor: string;
+  icon: string;
+  label: string;
+}
 
 @Component({
   selector: 'app-orders',
@@ -18,10 +26,11 @@ import { IGetOrders, ILastOrderResponse } from './res/order.interface';
   imports: [
     CommonModule,
     TranslateModule,
-    ButtonComponent,
     LoadingComponent,
     ImageUrlDirective,
     CustomTranslatePipe,
+    AsyncPipe,
+    RouterLink,
   ],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
@@ -30,8 +39,10 @@ export class OrdersComponent implements OnInit {
   private _userService = inject(UserService);
   private _destroyRef = inject(DestroyRef);
   private _router = inject(Router);
+  private currentLang$ = inject(LanguageService);
+  private _cartState = inject(CartStateService);
+  currentLang = this.currentLang$.getLanguage();
 
-  // Create a subject that emits when navigation starts
   private _navigationStart = new Subject<void>();
 
   orders = signal<IGetOrders>({} as IGetOrders);
@@ -110,5 +121,69 @@ export class OrdersComponent implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  getOrderStatusConfig(status: string): OrderStatusConfig {
+    const statusLower = status.toLowerCase();
+
+    switch (statusLower) {
+      case 'delivered':
+        return {
+          textColor: 'text-green-600',
+          bgColor: 'bg-green-100',
+          icon: 'check-circle',
+          label: 'Delivered',
+        };
+      case 'on the way':
+        return {
+          textColor: 'text-blue-600',
+          bgColor: 'bg-blue-100',
+          icon: 'truck',
+          label: 'On The Way',
+        };
+      case 'confirmed':
+        return {
+          textColor: 'text-amber-600',
+          bgColor: 'bg-amber-100',
+          icon: 'clipboard-check',
+          label: 'Confirmed',
+        };
+      case 'cancelled':
+        return {
+          textColor: 'text-red-600',
+          bgColor: 'bg-red-100',
+          icon: 'x-circle',
+          label: 'Cancelled',
+        };
+      case 'processing':
+        return {
+          textColor: 'text-purple-600',
+          bgColor: 'bg-purple-100',
+          icon: 'refresh',
+          label: 'Processing',
+        };
+      default:
+        return {
+          textColor: 'text-gray-600',
+          bgColor: 'bg-gray-100',
+          icon: 'information-circle',
+          label: status,
+        };
+    }
+  }
+
+  reorder(orderId: number): void {
+    let lang = 'ar';
+    this.currentLang$.getLanguage().subscribe((next) => {
+      lang = next;
+    });
+
+    this._router.navigate(['/', lang, 'checkout', 'payment']);
+  }
+
+  addItemToCart(orderId: number): void {
+    this._cartState.fetchCart().subscribe((response) => {
+      console.log('cart ', response);
+    });
   }
 }
