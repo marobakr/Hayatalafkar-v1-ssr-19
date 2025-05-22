@@ -52,9 +52,9 @@ export class CheckoutComponent {
   /**
    * Check if a given route is active
    */
-  isActiveRoute(route: string): boolean {
-    return this._router.url.includes(route);
-  }
+  // isActiveRoute(route: string): boolean {
+  //   return this._router.url.includes(route);
+  // }
 
   /**
    * Handle address selection from the address component

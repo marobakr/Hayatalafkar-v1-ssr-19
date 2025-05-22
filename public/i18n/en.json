@@ -724,11 +724,40 @@
   },
   "order": {
     "date": {
+      "code": "order code",
       "date": "order request date",
+      "payment_method": "Payment Method ",
       "value": "20 march, 2025"
     },
     "delivered": "the order has been delivered",
-    "request-accepted": " the request has been accepted"
+    "detail": "order detail",
+    "details": {
+      "subtitle": "thank you, Your request has been completed successfully",
+      "title": "Your request has been completed successfully"
+    },
+    "request-accepted": " the request has been accepted",
+    "substitle": "products",
+    "track": {
+      "back": "review all orders",
+      "subtitle": "thank you, your request has been received successfully",
+      "title": "your request has been comleted successfully"
+    },
+    "track-order": "track order",
+    "tracking": {
+      "order": "track order",
+      "submitted": "Order Submitted",
+      "approved": "Approved",
+      "preparation": "In Preparation",
+      "way": "On The Way",
+      "delivered": "Delivered",
+      "estimated": "Estimated",
+      "progress": "Order Progress",
+      "progress_percentage": "Progress: {{percentage}}%",
+      "progress_steps": "Step {{current}} of {{total}}",
+      "status_active": "Current Status",
+      "status_completed": "Completed",
+      "status_pending": "Pending"
+    }
   },
   "order-number": "order number",
   "order-number-value": "#5DGTIOPLKNBFD",
@@ -984,6 +1013,13 @@
     "update_cart_quantity": "Update cart quantity",
     "updating": "Updating...",
     "wait_response": "Please wait..."
+  },
+  "shipping": {
+    "costs": {
+      "copon": "copon",
+      "s": "shipping costs",
+      "tax": "tax"
+    }
   },
   "shopping": {
     "description": "Browse our collection of beauty and cosmetic products",

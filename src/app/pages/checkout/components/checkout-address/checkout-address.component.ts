@@ -27,6 +27,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { OrderSummaryComponent } from '@shared/components/order-summary/order-summary.component';
+import { ArticlesHeaderComponent } from '../../../articles/components/articles-header/articles-header.component';
 
 @Component({
   selector: 'app-checkout-address',
@@ -39,6 +40,7 @@ import { OrderSummaryComponent } from '@shared/components/order-summary/order-su
     LoadingComponent,
     OrderSummaryComponent,
     CustomTranslatePipe,
+    ArticlesHeaderComponent,
   ],
   templateUrl: './checkout-address.component.html',
   styleUrls: ['./checkout-address.component.css'],

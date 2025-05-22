@@ -285,7 +285,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
       // User is authenticated, navigate to profile page
       this._router.navigate(['/', lang, 'profile']);
     } else {
-      // User is not authenticated, redirect to login page
+      // User is not authenticated, redirect to login page with updated path
       this._router.navigate(['/', lang, 'login']);
     }
   }

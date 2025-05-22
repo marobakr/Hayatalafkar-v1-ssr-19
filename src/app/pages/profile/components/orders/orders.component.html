@@ -1,6 +1,6 @@
 <!-- Current order -->
 <div class="mb-[35px]">
-  @if(!loading()){ @for(allOrders of orders().row.confirmed_orders; track
+  @if(!loading()){ @for(allOrders of orders().row?.confirmed_orders; track
   allOrders.id){
   <!-- ALL ORDERS -->
   <div class="my-8">

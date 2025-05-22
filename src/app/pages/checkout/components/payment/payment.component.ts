@@ -14,6 +14,7 @@ import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { OrderSummaryComponent } from '@shared/components/order-summary/order-summary.component';
 import { Observable, switchMap } from 'rxjs';
+import { ArticlesHeaderComponent } from '../../../articles/components/articles-header/articles-header.component';
 
 @Component({
   selector: 'app-payment',
@@ -24,6 +25,7 @@ import { Observable, switchMap } from 'rxjs';
     ButtonComponent,
     LoadingComponent,
     OrderSummaryComponent,
+    ArticlesHeaderComponent,
   ],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
@@ -148,11 +150,11 @@ export class PaymentComponent implements OnInit {
 
           // Navigate to order confirmation
           this._languageService.getLanguage().subscribe((lang) => {
-            this._router.navigate(['/', lang, 'profile', 'orders']);
+            this._router.navigate(['/', lang, 'checkout', 'success-order']);
           });
         },
         error: (error) => {
-          this.isSubmitting.set(false);
+          // this.isSubmitting.set(false);
           this._notificationService.error(
             error?.error?.message || 'checkout.payment.order_placed_error',
             'checkout.payment.error'
