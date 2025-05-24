@@ -7,8 +7,9 @@ import { CommonService } from '@core/services/common/common.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AboutUsService } from 'src/app/pages/about-us/res/about-us.service';
+import { IContactUs } from 'src/app/pages/contact-us/res/contact-us.interface';
+import { ContactUsService } from 'src/app/pages/contact-us/res/contact-us.service';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
-
 @Component({
   selector: 'app-footer',
   standalone: true,
@@ -32,6 +33,10 @@ export class FooterComponent implements OnInit {
 
   _aboutService = inject(AboutUsService);
 
+  _contactUsService = inject(ContactUsService);
+
+  contactUs = signal<IContactUs>({} as IContactUs);
+
   footerTitle: string = '';
 
   categories = signal<ICategory[]>([]);
@@ -41,6 +46,17 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.getFooterTitle();
+    this.getContactUs();
+  }
+
+  getContactUs(): void {
+    this._contactUsService.getContactUs().subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.contactUs.set(response.contact);
+        }
+      },
+    });
   }
 
   getCategories() {

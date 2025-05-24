@@ -17,6 +17,9 @@ import { SafeHtmlComponent } from '../../../../../../core/safe-html/safe-html.co
 // Module-level Map to track loading state by product ID for isAddingToCart
 const cartLoadingMap = new Map<number, boolean>();
 
+// Global flag to track if wishlist items have been loaded
+let globalWishlistLoaded = false;
+
 @Component({
   selector: 'app-shared-best-seller',
   standalone: true,
@@ -34,8 +37,6 @@ const cartLoadingMap = new Map<number, boolean>();
   styleUrl: './shared-best-seller.component.css',
 })
 export class SharedBestSellerComponent implements OnInit {
-  private _wishlistService = inject(WishlistService);
-
   private _authService = inject(AuthService);
 
   private _router = inject(Router);
@@ -44,27 +45,19 @@ export class SharedBestSellerComponent implements OnInit {
 
   private _alertService = inject(AlertService);
 
-  readonly _cartStateService = inject(CartStateService); // Make it available to computed
+  readonly _cartStateService = inject(CartStateService);
+
+  private _wishlistService = inject(WishlistService);
 
   private userId = inject(AuthService).getUserId();
-
-  productsInWishlist = this._wishlistService.getProductsInWishlistSignal();
-
-  isAddingToWishlist = signal(false);
-
-  isInWishlist = signal(false);
 
   currentLang$ = this._languageService.getLanguage();
 
   @Input({ required: true }) productData!: IAllProduct | BestProduct;
 
   ngOnInit(): void {
-    if (this._authService.isAuthenticated()) {
-      if (this.userId) {
-        if (this.productData) {
-          this.checkIfProductInWishlist();
-        }
-      }
+    if (this._authService.isAuthenticated() && this.userId) {
+      this.checkIfProductInWishlist();
     }
   }
 
@@ -82,6 +75,13 @@ export class SharedBestSellerComponent implements OnInit {
   isInCart(): boolean {
     if (!this.productData?.id) return false;
     return this._cartStateService.isProductInCart(this.productData.id);
+  }
+
+  /**
+   * Check if the product is currently being added to cart
+   */
+  isAddingToCart(): boolean {
+    return cartLoadingMap.get(this.productData?.id) || false;
   }
 
   toggleCart(): void {
@@ -132,34 +132,18 @@ export class SharedBestSellerComponent implements OnInit {
         // Refresh the cart state
         this._cartStateService.fetchCart();
 
-        // Show success notification (without buttons)
-        this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
-          translationKeys: {
-            title: 'alerts.cart.remove_success.title',
-          },
-        });
+        this.showSuccessAlert(
+          '/images/common/remove.gif',
+          'alerts.cart.remove_success.title'
+        );
       },
       error: (err) => {
         this.setCartLoading(false);
-        if (err.status === 401) {
-          this._languageService
-            .getLanguage()
-            .pipe(take(1))
-            .subscribe((lang) => {
-              this._router.navigate(['/', lang, 'login']);
-            });
-        }
-
-        // Show error notification
-        this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
-          translationKeys: {
-            title: 'alerts.cart.remove_error.title',
-            message: 'alerts.cart.remove_error.message',
-          },
-        });
-        console.error('Error removing from cart:', err);
+        this.handleApiError(
+          err,
+          'alerts.cart.remove_error.title',
+          'alerts.cart.remove_error.message'
+        );
       },
     });
   }
@@ -171,12 +155,7 @@ export class SharedBestSellerComponent implements OnInit {
     }
 
     if (!this._authService.isAuthenticated()) {
-      this._languageService
-        .getLanguage()
-        .pipe(take(1))
-        .subscribe((lang: string) => {
-          this._router.navigate(['/', lang, 'login']);
-        });
+      this.navigateToLogin();
       return;
     }
 
@@ -184,55 +163,91 @@ export class SharedBestSellerComponent implements OnInit {
     this.addNewItemToCart();
   }
 
-  isAddingToCart(): boolean {
-    return cartLoadingMap.get(this.productData.id) || false;
-  }
-
   private addNewItemToCart(): void {
-    if (!this.productData?.id) return; // Guard again
+    if (!this.productData?.id) return;
     const formData = new FormData();
     formData.append('product_id', this.productData.id.toString());
     formData.append('quantity', '1');
-    // if (this.userId) formData.append('user_id', this.userId.toString()); // API might need user_id
 
     this._cartStateService.addToCart(formData).subscribe({
       next: () => {
         this.setCartLoading(false);
-        // No need to manually set isInCart, computed signal handles it.
-        this.showAddToCartSuccessAlert();
+        this.showSuccessAlert(
+          '/images/common/addtocart.gif',
+          'alerts.cart.add_success.title'
+        );
       },
       error: (error) => {
         this.setCartLoading(false);
-        this.handleCartError(error);
-      },
-    });
-  }
-
-  private handleCartError(error: any): void {
-    if (error.status === 401) {
-      this._languageService
-        .getLanguage()
-        .pipe(take(1))
-        .subscribe((lang: string) => {
-          this._router.navigate(['/', lang, 'login']);
-        });
-    }
-    console.error('Cart operation error:', error);
-  }
-
-  private showAddToCartSuccessAlert(): void {
-    if (!this.productData) return;
-
-    // Show success notification for adding to cart
-    this._alertService.showNotification({
-      imagePath: '/images/common/addtocart.gif',
-      translationKeys: {
-        title: 'alerts.cart.add_success.title',
+        this.handleApiError(
+          error,
+          'alerts.cart.add_error.title',
+          'alerts.cart.add_error.message'
+        );
       },
     });
   }
 
   /* Wishlist */
+  productsInWishlist = this._wishlistService.getProductsInWishlistSignal();
+
+  isAddingToWishlist = signal(false);
+
+  isInWishlist = signal(false);
+
+  isLoading = signal(false);
+
+  wishlistItems = signal<any[]>([]);
+
+  // Avoid calling the API multiple times by checking global flag
+  loadWishlistItems(): void {
+    if (!this.userId) {
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    // If wishlist already loaded globally, use cached data instead of another API call
+    if (globalWishlistLoaded) {
+      this.isLoading.set(false);
+      this.checkIfProductInWishlist();
+      return;
+    }
+
+    this._wishlistService.getWishlistItems().subscribe({
+      next: (response) => {
+        // Check different possible response formats
+        if (response && Array.isArray(response.wishs)) {
+          this.wishlistItems.set(response.wishs);
+
+          // Update isInWishlist if productData is available
+          if (this.productData?.id) {
+            const isInList = response.wishs.some(
+              (item: any) => item.product_id === this.productData.id
+            );
+            this.isInWishlist.set(isInList);
+          }
+
+          // Set global flag to prevent multiple API calls
+          globalWishlistLoaded = true;
+        } else {
+          this.wishlistItems.set([]);
+        }
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading wishlist items:', error);
+        this.wishlistItems.set([]);
+        this.isLoading.set(false);
+
+        // If unauthorized, handle accordingly
+        if (error.status === 401) {
+          // Force a re-login if token is invalid
+          this._authService.logout().subscribe();
+        }
+      },
+    });
+  }
 
   toggleWishlist(): void {
     if (this.isInWishlist()) {
@@ -244,59 +259,41 @@ export class SharedBestSellerComponent implements OnInit {
 
   addToWishlist(): void {
     if (this.isInWishlist() || this.isAddingToWishlist()) return;
+
     if (!this.productData?.id || !this.userId) {
       if (!this.userId) {
-        this._languageService
-          .getLanguage()
-          .pipe(take(1))
-          .subscribe((lang) => {
-            this._router.navigate(['/', lang, 'login']);
-          });
+        this.navigateToLogin();
       }
       return;
     }
+
     this.isAddingToWishlist.set(true);
-    console.log(this.productData.id);
+
     this._wishlistService.addToWishlist(this.productData.id).subscribe({
       next: () => {
         this.isInWishlist.set(true);
         this.isAddingToWishlist.set(false);
         this._wishlistService.loadWishlistCount();
 
-        // Show success notification alert (no buttons)
-        this._alertService.showNotification({
-          imagePath: '/images/common/wishlist.gif',
-          translationKeys: {
-            title: 'alerts.wishlist.add_success.title',
-          },
-        });
+        this.showSuccessAlert(
+          '/images/common/wishlist.gif',
+          'alerts.wishlist.add_success.title'
+        );
       },
       error: (err) => {
         this.isAddingToWishlist.set(false);
-        if (err.status === 401) {
-          this._languageService
-            .getLanguage()
-            .pipe(take(1))
-            .subscribe((lang) => {
-              this._router.navigate(['/', lang, 'login']);
-            });
-        }
-
-        // Show error notification
-        this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
-          translationKeys: {
-            title: 'alerts.remove_error.title',
-            message: 'alerts.remove_error.message',
-          },
-        });
-        console.error('Error adding to wishlist:', err);
+        this.handleApiError(
+          err,
+          'alerts.wishlist.add_error.title',
+          'alerts.wishlist.add_error.message'
+        );
       },
     });
   }
 
   removeFromWishlist(): void {
     if (!this.isInWishlist() || !this.productData?.id) return;
+
     const wishId = this._wishlistService.getWishIdForProduct(
       this.productData.id
     );
@@ -312,10 +309,6 @@ export class SharedBestSellerComponent implements OnInit {
         cancelText: 'alerts.wishlist.remove_confirm.cancel',
       },
       onConfirm: () => {
-        // Proceed with removal
-        this.productsInWishlist().forEach((item) => {
-          // console.log(item);
-        });
         this.executeRemoveFromWishlist(wishId);
       },
     });
@@ -323,13 +316,14 @@ export class SharedBestSellerComponent implements OnInit {
 
   private checkIfProductInWishlist(): void {
     if (!this.productData || !this.productData.id) return;
+
+    // Check directly against the map maintained by the service
     const isInWishlist = this._wishlistService.isProductInWishlist(
       this.productData.id
     );
     this.isInWishlist.set(isInWishlist);
   }
 
-  // Actual removal from wishlist after confirmation
   private executeRemoveFromWishlist(wishId: number): void {
     this.isAddingToWishlist.set(true);
 
@@ -339,34 +333,65 @@ export class SharedBestSellerComponent implements OnInit {
         this.isAddingToWishlist.set(false);
         this._wishlistService.loadWishlistCount();
 
-        // Show success notification (without buttons)
-        this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
-          translationKeys: {
-            title: 'alerts.wishlist.remove_success.title',
-          },
-        });
+        this.showSuccessAlert(
+          '/images/common/remove.gif',
+          'alerts.wishlist.remove_success.title'
+        );
       },
       error: (err) => {
         this.isAddingToWishlist.set(false);
-        if (err.status === 401) {
-          this._languageService
-            .getLanguage()
-            .pipe(take(1))
-            .subscribe((lang) => {
-              this._router.navigate(['/', lang, 'login']);
-            });
-        }
+        this.handleApiError(
+          err,
+          'alerts.wishlist.remove_error.title',
+          'alerts.wishlist.remove_error.message'
+        );
+      },
+    });
+  }
 
-        // Show error notification
-        this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
-          translationKeys: {
-            title: 'alerts.wishlist.remove_error.title',
-            message: 'alerts.wishlist.remove_error.message',
-          },
-        });
-        console.error('Error removing from wishlist:', err);
+  /**
+   * Handle API errors consistently across cart and wishlist operations
+   */
+  private handleApiError(
+    error: any,
+    titleKey: string,
+    messageKey: string
+  ): void {
+    if (error.status === 401) {
+      this.navigateToLogin();
+    }
+
+    // Show error notification
+    this._alertService.showNotification({
+      imagePath: '/images/common/before-remove.png',
+      translationKeys: {
+        title: titleKey,
+        message: messageKey,
+      },
+    });
+    console.error('API operation error:', error);
+  }
+
+  /**
+   * Navigate to login page with current language
+   */
+  private navigateToLogin(): void {
+    this._languageService
+      .getLanguage()
+      .pipe(take(1))
+      .subscribe((lang: string) => {
+        this._router.navigate(['/', lang, 'login']);
+      });
+  }
+
+  /**
+   * Show success alert with consistent formatting
+   */
+  private showSuccessAlert(imagePath: string, titleKey: string): void {
+    this._alertService.showNotification({
+      imagePath: imagePath,
+      translationKeys: {
+        title: titleKey,
       },
     });
   }

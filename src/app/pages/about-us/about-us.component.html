@@ -1,3 +1,8 @@
+@if(isLoading){
+<app-loading></app-loading>
+} @else {
+<!-- Big Offer Card  -->
+
 <app-about-shared
   [showBgImage]="false"
   [sloganText]="'about-us.slogan-text' | translate"
@@ -6,7 +11,9 @@
   [counters]="aboutUsOne.counters"
   aria-label="About our company section"
 ></app-about-shared>
-
+} @if(isLoading){
+<app-loading></app-loading>
+} @else {
 <!-- Big Offer Card  -->
 <div class="container mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
@@ -25,6 +32,7 @@
     ></app-card>
   </div>
 </div>
+}
 
 <!-- Banner_1 -->
 <app-banner
@@ -40,6 +48,7 @@
 </app-banner>
 
 <!-- Card Service  -->
+@if (aboutUsTwo.features.length > 0) {
 <section
   class="text-center lg:ltr:text-left lg:rtl:text-right"
   aria-label="Our services"
@@ -48,10 +57,6 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
       @for (feature of aboutUsTwo.features | customTranslate; track feature.id)
       {
-      <!--
-    [cardImagePath]="API_CONFIG + 'uploads/about/' + feature.icon_image"
-
-  -->
       <app-service-card
         [cardDescription]="feature.text"
         [cardImagePath]="feature.icon_image"
@@ -62,7 +67,7 @@
     </div>
   </div>
 </section>
-
+}
 <!-- Banner_2 -->
 <app-banner
   [bannerText]="
@@ -78,13 +83,15 @@
 <!-- Big Card Offer -->
 <section
   aria-label="Special offers"
-  class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
+  class="container mx-auto pt-9 px-4 mb-[109px] overflow-x-hidden"
 >
   <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
     @if(aboutUsOne.offers.length > 0){ @for (offer of aboutUsOne.offers.length >
     1 ? aboutUsOne.offers.slice(0,2) : [aboutUsOne.offers[0],
     aboutUsOne.offers[0]]; track $index) {
     <app-big-card-offer
+      class="flex-grow-1"
+      [routerLink]="['/', currentLang$ | async, 'shopping']"
       [mainColor]="$even"
       [alt]="offer | customTranslate : 'title'"
       [imgPath]="`/images/categories/${$index}.webp`"
@@ -110,4 +117,6 @@
 ></app-banner>
 
 <!-- FAQ -->
+@if (aboutUsTwo.faqs.length > 0) {
 <app-faq [faqs]="aboutUsTwo.faqs"></app-faq>
+}

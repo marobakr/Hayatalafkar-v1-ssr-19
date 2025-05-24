@@ -32,10 +32,13 @@
           </span>
         </div>
         <!-- Cart Items -->
-        <div class="cart-items-container" [@listAnimation]>
+        <div
+          class="cart-items-container max-h-[564px] overflow-y-auto px-4 mb-[30px]"
+          [@listAnimation]
+        >
           @for (item of orderDetails(); track item.product_id) {
           <div
-            class="cart-item block md:flex items-center justify-between flex-wrap mb-8 py-6 px-[23px] pb-6 border-b-1 border-[#8D8D8D]"
+            class="cart-item block md:flex items-center justify-between flex-wrap py-[30px] px-[23px] border-b-1 border-[#8D8D8D]"
             [@itemState]="item.animationState || 'visible'"
             (@itemState.done)="onAnimationDone($event, item)"
           >
@@ -56,7 +59,15 @@
                 </figure>
               </div>
 
-              <figure class="max-w-[80px]">
+              <a
+                [routerLink]="[
+                  '/',
+                  currentLang$ | async,
+                  'product-details',
+                  item.product | customTranslate : 'slug'
+                ]"
+                class="max-w-[80px] rounded-[15px] overflow-hidden"
+              >
                 @if (item.product?.main_image) {
                 <img
                   [appImageUrl]="item.product.main_image"
@@ -71,11 +82,17 @@
                   alt=""
                 />
                 }
-              </figure>
+              </a>
               <div class="details">
                 <h3
+                  [routerLink]="[
+                    '/',
+                    currentLang$ | async,
+                    'product-details',
+                    item.product | customTranslate : 'slug'
+                  ]"
                   [title]="item.product | customTranslate : 'name'"
-                  class="text-category-size text-black font-bold mb-[15px] line-clamp-1"
+                  class="text-category-size text-black font-bold mb-[15px] line-clamp-1 cursor-pointer"
                 >
                   {{ item.product | customTranslate : "name" }}
                 </h3>
@@ -242,7 +259,7 @@
           >
             @if(isClearingCart) {
             <div
-              class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"
+              class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"
             ></div>
             } @else {
             {{ "wishlist.wishlist-footer.delete-all" | translate }}
@@ -338,11 +355,9 @@
         </div>
         }
       </div>
-      <!-- this acts as an offset -->
-      <div class="hidden lg:block lg:col-span-1 pb-6 xl:pb-0"></div>
 
       @if (!isEmpty()) {
-      <div class="col-span-12 xl:col-span-3 my-8 lg:my-0">
+      <div class="col-span-12 xl:col-span-4 my-8 lg:my-0 rtl:pr-15 ltr:pl-15">
         <div
           class="wrapper py-[19px] px-[45px] border border-[#202020] rounded-[15px] capitalize"
         >
@@ -425,31 +440,17 @@
     </div>
 
     <!-- Card Service -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+      @for (feature of aboutUsTwo.features | customTranslate; track feature.id)
+      {
+
       <app-service-card
-        [cardDescription]="
-          'about-us.service-card.card-3.description' | translate
-        "
-        [cardImagePath]="'./assets/images/whoWeAre/8.webp'"
-        [cardTitle]="'about-us.service-card.card-3.title' | translate"
-        [isCenter]="true"
+        [cardDescription]="feature.text"
+        [cardImagePath]="feature.icon_image"
+        [cardTitle]="feature.title"
+        [isCenter]="false"
       ></app-service-card>
-      <app-service-card
-        [cardDescription]="
-          'about-us.service-card.card-2.description' | translate
-        "
-        [cardImagePath]="'./assets/images/whoWeAre/7.webp'"
-        [cardTitle]="'about-us.service-card.card-2.title' | translate"
-        [isCenter]="true"
-      ></app-service-card>
-      <app-service-card
-        [cardDescription]="
-          'about-us.service-card.card-1.description' | translate
-        "
-        [cardImagePath]="'./assets/images/whoWeAre/9.webp'"
-        [cardTitle]="'about-us.service-card.card-1.title' | translate"
-        [isCenter]="true"
-      ></app-service-card>
+      }
     </div>
     }
   </div>

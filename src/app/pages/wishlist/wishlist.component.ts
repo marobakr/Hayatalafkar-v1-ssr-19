@@ -81,7 +81,7 @@ export class WishlistComponent implements OnInit {
 
   _alertService = inject(AlertService);
 
-  currectlang$ = inject(LanguageService).getLanguage();
+  currentLang$ = inject(LanguageService).getLanguage();
 
   wishlistItem: IGetWishlist[] = [];
 

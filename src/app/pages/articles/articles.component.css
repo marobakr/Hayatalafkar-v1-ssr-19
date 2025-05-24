@@ -54,48 +54,32 @@
   color: #6b7280;
 }
 
-/* Custom styles for pagination */
-::ng-deep .ngx-pagination {
+/* Custom pagination styles for Arabic UI */
+.custom-pagination {
   display: flex;
   justify-content: center;
-  padding: 0;
   margin: 2rem 0;
 }
 
-::ng-deep .ngx-pagination li {
-  margin: 0 0.25rem;
-  border-radius: 8px;
-  overflow: hidden;
+.pagination-button {
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-::ng-deep .ngx-pagination .current {
-  background: #cbac8d !important;
-  color: #fff !important;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
+.pagination-number {
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-::ng-deep .ngx-pagination a {
-  color: #333 !important;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.2s ease-in-out;
+.pagination-number[class*="bg-"] {
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-::ng-deep .ngx-pagination a:hover {
-  background-color: #f3f4f6;
-}
-
-::ng-deep .ngx-pagination .pagination-previous a::before,
-::ng-deep .ngx-pagination .pagination-next a::after {
-  display: none;
-}
-
-::ng-deep .ngx-pagination .pagination-previous.disabled,
-::ng-deep .ngx-pagination .pagination-next.disabled {
-  opacity: 0.5;
-  padding: 0.5rem 1rem;
+/* RTL support for pagination */
+[dir="rtl"] .custom-pagination {
+  flex-direction: row-reverse;
 }
 
 /* Loading spinner styles */

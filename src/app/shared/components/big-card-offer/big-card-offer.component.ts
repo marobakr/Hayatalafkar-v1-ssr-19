@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { SafeHtmlComponent } from '../../../core/safe-html/safe-html.component';
@@ -13,7 +12,6 @@ import { ArrowButtonComponent } from '../arrow-button/arrow-button.component';
     NgClass,
     TranslateModule,
     ArrowButtonComponent,
-    ImageUrlDirective,
     SafeHtmlComponent,
     CustomTranslatePipe,
   ],

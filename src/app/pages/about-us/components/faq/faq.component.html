@@ -12,38 +12,43 @@
     </h2>
 
     <!-- Layout -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
       <!-- Right Card -->
       <div class="md:col-span-2">
-        <flowbite-accordion>
-          @for (faq of faqs; track faq.id) {
-          <flowbite-accordion-panel [isOpen]="false" class="mb-[17px]">
-            <flowbite-accordion-title
-              class="p-5 mb-8 rounded-[15px] border border-[rgba(141,141,141,0.00)] bg-white shadow-md shadow-[rgba(0,0,0,0.25)]"
-            >
-              <div class="flex items-center justify-between w-full">
-                <div class="text-black text-subtitle-size font-medium">
+        <div
+          [ngClass]="{ 'max-h-[290px] overflow-y-auto': faqs.length > 3 }"
+          class="custom-scrollbar px-4"
+        >
+          <flowbite-accordion>
+            @for (faq of faqs; track faq.id) {
+            <flowbite-accordion-panel [isOpen]="false">
+              <flowbite-accordion-title
+                class="py-[22px] px-[23px] mb-[17px] rounded-[15px] border border-[rgba(141,141,141,0.00)] bg-white shadow-md shadow-[rgba(0,0,0,0.25)]"
+              >
+                <div class="flex items-center justify-between w-full">
+                  <div class="text-black text-subtitle-size font-medium">
+                    <app-safe-html
+                      [content]="faq | customTranslate : 'title'"
+                    ></app-safe-html>
+                  </div>
+                </div>
+              </flowbite-accordion-title>
+              <flowbite-accordion-content class="border-t-0">
+                <div class="mb-2 text-gray-500">
                   <app-safe-html
-                    [content]="faq | customTranslate : 'title'"
+                    [content]="faq | customTranslate : 'text'"
                   ></app-safe-html>
                 </div>
-              </div>
-            </flowbite-accordion-title>
-            <flowbite-accordion-content class="border-t-0">
-              <div class="mb-2 text-gray-500">
-                <app-safe-html
-                  [content]="faq | customTranslate : 'text'"
-                ></app-safe-html>
-              </div>
-            </flowbite-accordion-content>
-          </flowbite-accordion-panel>
-          }
-        </flowbite-accordion>
+              </flowbite-accordion-content>
+            </flowbite-accordion-panel>
+            }
+          </flowbite-accordion>
+        </div>
       </div>
 
       <!-- Left Card -->
       <div
-        class="bg-[#C9A888] rounded-[15px] md:col-span-1 p-6 flex flex-col justify-between items-center"
+        class="bg-[#C9A888] rounded-[15px] md:col-span-1 pt-[23px] pb-[26px] px-[23px] flex flex-col justify-between items-center"
       >
         <figure class="mb-[15px]">
           <img
@@ -53,7 +58,7 @@
             alt="FAQ section icon"
           />
         </figure>
-        <h3 class="text-black text-subtitle-size mb-[15px]">
+        <h3 class="text-black text-subtitle-size mb-[15px] text-center">
           {{ "FAQ.card.title" | translate }}
         </h3>
         <p class="text-[#333] text-category-size mb-[15px]">

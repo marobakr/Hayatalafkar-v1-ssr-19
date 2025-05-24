@@ -13,6 +13,7 @@
     >
       <figure>
         @if (isAddingToWishlist()) {
+
         <svg
           class="animate-spin h-5 w-5 text-muted-rose"
           xmlns="http://www.w3.org/2000/svg"
@@ -34,6 +35,7 @@
           ></path>
         </svg>
         } @else if (isInWishlist()) {
+
         <svg
           class="h-9 w-9 text-muted-rose"
           xmlns="http://www.w3.org/2000/svg"
@@ -44,14 +46,15 @@
             d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-5.201-3.893 10.989 10.989 0 01-2.49-4.831 6.95 6.95 0 01.945-5.205C5.93 5.38 7.553 4.5 9.31 4.5c1.355 0 2.618.607 3.476 1.577L12 6.39l-.214-.314A4.731 4.731 0 0114.69 4.5c1.757 0 3.38.879 4.44 2.466a6.95 6.95 0 01.945 5.205 10.989 10.989 0 01-2.49 4.831 15.247 15.247 0 01-5.201 3.893l-.022.012-.007.003-.001.001-.001-.001z"
           />
         </svg>
-        } @else {
-        <img
-          loading="lazy"
-          src="/images/common/wishlist.svg"
-          alt="add in wishlist"
-        />
         }
       </figure>
+      @if (!isInWishlist()) {
+      <img
+        loading="eager"
+        src="/images/common/wishlist.svg"
+        alt="add in wishlist"
+      />
+      }
     </button>
     <button
       class="cursor-pointer relative"
@@ -115,7 +118,15 @@
       </figure>
     </button>
   </div>
-  <div class="img relative cursor-pointer">
+  <div
+    [routerLink]="[
+      '/',
+      currentLang$ | async,
+      'product-details',
+      productData | customTranslate : 'slug'
+    ]"
+    class="img relative cursor-pointer"
+  >
     <a
       [routerLink]="[
         '/',
@@ -158,9 +169,17 @@
       {{ "shared.show-products" | translate }}
     </a>
 
-    <p class="text-black mb-3 text-category-size">
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'product-details',
+        productData | customTranslate : 'slug'
+      ]"
+      class="text-black mb-3 text-category-size"
+    >
       {{ productData | customTranslate : "name" }}
-    </p>
+    </a>
   </div>
   <div class="text-description-size font-bold text-black mb-8 line-clamp-1">
     <app-safe-html [content]="productData | customTranslate : 'description'">

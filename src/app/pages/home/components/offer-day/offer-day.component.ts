@@ -29,6 +29,12 @@ export class OfferDayComponent {
 
   currentLang$ = this._languageService.getLanguage();
 
+  isArabic = false;
+
+  lang = this._languageService.getIsArabic().subscribe((isArabic) => {
+    this.isArabic = isArabic;
+  });
+
   @Input({ required: true }) randomProducts: RandomProduct[] = [];
   @Input({ required: true }) lastOffer: Offer = {} as Offer;
 }

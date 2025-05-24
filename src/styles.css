@@ -18,14 +18,14 @@
 }
 
 @layer utilities {
-  @media (max-width: 1330px) and (min-width: 1280px) {
+  @media (min-width: 1278px) and (max-width: 1440px) {
     .container {
-      zoom: 95%;
+      width: 95%;
     }
   }
+
   @media (max-width: 660px) {
     .container {
-      /* overflow-x: hidden; */
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -34,6 +34,13 @@
     font-weight: 400;
     line-height: 1.5;
     padding-top: 78px;
+  }
+  @media (min-width: 1530px) {
+    .container {
+      width: 88rem !important;
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
   }
 }
 

@@ -29,14 +29,13 @@ export class AboutSharedComponent implements OnInit {
   @Input({ required: true }) showSloganText: boolean = true;
 
   /* Dynamic Inputs Properties */
-  @Input({ required: true }) aboutUs: AboutUs = {} as AboutUs;
-  @Input({ required: true }) counters: Counter[] = [] as Counter[];
+  @Input({ required: true }) aboutUs!: AboutUs;
+  @Input({ required: true }) counters!: Counter[];
 
   @Input() mainImage!: string;
 
   currentImage: string | null = null;
   currentLang$ = inject(LanguageService).getLanguage();
-  private languageService = inject(LanguageService);
   currentLang = 'en';
 
   ngOnInit(): void {

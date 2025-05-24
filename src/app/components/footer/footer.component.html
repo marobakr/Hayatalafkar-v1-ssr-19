@@ -8,11 +8,11 @@
           alt="logo"
           class="h-8 mx-auto md:mx-0"
         />
-        <p class="text-sm text-footer-color leading-relaxed">
+        <div class="text-sm text-footer-color leading-relaxed">
           <app-safe-html
             [content]="footerTitle | customTranslate : 'footer_for_text'"
           ></app-safe-html>
-        </p>
+        </div>
       </div>
 
       <!-- Column 2: الأقسام (Now spans 2 columns) -->
@@ -98,48 +98,31 @@
         <ul class="space-y-2 text-sm text-footer-color">
           <li class="flex items-center">
             <a
-              href="https://api.whatsapp.com/send?phone=984858584949949"
+              [href]="
+                'https://api.whatsapp.com/send?phone=' + contactUs()?.phone
+              "
               target="_blank"
               rel="noopener noreferrer"
               class="text-footer-color hover:underline cursor-pointer flex items-center w-full"
               [attr.aria-label]="'footer.contact.whatsapp_chat' | translate"
             >
               <span class="mr-1">{{ "footer.contact.phone" | translate }}</span>
-              <span class="mx-1">984858584949949 </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 ml-1 text-green-500"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
-                />
-                <path
-                  d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.628-5.373-12-12-12zm.029 18.88a6.944 6.944 0 01-3.333-.915l-3.708 1.012 1.023-3.767a7.047 7.047 0 01-.856-3.36c.001-3.898 3.17-7.066 7.067-7.066 1.887 0 3.662.738 4.994 2.072a7.066 7.066 0 012.072 5.001c-.002 3.902-3.173 7.073-7.07 7.073z"
-                />
-              </svg>
+              <span class="mx-1">{{ contactUs()?.phone }} </span>
             </a>
           </li>
           <li class="flex items-center">
             <a
-              href="https://www.google.com/maps?q=Riyadh+Saudi+Arabia"
+              [href]="
+                'https://www.google.com/maps?q=' + contactUs()
+                  | customTranslate : 'address'
+              "
               target="_blank"
               rel="noopener noreferrer"
               class="text-footer-color hover:underline cursor-pointer flex items-center w-full"
-              [attr.aria-label]="'footer.contact.find_us_on_map' | translate"
+              [attr.aria-label]="contactUs() | customTranslate : 'address'"
             >
               <span>{{ "footer.contact.address" | translate }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 ml-1 text-blue-500"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                />
-              </svg>
+              {{ contactUs() | customTranslate : "address" }}
             </a>
           </li>
         </ul>
@@ -150,13 +133,15 @@
     <div
       class="flex items-center justify-center mt-[69px] text-center relative"
     >
-      <span class="font-bold text-black">DIGITAL BOND</span>
-      <figure class="mx-[3px] max-w-[35px]" href="https://digitalbondmena.com/">
+      <a href="https://digitalbondmena.com/" class="font-bold text-black"
+        >DIGITAL BOND</a
+      >
+      <a class="mx-[3px] max-w-[35px]" href="https://digitalbondmena.com/">
         <img src="/images/navbar/lOGO.webp" alt="DIGITAL BOND Logo" />
-      </figure>
-      <a>
-        {{ "footer.rights" | translate }}
       </a>
+      <span>
+        {{ "footer.rights" | translate }}
+      </span>
       <div class="img-footer absolute -z-1">
         <figure>
           <img src="/images/footer/1.png" alt="footer" />

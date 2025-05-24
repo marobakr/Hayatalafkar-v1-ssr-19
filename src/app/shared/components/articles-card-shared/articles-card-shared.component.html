@@ -1,28 +1,42 @@
-<div class="bg-white">
-  <div class="relative mb-[13px]">
+<div class="bg-white mb-15">
+  <div class="relative mb-[23px]">
     <!-- ArticleImage -->
-    <figure class="rounded-xl overflow-hidden main_Image_Animation">
-      <img
-        loading="lazy"
-        [appImageUrl]="blogData.main_image"
-        [imageEndpoint]="'uploads/blogs'"
-        alt="article"
-        class="w-full object-cover"
-      />
-    </figure>
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'blog',
+        blogData | customTranslate : 'slug'
+      ]"
+    >
+      <figure
+        class="w-full max-w-[900px] max-h-[432px] rounded-xl overflow-hidden main_Image_Animation"
+      >
+        <img
+          loading="lazy"
+          [appImageUrl]="blogData.main_image"
+          [imageEndpoint]="'uploads/blogs'"
+          alt="article"
+          class="w-full"
+        />
+      </figure>
+    </a>
   </div>
 
-  <div class="p-4">
+  <div>
     <!-- ArticleDate -->
 
-    <div class="built relative">
-      <div class="classs text-[14px] text-[#333] mb-[13px]">
-        {{ blogData.blog_date }}
+    <div
+      class="built ltr:left-[16px] rtl:right-[16px] text-[12px] sm:text-[14px] text-[#333] mb-[15px] sm:mb-[13px] relative"
+    >
+      <div class="text-[16px] text-[#333]">
+        {{ blogData.blog_date | date : "d MMMM y" }}
       </div>
       <div
         class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"
       ></div>
     </div>
+
     <!-- ArticleTitle -->
     <h3 class="text-subtitle-size text-black mb-[15px] font-semibold">
       {{ blogData | customTranslate : "blog_title" }}
@@ -34,7 +48,7 @@
         'mb-[23px]': true,
         'mb-[10px]': !false
       }"
-      class="text-description-size"
+      class="text-description-size text-justify"
     >
       <app-safe-html
         [content]="blogData | customTranslate : 'blog_text'"
@@ -49,7 +63,6 @@
         'blog',
         blogData | customTranslate : 'slug'
       ]"
-      href="#"
       class="text-muted-rose text-[14px] font-bold underline"
     >
       {{ "shared.readMore" | translate }}

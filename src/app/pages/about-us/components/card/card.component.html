@@ -1,5 +1,6 @@
-<div class="p-5 bg-white border border-[#CBCBCB] rounded-[15px] shadow-md">
-  <div class="flex justify-start gap-x-2 mb-3">
+@if (cardTitle) {
+<div class="p-[30px] bg-white border border-[#CBCBCB] rounded-[15px] shadow-md">
+  <div class="flex justify-start gap-x-2 mb-[15px]">
     <figure class="p-3 bg bg-warm-tan rounded-full w-fit">
       <img
         loading="lazy"
@@ -8,9 +9,10 @@
         [alt]="cardTitle"
       />
     </figure>
-    <span class="text-title-size text-black">{{ cardTitle }}</span>
+    <span class="text-[28px] text-black font-bold">{{ cardTitle }}</span>
   </div>
-  <div class="mb-3 text-description-size text-black">
+  <div class="mb-3 text-description-size text-black line-clamp-4 text-justify">
     <app-safe-html [content]="cardDescription"></app-safe-html>
   </div>
 </div>
+}

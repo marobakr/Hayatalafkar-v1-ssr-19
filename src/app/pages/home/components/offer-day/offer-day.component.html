@@ -4,11 +4,23 @@
       {{ "offer-day.title" | translate }}
     </p>
     <h2 class="text-title-size font-bold mb-9 text-center">
-      {{ "offer-day.altTitle" | translate }}
+      @if (!isArabic) {
+
       <span class="text-muted-rose">
         {{ "offer-day.subtitle" | translate }}
       </span>
+      {{ "offer-day.altTitle" | translate }}
+
+      } @else {
+      {{ "offer-day.altTitle" | translate }}
+
+      <span class="text-muted-rose">
+        {{ "offer-day.subtitle" | translate }}
+      </span>
+
+      }
     </h2>
+
     <!-- Cards Container -->
     <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mb-[45px]">
       @for (randomProduct of randomProducts; track $index) {
@@ -53,15 +65,18 @@
         <!-- Content -->
         <div class="flex flex-col justify-between flex-shrink-10">
           <div>
+            <!-- Category -->
             <p class="text-[#333] text-category-size mb-[15px]">
-              {{ randomProduct | customTranslate : "name" }}
+              العنايه بالبشره
             </p>
+            <!-- Name -->
             <div class="text-[18px] font-bold mb-[15px]">
-              <app-safe-html
-                [content]="randomProduct | customTranslate : 'description'"
-              ></app-safe-html>
+              {{ randomProduct | customTranslate : "name" }}
             </div>
+            <!-- Price -->
             <div class="flex items-center text-subtitle-size gap-7 mb-[20px]">
+              @if (randomProduct.sale_price !== null) {
+
               <span class="text-muted-rose">
                 {{ randomProduct.price_after_sale }}
 
@@ -72,11 +87,26 @@
 
                 {{ "shared.currency" | translate }}</span
               >
+              } @else {
+              <span class="text-muted-rose">
+                {{ randomProduct.price }}
+
+                {{ "shared.currency" | translate }}</span
+              >
+              }
+            </div>
+            <!-- Description -->
+            <div
+              class="text-[#333] font-normal line-clamp-2 xl:text-justify mb-[16px]"
+            >
+              <app-safe-html
+                [content]="randomProduct | customTranslate : 'description'"
+              ></app-safe-html>
             </div>
           </div>
           <a
             [routerLink]="['/', currentLang$ | async, 'shopping']"
-            class="text-muted-rose text-description-size font-bold mt-4 flex items-center gap-[1px]"
+            class="text-muted-rose text-description-size font-bold flex items-center gap-[1px]"
             [attr.aria-label]="'shared.shopping_now' | translate"
           >
             <span>

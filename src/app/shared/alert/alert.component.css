@@ -7,7 +7,8 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
+
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1000;
 }
 
@@ -16,10 +17,9 @@
 }
 
 .wrapper {
-  background-image: url("/assets/images/common/alert-bg.png");
+  background-image: url("/images/common/alert-bg.png");
   background-color: lightgray;
   background-size: cover;
-  border-radius: 15px;
 }
 
 /* Animation classes */

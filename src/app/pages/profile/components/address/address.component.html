@@ -1,7 +1,9 @@
 <form [formGroup]="addressForm" (ngSubmit)="submition()">
-  <div class="address-container max-h-[300px] overflow-y-auto mb-6">
+  <div
+    class="address-container max-h-[300px] overflow-y-auto overflow-x-hidden mb-6"
+  >
     @if(!loading()) {
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4 px-3">
       @for(addr of address; track $index) {
       <div
         class="flex justify-start items-center pt-[23px] px-6 pb-[22px] gap-[15px] border border-[#AFA8A8] rounded-[15px]"
@@ -15,24 +17,18 @@
           />
         </figure>
         <div class="title w-full">
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center text-wrap">
             <h3
               class="text-black text-sm sm:text-description-size font-semibold capitalize mb-[13px]"
             >
               {{ addr.first_name }}
             </h3>
-
-            <!-- <button
-              class="text-[#ff0004] text-xs sm:text-description-size underline font-light capitalize"
-            >
-              {{ "deleted-address" | translate }}
-            </button> -->
           </div>
 
           <p
-            class="text-[#333] text-xs sm:text-category-size capitalize truncate"
+            class="text-[#333] text-wrap text-xs sm:text-category-size capitalize truncate"
           >
-            {{ addr.last_name }} , {{ addr.city }} , {{ addr.address }}
+            {{ addr.city }} , {{ addr.address }}
           </p>
         </div>
       </div>
@@ -128,8 +124,9 @@
       <select
         id="location_id"
         formControlName="location_id"
+        placeholder="'{{Select_Location' | translate}}"
         [ngClass]="{ 'border-red-500': isFieldInvalid('location_id') }"
-        class="appearance-none bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300 hover:border-rose-400 hover:shadow-sm transition-all duration-200 cursor-pointer"
+        class="appearance-none bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full focus:outline-none transition-all duration-200 cursor-pointer"
         aria-labelledby="location-label"
         [attr.disabled]="loading() ? '' : null"
         [title]="
@@ -167,9 +164,9 @@
       >
         @if(loading()) {
         <div
-          class="animate-spin h-5 w-5 border-2 border-rose-400 border-t-transparent rounded-full"
+          class="animate-spin h-5 w-5 border-2 border-warm-tans border-t-transparent rounded-full"
         ></div>
-        } @else if(locations()) {
+        } @else if(locations().length < 0) {
         <svg
           class="h-5 w-5 text-rose-400"
           xmlns="http://www.w3.org/2000/svg"

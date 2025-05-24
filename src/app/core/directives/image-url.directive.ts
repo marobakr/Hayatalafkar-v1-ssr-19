@@ -10,8 +10,8 @@ export class ImageUrlDirective {
   private _imageName: string | null = '';
   private _endpoint: string = 'uploads/blogs'; // Default to blogs
 
-  @Input({ required: true }) set appImageUrl(imageName: string | null) {
-    this._imageName = imageName;
+  @Input({ required: true }) set appImageUrl(imageName: string) {
+    this._imageName = imageName ?? '';
     this.updateSrc();
   }
 

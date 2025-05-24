@@ -18,7 +18,7 @@ import {
 import { IQuotes } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { API_CONFIG } from '@core/services/conf/api.config';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
 import { ToastrService } from 'ngx-toastr';
@@ -103,12 +103,16 @@ import { ContactUsService } from './res/contact-us.service';
   ],
 })
 export class ContactUsComponent implements OnInit {
-  private readonly contactUsService = inject(ContactUsService);
-  private readonly fb = inject(FormBuilder);
-  private readonly toastr = inject(ToastrService);
+  private contactUsService = inject(ContactUsService);
+
+  private fb = inject(FormBuilder);
+
+  private toastr = inject(ToastrService);
+
+  private translateService = inject(TranslateService);
 
   // Using signals for reactive state management
-  features = signal<IFeatures>({} as IFeatures);
+  features = signal<IFeatures[]>([]);
   contactUs = signal<IContactUs>({} as IContactUs);
   breaks = signal<IQuotes[]>([]);
   isSubmitting = signal<boolean>(false);
@@ -133,8 +137,9 @@ export class ContactUsComponent implements OnInit {
   private initForm(): void {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
+      last_name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.pattern(/^((\+?966\s?\d{9})|(\+?20\s?\d{10}))$/)],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{8,}$/)]],
       message: ['', [Validators.required, Validators.minLength(10)]],
     });
   }
@@ -155,20 +160,9 @@ export class ContactUsComponent implements OnInit {
     this.contactUsService.getFeatures().subscribe({
       next: (response: any) => {
         if (response) {
-          this.features.set(response.features);
+          console.log(response);
+          this.features.set(response.features || []);
           this.breaks.set(response.breaks || []);
-
-          // Initialize card hover states
-          if (response.features && response.features.data) {
-            response.features.data.forEach((feature: any) => {
-              this.cardStates[feature.id] = 'normal';
-            });
-          }
-
-          // Initialize fixed card IDs for contact cards
-          this.cardStates[1] = 'normal';
-          this.cardStates[2] = 'normal';
-          this.cardStates[3] = 'normal';
         }
       },
     });
@@ -177,11 +171,12 @@ export class ContactUsComponent implements OnInit {
   /**
    * Fetches contact information
    */
-  private getContactUs(): void {
+  getContactUs(): void {
     this.contactUsService.getContactUs().subscribe({
       next: (response: any) => {
         if (response) {
-          this.contactUs.set(response);
+          console.log(response);
+          this.contactUs.set(response.contact);
         }
       },
     });
@@ -199,8 +194,10 @@ export class ContactUsComponent implements OnInit {
       });
 
       this.toastr.warning(
-        'Please complete all required fields correctly',
-        'Validation Error'
+        this.translateService.instant(
+          'contact-us.form.validation.fields_required'
+        ),
+        this.translateService.instant('contact-us.form.validation.error_title')
       );
       return;
     }
@@ -208,13 +205,27 @@ export class ContactUsComponent implements OnInit {
     const formData: IContactUsForm = this.contactForm.value;
     this.isSubmitting.set(true);
 
+    const finalData = {
+      name: formData.name.split(' ')[0],
+      last_name: formData.name.split(' ')[1],
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+    };
     // Call the contact form submission API
     this.contactUsService
-      .getContactUsForm(formData)
+      .getContactUsForm(finalData)
       .pipe(
         catchError((error) => {
           console.error('Error submitting form:', error);
-          this.toastr.error('Failed to submit form', 'Error');
+          this.toastr.error(
+            this.translateService.instant(
+              'contact-us.form.submission.error_message'
+            ),
+            this.translateService.instant(
+              'contact-us.form.submission.error_title'
+            )
+          );
           return of(null);
         }),
         finalize(() => this.isSubmitting.set(false))
@@ -223,8 +234,12 @@ export class ContactUsComponent implements OnInit {
         next: (response: any) => {
           if (response) {
             this.toastr.success(
-              'Your message has been sent successfully',
-              'Thank You'
+              this.translateService.instant(
+                'contact-us.form.submission.success_message'
+              ),
+              this.translateService.instant(
+                'contact-us.form.submission.success_title'
+              )
             );
             this.contactForm.reset();
           }

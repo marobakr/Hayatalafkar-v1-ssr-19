@@ -14,9 +14,11 @@
     "main-title": "تابع",
     "title": "هل لديك أي أسئلة؟!"
   },
+  "Loading": "جاري التسجيل",
   "Login_failed": "فشل تسجيل الدخول",
   "Login_successful": "تم تسجيل الدخول بنجاح",
   "Registration_successful": "تم تسجيل الحساب بنجاح",
+  "Select_Location": "اخترك موقعك",
   "about-us": {
     "cards": {
       "card-1": {
@@ -45,6 +47,37 @@
     "slogan-text": "تألق بثقة, تسوق بعناية و امان"
   },
   "account_management": {
+    "alerts": {
+      "cancel": "إلغاء",
+      "deactivate": {
+        "confirm": "تعطيل",
+        "message": "هل أنت متأكد من رغبتك في تعطيل حسابك؟ يمكنك إعادة تنشيطه لاحقًا.",
+        "title": "تعطيل الحساب"
+      },
+      "deactivate_error": {
+        "message": "خطأ في تعطيل الحساب. يرجى المحاولة مرة أخرى."
+      },
+      "deactivate_success": {
+        "message": "تم تعطيل حسابك بنجاح. سيتم تسجيل خروجك الآن.",
+        "title": "تم تعطيل الحساب"
+      },
+      "delete": {
+        "confirm": "حذف",
+        "message": "هل أنت متأكد تمامًا من رغبتك في حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء.",
+        "title": "حذف الحساب"
+      },
+      "delete_error": {
+        "message": "خطأ في حذف الحساب. يرجى المحاولة مرة أخرى."
+      },
+      "delete_success": {
+        "message": "تم حذف حسابك بشكل دائم. سيتم تسجيل خروجك الآن.",
+        "title": "تم حذف الحساب"
+      },
+      "error": {
+        "title": "خطأ"
+      },
+      "ok": "موافق"
+    },
     "deactivate_button": "تعطيل الحساب",
     "deactivate_description": "تعطيل حسابك مؤقتًا. يمكنك إعادة تنشيطه لاحقًا عن طريق تسجيل الدخول مرة أخرى.",
     "deactivate_title": "تعطيل الحساب",
@@ -488,7 +521,17 @@
       "placeholder-last-name": "قم بكتابة اسمك الاخير ",
       "placeholder-phone-number": "يجب ادخال رقم الهاتف الصحيح ",
       "placeholder-your-msg": " قم بكتابة رسالتك هنا ...",
+      "submission": {
+        "error_message": "فشل في إرسال النموذج. الرجاء المحاولة مرة أخرى",
+        "error_title": "خطأ",
+        "success_message": "تم إرسال رسالتك بنجاح",
+        "success_title": "شكراً لك"
+      },
       "submit": "ارسال",
+      "validation": {
+        "error_title": "خطأ في التحقق",
+        "fields_required": "الرجاء إكمال جميع الحقول المطلوبة بشكل صحيح"
+      },
       "your-msg": "رسالتك"
     },
     "heading": "اتصل بنا"
@@ -690,13 +733,13 @@
     "profile": "الملف الشخصي",
     "search": "بحث",
     "search_placeholder": "ابحث عن المنتجات...",
+    "toggle_menu": "جميع الاقسام",
     "wishlist": "المفضلة"
   },
   "newProducts": {
     "alt-description": " بشرة مشرقة و نضارة فائقة",
     "description": " استمتع معنا بالمنتجات الجديدة التى تهتم بنضارة بشرتك و صحتها و الحصول على",
-    "subtitle": "الجديدة",
-    "title": "المنتجات "
+    "title": "الجديدة المنتجات "
   },
   "news-articles": {
     "card-1": {
@@ -707,6 +750,10 @@
     "subtitle": "مشاهدة كل الاخبار",
     "title": "الأخبار و المقالات"
   },
+  "no-last-order-message": "ليس لديك أي طلبات حديثة لعرضها.",
+  "no-last-order-title": "لا يوجد طلب حديث",
+  "no-orders-message": "لم تقم بإجراء أي طلبات بعد. ابدأ التسوق لعرض طلباتك هنا.",
+  "no-orders-title": "لا توجد طلبات",
   "of": "من",
   "offer-day": {
     "altTitle": "      العروض الخاصة",
@@ -763,13 +810,13 @@
     },
     "track-order": "تتبع الطلب",
     "tracking": {
-      "order": "تتبع الطلب",
-      "submitted": "تم تقديم الطلب",
       "approved": "تمت الموافقة",
-      "preparation": "قيد التحضير",
-      "way": "في الطريق",
       "delivered": "تم التوصيل",
-      "estimated": "الوقت المتوقع"
+      "estimated": "الوقت المتوقع",
+      "order": "تتبع الطلب",
+      "preparation": "قيد التحضير",
+      "submitted": "تم تقديم الطلب",
+      "way": "في الطريق"
     }
   },
   "order-number": "رقم الطلب",
@@ -1012,12 +1059,13 @@
     "currency": "ر.س",
     "go_to_cart": "الذهاب إلى السلة",
     "loading": "جاري التحميل...",
+    "next": "التالى",
     "offer": "خصم 25%",
     "price_varies": "السعر يختلف حسب الخيارات",
     "processing": "جاري المعالجة...",
     "readMore": "قراءة المزيد",
     "shopping_now": "تسوق الآن",
-    "show-products": "شراء المنتج ",
+    "show-products": "مشاهده المنتج ",
     "success": "تم بنجاح",
     "update_cart": "تحديث كمية المنتج",
     "update_cart_quantity": "تحديث كمية المنتج في السلة",
@@ -1042,7 +1090,7 @@
       },
       "items": "منتج",
       "price": {
-        "currency": "ريال",
+        "currency": "ر.س",
         "reset": "إعادة تعيين الأسعار",
         "title": "السعر"
       },
@@ -1122,6 +1170,7 @@
     "password-mismatch": "كلمة المرور غير متطابقة",
     "password-required": "كلمة المرور مطلوبة",
     "phone-format": "رقم الهاتف غير صالح",
+    "phone-min-length": "يجب أن يتكون رقم الهاتف من 8 أرقام على الأقل",
     "phone-required": "رقم الهاتف مطلوب",
     "your-msg-min-length": "رسالة المستخدم يجب أن تكون أطول من 10 أحرف",
     "your-msg-required": "رسالة المستخدم مطلوبة"
@@ -1156,7 +1205,7 @@
         "لوشن ترطيب الجسم"
       ],
       "item-1": {
-        "price": "ريال",
+        "price": "ر.س",
         "subtitle": "العناية بالبشرة"
       }
     },
@@ -1166,9 +1215,5 @@
       "add-new": "هل تريد وضع الكل في العربة؟",
       "delete-all": "حذف كل العناصر"
     }
-  },
-  "no-orders-title": "لا توجد طلبات",
-  "no-orders-message": "لم تقم بإجراء أي طلبات بعد. ابدأ التسوق لعرض طلباتك هنا.",
-  "no-last-order-title": "لا يوجد طلب حديث",
-  "no-last-order-message": "ليس لديك أي طلبات حديثة لعرضها."
+  }
 }

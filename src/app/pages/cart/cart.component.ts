@@ -22,6 +22,8 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
 import { ArticlesHeaderComponent } from '../../pages/articles/components/articles-header/articles-header.component';
 import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
+import { IAboutUsTwo } from '../about-us/res/about-us.interface';
+import { AboutUsService } from '../about-us/res/about-us.service';
 import { cartItemAnimations } from './cart.animations';
 @Component({
   selector: 'app-cart',
@@ -54,6 +56,8 @@ export class CartComponent implements OnInit {
 
   _alertService = inject(AlertService);
 
+  _aboutUsService = inject(AboutUsService);
+
   // Loading state to show loading indicator
   isLoading = true;
 
@@ -71,24 +75,6 @@ export class CartComponent implements OnInit {
   currentLang$ = this._languageService.getLanguage();
 
   isPromoCodeLoading = false;
-  isRemovingItem = false;
-  isAddingItem = false;
-  isClearingCart = false;
-  removeItemError: string | null = null;
-  cartUpdateSuccess: string | null = null;
-
-  // Track which item is currently being removed by ID
-  removingItemId: string | number | null = null;
-  // Track which item is currently being updated by ID
-  updatingItemId: string | number | null = null;
-
-  promoCodeForm: FormGroup = this.formBuilder.group({
-    code: ['', [Validators.required, Validators.minLength(3)]],
-  });
-
-  promoCodeError: string | null = null;
-
-  promoCodeSuccess: string | null = null;
 
   ngOnInit(): void {
     // Start with loading state
@@ -121,6 +107,8 @@ export class CartComponent implements OnInit {
         console.error('Error fetching cart during initialization', err);
       },
     });
+
+    this.getAboutData();
   }
 
   /**
@@ -184,6 +172,11 @@ export class CartComponent implements OnInit {
     const numPrice = typeof price === 'string' ? parseFloat(price) : price;
     return numPrice.toFixed(2);
   }
+
+  // Track which item is currently being removed by ID
+  removingItemId: string | number | null = null;
+  // Track which item is currently being updated by ID
+  updatingItemId: string | number | null = null;
 
   /**
    * Increase item quantity by 1
@@ -259,6 +252,16 @@ export class CartComponent implements OnInit {
       this.removeItem(cartItem);
     }
   }
+
+  isRemovingItem = false;
+
+  isAddingItem = false;
+
+  isClearingCart = false;
+
+  removeItemError: string | null = null;
+
+  cartUpdateSuccess: string | null = null;
 
   /**
    * Remove an item from the cart
@@ -366,6 +369,15 @@ export class CartComponent implements OnInit {
   /**
    * Apply a promo code to the cart
    */
+
+  promoCodeForm: FormGroup = this.formBuilder.group({
+    code: ['', [Validators.required, Validators.minLength(3)]],
+  });
+
+  promoCodeError: string | null = null;
+
+  promoCodeSuccess: string | null = null;
+
   applyPromoCode() {
     if (this.promoCodeForm.valid) {
       const code = this.promoCodeForm.get('code')?.value;
@@ -443,5 +455,11 @@ export class CartComponent implements OnInit {
     }
   }
 
-  /* Calculate Total Price */
+  aboutUsTwo: IAboutUsTwo = {} as IAboutUsTwo;
+
+  getAboutData() {
+    this._aboutUsService.getAboutData().subscribe((res: IAboutUsTwo) => {
+      this.aboutUsTwo = res;
+    });
+  }
 }

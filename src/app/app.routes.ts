@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
-import { authCheckResolver } from '@core/resolvers/auth-check.resolver';
+import { unauthGuard } from '@core/guards/unauth.guard';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 import { checkoutAddressResolver } from './pages/checkout/res/resolvers/checkout-address.resolver';
 import { checkoutLocationsResolver } from './pages/checkout/res/resolvers/checkout-locations.resolver';
@@ -9,7 +9,6 @@ import { productDetailsResolver } from './pages/product-details/res/product-deta
 export const routes: Routes = [
   { path: '', redirectTo: '/ar', pathMatch: 'full' },
 
-  /* Auth routes */
   {
     path: ':lang/login',
     loadComponent: () =>
@@ -25,11 +24,9 @@ export const routes: Routes = [
           title: 'pages.auth.login.title',
           description: 'pages.auth.login.description',
         },
-        resolve: {
-          authCheck: authCheckResolver,
-        },
       },
     ],
+    canActivate: [unauthGuard],
   },
 
   {
@@ -43,9 +40,6 @@ export const routes: Routes = [
           import('../app/pages/auth/register/register.component').then(
             (c) => c.RegisterComponent
           ),
-        resolve: {
-          authCheck: authCheckResolver,
-        },
         children: [
           { path: '', redirectTo: 'personal', pathMatch: 'full' },
           {
@@ -172,6 +166,7 @@ export const routes: Routes = [
           title: 'pages.product.title',
           description: 'pages.product.description',
         },
+        canActivate: [authGuard],
       },
 
       /* About Us  */

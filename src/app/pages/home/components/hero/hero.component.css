@@ -6,62 +6,68 @@
   transform: rotate(180);
 }
 
-/* Loading overlay styles */
-.carousel-wrapper {
-  position: relative;
-  transition: opacity 0.5s ease;
-  overflow: hidden !important;
-}
-
-/* Owl Carousel Custom Styles - Simplified */
+/* Owl Carousel Custom Styles */
 ::ng-deep .owl-carousel {
   width: 100%;
   position: relative;
-  min-height: 300px;
-  display: block !important;
-  overflow: hidden !important;
 }
 
 ::ng-deep .owl-stage-outer {
-  overflow: hidden !important;
-  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 ::ng-deep .owl-stage {
   display: flex;
-  position: relative;
+  transition: all 0.5s ease !important;
 }
 
-/* Fix visibility of items */
 ::ng-deep .owl-item {
-  position: relative;
-  min-height: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.5s ease !important;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
+  transition: opacity 0.5s ease-in-out !important;
 }
 
-/* Initially hide all items */
-::ng-deep .owl-carousel .owl-item {
-  opacity: 0;
-  visibility: hidden;
+/* Navigation Arrows */
+::ng-deep .owl-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 10;
+  pointer-events: none;
 }
 
-/* Show active items */
-::ng-deep .owl-carousel .owl-item.active {
-  opacity: 1 !important;
-  visibility: visible !important;
+::ng-deep .owl-prev,
+::ng-deep .owl-next {
+  background-color: rgba(203, 172, 141, 0.6) !important;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Force single active item */
-::ng-deep .owl-carousel .owl-item.active ~ .owl-item.active {
-  opacity: 0 !important;
-  visibility: hidden !important;
+::ng-deep .owl-prev:hover,
+::ng-deep .owl-next:hover {
+  background-color: rgba(203, 172, 141, 0.9) !important;
+  transform: scale(1.1);
 }
 
+/* Fix for Font Awesome icons */
+::ng-deep .owl-prev i,
+::ng-deep .owl-next i {
+  color: white;
+  font-size: 18px;
+}
 /* Horizontal slide animations */
 @keyframes slideInRight {
   0% {
@@ -224,7 +230,6 @@ img[appImageUrl] {
   max-height: 400px !important;
   margin: 0 auto;
 }
-
 /* Rotating logo animation */
 .image-rotate {
   z-index: 10;

@@ -50,7 +50,14 @@ export class ProfileDetailsComponent implements OnInit {
     this.loginForm = this._fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      phone: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('[0-9]*'),
+        ],
+      ],
       email: ['', [Validators.required, Validators.email]],
     });
   }
@@ -78,10 +85,11 @@ export class ProfileDetailsComponent implements OnInit {
 
   populateForm(userData: any): void {
     if (userData) {
+      console.log(userData);
       this.loginForm.patchValue({
         firstName: userData.name.split(' ')[0] || '',
         lastName: userData.name.split(' ')[1] || '',
-        phoneNumber: userData.phone || '',
+        phone: userData.phone || '',
         email: userData.email || '',
       });
     }
@@ -90,7 +98,12 @@ export class ProfileDetailsComponent implements OnInit {
   submition(): void {
     if (this.loginForm.valid) {
       this.loading.set(true);
-      const userData = this.loginForm.value;
+      console.log(this.loginForm.value);
+      const userData = {
+        name: `${this.loginForm.value.firstName} ${this.loginForm.value.lastName}`,
+        phone: this.loginForm.value.phone,
+        email: this.loginForm.value.email,
+      };
       this._userService
         .updateUserInfo(userData)
         .pipe(takeUntilDestroyed(this._destroyRef))

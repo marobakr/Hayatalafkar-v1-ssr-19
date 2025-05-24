@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
@@ -19,6 +19,7 @@ import { SafeHtmlComponent } from '../../../core/safe-html/safe-html.component';
     RouterLink,
     AsyncPipe,
     ImageUrlDirective,
+    DatePipe,
   ],
   templateUrl: './articles-card-shared.component.html',
   styleUrl: './articles-card-shared.component.css',

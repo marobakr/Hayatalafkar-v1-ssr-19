@@ -43,6 +43,7 @@ export interface LatestProduct {
   created_at: string;
   updated_at: string;
   first_choice: string;
+  blog_date: string;
 }
 
 export interface Slider {
