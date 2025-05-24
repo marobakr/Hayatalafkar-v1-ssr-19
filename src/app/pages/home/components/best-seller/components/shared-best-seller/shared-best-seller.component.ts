@@ -17,6 +17,9 @@ import { SafeHtmlComponent } from '../../../../../../core/safe-html/safe-html.co
 // Module-level Map to track loading state by product ID for isAddingToCart
 const cartLoadingMap = new Map<number, boolean>();
 
+// Global flag to track if wishlist items have been loaded
+let globalWishlistLoaded = false;
+
 @Component({
   selector: 'app-shared-best-seller',
   standalone: true,
@@ -54,8 +57,7 @@ export class SharedBestSellerComponent implements OnInit {
 
   ngOnInit(): void {
     if (this._authService.isAuthenticated() && this.userId) {
-      // Load wishlist items when component initializes
-      this.loadWishlistItems();
+      this.checkIfProductInWishlist();
     }
   }
 
@@ -197,6 +199,7 @@ export class SharedBestSellerComponent implements OnInit {
 
   wishlistItems = signal<any[]>([]);
 
+  // Avoid calling the API multiple times by checking global flag
   loadWishlistItems(): void {
     if (!this.userId) {
       return;
@@ -204,9 +207,15 @@ export class SharedBestSellerComponent implements OnInit {
 
     this.isLoading.set(true);
 
+    // If wishlist already loaded globally, use cached data instead of another API call
+    if (globalWishlistLoaded) {
+      this.isLoading.set(false);
+      this.checkIfProductInWishlist();
+      return;
+    }
+
     this._wishlistService.getWishlistItems().subscribe({
       next: (response) => {
-        console.log('how many this function call');
         // Check different possible response formats
         if (response && Array.isArray(response.wishs)) {
           this.wishlistItems.set(response.wishs);
@@ -218,6 +227,9 @@ export class SharedBestSellerComponent implements OnInit {
             );
             this.isInWishlist.set(isInList);
           }
+
+          // Set global flag to prevent multiple API calls
+          globalWishlistLoaded = true;
         } else {
           this.wishlistItems.set([]);
         }
@@ -263,9 +275,6 @@ export class SharedBestSellerComponent implements OnInit {
         this.isAddingToWishlist.set(false);
         this._wishlistService.loadWishlistCount();
 
-        // Refresh wishlist items
-        this.loadWishlistItems();
-
         this.showSuccessAlert(
           '/images/common/wishlist.gif',
           'alerts.wishlist.add_success.title'
@@ -308,13 +317,11 @@ export class SharedBestSellerComponent implements OnInit {
   private checkIfProductInWishlist(): void {
     if (!this.productData || !this.productData.id) return;
 
-    // Check if current product is in wishlist from our loaded wishlist items
-    const currentItems = this.wishlistItems();
-    const isInList = currentItems.some(
-      (item) => item.product_id === this.productData.id
+    // Check directly against the map maintained by the service
+    const isInWishlist = this._wishlistService.isProductInWishlist(
+      this.productData.id
     );
-
-    this.isInWishlist.set(isInList);
+    this.isInWishlist.set(isInWishlist);
   }
 
   private executeRemoveFromWishlist(wishId: number): void {
@@ -325,9 +332,6 @@ export class SharedBestSellerComponent implements OnInit {
         this.isInWishlist.set(false);
         this.isAddingToWishlist.set(false);
         this._wishlistService.loadWishlistCount();
-
-        // Refresh wishlist items
-        this.loadWishlistItems();
 
         this.showSuccessAlert(
           '/images/common/remove.gif',
