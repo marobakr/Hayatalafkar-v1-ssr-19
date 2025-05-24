@@ -4,7 +4,7 @@
   </figure>
 
   <!-- Full Name  -->
-  <div class="flex justify-between items-center gap-x-[23px] mb-[44px]">
+  <div class="flex justify-between items-center gap-x-[23px] mb-[42px]">
     <!-- First Name  -->
     <div class="flex-grow-1">
       <label
@@ -19,6 +19,14 @@
         class="bg-white capo border border-[#8D8D8D] rounded-[15px] capitalize rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="'contact-us.form.placeholder-first-name' | translate"
       />
+      @if (loginForm.get('firstName')?.invalid &&
+      loginForm.get('firstName')?.touched) {
+      <div class="mt-2 text-muted-rose">
+        @if (loginForm.get('firstName')?.errors?.['required']) {
+        <span>{{ "validation.name-required" | translate }}</span>
+        }
+      </div>
+      }
     </div>
     <!-- Last Name  -->
     <div class="flex-grow-1">
@@ -35,6 +43,14 @@
         class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
         [placeholder]="'contact-us.form.placeholder-last-name' | translate"
       />
+      @if (loginForm.get('lastName')?.invalid &&
+      loginForm.get('lastName')?.touched) {
+      <div class="mt-2 text-muted-rose">
+        @if (loginForm.get('lastName')?.errors?.['required']) {
+        <span>{{ "validation.name-required" | translate }}</span>
+        }
+      </div>
+      }
     </div>
   </div>
 
@@ -48,11 +64,22 @@
     </label>
     <input
       type="text"
-      formControlName="phoneNumber"
+      formControlName="phone"
       id="phone-number"
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full rtl:text-right ltr:text-left"
       [placeholder]="'contact-us.form.placeholder-phone-number' | translate"
     />
+    @if (loginForm.get('phone')?.invalid && loginForm.get('phone')?.touched) {
+    <div class="mt-2 text-muted-rose">
+      @if (loginForm.get('phone')?.errors?.['required']) {
+      <span>{{ "validation.phone-required" | translate }}</span>
+      } @if (loginForm.get('phone')?.errors?.['minlength']) {
+      <span>{{ "validation.phone-min-length" | translate }}</span>
+      } @if (loginForm.get('phone')?.errors?.['pattern']) {
+      <span>{{ "validation.phone-format" | translate }}</span>
+      }
+    </div>
+    }
   </div>
 
   <!-- Email -->
@@ -70,6 +97,15 @@
       class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full"
       [placeholder]="'contact-us.form.placeholder-email' | translate"
     />
+    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+    <div class="mt-2 text-muted-rose">
+      @if (loginForm.get('email')?.errors?.['required']) {
+      <span>{{ "validation.email-required" | translate }}</span>
+      } @if (loginForm.get('email')?.errors?.['email']) {
+      <span>{{ "validation.email-format" | translate }}</span>
+      }
+    </div>
+    }
   </div>
 
   <div class="flex justify-between items-center">

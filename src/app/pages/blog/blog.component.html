@@ -21,7 +21,7 @@
         <!-- Date -->
         <div class="built relative rtl:right-[8px] ltr:left-[8px]">
           <div class="classs text-[14px] text-[#333] mb-[13px]">
-            {{ blog.blog_date }}
+            {{ blog.blog_date | date : "d MMMM y" }}
           </div>
           <div
             class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"

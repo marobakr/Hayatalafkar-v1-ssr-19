@@ -1,9 +1,5 @@
 {
   "Complete_order": "Complete the application",
-  "no-orders-title": "No Orders Found",
-  "no-orders-message": "You haven't placed any orders yet. Start shopping to see your orders here.",
-  "no-last-order-title": "No Recent Order",
-  "no-last-order-message": "You don't have any recent orders to display.",
   "FAQ": {
     "Accordions": {
       "Accordion-1": "What departments do you offer?",
@@ -21,6 +17,7 @@
   "Login_failed": "Login failed",
   "Login_successful": "login successfull",
   "Registration_successful": "Registration successful",
+  "Select_Location": "select your location",
   "about-us": {
     "cards": {
       "card-1": {
@@ -55,7 +52,38 @@
     "delete_button": "Delete Account",
     "delete_description": "Permanently delete your account and all associated data. This action cannot be undone.",
     "delete_title": "Delete Account",
-    "title": "Account Management"
+    "title": "Account Management",
+    "alerts": {
+      "deactivate": {
+        "title": "Deactivate Account",
+        "message": "Are you sure you want to deactivate your account? You can reactivate it later.",
+        "confirm": "Deactivate"
+      },
+      "deactivate_success": {
+        "title": "Account Deactivated",
+        "message": "Your account has been deactivated successfully. You will be logged out now."
+      },
+      "deactivate_error": {
+        "message": "Error deactivating account. Please try again."
+      },
+      "delete": {
+        "title": "Delete Account",
+        "message": "Are you absolutely sure you want to delete your account? This action cannot be undone.",
+        "confirm": "Delete"
+      },
+      "delete_success": {
+        "title": "Account Deleted",
+        "message": "Your account has been permanently deleted. You will be logged out now."
+      },
+      "delete_error": {
+        "message": "Error deleting account. Please try again."
+      },
+      "error": {
+        "title": "Error"
+      },
+      "ok": "OK",
+      "cancel": "Cancel"
+    }
   },
   "add": {
     "address": "add address",
@@ -471,7 +499,17 @@
       "placeholder-last-name": "write your last name",
       "placeholder-phone-number": "you must enter the correct phone number",
       "placeholder-your-msg": "write your message here...",
+      "submission": {
+        "error_message": "Failed to submit form. Please try again",
+        "error_title": "Error",
+        "success_message": "Your message has been sent successfully",
+        "success_title": "Thank You"
+      },
       "submit": "Submit",
+      "validation": {
+        "error_title": "Validation Error",
+        "fields_required": "Please complete all required fields correctly"
+      },
       "your-msg": "Your Message"
     },
     "heading": "Contact Us"
@@ -673,6 +711,7 @@
     "profile": "Profile",
     "search": "Search",
     "search_placeholder": "Search for products...",
+    "toggle_menu": "mega menu",
     "wishlist": "Wishlist"
   },
   "newProducts": {
@@ -689,9 +728,13 @@
       "title": "The Essential Daily Skincare Routine Your Skin Needs for Freshness and Preventing Excessive Dryness"
     },
     "main-title": "Latest",
-    "subtitle": "View All News",
+    "subtitle": "show All News",
     "title": "News and Articles"
   },
+  "no-last-order-message": "You don't have any recent orders to display.",
+  "no-last-order-title": "No Recent Order",
+  "no-orders-message": "You haven't placed any orders yet. Start shopping to see your orders here.",
+  "no-orders-title": "No Orders Found",
   "of": "of",
   "offer-day": {
     "altTitle": "Special Offers",
@@ -748,19 +791,19 @@
     },
     "track-order": "track order",
     "tracking": {
-      "order": "track order",
-      "submitted": "Order Submitted",
       "approved": "Approved",
-      "preparation": "In Preparation",
-      "way": "On The Way",
       "delivered": "Delivered",
       "estimated": "Estimated",
+      "order": "track order",
+      "preparation": "In Preparation",
       "progress": "Order Progress",
       "progress_percentage": "Progress: {{percentage}}%",
       "progress_steps": "Step {{current}} of {{total}}",
       "status_active": "Current Status",
       "status_completed": "Completed",
-      "status_pending": "Pending"
+      "status_pending": "Pending",
+      "submitted": "Order Submitted",
+      "way": "On The Way"
     }
   },
   "order-number": "order number",
@@ -1005,13 +1048,13 @@
     "continue_shopping": "Continue Shopping",
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
-    "loading": "Loading...",
+    "loading": "Loading",
     "offer": "25% Discount",
     "price_varies": "Price varies based on options",
     "processing": "Processing...",
     "readMore": "Read More",
     "shopping_now": "shopping now",
-    "show-products": "buying the product ",
+    "show-products": "show product ",
     "success": "Success",
     "update_cart": "update product quantity",
     "update_cart_quantity": "Update cart quantity",
@@ -1115,6 +1158,7 @@
     "password-mismatch": "Passwords do not match",
     "password-required": "Password is required",
     "phone-format": "Phone must be a valid number",
+    "phone-min-length": "Phone number must be at least 8 digits",
     "phone-required": "Phone is required",
     "your-msg-min-length": "Your message must be at least 10 characters long",
     "your-msg-required": "Your message is required"

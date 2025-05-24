@@ -11,6 +11,9 @@
         isInWishlist() ? 'Remove from wishlist' : 'Add to wishlist'
       "
     >
+      {{ isAddingToWishlist() }}
+      {{ toggleWishlist() }}
+      {{ isInWishlist() }}
       <figure>
         @if (isAddingToWishlist()) {
         <svg
@@ -115,7 +118,15 @@
       </figure>
     </button>
   </div>
-  <div class="img relative cursor-pointer">
+  <div
+    [routerLink]="[
+      '/',
+      currentLang$ | async,
+      'product-details',
+      productData | customTranslate : 'slug'
+    ]"
+    class="img relative cursor-pointer"
+  >
     <a
       [routerLink]="[
         '/',
@@ -158,9 +169,17 @@
       {{ "shared.show-products" | translate }}
     </a>
 
-    <p class="text-black mb-3 text-category-size">
+    <a
+      [routerLink]="[
+        '/',
+        currentLang$ | async,
+        'product-details',
+        productData | customTranslate : 'slug'
+      ]"
+      class="text-black mb-3 text-category-size"
+    >
       {{ productData | customTranslate : "name" }}
-    </p>
+    </a>
   </div>
   <div class="text-description-size font-bold text-black mb-8 line-clamp-1">
     <app-safe-html [content]="productData | customTranslate : 'description'">

@@ -302,7 +302,7 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
       const userData = this._authService.getUserData();
       if (userData && userData.id) {
         this.userId = userData.id;
-        if (this.productDetails && this.productDetails.id) {
+        if (this.productDetails && this.productDetails) {
           this.checkIfProductInWishlist();
           this.checkIfProductInCart();
         }

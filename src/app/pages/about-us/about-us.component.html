@@ -8,6 +8,8 @@
 ></app-about-shared>
 
 <!-- Big Offer Card  -->
+@defer (when aboutUsTwo.aboutdata ;on idle ){
+
 <div class="container mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
     <!-- Static -->
@@ -25,6 +27,7 @@
     ></app-card>
   </div>
 </div>
+}
 
 <!-- Banner_1 -->
 <app-banner
@@ -48,10 +51,6 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
       @for (feature of aboutUsTwo.features | customTranslate; track feature.id)
       {
-      <!--
-    [cardImagePath]="API_CONFIG + 'uploads/about/' + feature.icon_image"
-
-  -->
       <app-service-card
         [cardDescription]="feature.text"
         [cardImagePath]="feature.icon_image"
@@ -80,7 +79,7 @@
   aria-label="Special offers"
   class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
 >
-  <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
+  <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-between">
     @if(aboutUsOne.offers.length > 0){ @for (offer of aboutUsOne.offers.length >
     1 ? aboutUsOne.offers.slice(0,2) : [aboutUsOne.offers[0],
     aboutUsOne.offers[0]]; track $index) {
@@ -111,4 +110,6 @@
 ></app-banner>
 
 <!-- FAQ -->
+@if (aboutUsTwo.faqs.length > 0) {
 <app-faq [faqs]="aboutUsTwo.faqs"></app-faq>
+}

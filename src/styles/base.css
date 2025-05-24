@@ -36,3 +36,20 @@
     transform: scale(1);
   }
 }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 11px;
+  max-height: 31px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee2e2;
+  border-radius: 5px;
+  height: 31px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted-rose);
+  border-radius: 5px;
+}

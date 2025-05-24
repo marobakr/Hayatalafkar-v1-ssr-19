@@ -1,7 +1,5 @@
-<nav class="fixed top-0 right-0 left-0 z-50 bg-white">
-  <div
-    class="container flex flex-wrap items-center justify-between mx-auto pt-[22px] pb-4"
-  >
+<nav class="fixed top-0 right-0 left-0 z-50 bg-white pt-[22px] pb-6">
+  <div class="container flex flex-wrap items-center justify-between mx-auto">
     <a
       [routerLink]="['/', currentLang$ | async, 'home']"
       class="flex items-center xl:rtl:ml-[92px] xl:ltr:mr-[92px]"
@@ -22,7 +20,7 @@
     <!-- Mobile Menu Toggle -->
     <button
       (click)="toggleMobileMenu()"
-      class="capitalize text-muted-rose hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 xl:hidden"
+      class="capitalize text-muted-rose cursor-pointer hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 rounded-lg text-sm p-2.5 xl:hidden"
       [attr.aria-expanded]="isMenuOpen"
       [attr.aria-label]="'navbar.toggle_menu' | translate"
     >
@@ -62,15 +60,19 @@
 
           <li class="cursor-pointer" role="menuitem">
             <button
-              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left"
+              class="cursor-pointer show-arrow relative block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left"
               (click)="toggleMegaMenu($event)"
+              (keydown)="handleMegaMenuKeydown($event)"
               [attr.aria-expanded]="showMegaMenu"
               [attr.aria-haspopup]="true"
             >
               {{ "navbar.pages_Title.products.title" | translate }}
             </button>
             @if (showMegaMenu) {
-            <app-mega-menu (closeMenu)="showMegaMenu = false"></app-mega-menu>
+            <app-mega-menu
+              (closeMenu)="showMegaMenu = false"
+              (click)="$event.stopPropagation()"
+            ></app-mega-menu>
             }
           </li>
 
@@ -110,7 +112,6 @@
             </a>
           </li>
         </ul>
-
         <!-- Language Selector -->
         <ul
           id="langDropdownButton"
@@ -118,7 +119,8 @@
         >
           <li class="relative cursor-pointer">
             <button
-              class="block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
+              id="langDropdownButton"
+              class="cursor-pointer block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
               (click)="toggleMenu()"
               [attr.aria-expanded]="showMenu"
               [attr.aria-haspopup]="true"
@@ -134,7 +136,7 @@
                   alt="Language"
                 />
               </figure>
-              <span class="inline-block align-middle">{{
+              <span class="inline-block align-middle pr-[5px] pl-[3px]">{{
                 "navbar.languages.lang" | translate
               }}</span>
               <figure
@@ -156,10 +158,12 @@
               role="menu"
             >
               <ul class="py-4 text-sm text-gray-700 dark:text-gray-200">
-                <li role="menuitem">
+                <li role="menuitem ">
                   <button
                     (click)="changeLang('ar')"
-                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                    (keydown)="handleDropdownKeydown($event, 'ar')"
+                    class="cursor-pointer flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                    tabindex="0"
                   >
                     <figure class="max-w-[25px] max-h-[25px]">
                       <img
@@ -172,10 +176,12 @@
                     <span> العربية </span>
                   </button>
                 </li>
-                <li role="menuitem">
+                <li role="menuitem ">
                   <button
                     (click)="changeLang('en')"
-                    class="flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                    (keydown)="handleDropdownKeydown($event, 'en')"
+                    class="cursor-pointer flex items-center justify-between px-4 py-2 text-black hover:bg-gray-100 dark:hover:text-black text-category-size w-full"
+                    tabindex="0"
                   >
                     <figure class="max-w-[25px] max-h-[25px]">
                       <img
@@ -192,7 +198,6 @@
             </div>
             }
           </li>
-
         </ul>
 
         <!-- Desktop Actions -->
@@ -231,6 +236,8 @@
                   class="bg-white border border-[#8D8D8D] rounded-[15px] pr-4 py-[18px] w-full"
                   [attr.placeholder]="'navbar.search_placeholder' | translate"
                   (input)="onSearchInput($event)"
+                  (keydown)="onSearchInput($event)"
+                  (focus)="closeAllDropdownsExcept('search')"
                   required
                 />
               </div>
@@ -253,7 +260,9 @@
                   alt="Wishlist"
                 />
                 @if (wishlistCount() > 0) {
-                <span class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span
+                  class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                >
                   {{ wishlistCount() }}
                 </span>
                 }
@@ -275,7 +284,9 @@
                   alt="Cart"
                 />
                 @if (cartCount() > 0) {
-                <span class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span
+                  class="absolute -top-2 -right-2 bg-warm-tan text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                >
                   {{ cartCount() }}
                 </span>
                 }
@@ -383,9 +394,23 @@
       <li class="mb-6">
         <div class="relative">
           <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            <div
+              class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+            >
+              <svg
+                class="w-4 h-4 text-gray-500"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
               </svg>
             </div>
             <input
@@ -394,6 +419,8 @@
               class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-warm-tan focus:border-warm-tan"
               [attr.placeholder]="'navbar.search_placeholder' | translate"
               (input)="onSearchInput($event)"
+              (keydown)="onSearchInput($event)"
+              (focus)="closeAllDropdownsExcept('none')"
               aria-label="Search products"
             />
           </div>
@@ -413,10 +440,11 @@
         </a>
       </li>
 
-      <li>
+      <li class="relative show-arrow cursor-pointer">
         <button
-          class="flex justify-between items-center w-full py-2 text-black font-bold"
+          class="cursor-pointer flex justify-between items-center w-full py-2 text-black font-bold"
           (click)="toggleMobileProductsMenu($event)"
+          (keydown)="handleMobileMenuKeydown($event)"
           [attr.aria-expanded]="showMobileProductsMenu"
         >
           <span>{{ "navbar.pages_Title.products.title" | translate }}</span>
@@ -441,6 +469,7 @@
           <app-mega-menu
             [isMobile]="true"
             (closeMenu)="showMobileProductsMenu = false"
+            (click)="$event.stopPropagation()"
           ></app-mega-menu>
         </div>
         }
@@ -485,7 +514,6 @@
           {{ "navbar.pages_Title.contact_Us.title" | translate }}
         </a>
       </li>
-
 
       <!-- Language Selector Mobile -->
       <li class="border-t border-gray-200 pt-4 mt-4">
@@ -553,7 +581,9 @@
               class="block py-2 text-black font-bold relative"
               (click)="toggleMobileMenu()"
             >
-              <figure class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2">
+              <figure
+                class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
+              >
                 <img
                   src="/images/navbar/6.webp"
                   width="25"
@@ -561,7 +591,9 @@
                   alt="Wishlist"
                 />
                 @if (wishlistCount() > 0) {
-                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span
+                  class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                >
                   {{ wishlistCount() }}
                 </span>
                 }
@@ -575,7 +607,9 @@
               class="block py-2 text-black font-bold relative"
               (click)="toggleMobileMenu()"
             >
-              <figure class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2">
+              <figure
+                class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
+              >
                 <img
                   ngSrc="/images/navbar/7.webp"
                   width="25"
@@ -583,7 +617,9 @@
                   alt="Cart"
                 />
                 @if (cartCount() > 0) {
-                <span class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span
+                  class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                >
                   {{ cartCount() }}
                 </span>
                 }
@@ -593,26 +629,23 @@
         </ul>
       </li>
 
-      <li class="border-t border-gray-200 pt-4 mt-4">
-        @if (isAuthenticated()) {
-          <!-- Add this to the mobile menu -->
-          <li class="mt-4">
-            <button
-              [attr.aria-label]="'navbar.logout' | translate"
-              (click)="logout()"
-              class="flex items-center space-x-2 rtl:space-x-reverse py-2 text-black font-bold"
-            >
-              <figure>
-                <img
-                  src="/images/navbar/logout.svg"
-                  class="w-[30px]"
-                  alt="Logout"
-                />
-              </figure>
-            </button>
-          </li>
-          }
+      @if (isAuthenticated()) {
+      <li class="mt-4">
+        <button
+          [attr.aria-label]="'navbar.logout' | translate"
+          (click)="logout()"
+          class="flex items-center space-x-2 rtl:space-x-reverse py-2 text-black font-bold"
+        >
+          <figure>
+            <img
+              src="/images/navbar/logout.svg"
+              class="w-[30px]"
+              alt="Logout"
+            />
+          </figure>
+        </button>
       </li>
+      }
     </ul>
   </div>
 </nav>

@@ -101,7 +101,7 @@ export class AccountManagementComponent {
         'Are you sure you want to deactivate your account? You can reactivate it later.',
       confirmText: 'Deactivate',
       cancelText: 'Cancel',
-      imagePath: '/images/common/account-deactivate.png',
+      imagePath: '/images/auth/account-deactivated.png',
       translationKeys: {
         title: 'account_management.alerts.deactivate.title',
         message: 'account_management.alerts.deactivate.message',
@@ -124,7 +124,7 @@ export class AccountManagementComponent {
                 message:
                   'Your account has been deactivated successfully. You will be logged out now.',
                 confirmText: 'OK',
-                imagePath: '/images/common/account-deactivated.png',
+                imagePath: '/images/auth/account-deactivated.png',
                 translationKeys: {
                   title: 'account_management.alerts.deactivate_success.title',
                   message:
@@ -181,7 +181,7 @@ export class AccountManagementComponent {
         'Are you absolutely sure you want to delete your account? This action cannot be undone.',
       confirmText: 'Delete',
       cancelText: 'Cancel',
-      imagePath: '/images/common/account-delete.png',
+      imagePath: '/images/auth/account-deleted.png',
       translationKeys: {
         title: 'account_management.alerts.delete.title',
         message: 'account_management.alerts.delete.message',
@@ -204,7 +204,7 @@ export class AccountManagementComponent {
                 message:
                   'Your account has been permanently deleted. You will be logged out now.',
                 confirmText: 'OK',
-                imagePath: '/images/common/account-deleted.png',
+                imagePath: '/images/auth/account-deleted.png',
                 translationKeys: {
                   title: 'account_management.alerts.delete_success.title',
                   message: 'account_management.alerts.delete_success.message',

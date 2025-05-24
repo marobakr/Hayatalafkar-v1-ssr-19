@@ -63,6 +63,41 @@
                   }
                 </div>
               </div>
+              <!-- Last Name -->
+              <div class="flex-grow-1 w-full">
+                <label
+                  for="last_name"
+                  class="block relative text-subtitle-size font-bold mb-[23px] after:absolute after:content-['*'] after:-top-[6px] ltr:after:right-0 rtl:after:left-0 w-fit after:text-muted-rose after:transform after:translate-x-full rtl:after:-translate-x-full after:font-bold after:text-start-size"
+                >
+                  {{ "contact-us.form.last-name" | translate }}
+                </label>
+                <input
+                  type="text"
+                  id="last_name"
+                  formControlName="last_name"
+                  class="bg-white border border-[#8D8D8D] rounded-[15px] rtl:pr-4 ltr:pl-4 py-[18px] w-full {{
+                    getControlClass('last_name')
+                  }}"
+                  [placeholder]="
+                    'contact-us.form.placeholder-last-name' | translate
+                  "
+                  autocomplete="last_name"
+                  aria-required="true"
+                />
+                <div class="min-h-[24px]">
+                  @if (contactForm.get('last_name')?.touched &&
+                  contactForm.get('last_name')?.errors) {
+                  <div class="text-red-500 text-sm mt-1" aria-live="polite">
+                    @if (contactForm.get('last_name')?.errors?.['required']) {
+                    <span>{{ "validation.name-required" | translate }}</span>
+                    } @else if
+                    (contactForm.get('last_name')?.errors?.['minlength']) {
+                    <span>{{ "validation.name-min-length" | translate }}</span>
+                    }
+                  </div>
+                  }
+                </div>
+              </div>
             </div>
 
             <!-- Phone Number -->
@@ -173,8 +208,8 @@
 
             <app-arrow-button
               [gap]="'5px'"
-              [px]="'4'"
-              [py]="'2'"
+              [px]="'[30px]'"
+              [py]="'[9px]'"
               [title]="
                 (isSubmitting() ? 'common.sending' : 'form.send') | translate
               "
@@ -191,7 +226,7 @@
         </div>
         <div class="hidden lg:block lg:col-span-4 main_Image_Animation">
           <figure
-            class="relative aspect-[2/3] w-full rounded-xl overflow-hidden"
+            class="relative aspect-[2/3] w-full rounded-xl overflow-hidden h-full"
           >
             <img
               class="w-full h-full object-cover"
@@ -209,14 +244,11 @@
     <!-- Contact Cards Details -->
     <div class="min-h-[350px]" @fadeIn>
       @if (contactUs()) {
-      <div class="grid md:grid-cols-12 gap-[30px]" @cardAnimation>
+      <div class="grid md:grid-cols-12 gap-[30px]">
         <!-- Maps Cards -->
         <div class="md:col-span-6 lg:col-span-4">
           <div
             class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
-            [@cardHover]="'normal'"
-            (mouseenter)="onCardMouseEnter(1)"
-            (mouseleave)="onCardMouseLeave(1)"
           >
             <figure
               class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
@@ -238,7 +270,7 @@
             </h3>
 
             <p class="text-[#333] text-category-size font-light mt-5 mb-[55px]">
-              {{ "contact-us.cards.maps-card.subTitle" | translate }}
+              {{ contactUs() | customTranslate : "address" }}
             </p>
           </div>
         </div>
@@ -247,9 +279,6 @@
         <div class="md:col-span-6 lg:col-span-4">
           <div
             class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
-            [@cardHover]="'normal'"
-            (mouseenter)="onCardMouseEnter(2)"
-            (mouseleave)="onCardMouseLeave(2)"
           >
             <figure
               class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
@@ -285,9 +314,6 @@
         <div class="md:col-span-6 lg:col-span-4">
           <div
             class="border border-[#8D8D8D] rounded-[15px] text-center h-full transition-all hover:shadow-lg"
-            [@cardHover]="'normal'"
-            (mouseenter)="onCardMouseEnter(3)"
-            (mouseleave)="onCardMouseLeave(3)"
           >
             <figure
               class="mt-[30px] rounded-full bg-warm-tan p-[18px] w-fit mx-auto aspect-square card-icon-container"
@@ -335,19 +361,15 @@
       <h2 id="service-features" class="sr-only">
         {{ "contact-us.services.heading" | translate }}
       </h2>
-      <div
-        class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 min-h-[200px]"
-        @cardAnimation
-      >
+      <!-- Card Service -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         @for (feature of features() | customTranslate; track feature.id) {
+
         <app-service-card
-          [cardDescription]="feature | customTranslate : 'text'"
+          [cardDescription]="feature.text"
           [cardImagePath]="feature.icon_image"
           [cardTitle]="feature.title"
-          [isCenter]="true"
-          [@cardHover]="cardStates[feature.id] || 'normal'"
-          (mouseenter)="onCardMouseEnter(feature.id)"
-          (mouseleave)="onCardMouseLeave(feature.id)"
+          [isCenter]="false"
         ></app-service-card>
         }
       </div>

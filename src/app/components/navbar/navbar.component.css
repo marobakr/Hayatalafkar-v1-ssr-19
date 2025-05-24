@@ -77,3 +77,23 @@
   overflow: hidden;
   height: 100vh;
 }
+
+@media (min-width: 1279px) {
+  /* show arrow */
+  .show-arrow:hover::after {
+    transform: translate(50%, 90%) scale(1);
+    opacity: 1;
+  }
+  .show-arrow::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+    transform: translate(50%, 100%) scale(0.8);
+    opacity: 0;
+    border: 8px solid;
+    border-color: var(--color-muted-rose) transparent transparent transparent;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    pointer-events: none;
+  }
+}

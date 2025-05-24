@@ -3,7 +3,8 @@
   <div class="min-h-[300px] flex items-center justify-center">
     <app-loading></app-loading>
   </div>
-  } @else {
+  } @else { @defer (on idle) {
+
   <div
     class="container mx-auto px-4 relative bg-[#CBAC8D] [border-radius:23px] py-6"
   >
@@ -11,23 +12,8 @@
       {{ "hero.title" | translate }}
     </h1>
 
-    <!-- Loader while carousel initializes -->
-    @if (isCarouselLoading()) {
-    <div
-      class="absolute inset-0 bg-[#CBAC8D] z-10 flex items-center justify-center rounded-[23px]"
-    >
-      <div
-        class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-white"
-      ></div>
-    </div>
-    }
-
     <!-- Owl Carousel with better overflow control -->
-    <div
-      class="carousel-wrapper overflow-hidden relative"
-      [class.opacity-0]="isCarouselLoading()"
-      [style.transition]="'opacity 0.5s ease-in-out'"
-    >
+    <div class="carousel-wrapper overflow-hidden relative">
       <!-- Ensure consistent height -->
       <div class="min-h-[400px]">
         <!-- Force the element to be visible with !important styles -->
@@ -118,6 +104,7 @@
               </div>
             </div>
           </ng-template>
+
           }
         </owl-carousel-o>
       </div>
@@ -140,5 +127,5 @@
       </figure>
     </div>
   </div>
-  }
+  } }
 </section>

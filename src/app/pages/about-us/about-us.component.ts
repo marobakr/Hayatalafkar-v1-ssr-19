@@ -43,7 +43,33 @@ export class AboutUsComponent implements OnInit {
     breaks: [],
     offers: [],
   };
-  aboutUsTwo: IAboutUsTwo = {} as IAboutUsTwo;
+
+  // Initialize with default values to prevent undefined errors
+  aboutUsTwo: IAboutUsTwo = {
+    faqs: [],
+    features: [],
+    aboutdata: {
+      id: 0,
+      en_meta_title: '',
+      ar_meta_title: '',
+      en_meta_text: '',
+      ar_meta_text: '',
+      main_image: '',
+      active_status: 0,
+      en_footer_for_text: '',
+      ar_footer_for_text: '',
+      en_mission_text: '',
+      ar_mission_text: '',
+      en_vision_text: '',
+      ar_vision_text: '',
+      en_main_title: '',
+      ar_main_title: '',
+      en_main_text: '',
+      ar_main_text: '',
+      created_at: '',
+      updated_at: '',
+    },
+  };
 
   ngOnInit(): void {
     this.getAboutUs();

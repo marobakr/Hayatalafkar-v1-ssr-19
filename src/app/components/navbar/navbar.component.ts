@@ -78,8 +78,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
   currentLang$ = this._languageService.getLanguage();
 
-  // Add this property to track the last clicked element
+  // Add these properties to track clicked elements and dropdown triggers
   private lastClickedElement: HTMLElement | null = null;
+  private languageDropdownTrigger: HTMLElement | null = null;
+  private megaMenuTrigger: HTMLElement | null = null;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
@@ -99,6 +101,14 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
       // Initial screen width check
       this.checkScreenWidth();
+
+      // Store references to dropdown triggers
+      setTimeout(() => {
+        this.languageDropdownTrigger =
+          document.getElementById('langDropdownButton');
+        this.megaMenuTrigger =
+          this.elementRef.nativeElement.querySelector('.show-arrow button');
+      }, 100);
     }
 
     // Load wishlist count
@@ -160,15 +170,65 @@ export class NavbarComponent implements OnDestroy, OnInit {
     }
   }
 
+  /**
+   * Closes all dropdown menus except for the specified one
+   * @param keepOpen The dropdown to keep open (or 'none' to close all)
+   */
+  public closeAllDropdownsExcept(
+    keepOpen: 'menu' | 'search' | 'megaMenu' | 'mobileProducts' | 'none'
+  ): void {
+    if (keepOpen !== 'menu') {
+      this.showMenu = false;
+    }
+
+    if (keepOpen !== 'search') {
+      this.showSearch = false;
+      this._searchService.toggleSearch(false);
+    }
+
+    if (keepOpen !== 'megaMenu') {
+      this.showMegaMenu = false;
+    }
+
+    if (keepOpen !== 'mobileProducts') {
+      this.showMobileProductsMenu = false;
+    }
+  }
+
   changeLang(lang: string): void {
     const currentUrl = this._router.url;
     this._languageService.changeLanguage(lang, currentUrl);
-    this.showMenu = false;
+
+    // Close dropdown and remove click handlers
+    this.closeAllDropdownsExcept('none');
+    this.removeGlobalClickListener();
+
     this.isRtl = lang === 'ar';
   }
 
   toggleMenu(): void {
+    // Toggle current state
     this.showMenu = !this.showMenu;
+
+    // Close all other dropdowns
+    if (this.showMenu) {
+      this.closeAllDropdownsExcept('menu');
+      this.lastClickedElement = this.languageDropdownTrigger;
+
+      setTimeout(() => {
+        this.addGlobalClickListener((event: MouseEvent) => {
+          this.handleOutsideClick(event, 'language');
+        });
+
+        // Focus the first dropdown item when menu opens
+        const firstDropdownItem = document.querySelector(
+          '#langDropdown li button'
+        ) as HTMLElement;
+        if (firstDropdownItem) {
+          firstDropdownItem.focus();
+        }
+      }, 0);
+    }
   }
 
   toggleMobileSearch() {
@@ -183,7 +243,14 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
   toggleSearch(event: Event): void {
     event.stopPropagation();
+
+    // Toggle current state
     this.showSearch = !this.showSearch;
+
+    // Close all other dropdowns if opening search
+    if (this.showSearch) {
+      this.closeAllDropdownsExcept('search');
+    }
 
     // Notify search service about search toggle state
     this._searchService.toggleSearch(this.showSearch);
@@ -198,6 +265,20 @@ export class NavbarComponent implements OnDestroy, OnInit {
           searchInput.focus();
         }
       }, 100);
+
+      // Add click outside handler
+      this.addGlobalClickListener((event: MouseEvent) => {
+        const searchContainer =
+          this.elementRef.nativeElement.querySelector('.search-container');
+        if (
+          searchContainer &&
+          !searchContainer.contains(event.target as Node)
+        ) {
+          this.showSearch = false;
+          this._searchService.toggleSearch(false);
+          this.removeGlobalClickListener();
+        }
+      });
     }
   }
 
@@ -208,29 +289,127 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
   toggleMobileProductsMenu(event: Event) {
     event.stopPropagation();
+
+    // Toggle current state
     this.showMobileProductsMenu = !this.showMobileProductsMenu;
+
+    // Close all other dropdowns if opening mobile products menu
+    if (this.showMobileProductsMenu) {
+      this.closeAllDropdownsExcept('mobileProducts');
+    }
   }
 
   closeProductsMenu() {
     this.showProductsMenu = false;
   }
 
-  @HostListener('document:click')
-  onClickOutside() {
-    this.showProductsMenu = false;
-    this.showMobileProductsMenu = false;
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    // Handle core menu dropdowns
+    this.handleOutsideClick(event, 'all');
+  }
 
-    if (isPlatformBrowser(this.platformId)) {
+  /**
+   * Handles clicks outside of specific dropdown elements
+   */
+  private handleOutsideClick(
+    event: MouseEvent,
+    type: 'all' | 'language' | 'megamenu' | 'search'
+  ) {
+    const target = event.target as HTMLElement;
+
+    // Handle language dropdown
+    if (type === 'all' || type === 'language') {
+      const langDropdown =
+        this.elementRef.nativeElement.querySelector('#langDropdown');
+      const langButton = this.languageDropdownTrigger;
+
+      if (
+        this.showMenu &&
+        langDropdown &&
+        langButton &&
+        !langDropdown.contains(target) &&
+        !langButton.contains(target)
+      ) {
+        this.showMenu = false;
+      }
+    }
+
+    // Handle mega menu
+    if (type === 'all' || type === 'megamenu') {
+      const megaMenu =
+        this.elementRef.nativeElement.querySelector('app-mega-menu');
+      const megaMenuButton = this.megaMenuTrigger;
+
+      if (
+        this.showMegaMenu &&
+        megaMenu &&
+        megaMenuButton &&
+        !megaMenu.contains(target) &&
+        !megaMenuButton.contains(target)
+      ) {
+        this.showMegaMenu = false;
+      }
+    }
+
+    // Handle mobile products menu
+    if (this.showMobileProductsMenu) {
+      const mobileProductsMenuContainer = target.closest('.show-arrow');
+      const mobileProductsMenu =
+        this.elementRef.nativeElement.querySelector('.show-arrow .mt-2');
+
+      if (mobileProductsMenu && !mobileProductsMenuContainer) {
+        this.showMobileProductsMenu = false;
+      }
+    }
+
+    // Handle search
+    if (type === 'all' || type === 'search') {
       const searchContainer =
         this.elementRef.nativeElement.querySelector('.search-container');
-      if (!searchContainer?.matches(':hover')) {
-        if (this.showSearch) {
-          this.showSearch = false;
-
-          // Use the search service
-          this._searchService.toggleSearch(false);
-        }
+      if (
+        this.showSearch &&
+        searchContainer &&
+        !searchContainer.contains(target)
+      ) {
+        this.showSearch = false;
+        this._searchService.toggleSearch(false);
       }
+    }
+  }
+
+  // Global click handler for one-time clicks
+  private globalClickHandler: ((event: MouseEvent) => void) | null = null;
+
+  /**
+   * Adds a global click listener that self-removes after one execution
+   */
+  private addGlobalClickListener(handler: (event: MouseEvent) => void): void {
+    this.removeGlobalClickListener(); // Clean up any existing handler
+
+    this.globalClickHandler = (event: MouseEvent) => {
+      handler(event);
+      this.removeGlobalClickListener();
+    };
+
+    setTimeout(() => {
+      document.addEventListener(
+        'click',
+        this.globalClickHandler as EventListener
+      );
+    }, 0);
+  }
+
+  /**
+   * Removes the global click listener
+   */
+  private removeGlobalClickListener(): void {
+    if (this.globalClickHandler) {
+      document.removeEventListener(
+        'click',
+        this.globalClickHandler as EventListener
+      );
+      this.globalClickHandler = null;
     }
   }
 
@@ -246,13 +425,29 @@ export class NavbarComponent implements OnDestroy, OnInit {
       return;
     }
 
+    // Close all other dropdowns before opening mega menu
+    this.closeAllDropdownsExcept('megaMenu');
+
     // Store the clicked element and open the menu
     this.lastClickedElement = listItem;
     this.showMegaMenu = true;
+
+    // Add global click handler
+    if (this.showMegaMenu) {
+      this.addGlobalClickListener((event: MouseEvent) => {
+        this.handleOutsideClick(event, 'megamenu');
+      });
+    }
   }
 
   toggleMobileMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+
+    // Close all dropdowns when opening mobile menu
+    if (this.isMenuOpen) {
+      this.closeAllDropdownsExcept('none');
+    }
+
     // Prevent body scroll when menu is open
     if (isPlatformBrowser(this.platformId)) {
       if (this.isMenuOpen) {
@@ -326,6 +521,13 @@ export class NavbarComponent implements OnDestroy, OnInit {
     const searchInput = event.target as HTMLInputElement;
     const searchQuery = searchInput.value.trim().toLowerCase();
 
+    // Handle Escape key to close search
+    if (event instanceof KeyboardEvent && event.key === 'Escape') {
+      this.showSearch = false;
+      this._searchService.toggleSearch(false);
+      return;
+    }
+
     // Update search query in service
     this._searchService.updateSearchQuery(searchQuery);
 
@@ -352,9 +554,96 @@ export class NavbarComponent implements OnDestroy, OnInit {
     }
   }
 
+  /**
+   * Handle keyboard events for dropdown menu items
+   */
+  handleDropdownKeydown(event: KeyboardEvent, lang?: string): void {
+    // Handle Enter key - select the language
+    if (event.key === 'Enter' && lang) {
+      this.changeLang(lang);
+      event.preventDefault();
+    }
+
+    // Handle Escape key - close the dropdown
+    if (event.key === 'Escape') {
+      this.showMenu = false;
+      this.removeGlobalClickListener();
+      event.preventDefault();
+
+      // Return focus to the dropdown button
+      setTimeout(() => {
+        const dropdownButton = document.getElementById('langDropdownButton');
+        if (dropdownButton) {
+          dropdownButton.focus();
+        }
+      }, 0);
+    }
+
+    // Handle arrow keys for navigation within dropdown
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+
+      const currentElement = event.target as HTMLElement;
+      const listItems = Array.from(
+        document.querySelectorAll('#langDropdown li button')
+      );
+      const currentIndex = listItems.indexOf(currentElement);
+
+      if (event.key === 'ArrowDown' && currentIndex < listItems.length - 1) {
+        (listItems[currentIndex + 1] as HTMLElement).focus();
+      } else if (event.key === 'ArrowUp' && currentIndex > 0) {
+        (listItems[currentIndex - 1] as HTMLElement).focus();
+      }
+    }
+  }
+
+  /**
+   * Handle keyboard events for mega menu dropdown
+   */
+  handleMegaMenuKeydown(event: KeyboardEvent): void {
+    // Toggle mega menu on Enter key
+    if (event.key === 'Enter') {
+      this.showMegaMenu = !this.showMegaMenu;
+      event.preventDefault();
+
+      // If opening, add global click handler
+      if (this.showMegaMenu) {
+        this.addGlobalClickListener((event: MouseEvent) => {
+          this.handleOutsideClick(event, 'megamenu');
+        });
+      }
+    }
+
+    // Close mega menu on Escape key
+    if (event.key === 'Escape' && this.showMegaMenu) {
+      this.showMegaMenu = false;
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Handle keyboard events for mobile products menu
+   */
+  handleMobileMenuKeydown(event: KeyboardEvent): void {
+    // Toggle mobile products menu on Enter key
+    if (event.key === 'Enter') {
+      this.showMobileProductsMenu = !this.showMobileProductsMenu;
+      event.preventDefault();
+    }
+
+    // Close mobile products menu on Escape key
+    if (event.key === 'Escape' && this.showMobileProductsMenu) {
+      this.showMobileProductsMenu = false;
+      event.preventDefault();
+    }
+  }
+
   ngOnDestroy(): void {
     // Clean up all subscriptions
     this.resizeSubscription?.unsubscribe();
+
+    // Remove any global click handlers
+    this.removeGlobalClickListener();
 
     // Restore body scroll when component is destroyed
     if (isPlatformBrowser(this.platformId)) {
