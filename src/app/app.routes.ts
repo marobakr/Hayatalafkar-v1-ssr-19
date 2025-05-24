@@ -8,13 +8,12 @@ import { productDetailsResolver } from './pages/product-details/res/product-deta
 
 export const routes: Routes = [
   { path: '', redirectTo: '/ar', pathMatch: 'full' },
-  /* Auth layout */
+
   {
-    path: ':lang',
+    path: ':lang/login',
     loadComponent: () =>
       import('./layouts/auth-layout/auth-layout').then((c) => c.AuthLayout),
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: '',
         loadComponent: () =>
@@ -26,19 +25,59 @@ export const routes: Routes = [
           description: 'pages.auth.login.description',
         },
       },
-      {
-        path: 'register',
-        loadComponent: () =>
-          import(
-            '../app/pages/auth/register/components/personal/personal.component'
-          ).then((c) => c.PersonalComponent),
-        data: {
-          title: 'pages.auth.register.personal.title',
-          description: 'pages.auth.register.personal.description',
-        },
-      },
     ],
     canActivate: [unauthGuard],
+  },
+
+  {
+    path: ':lang/register',
+    loadComponent: () =>
+      import('./layouts/auth-layout/auth-layout').then((c) => c.AuthLayout),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('../app/pages/auth/register/register.component').then(
+            (c) => c.RegisterComponent
+          ),
+        children: [
+          { path: '', redirectTo: 'personal', pathMatch: 'full' },
+          {
+            path: 'personal',
+            loadComponent: () =>
+              import(
+                '../app/pages/auth/register/components/personal/personal.component'
+              ).then((c) => c.PersonalComponent),
+            data: {
+              title: 'pages.auth.register.personal.title',
+              description: 'pages.auth.register.personal.description',
+            },
+          },
+          {
+            path: 'password',
+            loadComponent: () =>
+              import(
+                '../app/pages/auth/register/components/password/password.component'
+              ).then((c) => c.PasswordComponent),
+            data: {
+              title: 'pages.auth.register.password.title',
+              description: 'pages.auth.register.password.description',
+            },
+          },
+          {
+            path: 'address',
+            loadComponent: () =>
+              import(
+                '../app/pages/auth/register/components/address/address.component'
+              ).then((c) => c.AddressComponent),
+            data: {
+              title: 'pages.auth.register.address.title',
+              description: 'pages.auth.register.address.description',
+            },
+          },
+        ],
+      },
+    ],
   },
 
   /* Main layout */
@@ -127,6 +166,7 @@ export const routes: Routes = [
           title: 'pages.product.title',
           description: 'pages.product.description',
         },
+        canActivate: [authGuard],
       },
 
       /* About Us  */
@@ -321,7 +361,6 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
     ],
-    canActivate: [authGuard],
   },
 
   // ✅ Catch all unknown child routes under :lang

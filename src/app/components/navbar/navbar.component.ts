@@ -147,9 +147,6 @@ export class NavbarComponent implements OnDestroy, OnInit {
       .subscribe((event: NavigationEnd) => {
         // Check if authenticated and load data accordingly
         if (this._authService.isAuthenticated()) {
-          // Always refresh wishlist count on navigation
-          this._wishlistService.loadWishlistCount();
-
           // For cart pages, we need to check orders and fetch cart
           if (event.url.includes('/cart')) {
             this._cartStateService.checkConfirmedOrders();

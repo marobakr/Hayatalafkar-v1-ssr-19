@@ -3,10 +3,10 @@
   class="container mx-auto px-4 pt-[60px] mb-[60px] relative"
 >
   <div
-    class="flex flex-col lg:flex-row items-start justify-between relative z-10"
+    class="flex flex-col lg:flex-row items-start justify-between relative z-10 gap-x-[59px]"
   >
-    <div class="hidden lg:block lg:w-[45%] self-stretch">
-      <figure class="main_Image_Animation h-full">
+    <div class="hidden xl:block xl:w-[45%] self-stretch">
+      <figure class="main_Image_Animation">
         <img
           class="max-w-full about_image"
           loading="eager"
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Text Column -->
-    <div class="w-full lg:w-[55%] space-y-6">
+    <div class="w-full xl:w-[55%] space-y-6">
       <h4 class="text-black font-bold text-title-size mb-6 mt-8">
         {{ "hero.about-us.title" | translate }}
       </h4>
@@ -29,7 +29,7 @@
         </span>
       </h2>
       <p
-        class="text-[#474747] text-description-size leading-relaxed mb-[50px] line-clamp-4 text-justify"
+        class="text-[#474747] text-description-size leading-relaxed mb-[50px] line-clamp-4 xl:text-justify"
       >
         {{ aboutUs | customTranslate : "main_text" }}
       </p>

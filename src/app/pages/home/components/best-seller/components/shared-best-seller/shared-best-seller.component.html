@@ -11,11 +11,9 @@
         isInWishlist() ? 'Remove from wishlist' : 'Add to wishlist'
       "
     >
-      {{ isAddingToWishlist() }}
-      {{ toggleWishlist() }}
-      {{ isInWishlist() }}
       <figure>
         @if (isAddingToWishlist()) {
+
         <svg
           class="animate-spin h-5 w-5 text-muted-rose"
           xmlns="http://www.w3.org/2000/svg"
@@ -37,6 +35,7 @@
           ></path>
         </svg>
         } @else if (isInWishlist()) {
+
         <svg
           class="h-9 w-9 text-muted-rose"
           xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +47,7 @@
           />
         </svg>
         } @else {
+
         <img
           loading="lazy"
           src="/images/common/wishlist.svg"

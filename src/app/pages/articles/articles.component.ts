@@ -121,6 +121,48 @@ export class ArticlesComponent {
     this.loadBlogs(pageUrl);
   }
 
+  /**
+   * Calculate the total number of pages
+   * @returns Total number of pages
+   */
+  totalPages(): number {
+    return Math.ceil(this.totalItems / this.itemsPerPage);
+  }
+
+  /**
+   * Generates an array of page numbers for pagination display
+   * @returns Array of page numbers to display
+   */
+  getPageNumbers(): number[] {
+    const totalPages = this.totalPages();
+
+    // Show only 4 pages as in the UI design
+    const maxVisiblePages = 4;
+
+    // If we have 4 or fewer pages, show all in reverse order
+    if (totalPages <= maxVisiblePages) {
+      // Create array [totalPages, totalPages-1, ..., 1]
+      return Array.from({ length: totalPages }, (_, i) => totalPages - i);
+    }
+
+    // If current page is near the end, show last 4 pages
+    if (this.currentPage > totalPages - maxVisiblePages + 1) {
+      return [totalPages, totalPages - 1, totalPages - 2, totalPages - 3];
+    }
+
+    // Otherwise show a window of pages ending with current page
+    let start = Math.max(1, this.currentPage - 3);
+    let end = Math.min(start + 3, totalPages);
+
+    // Generate pages in reverse order (e.g., [4,3,2,1])
+    const pages = [];
+    for (let i = end; i >= start; i--) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
   getLatestProduct() {
     this._commonService.getLatestProduct().subscribe((res: any) => {
       this.latestProducts = res.latestProducts;

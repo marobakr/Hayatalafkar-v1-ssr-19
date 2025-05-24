@@ -296,7 +296,7 @@
           <!-- PROFILE -->
           <li class="cursor-pointer" role="menuitem">
             <a
-              [href]="'/' + (currentLang$ | async) + '/profile'"
+              [routerLink]="'/' + (currentLang$ | async) + '/profile'"
               (click)="navigateToProfile(); $event.preventDefault()"
               class="block py-2 px-3 xl:p-0"
               [attr.aria-label]="'navbar.profile' | translate"
@@ -312,7 +312,9 @@
             </a>
           </li>
           <!-- Add logout button for authenticated users -->
-          <li class="cursor-pointer" role="menuitem" *ngIf="isAuthenticated()">
+          @if(isAuthenticated()){
+
+          <li class="cursor-pointer" role="menuitem">
             <button
               (click)="logout()"
               class="block py-2 px-3 xl:p-0"
@@ -328,6 +330,7 @@
               </figure>
             </button>
           </li>
+          }
         </ul>
       </div>
     </div>

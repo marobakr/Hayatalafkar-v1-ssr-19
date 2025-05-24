@@ -8,7 +8,6 @@ export const unauthGuard: CanActivateFn = () => {
   const authStorageService = inject(AuthStorageService);
   const router = inject(Router);
   const languageService = inject(LanguageService);
-
   return languageService.getLanguage().pipe(
     map((lang) => {
       if (!authStorageService.isAuthenticated()) {

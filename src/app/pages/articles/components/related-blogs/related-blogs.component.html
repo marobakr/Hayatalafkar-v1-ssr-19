@@ -2,7 +2,7 @@
   <!-- Section Header -->
   @if (lightLabel) {
   <div class="flex items-center justify-between mb-[35px] font-bold">
-    <h4 class="w-[50%] sm:w-fit text-price-size md:text-title-size font-normal">
+    <h4 class="w-[50%] sm:w-fit text-price-size md:text-title-size font-light">
       {{ "news-articles.main-title" | translate }}
 
       <span class="text-muted-rose">
@@ -19,12 +19,10 @@
   </div>
   } @else {
   <div class="mb-6 text-center">
-    <p class="text-black text-base sm:text-lg md:text-price-size mb-3 sm:mb-6">
+    <p class="text-black mb-[18px] text-subtitle-size font-light">
       {{ "related-blog.title" | translate }}
     </p>
-    <h2
-      class="text-xl sm:text-2xl md:text-start-size font-semibold mb-6 sm:mb-9"
-    >
+    <h2 class="text-title-size font-light mb-[35px]">
       {{ "news-articles.main-title" | translate }}
 
       <span class="text-muted-rose">
@@ -38,8 +36,8 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 related-blogs-grid"
   >
-    @if (relatedBlogs && relatedBlogs.length > 0) { @for (blog of relatedBlogs;
-    track blog.id) {
+    @if (relatedBlogs && relatedBlogs.length > 0) { @for (blog of
+    relatedBlogs.slice(0, 3); track blog.id) {
     <div class="bg-white">
       <a
         [routerLink]="[
@@ -48,7 +46,7 @@
           'blog',
           blog | customTranslate : 'slug'
         ]"
-        class="block focus:outline-none focus:ring-2 focus:ring-warm-tan"
+        class="block"
       >
         <figure
           class="mb-[15px] rounded-[15px] overflow-hidden cursor-pointer h-[200px] sm:h-[220px] md:h-[250px]"
@@ -62,22 +60,25 @@
           />
         </figure>
       </a>
-      <div class="px-4">
+      <div>
         <!-- ArticleDate -->
-        <div
-          class="built text-[12px] sm:text-[14px] text-[#333] mb-[15px] sm:mb-[13px] relative"
-        >
-          <div class="text-[12px] sm:text-[14px] text-[#333]">
-            @if (getCurrentLang === 'en') {
-            {{ blog.blog_date | date : "d MMMM y" }}
-            } @else {
-            {{ blog.blog_date | date : "d MMMM y" }}
-            }
-          </div>
+        <div class="px-4">
           <div
-            class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"
-          ></div>
+            class="built text-[14px] text-[#333] mb-[15px] sm:mb-[13px] relative"
+          >
+            <div class="text-[#333]">
+              @if (getCurrentLang === 'en') {
+              {{ blog.blog_date | date : "d MMMM y" }}
+              } @else {
+              {{ blog.blog_date | date : "d MMMM y" }}
+              }
+            </div>
+            <div
+              class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"
+            ></div>
+          </div>
         </div>
+
         <!-- ArticleDescription -->
         <div
           class="line-clamp-2 sm:line-clamp-1 whitespace-normal leading-relaxed tracking-normal text-description-size font-normal mb-[10px]"
@@ -95,7 +96,7 @@
             'blog',
             blog | customTranslate : 'slug'
           ]"
-          class="text-muted-rose text-[12px] sm:text-[14px] font-bold underline hover:text-[#b99979] transition-colors mt-auto"
+          class="text-[#A48374] text-[12px] sm:text-[14px] font-bold underline hover:text-[#b99979] transition-colors mt-auto"
         >
           {{ "shared.readMore" | translate }}
         </a>

@@ -1,3 +1,8 @@
+@if(isLoading){
+<app-loading></app-loading>
+} @else {
+<!-- Big Offer Card  -->
+
 <app-about-shared
   [showBgImage]="false"
   [sloganText]="'about-us.slogan-text' | translate"
@@ -6,10 +11,10 @@
   [counters]="aboutUsOne.counters"
   aria-label="About our company section"
 ></app-about-shared>
-
+} @if(isLoading){
+<app-loading></app-loading>
+} @else {
 <!-- Big Offer Card  -->
-@defer (when aboutUsTwo.aboutdata ;on idle ){
-
 <div class="container mx-auto">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
     <!-- Static -->
@@ -43,6 +48,7 @@
 </app-banner>
 
 <!-- Card Service  -->
+@if (aboutUsTwo.features.length > 0) {
 <section
   class="text-center lg:ltr:text-left lg:rtl:text-right"
   aria-label="Our services"
@@ -61,7 +67,7 @@
     </div>
   </div>
 </section>
-
+}
 <!-- Banner_2 -->
 <app-banner
   [bannerText]="
@@ -77,13 +83,14 @@
 <!-- Big Card Offer -->
 <section
   aria-label="Special offers"
-  class="container mx-auto px-4 mb-[109px] overflow-x-hidden md:overflow-x-visible"
+  class="container mx-auto pt-9 px-4 mb-[109px] overflow-x-hidden"
 >
-  <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-between">
+  <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
     @if(aboutUsOne.offers.length > 0){ @for (offer of aboutUsOne.offers.length >
     1 ? aboutUsOne.offers.slice(0,2) : [aboutUsOne.offers[0],
     aboutUsOne.offers[0]]; track $index) {
     <app-big-card-offer
+      class="flex-grow-1"
       [routerLink]="['/', currentLang$ | async, 'shopping']"
       [mainColor]="$even"
       [alt]="offer | customTranslate : 'title'"

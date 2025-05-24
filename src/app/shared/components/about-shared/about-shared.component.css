@@ -28,12 +28,12 @@ section.showBgImage {
 }
 
 .about_image {
-  @media (min-width: 1024px) and (max-width: 1535px) {
+  /* @media (min-width: 1024px) and (max-width: 1535px) {
     width: 93%;
     height: 100%;
-  }
-
+  } */
+  /*
   @media (min-width: 1536px) {
     max-height: 600px;
-  }
+  } */
 }

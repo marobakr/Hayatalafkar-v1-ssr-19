@@ -151,12 +151,10 @@ export class WishlistService {
 
   // Get all wishlist items
   getWishlistItems(): Observable<any> {
-    // If userId is provided, use it; otherwise use a generic endpoint
-    const endpoint = this.userId
-      ? `${API_CONFIG.WISHLIST.GET_USER_WISH}/${this.userId}`
-      : API_CONFIG.WISHLIST.GET_USER_WISH;
-
-    return this.apiService.get(endpoint);
+    console.log('first');
+    return this.apiService.get(
+      `${API_CONFIG.WISHLIST.GET_USER_WISH}/${this.userId}`
+    );
   }
 
   // Load wishlist count from API if user is authenticated

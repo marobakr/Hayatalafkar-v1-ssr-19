@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AboutSharedComponent } from '@shared/components/about-shared/about-shared.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
 import { BigCardOfferComponent } from '@shared/components/big-card-offer/big-card-offer.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { CardComponent } from './components/card/card.component';
 import { FAQComponent } from './components/faq/faq.component';
 import { ServiceCardComponent } from './components/service-card/service-card.component';
@@ -28,6 +29,7 @@ import { AboutUsService } from './res/about-us.service';
     CustomTranslatePipe,
     RouterLink,
     AsyncPipe,
+    LoadingComponent,
   ],
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.css',
@@ -35,8 +37,12 @@ import { AboutUsService } from './res/about-us.service';
 export class AboutUsComponent implements OnInit {
   aboutUsService = inject(AboutUsService);
   languageService = inject(LanguageService);
+
   currentLang$ = this.languageService.getLanguage();
+
   API_CONFIG = API_CONFIG.BASE_URL_IMAGE;
+
+  isLoading = true;
 
   aboutUsOne: IAboutUsOne = {
     counters: [],
@@ -79,6 +85,7 @@ export class AboutUsComponent implements OnInit {
   getAboutUs() {
     this.aboutUsService.getAboutUs().subscribe((res: IAboutUsOne) => {
       this.aboutUsOne = res;
+      this.isLoading = false;
     });
   }
 
@@ -86,6 +93,7 @@ export class AboutUsComponent implements OnInit {
   getAboutData() {
     this.aboutUsService.getAboutData().subscribe((res: IAboutUsTwo) => {
       this.aboutUsTwo = res;
+      this.isLoading = false;
     });
   }
 }

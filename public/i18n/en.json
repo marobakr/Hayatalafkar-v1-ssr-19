@@ -14,6 +14,7 @@
     "main-title": "follow along",
     "title": "do you have any questions !?"
   },
+  "Loading": "loading",
   "Login_failed": "Login failed",
   "Login_successful": "login successfull",
   "Registration_successful": "Registration successful",
@@ -46,44 +47,44 @@
     "slogan-text": "Shine with confidence, shop with care and safety"
   },
   "account_management": {
+    "alerts": {
+      "cancel": "Cancel",
+      "deactivate": {
+        "confirm": "Deactivate",
+        "message": "Are you sure you want to deactivate your account? You can reactivate it later.",
+        "title": "Deactivate Account"
+      },
+      "deactivate_error": {
+        "message": "Error deactivating account. Please try again."
+      },
+      "deactivate_success": {
+        "message": "Your account has been deactivated successfully. You will be logged out now.",
+        "title": "Account Deactivated"
+      },
+      "delete": {
+        "confirm": "Delete",
+        "message": "Are you absolutely sure you want to delete your account? This action cannot be undone.",
+        "title": "Delete Account"
+      },
+      "delete_error": {
+        "message": "Error deleting account. Please try again."
+      },
+      "delete_success": {
+        "message": "Your account has been permanently deleted. You will be logged out now.",
+        "title": "Account Deleted"
+      },
+      "error": {
+        "title": "Error"
+      },
+      "ok": "OK"
+    },
     "deactivate_button": "Deactivate Account",
     "deactivate_description": "Temporarily disable your account. You can reactivate it later by logging in again.",
     "deactivate_title": "Deactivate Account",
     "delete_button": "Delete Account",
     "delete_description": "Permanently delete your account and all associated data. This action cannot be undone.",
     "delete_title": "Delete Account",
-    "title": "Account Management",
-    "alerts": {
-      "deactivate": {
-        "title": "Deactivate Account",
-        "message": "Are you sure you want to deactivate your account? You can reactivate it later.",
-        "confirm": "Deactivate"
-      },
-      "deactivate_success": {
-        "title": "Account Deactivated",
-        "message": "Your account has been deactivated successfully. You will be logged out now."
-      },
-      "deactivate_error": {
-        "message": "Error deactivating account. Please try again."
-      },
-      "delete": {
-        "title": "Delete Account",
-        "message": "Are you absolutely sure you want to delete your account? This action cannot be undone.",
-        "confirm": "Delete"
-      },
-      "delete_success": {
-        "title": "Account Deleted",
-        "message": "Your account has been permanently deleted. You will be logged out now."
-      },
-      "delete_error": {
-        "message": "Error deleting account. Please try again."
-      },
-      "error": {
-        "title": "Error"
-      },
-      "ok": "OK",
-      "cancel": "Cancel"
-    }
+    "title": "Account Management"
   },
   "add": {
     "address": "add address",
@@ -717,11 +718,8 @@
   "newProducts": {
     "alt-description": "Radiant skin and exceptional freshness.",
     "description": "Enjoy with us the new products that care for your skin's freshness and health, and help you achieve",
-    "subtitle": "",
     "title": "New Products"
   },
-  "newProducts.subtitle": "new products",
-  "newProducts.title": "products",
   "news-articles": {
     "card-1": {
       "date": "March 19, 2025",
@@ -746,7 +744,7 @@
       "description": "Serum and moisturizing body lotion with shea butter, glycerin, and vitamins that hydrate and brighten the skin",
       "title": "Moisturizing Body Lotion"
     },
-    "subtitle": "Daily",
+    "subtitle": "today’s",
     "text-content": {
       "altDesc": "For Women's Care",
       "description": "Essential Cosmetics",
@@ -990,8 +988,8 @@
     "view_details": "View Details"
   },
   "related-blog": {
-    "subtitle": "Related News & Articles",
-    "title": "Related News & Articles"
+    "subtitle": "News & Articles",
+    "title": "News & Related Articles"
   },
   "related-products": {
     "explore": "explore",
@@ -1049,6 +1047,7 @@
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
     "loading": "Loading",
+    "next": "next",
     "offer": "25% Discount",
     "price_varies": "Price varies based on options",
     "processing": "Processing...",
