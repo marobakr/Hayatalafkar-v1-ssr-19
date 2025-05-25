@@ -11,14 +11,14 @@ export interface IProduct {
   ar_name: string;
   en_slug: string;
   ar_slug: string;
-  en_description: string;
-  ar_description: string;
-  price: string;
+  en_description?: string;
+  ar_description?: string;
+  price?: string;
   sale_price: string;
   price_after_sale: string;
   stock_status: boolean;
   main_image: string;
-  additional_images: any[][];
+  additional_images?: Array<{ img: string }>;
   ar_small_descritpion: any;
   en_small_descritpion: any;
   featured: number;
@@ -34,8 +34,12 @@ export interface IProduct {
   updated_at: string;
   category: Category;
   subcategory: Subcategory;
-  choices: Choice[];
+  choices?: any[];
   size: string;
+  ar_meta_Title?: string | null;
+  en_meta_Title?: string | null;
+  ar_meta_text?: string | null;
+  en_meta_text?: string | null;
 }
 
 export interface Choice {

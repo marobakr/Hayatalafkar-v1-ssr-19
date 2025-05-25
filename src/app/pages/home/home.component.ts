@@ -108,6 +108,7 @@ import { HomeService } from './res/home.service';
       ]),
     ]),
   ],
+  host: { ngSkipHydration: 'true' },
 })
 export class HomeComponent implements OnInit {
   _homeService = inject(HomeService);

@@ -146,6 +146,7 @@ export type StockFilterType = 'all' | 'available' | 'unavailable';
       transition('normal <=> hovered', animate('200ms ease-in-out')),
     ]),
   ],
+  host: { ngSkipHydration: 'true' },
 })
 export class ShoppingComponent implements OnInit, OnDestroy {
   // ===== Services =====
@@ -391,10 +392,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
             currentLang === 'en'
               ? this.products[0].category.en_slug
               : this.products[0].category.ar_slug;
-
           if (categorySlug && !currentFilters.includes(categorySlug)) {
             this.selectedFilters.set([...currentFilters, categorySlug]);
-
             // Check the corresponding checkbox for this category
             setTimeout(() => {
               const checkbox = document.querySelector(
@@ -424,7 +423,6 @@ export class ShoppingComponent implements OnInit, OnDestroy {
             const currentFilters = this.selectedFilters();
             if (categorySlug && !currentFilters.includes(categorySlug)) {
               this.selectedFilters.set([...currentFilters, categorySlug]);
-
               // Check the corresponding checkbox for this category
               setTimeout(() => {
                 const checkbox = document.querySelector(

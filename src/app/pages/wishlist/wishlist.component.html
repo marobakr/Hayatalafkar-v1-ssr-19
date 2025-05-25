@@ -181,23 +181,6 @@
 
         <!-- Wishlist Items Footer -->
         <div class="flex items-center justify-between pt-[27px] pb-[30px]">
-          <div
-            class="btns flex items-center justify-start rtl:justify-end gap-3"
-          >
-            <button
-              class="text-[#333] text-category-size py-[9px] px-[11px] rounded-[50px] capitalize"
-            >
-              {{ "wishlist.wishlist-footer.add-new" | translate }}
-            </button>
-
-            <app-button
-              [px]="'px-[31px]'"
-              [py]="'py-[4px]'"
-              [title]="'wishlist.wishlist-footer.add-all' | translate"
-              [type]="'button'"
-            ></app-button>
-          </div>
-
           <button
             (click)="removeAllItems()"
             class="cursor-pointer text-muted-rose text-description-size font-bold capitalize underline"

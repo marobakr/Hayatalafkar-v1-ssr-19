@@ -1,4 +1,4 @@
-<section>
+<section class="overflow-x-hidden">
   <div
     [safeHtmlWithScripts]="blog | customTranslate : 'script_text'"
     class="hidden"
@@ -6,12 +6,14 @@
   <div class="container mx-auto">
     @if (blog) {
     <figure
-      class="mb-15 my-5 rounded-xl max-h-[432px] overflow-hidden object-cover object-right-top"
+      class="mb-15 my-5 rounded-xl overflow-hidden object-cover object-right-top"
     >
+      <!--         class="w-full h-[200px] sm:h-full aspect-[16/9] max-h-[432px]"
+ -->
       <img
         [appImageUrl]="blog.main_image"
         [imageEndpoint]="'uploads/blogs'"
-        class="w-full"
+        class="w-full max-h-[432px]"
         [alt]="blog | customTranslate : 'blog_title'"
       />
     </figure>

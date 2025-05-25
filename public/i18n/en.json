@@ -744,7 +744,7 @@
       "description": "Serum and moisturizing body lotion with shea butter, glycerin, and vitamins that hydrate and brighten the skin",
       "title": "Moisturizing Body Lotion"
     },
-    "subtitle": "today’s",
+    "subtitle": "today's",
     "text-content": {
       "altDesc": "For Women's Care",
       "description": "Essential Cosmetics",
@@ -926,9 +926,10 @@
     "more_information": "more information",
     "size": "size",
     "tabs": {
-      "additional_info": "addition information",
-      "description": "description",
-      "reviews": "rating"
+      "description": "addition information",
+      "how_to_use": "how to use",
+      "ingredient": "ingredient",
+      "more_information": "more information"
     }
   },
   "profile": {
@@ -1033,8 +1034,10 @@
       "Women's Care"
     ]
   },
+  "share": "share",
   "shared": {
     "add_to_cart": "Add to cart",
+    "add_to_cart_shooping": "add to cart ",
     "added_to_cart_success": "Item added to cart successfully",
     "adding": "Adding...",
     "buttons": {
@@ -1043,12 +1046,14 @@
       "saving": "Saving...",
       "submitting": "Submitting..."
     },
+    "buy_now": "Buy Now",
     "continue_shopping": "Continue Shopping",
     "currency": "SAR",
     "go_to_cart": "Go to Cart",
     "loading": "Loading",
     "next": "next",
     "offer": "25% Discount",
+    "previous": "prev",
     "price_varies": "Price varies based on options",
     "processing": "Processing...",
     "readMore": "Read More",

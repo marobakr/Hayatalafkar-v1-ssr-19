@@ -166,7 +166,6 @@ export const routes: Routes = [
           title: 'pages.product.title',
           description: 'pages.product.description',
         },
-        canActivate: [authGuard],
       },
 
       /* About Us  */

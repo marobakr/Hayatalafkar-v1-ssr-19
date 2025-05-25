@@ -1,4 +1,4 @@
-<section>
+<section class="overflow-x-hidden">
   <app-articles-header
     [title]="'articles.header.title' | translate"
     [showRotateImage]="false"
@@ -8,17 +8,11 @@
   <div class="container mx-auto">
     <!-- Layout -->
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-11 items-start">
-      <div class="lg:col-span-9 xl:text-justify order-2 lg:order-1">
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-11 items-start">
+      <div class="xl:col-span-9 xl:text-justify order-2 xl:order-1">
         @if (loading) {
         <app-loading></app-loading>
 
-        } @else if (error) {
-        <div class="text-center py-8">
-          <p class="text-red-500">
-            Failed to load articles. Please try again later.
-          </p>
-        </div>
         } @else if (blogs && blogs.length > 0) { @for (blog of blogs | paginate:
         { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems:
         totalItems }; track blog.id || $index) {
@@ -35,7 +29,7 @@
               (click)="onPageChange(currentPage + 1)"
               [disabled]="currentPage >= totalPages()"
               [class.opacity-50]="currentPage >= totalPages()"
-              class="pagination-button px-4 py-2 bg-[#D9D9D9] rounded-full text-black hover:bg-gray-300 disabled:cursor-not-allowed border-[#B4B4B4]"
+              class="pagination-button px-[10px] pb-[1px] bg-[#D9D9D9] rounded-[10px] font-medium text-[20px] text-black hover:bg-gray-300 disabled:cursor-not-allowed border-[1px] border-[#B4B4B4]"
             >
               {{ "shared.next" | translate }}
             </button>
@@ -48,7 +42,7 @@
                 [class.bg-[#d3aa7e]]="currentPage === page"
                 [class.text-white]="currentPage === page"
                 [class.border-[#CBAC8D]]="currentPage === page"
-                class="pagination-number w-[23px] h-[23px] flex items-center justify-center rounded-full text-black border-2 border-[#A7A0A0] px-[8px] py-[1px]"
+                class="cursor-pointer pagination-number w-[23px] h-[23px] flex items-center justify-center rounded-full text-black border-2 border-[#A7A0A0] px-[8px] py-[1px]"
               >
                 {{ page }}
               </button>
@@ -63,7 +57,7 @@
         }
       </div>
 
-      <div class="lg:col-span-3 order-1 lg:order-2">
+      <div class="xl:col-span-3 order-1 xl:order-2">
         <!-- Heading -->
         <app-section-heading
           class="mb-3"
@@ -109,24 +103,34 @@
                 [routerLink]="[
                   '/',
                   currentLanguage$ | async,
-                  'products',
+                  'blog',
                   latestProduct | customTranslate : 'slug'
                 ]"
               >
-                <figure class="w-[99px] rounded-[15px] overflow-hidden">
+                <figure
+                  class="w-[99px] h-[99px] rounded-[15px] overflow-hidden"
+                >
                   <img
                     loading="lazy"
-                    class="w-full"
+                    class="w-full h-full object-cover"
                     [appImageUrl]="latestProduct.main_image"
                     [imageEndpoint]="'uploads/blogs'"
                     [alt]="latestProduct | customTranslate : 'name'"
                   />
                 </figure>
               </a>
-
               <div class="content">
                 <p class="mb-[10px] text-category-size text-[#333]">
-                  {{ latestProduct | customTranslate : "name" }}
+                  <a
+                    [routerLink]="[
+                      '/',
+                      currentLanguage$ | async,
+                      'blog',
+                      latestProduct | customTranslate : 'slug'
+                    ]"
+                  >
+                    {{ latestProduct | customTranslate : "name" }}
+                  </a>
                 </p>
                 <div
                   class="mb-[10px] text-category-size font-semibold text-black line-clamp-1"
@@ -135,55 +139,11 @@
                     [content]="latestProduct | customTranslate : 'description'"
                   ></app-safe-html>
                 </div>
-                <div class="date underline text-muted-rose font-semibold">
-                  {{ latestProduct.created_at | date : "yyyy-mm-dd" }}
-                </div>
               </div>
             </div>
             }
           </div>
         </div>
-
-        <!-- New  Products -->
-        <!-- <div class="newProducts mb-[60px]">
-          <app-section-heading
-            class="mb-3"
-            [sectionName]="'articles.sidebar.new-products' | translate"
-          ></app-section-heading>
-          @for (latestProduct of latestProducts.slice(0, 4); track $index) {
-          <div class="flex gap-2 items-center mb-3">
-            <figure>
-              <img
-                loading="lazy"
-                class="w-[99px]"
-                alt="image"
-                [appImageUrl]="latestProduct.main_image"
-                [imageEndpoint]="'uploads/latest_products'"
-              />
-            </figure>
-
-            <div class="content">
-              <p class="mb-1 text-category-size text-[#333]">
-                {{ latestProduct | customTranslate : "name" }}
-              </p>
-
-              <p class="mb-1 text-description-size font-semibold text-black">
-                {{ latestProduct | customTranslate : "name" }}
-              </p>
-
-              <div class="mb-1 text-description-size font-semibold text-black">
-                <app-safe-html
-                  [content]="latestProduct | customTranslate : 'description'"
-                ></app-safe-html>
-              </div>
-
-              <div class="date underline text-muted-rose font-semibold">
-                {{ latestProduct.created_at | date : "dd MMMM yyyy" }}
-              </div>
-            </div>
-          </div>
-          }
-        </div> -->
 
         <app-talent-image-card
           [imagePath]="'/images/news/13.png'"

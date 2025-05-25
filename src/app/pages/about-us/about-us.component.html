@@ -85,18 +85,19 @@
   aria-label="Special offers"
   class="container mx-auto pt-9 px-4 mb-[109px] overflow-x-hidden"
 >
-  <div class="flex flex-wrap gap-x-6 gap-y-9 xl:gap-y-6 justify-center">
-    @if(aboutUsOne.offers.length > 0){ @for (offer of aboutUsOne.offers.length >
-    1 ? aboutUsOne.offers.slice(0,2) : [aboutUsOne.offers[0],
-    aboutUsOne.offers[0]]; track $index) {
+  <div
+    class="flex flex-wrap md:flex-nowrap gap-x-6 gap-y-[20px] xl:gap-y-6 justify-center"
+  >
+    @if(aboutUsOne.offers.length > 0) { @for (offer of
+    aboutUsOne.offers.slice(0,2) ; track offer.id) {
     <app-big-card-offer
-      class="flex-grow-1"
+      class="flex-grow-1 cursor-pointer"
       [routerLink]="['/', currentLang$ | async, 'shopping']"
       [mainColor]="$even"
+      [imgPath]="offer.main_image"
       [alt]="offer | customTranslate : 'title'"
-      [imgPath]="`/images/categories/${$index}.webp`"
       [title]="offer | customTranslate : 'title'"
-      [subtitle]="offer | customTranslate : 'samll_title'"
+      [subtitle]="offer | customTranslate : 'small_title'"
       [description]="offer | customTranslate : 'text'"
     ></app-big-card-offer>
     } }

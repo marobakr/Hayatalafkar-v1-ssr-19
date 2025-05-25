@@ -10,14 +10,14 @@
   <div class="container mx-auto overflow-hidden">
     @if (!isLoading()) {
     <div
-      class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 rtl:flex-row-reverse"
+      class="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-10 rtl:flex-row-reverse"
     >
       <!-- Left Side: Product Images Carousel -->
       <div class="product-images">
         <!-- Main Carousel -->
         <div
           class="carousel-wrapper overflow-hidden rounded-lg mb-4"
-          [class.rtl]="isRtlMode()"
+          [class.rtl-carousel]="isRtlMode()"
         >
           <owl-carousel-o [options]="mainCarouselOptions" #mainCarousel>
             @for (image of processedImages(); track image.id) {
@@ -35,20 +35,20 @@
 
         <!-- Thumbnail Gallery - Only show when there are additional images -->
         @if (processedImages().length > 1) {
-        <div class="thumbnail-gallery mt-4" [class.rtl]="isRtlMode()">
+        <div class="thumbnail-gallery mt-4" [class.rtl-carousel]="isRtlMode()">
           <owl-carousel-o [options]="thumbnailOptions" #thumbnailCarousel>
             @for (image of processedImages(); track image.id; let i = $index) {
             <ng-template carouselSlide [id]="'thumb_' + image.id">
               <div
                 [class.thumbnail-active]="activeIndex() === i"
                 (click)="setActiveIndex(i)"
-                class="thumbnail-item cursor-pointer p-1 border rounded-md"
+                class="thumbnail-item cursor-pointer p-1 border-[1px] border-transparent rounded-[15px] overflow-hidden"
               >
                 <img
                   [appImageUrl]="image.url"
                   [imageEndpoint]="''"
                   [alt]="image.alt"
-                  class="w-full h-full object-cover rounded"
+                  class="w-full h-full object-cover"
                 />
               </div>
             </ng-template>
@@ -61,23 +61,24 @@
       <!-- Right Side: Product Details -->
       <div class="product-info rtl:text-right ltr:text-left">
         <!-- Product Title -->
-        <h1 class="text-[16px] mb-4">
-          {{ productDetails | customTranslate : "name" }}
-        </h1>
-
-        <!-- Stock Status & Rating -->
-        <div class="mb-2 flex gap-4 items-center">
-          <h2 class="text-2xl font-bold">
-            {{ productDetails | customTranslate : "slug" }}
+        <h4 class="text-[16px] text-[#333] mb-[23px]">
+          {{ productDetails.category | customTranslate : "name" }}
+        </h4>
+        <!-- Stock Status  -->
+        <div class="mb-[23px] flex gap-4 items-center">
+          <h2 class="text-[23px] text-black font-medium">
+            {{ productDetails | customTranslate : "name" }}
           </h2>
           <div
-            class="text-xs py-1 px-3 rounded-full bg-gray-100 text-[#CBAC8D]"
+            class="text-[#040404] rounded-full border-[1px] border-[#A48374] px-[16px] py-[2px]"
           >
-            @if (productDetails.stock_status) {
-            {{ "in_stock" | translate }}
-            } @else {
-            {{ "out_of_stock" | translate }}
-            }
+            <p class="text-[16px]">
+              @if (productDetails.stock_status) {
+              {{ "in_stock" | translate }}
+              } @else {
+              {{ "out_of_stock" | translate }}
+              }
+            </p>
           </div>
         </div>
 
@@ -88,34 +89,43 @@
             {{ activeChoicePrice() }}
             {{ "shared.currency" | translate }}
           </span>
-          } @else {
-          <span class="text-lg font-bold">
+          } @else if (productDetails.sale_price) {
+          <div
+            class="flex items-cetner justify-center gap-x-[26px] mb-[30px] text-price-size"
+          >
+            <span class="text-[#A48374] font-medium">
+              {{ productDetails.price_after_sale }}
+              {{ "shared.currency" | translate }}
+            </span>
+            <span class="text-[#333] line-through">
+              {{ productDetails.price }}
+              {{ "shared.currency" | translate }}
+            </span>
+          </div>
+          }@else {
+          <span class="text-[#A48374] text-price-size font-medium">
             {{ productDetails.price }}
             {{ "shared.currency" | translate }}
           </span>
-          @if (productDetails.sale_price) {
-          <span class="text-gray-500 line-through">
-            {{ productDetails.price_after_sale }}
-            {{ "shared.currency" | translate }}
-          </span>
-          } }
+          }
         </div>
 
         <!-- Product Description -->
-        <div class="text-gray-600 mb-6 leading-relaxed">
-          <app-safe-html
-            [content]="productDetails | customTranslate : 'description'"
-          ></app-safe-html>
-        </div>
+        <div
+          class="text-[#333] text-description-size mb-[30px] leading-relaxed"
+          [innerHTML]="productDetails | customTranslate : 'small_descritpion'"
+        ></div>
+        @if(productDetails.size){
 
-        <p class="text-gray-600 mb-6 flex gap-1 items-center">
+        <p class="text-[#000] mb-10 font-medium">
           {{ "product_details.size" | translate }} :
           <span class="font-bold">{{ productDetails.size }}</span>
         </p>
+        }
 
         <!-- Size Selector -->
         @if (productDetails.choices && productDetails.choices.length > 0) {
-        <div class="mb-6">
+        <div class="mb-15">
           <h3 class="text-lg font-semibold mb-3">الحجم</h3>
           <div class="flex flex-wrap gap-3">
             @for(choice of productDetails.choices; track choice.id) {
@@ -123,7 +133,8 @@
               (click)="setSelectedSizeFromChoice(choice)"
               [class.bg-[#CBAC8D]]="isChoiceActive(choice)"
               [class.text-white]="isChoiceActive(choice)"
-              class="size-btn py-2 px-6 rounded-full border border-gray-300 transition-colors hover:bg-gray-100"
+              [class.border-[#A48374]]="isChoiceActive(choice)"
+              class="text-category-size text-[#040404] py-[2px] px-[16px] font-normal rounded-full border shodow-[0px 4px 4px 0px rgba(0, 0, 0, 0.25)]"
             >
               {{ getChoiceName(choice) }}
             </button>
@@ -133,25 +144,50 @@
         }
 
         <!-- Quantity Selector and Add to Cart -->
-        <div class="flex flex-wrap gap-4 items-center">
+        <div class="flex flex-wrap gap-x-4 items-center mb-[30px]">
           <!-- Quantity Selector -->
           <div
-            class="quantity-selector flex items-center border border-gray-300 rounded-md"
+            class="quantity-selector flex items-center gap-x-[15px] border border-[#8D8D8D] rounded-full"
           >
             <button
               (click)="decrementQuantity()"
-              class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+              class="cursor-pointer px-3 py-2 text-[#000]"
               [disabled]="isAddingToCart()"
             >
-              -
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
             </button>
-            <span class="px-4 py-2">{{ quantity() }}</span>
+            <span class="px-4 py-[8px]">{{ quantity() }}</span>
             <button
               (click)="incrementQuantity()"
-              class="cursor-pointer px-3 py-2 text-gray-600 hover:bg-gray-100"
+              class="cursor-pointer px-3 py-2 text-[#000]"
               [disabled]="isAddingToCart()"
             >
-              +
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
             </button>
           </div>
 
@@ -159,7 +195,7 @@
           <button
             (click)="isInCart() ? updateCartQuantity() : addToCart()"
             [disabled]="isAddingToCart() || !productDetails.stock_status"
-            class="cursor-pointer bg-[#111111] text-white px-6 py-3 rounded-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            class="cursor-pointer bg-[#CBAC8D] text-white px-[23px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             [class.opacity-70]="
               isAddingToCart() || !productDetails.stock_status
             "
@@ -179,78 +215,37 @@
               }}
             </span>
             } @else if (isInCart()) {
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="mr-2"
-            >
-              <path d="M20 6L9 17l-5-5"></path>
-            </svg>
+
             {{ "shared.update_cart" | translate }}
             } @else {
-            {{ "shared.add_to_cart" | translate }}
+            {{ "shared.add_to_cart_shooping" | translate }}
             }
           </button>
-
-          <!-- Remove from Cart Button (only visible when product is in cart or being updated) -->
-          @if (isInCartOrUpdating()) {
+          <!-- Buy now  -->
           <button
-            (click)="removeFromCart()"
-            [disabled]="isAddingToCart()"
-            class="cursor-pointer flex items-center justify-center w-10 h-10 bg-white text-red-500 rounded-full shadow-md hover:bg-red-50 transition-colors duration-200"
-            aria-label="Remove from cart"
+            (click)="buyNow()"
+            [disabled]="isAddingToCart() || !productDetails.stock_status"
+            class="cursor-pointer bg-[#111111] text-white px-[47px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            [class.opacity-70]="
+              isAddingToCart() || !productDetails.stock_status
+            "
+            [class.cursor-not-allowed]="
+              isAddingToCart() || !productDetails.stock_status
+            "
           >
-            <span class="sr-only">Remove from cart</span>
             @if (isAddingToCart()) {
-            <span class="animate-spin">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v6l4 2"></path>
-              </svg>
-            </span>
+            <span
+              class="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+            ></span>
+            <span class="ml-2">{{ "shared.processing" | translate }}</span>
             } @else {
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              <line x1="10" y1="11" x2="10" y2="17"></line>
-              <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
+            {{ "shared.buy_now" | translate }}
             }
           </button>
-          }
-
           <!-- Wishlist Button -->
           <button
             type="button"
-            class="cursor-pointer flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+            class="cursor-pointer flex items-center justify-center w-[30px] h-[30px] rounded-full transition-colors duration-200"
             [disabled]="isAddingToWishlist()"
             (click)="isInWishlist() ? removeFromWishlist() : addToWishlist()"
             aria-label="Add to wishlist"
@@ -260,8 +255,8 @@
             <span class="animate-spin">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="30"
+                height="30"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -276,8 +271,8 @@
             } @else {
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="30"
+              height="30"
               viewBox="0 0 24 24"
               fill="currentColor"
               stroke="currentColor"
@@ -285,7 +280,7 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               [style.fill]="isInWishlist() ? '#ef4444' : 'none'"
-              [style.stroke]="isInWishlist() ? '#ef4444' : '#9ca3af'"
+              [style.stroke]="isInWishlist() ? '#ef4444' : '#000'"
             >
               <path
                 d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
@@ -294,104 +289,10 @@
             }
           </button>
         </div>
-        <!-- Addition Information -->
-        <div class="mt-8 space-y-6 border-t pt-6">
-          <!-- More Information -->
-          @if (productDetails | customTranslate : 'more_information') {
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h4
-              class="text-md font-medium text-gray-800 mb-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-[#CBAC8D]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {{ "product_details.more_information" | translate }}
-            </h4>
-            <div class="text-gray-600">
-              <app-safe-html
-                [content]="
-                  productDetails | customTranslate : 'more_information'
-                "
-              ></app-safe-html>
-            </div>
-          </div>
-          }
-
-          <!-- Ingredients -->
-          @if (productDetails | customTranslate : 'ingredient') {
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h4
-              class="text-md font-medium text-gray-800 mb-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-[#CBAC8D]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                />
-              </svg>
-              {{ "product_details.ingredient" | translate }}
-            </h4>
-            <div class="text-gray-600">
-              <app-safe-html
-                [content]="productDetails | customTranslate : 'ingredient'"
-              ></app-safe-html>
-            </div>
-          </div>
-          }
-
-          <!-- How to Use -->
-          @if (productDetails | customTranslate : 'how_to_use') {
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <h4
-              class="text-md font-medium text-gray-800 mb-2 flex items-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-[#CBAC8D]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                />
-              </svg>
-              {{ "product_details.how_to_use" | translate }}
-            </h4>
-            <div class="text-gray-600">
-              <app-safe-html
-                [content]="productDetails | customTranslate : 'how_to_use'"
-              ></app-safe-html>
-            </div>
-          </div>
-          }
-        </div>
 
         <!-- Social Share -->
         <div class="mt-2 flex items-center gap-2 mb-4">
-          <span class="text-gray-500 text-sm">مشاركة:</span>
+          <span class="text-black font-bold">{{ "share" | translate }}:</span>
           <div class="social-icons flex gap-2">
             <a
               href="javascript:void(0)"
@@ -451,10 +352,11 @@
         </div>
       </div>
     </div>
+
     <!-- Product Description NavTaps -->
     <div class="my-16">
       <div>
-        <nav class="flex justify-center gap-4 flex-rows-reverce">
+        <nav class="flex justify-center gap-x-[112px] flex-rows-reverce">
           @for (tab of productTabs; track tab.id; let i = $index) {
           <button
             (click)="setActiveTab(i)"
@@ -467,8 +369,7 @@
               'hover:text-gray-700': activeTab() !== i,
               'hover:border-gray-300': activeTab() !== i,
             }"
-            class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ease-in-out"
-            class="text-price-size font-bold cursor-pointer"
+            class="text-price-size font-medium cursor-pointer"
           >
             {{ tab.title | translate }}
           </button>
@@ -476,30 +377,27 @@
         </nav>
       </div>
 
-      <div class="mt-8 overflow-hidden">
-        <!-- Description Tab -->
+      <div class="mt-8 overflow-hidden mb-15">
+        <!-- description -->
         @if (activeTab() === 0) {
-        <div
-          @fadeSlideInOut
-          class="prose max-w-none text-gray-600 leading-relaxed"
-        >
+        <div @fadeSlideInOut class="max-w-none text-[#171717] leading-relaxed">
           <app-safe-html
             [content]="productDetails | customTranslate : 'description'"
           ></app-safe-html>
         </div>
         }
 
-        <!-- Additional Information Tab -->
+        <!-- how_to_use -->
         @if (activeTab() === 1) {
         <div @fadeSlideInOut class="prose max-w-none">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
-              <div class="text-lg font-medium text-gray-900 mb-4">
-                <app-safe-html
-                  [content]="productDetails | customTranslate : 'description'"
-                ></app-safe-html>
-              </div>
-              <!-- <ul class="space-y-3">
+            <!-- <div class="bg-gray-50 p-6 rounded-lg shadow-sm"> -->
+            <div class="text-[#171717] mb-4">
+              <app-safe-html
+                [content]="productDetails | customTranslate : 'how_to_use'"
+              ></app-safe-html>
+            </div>
+            <!-- <ul class="space-y-3">
                   @if (productDetails.brand) {
                   <li class="flex">
                     <span class="font-medium text-gray-700 w-40">{{
@@ -538,195 +436,72 @@
                   </li>
                   }
                 </ul> -->
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
-              <app-safe-html
-                [content]="
-                  productDetails | customTranslate : 'more_information'
-                "
-              ></app-safe-html>
-              <!-- <ul class="space-y-3">
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.availability" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      productDetails.stock_status
-                        ? ("product_details.in_stock" | translate)
-                        : ("product_details.out_of_stock" | translate)
-                    }}</span>
-                  </li>
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.shipping_fee" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      "product_details.shipping_fee_value" | translate
-                    }}</span>
-                  </li>
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.delivery_time" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      "product_details.delivery_time_value" | translate
-                    }}</span>
-                  </li>
-                </ul> -->
-            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+        }
 
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+        <!-- ingredient -->
+        @if (activeTab() === 2) {
+        <div @fadeSlideInOut class="prose max-w-none">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- <div class="bg-gray-50 p-6 rounded-lg shadow-sm"> -->
+            <div class="text-[#171717] mb-4">
               <app-safe-html
-                [content]="productDetails | customTranslate : 'ingredient'"
+                [content]="productDetails | customTranslate : 'how_to_use'"
               ></app-safe-html>
+              <!-- </div> -->
+              <!-- <ul class="space-y-3">
+                    @if (productDetails.brand) {
+                    <li class="flex">
+                      <span class="font-medium text-gray-700 w-40">{{
+                        "product_details.brand" | translate
+                      }}</span>
+                      <span class="text-gray-600">{{
+                        productDetails.brand
+                      }}</span>
+                    </li>
+                    } @if (productDetails.sku) {
+                    <li class="flex">
+                      <span class="font-medium text-gray-700 w-40">{{
+                        "product_details.sku" | translate
+                      }}</span>
+                      <span class="text-gray-600">{{
+                        productDetails.sku
+                      }}</span>
+                    </li>
+                    } @if (productDetails.weight) {
+                    <li class="flex">
+                      <span class="font-medium text-gray-700 w-40">{{
+                        "product_details.weight" | translate
+                      }}</span>
+                      <span class="text-gray-600">{{
+                        productDetails.weight
+                      }}</span>
+                    </li>
+                    } @if (productDetails.dimensions) {
+                    <li class="flex">
+                      <span class="font-medium text-gray-700 w-40">{{
+                        "product_details.dimensions" | translate
+                      }}</span>
+                      <span class="text-gray-600">{{
+                        productDetails.dimensions
+                      }}</span>
+                    </li>
+                    }
+                  </ul> -->
             </div>
           </div>
         </div>
         }
 
-        <!-- Ratings & Reviews Tab -->
-        @if (activeTab() === 2) {
+        <!-- more information -->
+        @if (activeTab() === 3) {
         <div @fadeSlideInOut class="prose max-w-none">
-          <div class="flex flex-col md:flex-row gap-8">
-            <!-- Overall Rating Summary -->
-            <!-- <div class="md:w-1/3">
-              <div class="bg-gray-50 p-6 rounded-lg shadow-sm text-center">
-                <h3 class="text-xl font-bold text-gray-900">4.8</h3>
-                <div class="flex justify-center my-2">
-                  <span class="text-yellow-400 flex">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                  </span>
-                </div>
-                <p class="text-sm text-gray-600">
-                  {{ "product_details.based_on" | translate }} 24
-                  {{ "product_details.reviews" | translate }}
-                </p> -->
-
-            <!-- Rating Breakdown -->
-            <!-- <div class="mt-4 space-y-2">
-                  <div class="flex items-center">
-                    <span class="text-sm w-8">5★</span>
-                    <div
-                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
-                    >
-                      <div
-                        class="bg-yellow-400 h-full rounded-full"
-                        style="width: 75%"
-                      ></div>
-                    </div>
-                    <span class="text-sm w-8">75%</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span class="text-sm w-8">4★</span>
-                    <div
-                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
-                    >
-                      <div
-                        class="bg-yellow-400 h-full rounded-full"
-                        style="width: 20%"
-                      ></div>
-                    </div>
-                    <span class="text-sm w-8">20%</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span class="text-sm w-8">3★</span>
-                    <div
-                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
-                    >
-                      <div
-                        class="bg-yellow-400 h-full rounded-full"
-                        style="width: 5%"
-                      ></div>
-                    </div>
-                    <span class="text-sm w-8">5%</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span class="text-sm w-8">2★</span>
-                    <div
-                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
-                    >
-                      <div
-                        class="bg-yellow-400 h-full rounded-full"
-                        style="width: 0%"
-                      ></div>
-                    </div>
-                    <span class="text-sm w-8">0%</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span class="text-sm w-8">1★</span>
-                    <div
-                      class="flex-1 h-2 mx-2 bg-gray-200 rounded-full overflow-hidden"
-                    >
-                      <div
-                        class="bg-yellow-400 h-full rounded-full"
-                        style="width: 0%"
-                      ></div>
-                    </div>
-                    <span class="text-sm w-8">0%</span>
-                  </div>
-                </div> -->
-            <!-- </div> -->
-            <!-- </div> -->
-
-            <!-- Reviews List -->
-            <div class="md:w-2/3">
-              <div class="space-y-6">
-                <!-- Review Item -->
-                @for (i of [1, 2]; track i; let idx = $index) {
-                <div
-                  class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm"
-                  @fadeIn
-                  [style.animation-delay]="idx * 100 + 'ms'"
-                >
-                  <div class="flex justify-between items-start">
-                    <div class="flex items-center">
-                      <div
-                        class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600"
-                      >
-                        <i class="fas fa-user"></i>
-                      </div>
-                      <div class="ml-4">
-                        <h4 class="text-sm font-medium text-gray-900">
-                          {{ "product_details.customer_" + i | translate }}
-                        </h4>
-                        <div class="flex text-yellow-400 text-xs mt-1">
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                          <i class="fas fa-star"></i>
-                        </div>
-                      </div>
-                    </div>
-                    <span class="text-sm text-gray-500">{{
-                      i === 1 ? "2023-12-10" : "2023-11-23"
-                    }}</span>
-                  </div>
-                  <div class="mt-4">
-                    <h5 class="text-sm font-medium text-gray-900">
-                      {{ "product_details.review_title_" + i | translate }}
-                    </h5>
-                    <p class="mt-2 text-sm text-gray-600">
-                      {{ "product_details.review_content_" + i | translate }}
-                    </p>
-                  </div>
-                </div>
-                }
-
-                <!-- Load More Button -->
-                <div class="text-center">
-                  <button
-                    class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors"
-                  >
-                    {{ "product_details.load_more_reviews" | translate }}
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div class="text-gray-600">
+            <app-safe-html
+              [content]="productDetails | customTranslate : 'more_information'"
+            ></app-safe-html>
           </div>
         </div>
         }
@@ -742,6 +517,7 @@
       >
         {{ "related-products.title" | translate }}
       </p>
+
       <h2
         class="text-xl sm:text-2xl md:text-start-size font-semibold mb-6 sm:mb-9"
       >

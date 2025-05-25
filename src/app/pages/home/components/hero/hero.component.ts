@@ -1,4 +1,3 @@
-import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   inject,
@@ -19,9 +18,8 @@ import {
   CarouselModule,
   OwlOptions,
 } from 'ngx-owl-carousel-o';
-import { Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { Slider } from '../../res/home.interfaces';
-
 @Component({
   selector: 'app-hero',
   standalone: true,
@@ -43,50 +41,34 @@ export class HeroComponent {
 
   private platformId = inject(PLATFORM_ID);
   private languageService = inject(LanguageService);
-  private isBrowser = isPlatformBrowser(this.platformId);
-  private currentLanguage: string = 'en';
-  private destroy$ = new Subject<void>();
-  private isCarouselInitialized = false;
 
   // Signal to track carousel loading state
   isCarouselLoading = signal(true);
   currentLang$ = this.languageService.getLanguage();
 
+  isRtlMode = this.languageService
+    .getLanguage()
+    .pipe(map((lang) => lang === 'ar'));
+
   // Configure owl carousel options
   customOptions: OwlOptions = {
     loop: true,
-    mouseDrag: true,
-    touchDrag: true,
-    pullDrag: true,
-    dots: true,
-    dotsEach: false,
-    navSpeed: 700,
-    autoHeight: true,
-    items: 1,
-    autoplay: true,
-    autoplayTimeout: 5000,
-    autoplayHoverPause: true,
-    margin: 0,
-    smartSpeed: 800,
+    autoplay: false,
     center: true,
-    stagePadding: 0,
-    rewind: false,
-    slideTransition: 'ease',
-    animateIn: 'slideInRight',
-    animateOut: 'slideOutLeft',
-    lazyLoad: false,
-    rtl: false,
-    navText: ['', ''],
+    dots: false,
+    autoHeight: false,
+    autoWidth: false,
+
     responsive: {
       0: {
         items: 1,
-        nav: false,
       },
-      768: {
+      600: {
         items: 1,
-        nav: false,
+      },
+      1000: {
+        items: 1,
       },
     },
-    nav: false,
   };
 }

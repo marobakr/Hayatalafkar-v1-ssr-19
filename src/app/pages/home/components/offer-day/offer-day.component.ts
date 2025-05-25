@@ -8,6 +8,7 @@ import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
 import { Offer, RandomProduct } from '../../res/home.interfaces';
+
 @Component({
   selector: 'app-offer-day',
   standalone: true,
@@ -37,4 +38,55 @@ export class OfferDayComponent {
 
   @Input({ required: true }) randomProducts: RandomProduct[] = [];
   @Input({ required: true }) lastOffer: Offer = {} as Offer;
+
+  /**
+   * Format text with first two words black and rest white, preserving HTML
+   */
+  formatRichText(text: string): string {
+    if (!text) return '';
+
+    // Strip HTML to count actual words
+    const textWithoutHtml = text.replace(/<[^>]*>/g, '');
+    const words = textWithoutHtml
+      .split(' ')
+      .filter((word) => word.trim() !== '');
+
+    if (words.length <= 2) {
+      return `<span class="text-black">${text}</span>`;
+    }
+
+    // Find the first two words in the original text
+    let tempText = text;
+    let wordCount = 0;
+    let firstTwoWordsEndIndex = 0;
+
+    for (let i = 0; i < tempText.length; i++) {
+      // Skip HTML tags
+      if (tempText[i] === '<') {
+        while (i < tempText.length && tempText[i] !== '>') {
+          i++;
+        }
+        continue;
+      }
+
+      // Check if we're at a word boundary (space)
+      if (tempText[i] === ' ' && i > 0 && tempText[i - 1] !== '>') {
+        wordCount++;
+        if (wordCount === 2) {
+          firstTwoWordsEndIndex = i;
+          break;
+        }
+      }
+    }
+
+    // If we found the split point
+    if (firstTwoWordsEndIndex > 0) {
+      const firstPart = tempText.substring(0, firstTwoWordsEndIndex);
+      const secondPart = tempText.substring(firstTwoWordsEndIndex);
+      return `<span class="text-black">${firstPart}</span><span class="text-white">${secondPart}</span>`;
+    }
+
+    // Fallback to original text
+    return text;
+  }
 }
