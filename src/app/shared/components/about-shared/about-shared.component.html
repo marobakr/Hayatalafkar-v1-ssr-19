@@ -20,20 +20,20 @@
 
     <!-- Text Column -->
     <div class="w-full xl:w-[55%] space-y-6">
-      <h4 class="text-black font-bold text-title-size mb-6 mt-8">
+      <h2 class="text-black font-bold text-title-size mb-6 mt-8">
         {{ "hero.about-us.title" | translate }}
-      </h4>
-      <h2 class="text-[2.8125rem] font-medium text-black mb-[35px]">
+      </h2>
+      <h3 class="text-[2.8125rem] font-medium text-black mb-[35px]">
         {{ getMainTitleWithoutLastWord() }}
         <span class="text-muted-rose">
           {{ getLastWordOfMainTitle() }}
         </span>
-      </h2>
-      <p
+      </h3>
+      <h4
         class="text-[#474747] text-description-size leading-relaxed mb-[50px] line-clamp-4 xl:text-justify"
       >
         {{ aboutUs | customTranslate : "main_text" }}
-      </p>
+      </h4>
       <!-- Stats -->
       <div
         class="flex flex-col sm:flex-row justify-evenly items-center gap-4 bg-warm-tan rounded-2xl py-[19px] text-white mb-[54px]"
