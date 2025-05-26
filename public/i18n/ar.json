@@ -937,14 +937,15 @@
   },
   "product_code": "كود المنتج",
   "product_details": {
-    "how_to_use": "طريقه الاستخدام",
-    "ingredient": "المكون",
+    "how_to_use": "طريقة الاستخدام",
+    "ingredient": "المكونات",
     "more_information": "معلومات اضافيه",
-    "size": "الحجم ",
+    "size": "الحجم",
     "tabs": {
-      "additional_info": "معلومات اضافيه ",
       "description": "الوصف",
-      "reviews": "التقيم"
+      "how_to_use": "طريقة الاستخدام",
+      "ingredient": "المكونات",
+      "more_information": "المعلومات الإضافية"
     }
   },
   "profile": {
@@ -1045,8 +1046,10 @@
       "ميكب"
     ]
   },
+  "share": "مشاركة",
   "shared": {
     "add_to_cart": "أضف إلى السلة",
+    "add_to_cart_shooping": "الاضافة الى سلة التسوق",
     "added_to_cart_success": "تمت إضافة المنتج إلى سلة التسوق بنجاح",
     "adding": "جاري الإضافة...",
     "buttons": {
@@ -1055,14 +1058,16 @@
       "saving": "جاري الحفظ...",
       "submitting": "جاري الإرسال..."
     },
+    "buy_now": "شراء الآن",
     "continue_shopping": "متابعة التسوق",
     "currency": "ر.س",
     "go_to_cart": "الذهاب إلى السلة",
     "loading": "جاري التحميل...",
     "next": "التالى",
     "offer": "خصم 25%",
+    "previous": "السابق",
     "price_varies": "السعر يختلف حسب الخيارات",
-    "processing": "جاري المعالجة...",
+    "processing": "جاري ...",
     "readMore": "قراءة المزيد",
     "shopping_now": "تسوق الآن",
     "show-products": "مشاهده المنتج ",

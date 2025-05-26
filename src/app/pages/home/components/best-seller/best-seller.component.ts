@@ -12,6 +12,7 @@ import { SharedBestSellerComponent } from './components/shared-best-seller/share
   imports: [SharedBestSellerComponent, TranslateModule, RouterLink, AsyncPipe],
   templateUrl: './best-seller.component.html',
   styleUrl: './best-seller.component.css',
+  host: { ngSkipHydration: 'true' },
 })
 export class BestSellerComponent {
   @Input({ required: true }) LatestProducts: LatestProduct[] = [];

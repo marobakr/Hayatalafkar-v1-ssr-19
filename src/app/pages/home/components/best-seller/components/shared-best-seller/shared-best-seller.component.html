@@ -46,15 +46,14 @@
             d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-5.201-3.893 10.989 10.989 0 01-2.49-4.831 6.95 6.95 0 01.945-5.205C5.93 5.38 7.553 4.5 9.31 4.5c1.355 0 2.618.607 3.476 1.577L12 6.39l-.214-.314A4.731 4.731 0 0114.69 4.5c1.757 0 3.38.879 4.44 2.466a6.95 6.95 0 01.945 5.205 10.989 10.989 0 01-2.49 4.831 15.247 15.247 0 01-5.201 3.893l-.022.012-.007.003-.001.001-.001-.001z"
           />
         </svg>
+        } @else {
+        <img
+          loading="lazy"
+          src="/images/common/wishlist.svg"
+          alt="add in wishlist"
+        />
         }
       </figure>
-      @if (!isInWishlist()) {
-      <img
-        loading="eager"
-        src="/images/common/wishlist.svg"
-        alt="add in wishlist"
-      />
-      }
     </button>
     <button
       class="cursor-pointer relative"
@@ -119,13 +118,13 @@
     </button>
   </div>
   <div
+    class="img relative cursor-pointer"
     [routerLink]="[
       '/',
       currentLang$ | async,
       'product-details',
       productData | customTranslate : 'slug'
     ]"
-    class="img relative cursor-pointer"
   >
     <a
       [routerLink]="[
@@ -138,6 +137,7 @@
       <figure class="h-[386px] md:h-[334px]">
         <img
           class="w-full h-full"
+          loading="lazy"
           [appImageUrl]="productData.main_image"
           [imageEndpoint]="'uploads/products'"
           alt="product image"
@@ -153,7 +153,6 @@
     </div>
     }
   </div>
-
   <div
     class="flex flex-row rtl:flex-row-reverse justify-between items-center mt-[26px] mb-4"
   >

@@ -6,6 +6,7 @@ import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { ApiService } from '@core/services/conf/api.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { map } from 'rxjs';
 import { IBlog } from 'src/app/pages/articles/res/interfaces/blogs';
 import { SafeHtmlComponent } from '../../../core/safe-html/safe-html.component';
 @Component({
@@ -30,6 +31,12 @@ export class ArticlesCardSharedComponent {
   _languageService = inject(LanguageService);
 
   currentLang$ = this._languageService.getLanguage();
+
+  isArabic$ = this.currentLang$.pipe(
+    map((lang) => {
+      return lang === 'ar';
+    })
+  );
 
   @Input({ required: true }) blogData: IBlog = {} as IBlog;
 }

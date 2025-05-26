@@ -1,6 +1,8 @@
 <!-- Sliders -->
 <app-hero [heroSection]="sliders"></app-hero>
 
+@defer (on idle) {
+
 <!-- About-us  -->
 <app-about-shared
   ut-shared
@@ -11,53 +13,57 @@
   [sloganText]="'hero.title' | translate"
 >
 </app-about-shared>
+}
 
 <!-- Categories -->
 <app-sections [categories]="categories"></app-sections>
-
+@defer (on idle) {
 <!-- Breacks -->
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="getQuoteById(1) | customTranslate : 'name'"
 ></app-banner>
-
+}
 <!-- offers -->
-<app-offer-card [offers]="offers"></app-offer-card>
+@defer (on idle) {
 
+<app-offer-card [offers]="offers"></app-offer-card>
+}
 <!-- Latest-Products -->
 <app-best-seller [LatestProducts]="latestProducts"></app-best-seller>
 
 <!-- Static-Banners -->
+@defer (on idle) {
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="getQuoteById(2) | customTranslate : 'name'"
 ></app-banner>
-
+}
 <!-- RandomProducts -->
 <app-offer-day
   [randomProducts]="randomProducts"
   [lastOffer]="offers[offers.length - 1]"
 ></app-offer-day>
-
 <!-- Static-Banners -->
+@defer (on idle) {
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="getQuoteById(2) | customTranslate : 'name'"
 ></app-banner>
-
+}
 <!-- bestProducts -->
 <app-new-products [bestProducts]="bestProducts"> </app-new-products>
-
 <!-- Static-Banners -->
+@defer (on idle) {
 <app-banner
   [showLeftSideImage]="true"
   [showRightSideImage]="true"
   [bannerText]="getQuoteById(3) | customTranslate : 'name'"
 ></app-banner>
-
+}
 <!-- Blogs -->
 <app-related-blogs
   [relatedBlogs]="latestBlogs"

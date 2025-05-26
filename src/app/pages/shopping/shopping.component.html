@@ -1,5 +1,9 @@
 <app-articles-header
-  [title]="'shopping.header.title' | translate"
+  [title]="
+    selectedFilters().length > 0
+      ? selectedFilters()
+      : ('shopping.header.title' | translate)
+  "
   [subTitle]="'shopping.header.subtitle' | translate"
   [showRotateImage]="true"
   [marginBottom]="'9'"
@@ -331,7 +335,7 @@
         <!-- All Cards -->
         <div class="col-span-12 xl:col-span-9 mb-15">
           <!-- Category/Subcategory Information -->
-          @if (categoryId() || subcategoryId()) {
+          <!-- @if (categoryId() || subcategoryId()) {
           <div class="container mx-auto my-4 md:my-6 px-3" @fadeIn>
             <div
               class="bg-warm-tan/10 rounded-lg p-3 md:p-5 border border-warm-tan/20 shadow-sm hover:shadow-md transition-shadow duration-300"
@@ -423,7 +427,7 @@
               </div>
             </div>
           </div>
-          }
+          } -->
           <div
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             @productGridAnimation
@@ -452,20 +456,9 @@
               (click)="previousPage()"
               [disabled]="currentPage() === 1"
               [class.opacity-50]="currentPage() === 1"
-              class="px-4 py-2 bg-warm-tan text-white rounded-md hover:bg-[#c8a67e] disabled:cursor-not-allowed pagination-button"
+              class="cursor-pointer pagination-button px-[10px] py-[1px] bg-[#D9D9D9] rounded-[10px] font-medium text-[20px] text-black hover:bg-gray-300 disabled:cursor-not-allowed border-[#B4B4B4]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              {{ "shared.previous" | translate }}
             </button>
 
             <!-- Page Numbers - Hide on mobile -->
@@ -473,10 +466,11 @@
               @for (page of getPageNumbers(); track page) {
               <button
                 (click)="goToPage(page)"
-                [class.bg-black]="currentPage() === page"
+                [class.bg-warm-tan]="currentPage() === page"
                 [class.text-white]="currentPage() === page"
-                [class.bg-gray-100]="currentPage() !== page"
-                class="px-4 py-2 rounded-md hover:bg-gray-200 pagination-button"
+                [class.border-[#A48374]]="currentPage() === page"
+                [class.bg-white]="currentPage() !== page"
+                class="cursor-pointer font-semibold text-[12px] w-[23px] h-[23px] border border-[#A7A0A0] text-white rounded-full pagination-button"
               >
                 {{ page }}
               </button>
@@ -491,24 +485,14 @@
             </div>
 
             <!-- Next Button -->
+
             <button
               (click)="nextPage()"
               [disabled]="currentPage() === totalPages()"
               [class.opacity-50]="currentPage() === totalPages()"
-              class="px-4 py-2 bg-warm-tan text-white rounded-md hover:bg-[#c8a67e] disabled:cursor-not-allowed pagination-button"
+              class="cursor-pointer pagination-button px-[10px] py-[1px] bg-[#D9D9D9] rounded-[10px] font-medium text-[20px] text-black hover:bg-gray-300 disabled:cursor-not-allowed border-[#B4B4B4]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              {{ "shared.next" | translate }}
             </button>
           </div>
 

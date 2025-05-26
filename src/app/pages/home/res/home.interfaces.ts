@@ -93,7 +93,7 @@ export interface Offer {
   id: number;
   main_image: string;
   ar_small_title: string;
-  en_samll_title: string;
+  en_small_title: string;
   en_title: string;
   ar_title: string;
   en_text: string;

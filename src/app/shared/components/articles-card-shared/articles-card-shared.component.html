@@ -30,7 +30,13 @@
       class="built ltr:left-[16px] rtl:right-[16px] text-[12px] sm:text-[14px] text-[#333] mb-[15px] sm:mb-[13px] relative"
     >
       <div class="text-[16px] text-[#333]">
+        @if(isArabic$ | async) {
+        {{ blogData.blog_date | date : " MMMM d y" }}
+
+        } @else {
         {{ blogData.blog_date | date : "d MMMM y" }}
+
+        }
       </div>
       <div
         class="circle rtl:right-[-4px] rtl:translate-x-full -translate-y-1/2 transform ltr:left-[-4px] ltr:-translate-x-full"

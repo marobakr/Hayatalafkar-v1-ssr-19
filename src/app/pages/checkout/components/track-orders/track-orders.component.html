@@ -214,6 +214,7 @@
               class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
             >
               <img
+                loading="lazy"
                 src="/images/checkout/order.svg"
                 alt="Order Submitted"
                 class="w-[45px] h-[45px]"
@@ -239,6 +240,7 @@
               class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
             >
               <img
+                loading="lazy"
                 src="/images/checkout/check-list.svg"
                 alt="Approved"
                 class="w-[45px] h-[45px]"
@@ -265,6 +267,7 @@
               class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
             >
               <img
+                loading="lazy"
                 src="/images/checkout/box-minimalistic.svg"
                 alt="In Preparation"
                 class="w-[45px] h-[45px]"
@@ -291,6 +294,7 @@
               class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
             >
               <img
+                loading="lazy"
                 src="/images/checkout/delivery.svg"
                 alt="On The Way"
                 class="w-[45px] h-[45px]"
@@ -317,6 +321,7 @@
               class="w-[70px] h-[70px] bg-white rounded-full flex items-center justify-center shadow-sm mb-4"
             >
               <img
+                loading="lazy"
                 src="/images/checkout/delivery-1.svg"
                 alt="Delivered"
                 class="w-[45px] h-[45px]"
@@ -393,6 +398,7 @@
               <figure class="max-w-[80px]">
                 @if (deliveredOrder.product?.main_image) {
                 <img
+                  loading="lazy"
                   [appImageUrl]="deliveredOrder.product.main_image"
                   [imageEndpoint]="''"
                   [alt]="deliveredOrder.product | customTranslate : 'name'"
@@ -400,6 +406,7 @@
                 />
                 } @else {
                 <img
+                  loading="lazy"
                   class="w-full"
                   src="./assets/images/wishlist/3.png"
                   alt=""

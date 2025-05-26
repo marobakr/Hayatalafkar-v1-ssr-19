@@ -1,5 +1,7 @@
 <section class="px-4">
   <div class="container mx-auto">
+    @if (randomProducts.length > 0) {
+
     <p class="text-black text-subtitle-size mb-6 text-center">
       {{ "offer-day.title" | translate }}
     </p>
@@ -125,71 +127,54 @@
       </div>
       }
     </div>
+    }
 
     <!-- offer-day Container -->
     <div
-      class="relative bg-warm-tan rounded-xl z-10 overflow-hidden flex flex-col-reverse lg:flex-row-reverse items-end justify-between pr-6 gap-8"
+      class="relative h-full bg-warm-tan rounded-xl z-10 overflow-hidden flex flex-col-reverse lg:flex-row-reverse items-stretch justify-between gap-8"
     >
       <!-- Image Section -->
-      <div class="w-full lg:w-1/2 relative z-10">
-        <!-- Background Image -->
-        @if (_languageService.getIsArabic()) {
-        <div
-          class="absolute bottom-0 ltr:right-[-20px] rtl:left-[0px] ltr:rotate-y-180"
-        >
-          <figure>
-            <img
-              loading="lazy"
-              src="/images/offer-day/5.png"
-              alt="خلفية"
-              class="max-w-[346px]"
-            />
-          </figure>
-        </div>
-        }
-
+      <div class="w-full lg:w-1/2 relative z-10 ltr:rotate-y-180">
         <!-- Foreground Image -->
-        <div
-          class="relative z-10 ltr:rotate-y-180 ltr:right-[110px] xl:right-[115px]"
-        >
-          <figure>
+        <div class="relative z-10 h-full">
+          <figure class="h-full">
             <img
               loading="lazy"
               [appImageUrl]="lastOffer?.main_image || ''"
               [imageEndpoint]="'uploads/offers'"
               [alt]="lastOffer | customTranslate : 'title'"
-              class="w-full md:max-w-[533px]"
+              class="w-full lg:max-w-[533px] h-full"
             />
           </figure>
         </div>
       </div>
 
       <!-- Text Content Section -->
-      <div class="w-full lg:w-1/2 p-3 md:p-8 text-start relative z-10">
+      <div
+        class="w-full p-[15px] sm:p-[25px] md:p-[40px] text-start relative z-10"
+      >
         <div
-          class="text-category-size md:text-[28px] text-white mb-[10px] md:mb-[23px]"
+          class="text-white font-semibold mb-[10px] md:mb-[23px] text-[28px]"
         >
-          {{ lastOffer | customTranslate : "title" }}
+          <app-safe-html
+            [content]="lastOffer | customTranslate : 'small_title'"
+          ></app-safe-html>
         </div>
+
         <h2
-          class="text-category-size md:text-[38px] text-white font-bold leading-snug mb-[10px] md:mb-[23px]"
+          class="text-[23px] md:text-[37px] font-bold leading-snug mb-[10px] md:mb-[23px] line-clamp-2"
         >
-          <div class="text-black">
-            <div class="text-[18px] font-bold mb-[15px]">
-              <app-safe-html
-                [content]="lastOffer | customTranslate : 'small_title'"
-              ></app-safe-html>
-            </div>
-          </div>
-          <div>
-            <app-safe-html
-              [content]="lastOffer | customTranslate : 'text'"
-            ></app-safe-html>
-          </div>
+          <div
+            class="inline-block"
+            [innerHTML]="formatRichText(lastOffer | customTranslate : 'title')"
+          ></div>
         </h2>
-        <p class="text-white text-category-size md:text-[28px] mb-5 md:mb-9">
-          {{ "offer-day.text-content.paragraph" | translate }}
-        </p>
+
+        <div
+          class="text-category-size md:text-[28px] text-white mb-[20px] md:mb-[35px]"
+          [innerHTML]="lastOffer | customTranslate : 'text'"
+        ></div>
+
         <app-arrow-button
           [gap]="'5px'"
           [px]="'4'"

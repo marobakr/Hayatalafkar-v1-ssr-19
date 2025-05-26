@@ -27,9 +27,16 @@ export class SafeHtmlComponent {
     this._content = value;
 
     // Process the content through sanitizer first
-    this.htmlContent =
-      this.sanitizer.sanitize(SecurityContext.HTML, value) || '';
+    if (this.trusted) {
+      // Skip security check for trusted content
+      this.htmlContent = value;
+    } else {
+      this.htmlContent =
+        this.sanitizer.sanitize(SecurityContext.HTML, value) || '';
+    }
   }
+
+  @Input() trusted = true;
 
   get content(): string {
     return this._content;

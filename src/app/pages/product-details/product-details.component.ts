@@ -14,15 +14,23 @@ import {
   Component,
   DestroyRef,
   effect,
+  HostBinding,
   inject,
   Injector,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
   runInInjectionContext,
   signal,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+} from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { AuthService } from '@core/services/auth/auth.service';
@@ -37,7 +45,7 @@ import {
   CarouselModule,
   OwlOptions,
 } from 'ngx-owl-carousel-o';
-import { take } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
 import { ArticlesHeaderComponent } from '../articles/components/articles-header/articles-header.component';
 import { SharedBestSellerComponent } from '../home/components/best-seller/components/shared-best-seller/shared-best-seller.component';
@@ -176,8 +184,15 @@ import { IProduct } from './res/productDetails.interface';
       ]),
     ]),
   ],
+  host: { ngSkipHydration: 'true' },
 })
-export class ProductDetailsComponent implements AfterViewInit, OnInit {
+export class ProductDetailsComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
+  @HostBinding('class.rtl') get isRtl() {
+    return this.isRtlMode();
+  }
+
   @ViewChild('mainCarousel') mainCarousel!: CarouselComponent;
   @ViewChild('thumbnailCarousel') thumbnailCarousel!: CarouselComponent;
 
@@ -220,7 +235,7 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   // Track the selected choice
   private selectedChoice = signal<any>(null);
 
-  quantity = signal(4);
+  quantity = signal(1);
 
   activeIndex = signal(0);
 
@@ -239,10 +254,6 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     autoplay: false,
     nav: true,
     rtl: false,
-    navText: [
-      '<i class="fa fa-chevron-left"></i>',
-      '<i class="fa fa-chevron-right"></i>',
-    ],
   };
 
   // Thumbnail gallery options
@@ -271,8 +282,9 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   // Product tabs configuration
   productTabs = [
     { id: 'description', title: 'product_details.tabs.description' },
-    { id: 'additional', title: 'product_details.tabs.additional_info' },
-    // { id: 'reviews', title: 'product_details.tabs.reviews' },
+    { id: 'how_to_use', title: 'product_details.tabs.how_to_use' },
+    { id: 'ingredient', title: 'product_details.tabs.ingredient' },
+    { id: 'more_information', title: 'product_details.tabs.more_information' },
   ];
 
   // Active tab index
@@ -282,15 +294,26 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   isAddingToCart = signal(false);
 
   private destroyRef = inject(DestroyRef);
+  private _titleService = inject(Title);
+  private _metaService = inject(Meta);
+
+  // Add subscription array to track and clean up subscriptions
+  private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     // Check language direction
-    this._languageService.getLanguage().subscribe((lang) => {
+    const langSub = this._languageService.getLanguage().subscribe((lang) => {
       this.isRtlMode.set(lang === 'ar');
 
       // Update carousel RTL setting based on language
       this.updateCarouselRtlSetting();
+
+      // Update meta tags when language changes
+      if (this.productDetails) {
+        this.updateMetaTags(this.productDetails);
+      }
     });
+    this.subscriptions.push(langSub);
 
     this.subscriptResolverToProductDetails();
     this.processProductImages();
@@ -311,6 +334,16 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
     // Create an effect that watches cart changes
     this.setupCartWatcher();
+
+    // Set up router event subscription to update meta tags after navigation
+    const routerSub = this._router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.productDetails) {
+          this.updateMetaTags(this.productDetails);
+        }
+      });
+    this.subscriptions.push(routerSub);
   }
 
   /**
@@ -331,9 +364,21 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
   // Update carousel options when RTL mode changes
   private updateCarouselRtlSetting(): void {
     const isRtl = this.isRtlMode();
+
+    const navTextForRtl = [
+      '<i class="fa-solid fa-arrow-right"></i>',
+      '<i class="fa-solid fa-arrow-left"></i>',
+    ];
+
+    const navTextForLtr = [
+      '<i class="fa-solid fa-arrow-left"></i>',
+      '<i class="fa-solid fa-arrow-right"></i>',
+    ];
+
     this.mainCarouselOptions = {
       ...this.mainCarouselOptions,
       rtl: isRtl,
+      navText: isRtl ? navTextForRtl : navTextForLtr,
     };
 
     this.thumbnailOptions = {
@@ -379,10 +424,18 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
     }, 100);
   }
 
+  /**
+   * Subscribe to product details from resolver and update meta tags
+   */
   subscriptResolverToProductDetails(): void {
-    this._route.data.subscribe((next) => {
+    const routeSub = this._route.data.subscribe((next) => {
       this.productDetails = next['productDetails'].product;
       this.relatedProducts = next['productDetails'].relatedProducts;
+
+      // Update meta tags once product details are loaded
+      if (this.productDetails) {
+        this.updateMetaTags(this.productDetails);
+      }
 
       // Initialize the selected size from the first choice if available
       if (
@@ -407,6 +460,7 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
         ];
       }
     });
+    this.subscriptions.push(routeSub);
   }
 
   incrementQuantity(): void {
@@ -859,21 +913,11 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
 
     this.isAddingToCart.set(true);
 
-    // Create cart item data
-    const formData = new FormData();
-    formData.append('product_id', this.productDetails.id.toString());
-    formData.append('quantity', this.quantity().toString());
-
-    // Get the currently selected choice
-    const choice = this.selectedChoice();
-
-    // If there's a selected choice, add its ID to the form data
-    if (choice && choice.id) {
-      console.log('Adding with choice_id:', choice.id);
-    }
+    // Use the prepareCartPayload helper to prepare the payload
+    const payload = this.prepareCartPayload();
 
     // Call cart service to add item
-    this._cartStateService.addToCart(formData).subscribe({
+    this._cartStateService.addToCart(payload).subscribe({
       next: () => {
         this.isAddingToCart.set(false);
 
@@ -1070,5 +1114,172 @@ export class ProductDetailsComponent implements AfterViewInit, OnInit {
         this.isAddingToCart.set(false);
       },
     });
+  }
+
+  /**
+   * Adds the product to cart and navigates to the cart page
+   */
+  buyNow(): void {
+    // If product is already in cart, just navigate to cart
+    if (this.isInCart()) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang: string) => {
+          this._router.navigate(['/', lang, 'cart']);
+        });
+      return;
+    }
+
+    // Otherwise, add to cart then navigate
+    this.isAddingToCart.set(true);
+
+    const payload = this.prepareCartPayload();
+
+    this._cartStateService.addToCart(payload).subscribe({
+      next: () => {
+        this.isAddingToCart.set(false);
+        this._languageService
+          .getLanguage()
+          .pipe(take(1))
+          .subscribe((lang: string) => {
+            this._router.navigate(['/', lang, 'cart']);
+          });
+      },
+      error: (error) => {
+        this.handleCartError(error);
+        this.isAddingToCart.set(false);
+      },
+    });
+  }
+
+  /**
+   * Prepares the cart payload based on product selection
+   * @returns The cart payload
+   */
+  private prepareCartPayload(): any {
+    const productId = this.productDetails.id;
+    const qty = this.quantity();
+
+    // If there's a selected choice, include it in the payload
+    if (this.selectedChoice()) {
+      return {
+        product_id: productId,
+        quantity: qty,
+        choice_id: this.selectedChoice().id,
+      };
+    }
+
+    // Otherwise, just send product_id and quantity
+    return {
+      product_id: productId,
+      quantity: qty,
+    };
+  }
+
+  /**
+   * Updates all meta tags (title and description) based on the current language
+   */
+  private updateMetaTags(product: IProduct): void {
+    if (!product) return;
+
+    const currentLang = this._translateService.currentLang;
+
+    // Remove existing meta tags first
+    this._metaService.removeTag("name='title'");
+    this._metaService.removeTag("property='og:title'");
+    this._metaService.removeTag("property='twitter:title'");
+    this._metaService.removeTag("name='description'");
+    this._metaService.removeTag("property='og:description'");
+    this._metaService.removeTag("property='twitter:description'");
+    this._metaService.removeTag("property='og:image'");
+    this._metaService.removeTag("property='twitter:image'");
+
+    // Set meta title
+    const metaTitle =
+      currentLang === 'en' ? product.en_meta_Title : product.ar_meta_Title;
+
+    if (metaTitle && metaTitle.trim() !== '') {
+      // Set document title
+      this._titleService.setTitle(metaTitle);
+
+      // Remove any fallback title that might have been set by the router
+      const titleElement = document.querySelector('title');
+      if (titleElement) {
+        titleElement.textContent = metaTitle;
+      }
+
+      // Set meta tags for social sharing and SEO
+      this._metaService.addTag({
+        name: 'title',
+        content: metaTitle,
+      });
+      this._metaService.addTag({
+        property: 'og:title',
+        content: metaTitle,
+      });
+      this._metaService.addTag({
+        property: 'twitter:title',
+        content: metaTitle,
+      });
+    } else {
+      // Fallback to product name if no meta title is available
+      const productName =
+        currentLang === 'en' ? product.en_name : product.ar_name;
+      if (productName) {
+        this._titleService.setTitle(productName);
+
+        this._metaService.addTag({
+          name: 'title',
+          content: productName,
+        });
+        this._metaService.addTag({
+          property: 'og:title',
+          content: productName,
+        });
+        this._metaService.addTag({
+          property: 'twitter:title',
+          content: productName,
+        });
+      }
+    }
+
+    // Set meta description
+    const metaDescription =
+      currentLang === 'en' ? product.en_meta_text : product.ar_meta_text;
+
+    if (metaDescription && metaDescription.trim() !== '') {
+      // Update meta description tags
+      this._metaService.addTag({
+        name: 'description',
+        content: metaDescription,
+      });
+      this._metaService.addTag({
+        property: 'og:description',
+        content: metaDescription,
+      });
+      this._metaService.addTag({
+        property: 'twitter:description',
+        content: metaDescription,
+      });
+    }
+
+    // Set image meta tags if available
+    if (product.main_image) {
+      const imageUrl = product.main_image;
+      this._metaService.addTag({
+        property: 'og:image',
+        content: imageUrl,
+      });
+      this._metaService.addTag({
+        property: 'twitter:image',
+        content: imageUrl,
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up all subscriptions
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

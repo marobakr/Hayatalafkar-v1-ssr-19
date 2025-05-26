@@ -97,3 +97,41 @@
     pointer-events: none;
   }
 }
+
+/* Overlay animation for mobile menu */
+.fixed.inset-0.bg-black\/50 {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.fixed.inset-0.bg-black\/50.opacity-100 {
+  opacity: 0.5;
+  transition: opacity 0.3s ease-out;
+}
+
+/* Enhanced mobile menu animations */
+.mobile-menu-container .fixed {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateX(-100%); /* Default position for LTR */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-container.hidden .fixed {
+  visibility: hidden; /* Ensure menu is completely hidden when container is hidden */
+}
+
+/* Specific RTL/LTR positioning with transitions */
+:host-context([dir="rtl"]) .mobile-menu-container .fixed {
+  transform: translateX(100%); /* Default position for RTL */
+}
+
+/* Apply translate-x-0 when menu is open, with smooth animation */
+.mobile-menu-container:not(.hidden) .fixed.translate-x-0 {
+  transform: translateX(0) !important;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Add subtle shadow effect during animation */
+.mobile-menu-container:not(.hidden) .fixed.translate-x-0 {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+}
