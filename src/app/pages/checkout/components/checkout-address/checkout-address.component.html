@@ -8,7 +8,7 @@
 <div class="container mx-auto">
   <div class="checkout-content justify-between">
     <div class="grid grid-cols-12 gap-6">
-      <div class="col-span-12 lg:col-span-8 overflow-hidden">
+      <div class="col-span-12 lg:col-span-8 overflow-x-hidden">
         <div class="checkout-address-container">
           <!-- Loading state -->
           @if(loading()) {
@@ -79,20 +79,6 @@
               >
                 {{ "checkout.add_another_address" | translate }}
               </button>
-              <app-button
-                [routerLink]="[
-                  '/',
-                  currentLang$ | async,
-                  'checkout',
-                  'payment'
-                ]"
-                [px]="'px-[40px] sm:px-[84px]'"
-                [py]="'py-[9px]'"
-                [title]="'checkout.next_step' | translate"
-                [disabled]="!selectedAddressId()"
-                type="button"
-              >
-              </app-button>
             </div>
           </div>
           }
@@ -412,6 +398,11 @@
           } }
         </div>
       </div>
+      @if(loading()) {
+      <div class="flex justify-center items-center py-8">
+        <app-loading></app-loading>
+      </div>
+      } @else {
 
       <!-- Order Summary Section -->
       <div class="col-span-12 lg:col-span-4">
@@ -419,8 +410,20 @@
           [selectedAddress]="getSelectedAddress()"
           [showActionButton]="false"
         >
+          <app-button
+            class="block w-full"
+            [routerLink]="['/', currentLang$ | async, 'checkout', 'payment']"
+            [px]="'px-[40px] sm:px-[84px]'"
+            [py]="'py-[9px]'"
+            [isLoading]="isSubmitting()"
+            [title]="'checkout.next_step' | translate"
+            [disabled]="!selectedAddressId()"
+            type="button"
+          >
+          </app-button>
         </app-order-summary>
       </div>
+      }
     </div>
   </div>
 </div>

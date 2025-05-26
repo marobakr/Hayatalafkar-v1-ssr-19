@@ -435,6 +435,7 @@
       "card_number_placeholder": "1234 5678 9012 3456",
       "cash_on_delivery_description": "Pay in cash when your order is delivered",
       "cash_on_delivery_note": "Your order will be delivered to your address and you can pay directly to the courier",
+      "choices": "choose payment method",
       "cvv": "CVV",
       "cvv_placeholder": "123",
       "description": "Complete your purchase with secure payment",

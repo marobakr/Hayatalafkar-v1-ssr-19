@@ -276,7 +276,7 @@ export class SharedBestSellerComponent implements OnInit {
         this._wishlistService.loadWishlistCount();
 
         this.showSuccessAlert(
-          '/images/common/wishlist.gif',
+          '/images/common/wishlist.png',
           'alerts.wishlist.add_success.title'
         );
       },

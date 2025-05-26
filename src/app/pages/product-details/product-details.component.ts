@@ -739,7 +739,7 @@ export class ProductDetailsComponent
 
         // Show success notification alert (no buttons)
         this._alertService.showNotification({
-          imagePath: '/images/common/wishlist.gif',
+          imagePath: '/images/common/wishlist.png',
           translationKeys: {
             title: 'alerts.wishlist.add_success.title',
           },

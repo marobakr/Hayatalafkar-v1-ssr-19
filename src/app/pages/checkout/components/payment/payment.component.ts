@@ -15,6 +15,12 @@ import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { OrderSummaryComponent } from '@shared/components/order-summary/order-summary.component';
 import { Observable } from 'rxjs';
 import { ArticlesHeaderComponent } from '../../../articles/components/articles-header/articles-header.component';
+
+export enum PaymentMethod {
+  CASH_ON_DELIVERY = 1,
+  ONLINE_PAYMENT = 2,
+}
+
 @Component({
   selector: 'app-payment',
   standalone: true,
@@ -44,6 +50,10 @@ export class PaymentComponent implements OnInit {
 
   // State management
   isSubmitting = signal(false);
+  selectedPaymentMethod = signal<PaymentMethod | null>(null);
+
+  // Payment method enum for template access
+  PaymentMethod = PaymentMethod;
 
   // Track if we're navigating away to prevent unnecessary redirects
   private isNavigatingAway = false;
@@ -60,6 +70,13 @@ export class PaymentComponent implements OnInit {
   currentLang$: Observable<string> = this._languageService.getLanguage();
 
   ngOnInit(): void {}
+
+  /**
+   * Set the selected payment method
+   */
+  selectPaymentMethod(method: PaymentMethod): void {
+    this.selectedPaymentMethod.set(method);
+  }
 
   /**
    * Fetch address details from user info
@@ -88,6 +105,25 @@ export class PaymentComponent implements OnInit {
   }
 
   /**
+   * Handle order placement based on payment method
+   */
+  handleOrderPlacement(): void {
+    if (!this.selectedPaymentMethod()) {
+      this._notificationService.error(
+        'Payment Method Required',
+        'Please select a payment method to continue'
+      );
+      return;
+    }
+
+    if (this.selectedPaymentMethod() === PaymentMethod.CASH_ON_DELIVERY) {
+      this.placeOrder();
+    } else if (this.selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT) {
+      this.redirectToPaymentGateway();
+    }
+  }
+
+  /**
    * Submit order with cash-on-delivery payment
    */
   placeOrder(): void {
@@ -96,10 +132,46 @@ export class PaymentComponent implements OnInit {
     this._ordersService.placeOrder(this.order().id).subscribe({
       next: (response: any) => {
         this.isSubmitting.set(false);
+        console.log(response);
+        // Navigate to track order page with order ID
+        let currentLang = 'en';
+        this._languageService.getLanguage().subscribe((lang) => {
+          currentLang = lang;
+        });
+        this._router.navigate([
+          '/',
+          currentLang,
+          'checkout',
+          'track-order',
+          this.order().user_id,
+        ]);
       },
       error: (error) => {
         this.isSubmitting.set(false);
+        this._notificationService.error(
+          'Order Error',
+          'Failed to place your order. Please try again.'
+        );
       },
     });
+  }
+
+  /**
+   * Redirect to online payment gateway
+   */
+  redirectToPaymentGateway(): void {
+    this.isSubmitting.set(true);
+
+    // In a real implementation, you would likely call an API to create a payment session
+    // and then redirect to the payment gateway URL
+
+    // Simulate payment gateway redirect
+    setTimeout(() => {
+      this.isSubmitting.set(false);
+      // This is where you would redirect to an actual payment gateway
+      window.location.href = `https://payment-gateway.example.com/pay?order_id=${
+        this.order().id
+      }`;
+    }, 1000);
   }
 }

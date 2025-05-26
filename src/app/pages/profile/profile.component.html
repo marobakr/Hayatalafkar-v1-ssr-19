@@ -67,9 +67,20 @@
             </button>
           </div>
           @if (isProfileDetailsRoute$ | async) {
-          <app-talent-image-card
-            [imagePath]="'/images/news/13.png'"
-          ></app-talent-image-card>
+          <div class="hidden h-full lg:block rounded-[30px] overflow-hidden">
+            <div class="talent-image w-full h-[708px] bg-white relative">
+              <figure
+                class="main_Image_Animation h-full rounded-[30px] overflow-hidden"
+              >
+                <img
+                  loading="lazy"
+                  [src]="'/images/news/13.png'"
+                  alt="Talent Image"
+                  class="w-full h-full object-cover"
+                />
+              </figure>
+            </div>
+          </div>
           }
         </div>
       </div>

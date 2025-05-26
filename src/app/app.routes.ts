@@ -322,17 +322,17 @@ export const routes: Routes = [
               description: 'pages.checkout.payment.description',
             },
           },
-          {
-            path: 'success-order',
-            loadComponent: () =>
-              import(
-                './pages/checkout/components/order-details/order-details.component'
-              ).then((c) => c.OrderDetailsComponent),
-            data: {
-              title: 'pages.checkout.success.title',
-              description: 'pages.checkout.success.description',
-            },
-          },
+          // {
+          //   path: 'success-order',
+          //   loadComponent: () =>
+          //     import(
+          //       './pages/checkout/components/order-details/order-details.component'
+          //     ).then((c) => c.OrderDetailsComponent),
+          //   data: {
+          //     title: 'pages.checkout.success.title',
+          //     description: 'pages.checkout.success.description',
+          //   },
+          // },
           {
             path: 'track-order',
             loadComponent: () =>
