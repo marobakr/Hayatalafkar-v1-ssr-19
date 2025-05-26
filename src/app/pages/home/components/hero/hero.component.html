@@ -5,7 +5,7 @@
   </div>
   } @else { @defer (on idle) {
 
-  <div class="container mx-auto">
+  <div class="container mx-auto relative">
     <div class="relative bg-[#CBAC8D] [border-radius:23px]">
       <h1 class="sr-only">
         {{ "hero.title" | translate }}
@@ -124,6 +124,8 @@
           />
         </figure>
       </div>
+
+      <div class="bg-image absolute inset-0 w-full h-full"></div>
     </div>
   </div>
 

@@ -316,3 +316,10 @@ section::before {
   right: auto !important;
   left: 10px !important;
 }
+.bg-image {
+  background-image: url(../../../../../../public/images/hero/hero_section.png);
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
 import { unauthGuard } from '@core/guards/unauth.guard';
+import { cartCheckResolver } from '@core/resolvers/cart-check.resolver';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 import { checkoutAddressResolver } from './pages/checkout/res/resolvers/checkout-address.resolver';
 import { checkoutLocationsResolver } from './pages/checkout/res/resolvers/checkout-locations.resolver';
@@ -305,6 +306,7 @@ export const routes: Routes = [
             resolve: {
               addressData: checkoutAddressResolver,
               locationsData: checkoutLocationsResolver,
+              cartCheck: cartCheckResolver,
             },
             data: {
               title: 'pages.checkout.address.title',
@@ -317,6 +319,9 @@ export const routes: Routes = [
               import(
                 './pages/checkout/components/payment/payment.component'
               ).then((c) => c.PaymentComponent),
+            resolve: {
+              cartCheck: cartCheckResolver,
+            },
             data: {
               title: 'pages.checkout.payment.title',
               description: 'pages.checkout.payment.description',

@@ -4,24 +4,16 @@
 </section>
 <!-- Card Service -->
 <div class="container mx-auto">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+  <!-- Card Service -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+    @for (feature of features() | customTranslate; track feature.id) {
+
     <app-service-card
-      [cardDescription]="'about-us.service-card.card-3.description' | translate"
-      [cardImagePath]="'./assets/images/whoWeAre/8.webp'"
-      [cardTitle]="'about-us.service-card.card-3.title' | translate"
-      [isCenter]="true"
+      [cardDescription]="feature.text"
+      [cardImagePath]="feature.icon_image"
+      [cardTitle]="feature.title"
+      [isCenter]="false"
     ></app-service-card>
-    <app-service-card
-      [cardDescription]="'about-us.service-card.card-2.description' | translate"
-      [cardImagePath]="'./assets/images/whoWeAre/7.webp'"
-      [cardTitle]="'about-us.service-card.card-2.title' | translate"
-      [isCenter]="true"
-    ></app-service-card>
-    <app-service-card
-      [cardDescription]="'about-us.service-card.card-1.description' | translate"
-      [cardImagePath]="'./assets/images/whoWeAre/9.webp'"
-      [cardTitle]="'about-us.service-card.card-1.title' | translate"
-      [isCenter]="true"
-    ></app-service-card>
+    }
   </div>
 </div>

@@ -7,10 +7,11 @@ import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CartStateService } from '@core/services/cart/cart-state.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { UserService } from '@core/services/user/user.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil } from 'rxjs/operators';
+import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
 import { IGetOrders, ILastOrderResponse } from './res/order.interface';
 
 interface OrderStatusConfig {
@@ -18,6 +19,7 @@ interface OrderStatusConfig {
   bgColor: string;
   icon: string;
   label: string;
+  borderColor: string;
 }
 
 @Component({
@@ -31,6 +33,7 @@ interface OrderStatusConfig {
     CustomTranslatePipe,
     AsyncPipe,
     RouterLink,
+    SafeHtmlComponent,
   ],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
@@ -41,9 +44,15 @@ export class OrdersComponent implements OnInit {
   private _router = inject(Router);
   private currentLang$ = inject(LanguageService);
   private _cartState = inject(CartStateService);
+  private _translateService = inject(TranslateService);
+  private _navigationStart = new Subject<void>();
+
   currentLang = this.currentLang$.getLanguage();
 
-  private _navigationStart = new Subject<void>();
+  lang = '';
+  $ = this.currentLang$.getLanguage().subscribe((next) => {
+    this.lang = next;
+  });
 
   orders = signal<IGetOrders>({} as IGetOrders);
   lastOrder = signal<ILastOrderResponse>({} as ILastOrderResponse);
@@ -125,51 +134,69 @@ export class OrdersComponent implements OnInit {
 
   getOrderStatusConfig(status: string): OrderStatusConfig {
     const statusLower = status.toLowerCase();
+    console.log('Status:', status, 'Lowercase:', statusLower);
+
+    let config: OrderStatusConfig;
 
     switch (statusLower) {
       case 'delivered':
-        return {
-          textColor: 'text-green-600',
+        config = {
+          textColor: 'text-[#2B841F]',
           bgColor: 'bg-green-100',
           icon: 'check-circle',
-          label: 'Delivered',
+          label: this._translateService.instant('order.status.delivered'),
+          borderColor: 'border border-[#2B841F]',
         };
+        break;
       case 'on the way':
-        return {
-          textColor: 'text-blue-600',
+        config = {
+          textColor: 'text-[#A48374]',
           bgColor: 'bg-blue-100',
           icon: 'truck',
-          label: 'On The Way',
+          label: this._translateService.instant('order.status.on_the_way'),
+          borderColor: 'border border-[#A48374]',
         };
+        break;
       case 'confirmed':
-        return {
-          textColor: 'text-amber-600',
-          bgColor: 'bg-amber-100',
+        config = {
+          textColor: 'text-[#A48374]',
+          bgColor: 'bg-[#FFF4E9]',
           icon: 'clipboard-check',
-          label: 'Confirmed',
+          label: this._translateService.instant('order.status.confirmed'),
+          borderColor: 'border border-[#A48374]',
         };
+        break;
       case 'cancelled':
-        return {
+        config = {
           textColor: 'text-red-600',
           bgColor: 'bg-red-100',
           icon: 'x-circle',
-          label: 'Cancelled',
+          label: this._translateService.instant('order.status.cancelled'),
+          borderColor: 'border border-red-600',
         };
+        break;
       case 'processing':
-        return {
+        config = {
           textColor: 'text-purple-600',
           bgColor: 'bg-purple-100',
           icon: 'refresh',
-          label: 'Processing',
+          label: this._translateService.instant('order.status.processing'),
+          borderColor: 'border border-purple-600',
         };
+        break;
       default:
-        return {
+        config = {
           textColor: 'text-gray-600',
           bgColor: 'bg-gray-100',
           icon: 'information-circle',
-          label: status,
+          label: this._translateService.instant('order.status.unknown'),
+          borderColor: 'border border-gray-600',
         };
+        break;
     }
+
+    console.log('Config returned:', config);
+    return config;
   }
 
   reorder(orderId: number): void {
@@ -185,5 +212,18 @@ export class OrdersComponent implements OnInit {
     this._cartState.fetchCart().subscribe((response) => {
       console.log('cart ', response);
     });
+  }
+
+  /**
+   * Navigate to the track order page for a specific order
+   * @param orderId Order ID to track
+   */
+  navigateToTrackOrder(orderId: number): void {
+    this.currentLang$
+      .getLanguage()
+      .pipe(take(1))
+      .subscribe((lang) => {
+        this._router.navigate(['/', lang, 'checkout', 'track-order', orderId]);
+      });
   }
 }
