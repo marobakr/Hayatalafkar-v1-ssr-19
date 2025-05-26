@@ -386,6 +386,12 @@
       "title": "shopping cart"
     },
     "item_removed": "Item removed from cart successfully",
+    "notifications": {
+      "empty_cart_checkout": {
+        "message": "Please add items to your cart before proceeding to checkout",
+        "title": "Cart is Empty"
+      }
+    },
     "promo-code": {
       "enter-valid-code": "Please enter a valid promo code",
       "error-applying": "Error applying promo code. Please try again.",
@@ -782,9 +788,18 @@
       "title": "Your request has been completed successfully"
     },
     "request-accepted": " the request has been accepted",
+    "status": {
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed",
+      "delivered": "Delivered",
+      "on_the_way": "On The Way",
+      "processing": "Processing",
+      "unknown": "Unknown"
+    },
     "substitle": "products",
     "track": {
       "back": "review all orders",
+      "start_new_order": "Start New Order",
       "subtitle": "thank you, your request has been received successfully",
       "title": "your request has been comleted successfully"
     },
@@ -916,6 +931,7 @@
       "title": "My Wishlist | Hayat Alafkar"
     }
   },
+  "payment-method": "payment method ",
   "privacy": {
     "description": "Read our privacy policy and data protection guidelines",
     "title": "Privacy Policy | Hayat Alafkar"
