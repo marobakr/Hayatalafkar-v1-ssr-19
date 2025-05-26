@@ -23,6 +23,7 @@
             @for (image of processedImages(); track image.id) {
             <ng-template carouselSlide [id]="'slide_' + image.id">
               <img
+                loading="lazy"
                 [appImageUrl]="image.url"
                 [imageEndpoint]="''"
                 [alt]="image.alt"
@@ -45,6 +46,7 @@
                 class="thumbnail-item cursor-pointer p-1 border-[1px] border-transparent rounded-[15px] overflow-hidden"
               >
                 <img
+                  loading="lazy"
                   [appImageUrl]="image.url"
                   [imageEndpoint]="''"
                   [alt]="image.alt"

@@ -336,7 +336,7 @@
     </div>
   </div>
 
-  <!-- Off-Canvas Mobile Menu -->
+  <!-- Off-Canvas Mobile Menu Overlay -->
   <div
     class="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
     [class.hidden]="!isMenuOpen"
@@ -345,116 +345,41 @@
     (click)="toggleMobileMenu()"
   ></div>
 
-  <div
-    class="fixed top-0 bottom-0 bg-white z-50 transition-transform duration-300 ease-in-out shadow-lg overflow-y-auto w-[80%] max-w-[300px]"
-    [class.right-0]="isRtl"
-    [class.left-0]="!isRtl"
-    [ngClass]="{
-      'translate-x-full': !isMenuOpen && isRtl,
-      '-translate-x-full': !isMenuOpen && !isRtl,
-      'translate-x-0': isMenuOpen
-    }"
-  >
-    <div class="p-4 flex justify-between items-center border-b border-gray-200">
-      <a
-        [routerLink]="['/', currentLang$ | async, 'home']"
-        (click)="toggleMobileMenu()"
+  <!-- Mobile menu wrapper with animation -->
+  <div class="mobile-menu-container" [class.hidden]="!isMenuOpen">
+    <div
+      class="fixed top-0 bottom-0 bg-white z-50 shadow-lg overflow-y-auto w-[80%] max-w-[300px]"
+      [class.translate-x-0]="isMenuOpen"
+      [attr.dir]="isRtl ? 'rtl' : 'ltr'"
+      [ngClass]="{
+        'right-0': isRtl,
+        'left-0': !isRtl
+      }"
+    >
+      <div
+        class="p-4 flex justify-between items-center border-b border-gray-200"
       >
-        <figure class="max-w-[56px] max-h-[40px]">
-          <img
-            src="/images/navbar/2.webp"
-            width="56"
-            height="40"
-            alt="Hayatalafkar Logo"
-          />
-        </figure>
-      </a>
-      <button
-        (click)="toggleMobileMenu()"
-        class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        [attr.aria-label]="'navbar.close_menu' | translate"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-
-    <!-- Mobile Menu Links -->
-    <ul class="py-4 px-6 space-y-4">
-      <!-- Mobile Search Input -->
-      <li class="mb-6">
-        <div class="relative">
-          <div class="relative">
-            <div
-              class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-            >
-              <svg
-                class="w-4 h-4 text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            </div>
-            <input
-              type="search"
-              id="mobile-search"
-              class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-warm-tan focus:border-warm-tan"
-              [attr.placeholder]="'navbar.search_placeholder' | translate"
-              (input)="onSearchInput($event)"
-              (keydown)="onSearchInput($event)"
-              (focus)="closeAllDropdownsExcept('none')"
-              aria-label="Search products"
-            />
-          </div>
-          <div class="text-xs text-gray-500 mt-2">
-            {{ "navbar.mobile_search_hint" | translate }}
-          </div>
-        </div>
-      </li>
-
-      <li>
         <a
           [routerLink]="['/', currentLang$ | async, 'home']"
-          class="block py-2 text-black font-bold"
           (click)="toggleMobileMenu()"
         >
-          {{ "navbar.pages_Title.home.title" | translate }}
+          <figure class="max-w-[56px] max-h-[40px]">
+            <img
+              src="/images/navbar/2.webp"
+              width="56"
+              height="40"
+              alt="Hayatalafkar Logo"
+            />
+          </figure>
         </a>
-      </li>
-
-      <li class="relative show-arrow cursor-pointer">
         <button
-          class="cursor-pointer flex justify-between items-center w-full py-2 text-black font-bold"
-          (click)="toggleMobileProductsMenu($event)"
-          (keydown)="handleMobileMenuKeydown($event)"
-          [attr.aria-expanded]="showMobileProductsMenu"
+          (click)="toggleMobileMenu()"
+          class="cursor-pointer text-muted-rose hover:text-gray-700 focus:outline-none"
+          [attr.aria-label]="'navbar.close_menu' | translate"
         >
-          <span>{{ "navbar.pages_Title.products.title" | translate }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 transition-transform"
-            [class.rotate-180]="showMobileProductsMenu"
+            class="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -463,192 +388,273 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M19 9l-7 7-7-7"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
         </button>
-        @if (showMobileProductsMenu) {
-        <div class="mt-2 ml-4 space-y-2">
-          <app-mega-menu
-            [isMobile]="true"
-            (closeMenu)="showMobileProductsMenu = false"
-            (click)="$event.stopPropagation()"
-          ></app-mega-menu>
-        </div>
+      </div>
+
+      <!-- Mobile Menu Links -->
+      <ul class="py-4 px-6 space-y-4">
+        <!-- Mobile Search Input -->
+        <li class="mb-6">
+          <div class="relative">
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="mobile-search"
+                class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-warm-tan focus:border-warm-tan"
+                [attr.placeholder]="'navbar.search_placeholder' | translate"
+                (input)="onSearchInput($event)"
+                (keydown)="onSearchInput($event)"
+                (focus)="closeAllDropdownsExcept('none')"
+                aria-label="Search products"
+              />
+            </div>
+            <div class="text-xs text-gray-500 mt-2">
+              {{ "navbar.mobile_search_hint" | translate }}
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <a
+            [routerLink]="['/', currentLang$ | async, 'home']"
+            class="block py-2 text-black font-bold"
+            (click)="toggleMobileMenu()"
+          >
+            {{ "navbar.pages_Title.home.title" | translate }}
+          </a>
+        </li>
+
+        <li class="relative show-arrow cursor-pointer">
+          <button
+            class="cursor-pointer flex justify-between items-center w-full py-2 text-black font-bold"
+            (click)="toggleMobileProductsMenu($event)"
+            (keydown)="handleMobileMenuKeydown($event)"
+            [attr.aria-expanded]="showMobileProductsMenu"
+          >
+            <span>{{ "navbar.pages_Title.products.title" | translate }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 transition-transform"
+              [class.rotate-180]="showMobileProductsMenu"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          @if (showMobileProductsMenu) {
+          <div class="mt-2 ml-4 space-y-2">
+            <app-mega-menu
+              [isMobile]="true"
+              (closeMenu)="showMobileProductsMenu = false"
+              (click)="$event.stopPropagation()"
+            ></app-mega-menu>
+          </div>
+          }
+        </li>
+
+        <li>
+          <a
+            [routerLink]="['/', currentLang$ | async, 'blogs']"
+            class="block py-2 text-black font-bold"
+            (click)="toggleMobileMenu()"
+          >
+            {{ "navbar.pages_Title.articles.title" | translate }}
+          </a>
+        </li>
+
+        <li>
+          <a
+            [routerLink]="['/', currentLang$ | async, 'shopping']"
+            class="block py-2 text-black font-bold"
+            (click)="toggleMobileMenu()"
+          >
+            {{ "navbar.pages_Title.shopping_now.title" | translate }}
+          </a>
+        </li>
+
+        <li>
+          <a
+            [routerLink]="['/', currentLang$ | async, 'about-us']"
+            class="block py-2 text-black font-bold"
+            (click)="toggleMobileMenu()"
+          >
+            {{ "navbar.pages_Title.who_we_are.title" | translate }}
+          </a>
+        </li>
+
+        <li>
+          <a
+            [routerLink]="['/', currentLang$ | async, 'contact-us']"
+            class="block py-2 text-black font-bold"
+            (click)="toggleMobileMenu()"
+          >
+            {{ "navbar.pages_Title.contact_Us.title" | translate }}
+          </a>
+        </li>
+
+        <!-- Language Selector Mobile -->
+        <li class="border-t border-gray-200 pt-4 mt-4">
+          <div class="flex space-x-4 rtl:space-x-reverse">
+            <button
+              (click)="changeLang('ar')"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
+              [class.bg-gray-100]="(currentLang$ | async) === 'ar'"
+            >
+              <figure class="max-w-[25px] max-h-[25px]">
+                <img
+                  ngSrc="/images/navbar/10.webp"
+                  width="25"
+                  height="25"
+                  alt="العربية"
+                />
+              </figure>
+              <span>العربية</span>
+            </button>
+
+            <button
+              (click)="changeLang('en')"
+              class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
+              [class.bg-gray-100]="(currentLang$ | async) === 'en'"
+            >
+              <figure class="max-w-[25px] max-h-[25px]">
+                <img
+                  ngSrc="/images/navbar/10.webp"
+                  width="25"
+                  height="25"
+                  alt="English"
+                />
+              </figure>
+              <span>English</span>
+            </button>
+          </div>
+        </li>
+
+        <!-- Profile Links Mobile -->
+        <li class="border-t border-gray-200 pt-4 mt-4">
+          <ul class="flex flex-row space-x-2 justify-between items-center">
+            <!-- PROFILE -->
+            <li>
+              <a
+                [href]="'/' + (currentLang$ | async) + '/profile'"
+                (click)="
+                  navigateToProfile();
+                  toggleMobileMenu();
+                  $event.preventDefault()
+                "
+                class="flex items-center space-x-2 rtl:space-x-reverse py-2"
+              >
+                <figure>
+                  <img
+                    src="/images/navbar/4.webp"
+                    class="w-[30px]"
+                    alt="Profile"
+                  />
+                </figure>
+              </a>
+            </li>
+
+            <li>
+              <!-- Mobile Wishlist Link -->
+              <a
+                [routerLink]="['/', currentLang$ | async, 'wishlist']"
+                class="block py-2 text-black font-bold relative"
+                (click)="toggleMobileMenu()"
+              >
+                <figure
+                  class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
+                >
+                  <img
+                    src="/images/navbar/6.webp"
+                    width="25"
+                    height="25"
+                    alt="Wishlist"
+                  />
+                  @if (wishlistCount() > 0) {
+                  <span
+                    class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                  >
+                    {{ wishlistCount() }}
+                  </span>
+                  }
+                </figure>
+              </a>
+            </li>
+
+            <li>
+              <a
+                [routerLink]="['/', currentLang$ | async, 'cart']"
+                class="block py-2 text-black font-bold relative"
+                (click)="toggleMobileMenu()"
+              >
+                <figure
+                  class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
+                >
+                  <img
+                    ngSrc="/images/navbar/7.webp"
+                    width="25"
+                    height="25"
+                    alt="Cart"
+                  />
+                  @if (cartCount() > 0) {
+                  <span
+                    class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                  >
+                    {{ cartCount() }}
+                  </span>
+                  }
+                </figure>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        @if (isAuthenticated()) {
+        <li class="mt-4">
+          <button
+            [attr.aria-label]="'navbar.logout' | translate"
+            (click)="logout()"
+            class="flex items-center space-x-2 rtl:space-x-reverse py-2 text-black font-bold"
+          >
+            <figure>
+              <img
+                src="/images/navbar/logout.svg"
+                class="w-[30px]"
+                alt="Logout"
+              />
+            </figure>
+          </button>
+        </li>
         }
-      </li>
-
-      <li>
-        <a
-          [routerLink]="['/', currentLang$ | async, 'blogs']"
-          class="block py-2 text-black font-bold"
-          (click)="toggleMobileMenu()"
-        >
-          {{ "navbar.pages_Title.articles.title" | translate }}
-        </a>
-      </li>
-
-      <li>
-        <a
-          [routerLink]="['/', currentLang$ | async, 'shopping']"
-          class="block py-2 text-black font-bold"
-          (click)="toggleMobileMenu()"
-        >
-          {{ "navbar.pages_Title.shopping_now.title" | translate }}
-        </a>
-      </li>
-
-      <li>
-        <a
-          [routerLink]="['/', currentLang$ | async, 'about-us']"
-          class="block py-2 text-black font-bold"
-          (click)="toggleMobileMenu()"
-        >
-          {{ "navbar.pages_Title.who_we_are.title" | translate }}
-        </a>
-      </li>
-
-      <li>
-        <a
-          [routerLink]="['/', currentLang$ | async, 'contact-us']"
-          class="block py-2 text-black font-bold"
-          (click)="toggleMobileMenu()"
-        >
-          {{ "navbar.pages_Title.contact_Us.title" | translate }}
-        </a>
-      </li>
-
-      <!-- Language Selector Mobile -->
-      <li class="border-t border-gray-200 pt-4 mt-4">
-        <div class="flex space-x-4 rtl:space-x-reverse">
-          <button
-            (click)="changeLang('ar'); toggleMobileMenu()"
-            class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
-            [class.bg-gray-100]="(currentLang$ | async) === 'ar'"
-          >
-            <figure class="max-w-[25px] max-h-[25px]">
-              <img
-                ngSrc="/images/navbar/10.webp"
-                width="25"
-                height="25"
-                alt="العربية"
-              />
-            </figure>
-            <span>العربية</span>
-          </button>
-
-          <button
-            (click)="changeLang('en'); toggleMobileMenu()"
-            class="flex items-center space-x-2 rtl:space-x-reverse py-2 px-3 rounded-lg hover:bg-gray-100"
-            [class.bg-gray-100]="(currentLang$ | async) === 'en'"
-          >
-            <figure class="max-w-[25px] max-h-[25px]">
-              <img
-                ngSrc="/images/navbar/10.webp"
-                width="25"
-                height="25"
-                alt="English"
-              />
-            </figure>
-            <span>English</span>
-          </button>
-        </div>
-      </li>
-
-      <!-- Profile Links Mobile -->
-      <li class="border-t border-gray-200 pt-4 mt-4">
-        <ul class="flex flex-row space-x-2 justify-between items-center">
-          <!-- PROFILE -->
-          <li>
-            <a
-              [href]="'/' + (currentLang$ | async) + '/profile'"
-              (click)="
-                navigateToProfile(); toggleMobileMenu(); $event.preventDefault()
-              "
-              class="flex items-center space-x-2 rtl:space-x-reverse py-2"
-            >
-              <figure>
-                <img
-                  src="/images/navbar/4.webp"
-                  class="w-[30px]"
-                  alt="Profile"
-                />
-              </figure>
-            </a>
-          </li>
-
-          <li>
-            <!-- Mobile Wishlist Link -->
-            <a
-              [routerLink]="['/', currentLang$ | async, 'wishlist']"
-              class="block py-2 text-black font-bold relative"
-              (click)="toggleMobileMenu()"
-            >
-              <figure
-                class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
-              >
-                <img
-                  src="/images/navbar/6.webp"
-                  width="25"
-                  height="25"
-                  alt="Wishlist"
-                />
-                @if (wishlistCount() > 0) {
-                <span
-                  class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                >
-                  {{ wishlistCount() }}
-                </span>
-                }
-              </figure>
-            </a>
-          </li>
-
-          <li>
-            <a
-              [routerLink]="['/', currentLang$ | async, 'cart']"
-              class="block py-2 text-black font-bold relative"
-              (click)="toggleMobileMenu()"
-            >
-              <figure
-                class="max-w-[25px] max-h-[25px] inline-block align-middle relative mr-2"
-              >
-                <img
-                  ngSrc="/images/navbar/7.webp"
-                  width="25"
-                  height="25"
-                  alt="Cart"
-                />
-                @if (cartCount() > 0) {
-                <span
-                  class="absolute -top-2 -right-2 bg-muted-rose text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                >
-                  {{ cartCount() }}
-                </span>
-                }
-              </figure>
-            </a>
-          </li>
-        </ul>
-      </li>
-
-      @if (isAuthenticated()) {
-      <li class="mt-4">
-        <button
-          [attr.aria-label]="'navbar.logout' | translate"
-          (click)="logout()"
-          class="flex items-center space-x-2 rtl:space-x-reverse py-2 text-black font-bold"
-        >
-          <figure>
-            <img
-              src="/images/navbar/logout.svg"
-              class="w-[30px]"
-              alt="Logout"
-            />
-          </figure>
-        </button>
-      </li>
-      }
-    </ul>
+      </ul>
+    </div>
   </div>
 </nav>

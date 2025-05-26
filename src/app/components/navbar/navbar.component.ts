@@ -193,14 +193,39 @@ export class NavbarComponent implements OnDestroy, OnInit {
   }
 
   changeLang(lang: string): void {
-    const currentUrl = this._router.url;
-    this._languageService.changeLanguage(lang, currentUrl);
+    // If mobile menu is open, close it with animation first
+    if (this.isMenuOpen) {
+      const menuElement = this.elementRef.nativeElement.querySelector(
+        '.mobile-menu-container .fixed'
+      );
+      if (menuElement) {
+        menuElement.classList.remove('translate-x-0');
+      }
 
-    // Close dropdown and remove click handlers
+      // After animation completes, hide the menu and change language
+      setTimeout(() => {
+        this.isMenuOpen = false;
+        document.body.classList.remove('scroll-lock');
+        this.performLanguageChange(lang);
+      }, 300); // Match this with CSS transition duration
+    } else {
+      // Otherwise, just change language
+      this.performLanguageChange(lang);
+    }
+  }
+
+  // Helper method to perform the actual language change
+  private performLanguageChange(lang: string): void {
+    // Close all dropdowns
     this.closeAllDropdownsExcept('none');
     this.removeGlobalClickListener();
 
-    this.isRtl = lang === 'ar';
+    // Allow any DOM updates to complete before changing language
+    setTimeout(() => {
+      const currentUrl = this._router.url;
+      this._languageService.changeLanguage(lang, currentUrl);
+      this.isRtl = lang === 'ar';
+    }, 0);
   }
 
   toggleMenu(): void {
@@ -438,16 +463,16 @@ export class NavbarComponent implements OnDestroy, OnInit {
   }
 
   toggleMobileMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+    // If menu is currently closed and we're opening it
+    if (!this.isMenuOpen) {
+      // First set isMenuOpen to true to show the container and background
+      this.isMenuOpen = true;
 
-    // Close all dropdowns when opening mobile menu
-    if (this.isMenuOpen) {
+      // Close all dropdowns when opening mobile menu
       this.closeAllDropdownsExcept('none');
-    }
 
-    // Prevent body scroll when menu is open
-    if (isPlatformBrowser(this.platformId)) {
-      if (this.isMenuOpen) {
+      // Prevent body scroll when menu is open
+      if (isPlatformBrowser(this.platformId)) {
         document.body.classList.add('scroll-lock');
 
         // Focus the mobile search input after a short delay to allow the menu to render
@@ -459,9 +484,25 @@ export class NavbarComponent implements OnDestroy, OnInit {
             mobileSearchInput.focus();
           }
         }, 300);
-      } else {
-        document.body.classList.remove('scroll-lock');
       }
+    } else {
+      // If menu is open and we're closing it
+      // First trigger the animation by removing the transform class
+      const menuElement = this.elementRef.nativeElement.querySelector(
+        '.mobile-menu-container .fixed'
+      );
+      if (menuElement) {
+        menuElement.classList.remove('translate-x-0');
+      }
+
+      // After animation completes, hide the menu completely
+      setTimeout(() => {
+        this.isMenuOpen = false;
+        // Restore body scroll
+        if (isPlatformBrowser(this.platformId)) {
+          document.body.classList.remove('scroll-lock');
+        }
+      }, 300); // Match this with CSS transition duration
     }
   }
 

@@ -104,6 +104,7 @@ orders().row.confirmed_orders.length > 0){
         class="flex flex-col md:flex-row items-center border-b border-[#8D8D8D] pb-[30px] pt-[54px]"
       >
         <img
+          loading="lazy"
           class="w-[80px] h-[80px] rounded-[15px] mb-4 md:mb-0"
           [appImageUrl]="order.product.main_image"
           [imageEndpoint]="''"
@@ -324,6 +325,7 @@ lastOrder().order.details.length > 0){
 
     <div class="flex items-center pb-[30px] pt-[54px]">
       <img
+        loading="lazy"
         class="w-[80px] h-[80px] rounded-[15px]"
         [appImageUrl]="deliveredOrder.product.main_image"
         [imageEndpoint]="''"

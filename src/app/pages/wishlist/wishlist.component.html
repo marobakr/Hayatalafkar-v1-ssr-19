@@ -95,7 +95,11 @@
                 (click)="removeItem(item.id, $index)"
               >
                 <figure class="mx-0 remove-icon">
-                  <img src="/images/wishlist/remove.svg" alt="remove item" />
+                  <img
+                    loading="lazy"
+                    src="/images/wishlist/remove.svg"
+                    alt="remove item"
+                  />
                 </figure>
               </div>
 
@@ -109,6 +113,7 @@
                 class="max-w-[80px] relative rounded-[15px] overflow-hidden"
               >
                 <img
+                  loading="lazy"
                   class="w-full"
                   [alt]="item.product | customTranslate : 'slug'"
                   [appImageUrl]="item.product.main_image"
@@ -118,6 +123,7 @@
                 @if (cartAnimationStates[$index]) {
 
                 <img
+                  loading="lazy"
                   src="/images/common/cart.svg"
                   class="absolute top-0 left-0 w-full h-full animate-cart"
                   alt="cart"

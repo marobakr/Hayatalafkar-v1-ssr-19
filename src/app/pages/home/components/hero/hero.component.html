@@ -12,10 +12,17 @@
       </h1>
 
       <!-- Owl Carousel with better overflow control -->
-      <div class="carousel-wrapper overflow-hidden relative max-h-[497px]">
+      <div
+        class="carousel-wrapper overflow-hidden relative max-h-[497px]"
+        [class.rtl-carousel]="isRtlMode()"
+      >
         <!-- Ensure consistent height -->
         <!-- Force the element to be visible with !important styles -->
-        <owl-carousel-o [options]="customOptions" #owlCarousel class="">
+        <owl-carousel-o
+          [options]="mainCarouselOptions"
+          #owlCarousel
+          class="owl-carousel-custom"
+        >
           @for (slide of heroSection; track slide.main_image) {
           <ng-template carouselSlide [id]="'slide_' + slide.main_image">
             <!-- Slide Content Container -->
@@ -56,7 +63,8 @@
                   <div
                     class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
                   >
-                    <button
+                    <a
+                      [routerLink]="['/', currentLang$ | async, 'shopping']"
                       class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
                       aria-label="Call to action"
                       [attr.title]="'hero.title-btn' | translate"
@@ -75,7 +83,7 @@
                           alt="arrow icon"
                         />
                       </figure>
-                    </button>
+                    </a>
                   </div>
                 </div>
 

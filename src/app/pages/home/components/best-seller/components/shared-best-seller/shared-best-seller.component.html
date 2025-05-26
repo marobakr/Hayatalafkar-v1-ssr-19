@@ -48,7 +48,7 @@
         </svg>
         } @else {
         <img
-          loading="eager"
+          loading="lazy"
           src="/images/common/wishlist.svg"
           alt="add in wishlist"
         />
@@ -137,6 +137,7 @@
       <figure class="h-[386px] md:h-[334px]">
         <img
           class="w-full h-full"
+          loading="lazy"
           [appImageUrl]="productData.main_image"
           [imageEndpoint]="'uploads/products'"
           alt="product image"
