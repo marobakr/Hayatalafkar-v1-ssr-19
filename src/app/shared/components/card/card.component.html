@@ -4,13 +4,13 @@
   [routerLink]="categoryId ? ['/', currentLang, 'shopping'] : []"
   [queryParams]="categoryId ? { categoryId: categoryId } : {}"
 >
-  <figure class="overflow-hidden mb-0 rounded-xl h-[300px]">
+  <figure class="overflow-hidden mb-0 rounded-xl aspect-[4/3]">
     <img
       loading="lazy"
       [appImageUrl]="imgPath"
       [imageEndpoint]="''"
-      [alt]="alt"
-      class="w-full h-full rounded-xl mb-0 transform transition-transform duration-300 group-hover:scale-110"
+      [alt]="alt + 'shopping.filter.category' | translate"
+      class="w-full h-full rounded-xl mb-0 object-cover transform transition-transform duration-300 group-hover:scale-110"
     />
   </figure>
   <p class="text-subtitle-size font-medium my-3">{{ title }}</p>
