@@ -58,6 +58,7 @@ import { ButtonComponent } from '@shared/components/button/button.component';
             [py]="'py-[9px]'"
             [px]="'px-[16px]'"
             [type]="'button'"
+            class="block w-fit"
           ></app-button>
         </div>
 
@@ -75,6 +76,7 @@ import { ButtonComponent } from '@shared/components/button/button.component';
             [py]="'py-[9px]'"
             [px]="'px-[16px]'"
             [type]="'button'"
+            class="block w-fit"
           ></app-button>
         </div>
       </div>

@@ -46,14 +46,17 @@ export class TrackOrdersComponent implements OnInit {
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((params) => {
         const orderIdParam = params.get('order-id');
-        if (orderIdParam) {
-          this.orderId.set(orderIdParam);
-          this.getOrderById(orderIdParam);
-        } else {
-          this.getLastOrder();
-        }
+        // if (orderIdParam) {
+        //   this.orderId.set(orderIdParam);
+        //   this.getOrderById(orderIdParam);
+        // } else {
+        // }
+        this.getLastOrder();
       });
   }
+
+
+
 
   formatDate(date: string | undefined): string {
     if (!date) return '';
@@ -103,7 +106,7 @@ export class TrackOrdersComponent implements OnInit {
   getOrderById(orderId: string): void {
     this.loading.set(true);
     this._userService
-      .getUserOrderById(orderId)
+      .showOrders(orderId)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: (response: ILastOrderResponse) => {

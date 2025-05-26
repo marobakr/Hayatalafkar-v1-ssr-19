@@ -33,7 +33,6 @@ export class RelatedBlogsComponent {
   getCurrentLang: string = '';
 
   lang = this._languageService.getIsArabic().subscribe((next) => {
-    console.log(next);
     this.getCurrentLang = next ? 'ar' : 'en';
   });
 

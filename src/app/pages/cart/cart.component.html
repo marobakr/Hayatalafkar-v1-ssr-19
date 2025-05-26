@@ -347,7 +347,7 @@
             </p>
             <button
               [routerLink]="['/', currentLang$ | async, 'shopping']"
-              class="bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
+              class="cursor-pointer bg-warm-tan text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
             >
               {{ "cart.empty.shop-now" | translate }}
             </button>
@@ -430,7 +430,7 @@
               'checkout',
               'checkout-address'
             ]"
-            class="cursor-pointer text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[60px] text-description-size mb-6"
+            class="cursor-pointer text-white rounded-[50px] border border-[(#164, 131, 116, 0.00)] bg-warm-tan capitalize w-full py-[9px] px-[30px] 2xl:px-[40px] text-description-size mb-6"
           >
             {{ "summary.complete-the-order" | translate }}
           </button>

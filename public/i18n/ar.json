@@ -464,6 +464,7 @@
       "card_number_placeholder": "1234 5678 9012 3456",
       "cash_on_delivery_description": "ادفع نقدًا عند استلام طلبك",
       "cash_on_delivery_note": "سيتم توصيل طلبك إلى عنوانك ويمكنك الدفع مباشرة إلى ساعي البريد",
+      "choices": "اختر طريقه الدفع",
       "cvv": "رمز التحقق",
       "cvv_placeholder": "123",
       "description": "أكمل عملية الشراء بدفع آمن",
@@ -715,10 +716,10 @@
         "title": "المقالات"
       },
       "contact_Us": {
-        "title": "اتصل بنا"
+        "title": "تواصل معنا"
       },
       "home": {
-        "title": "الرئيسية"
+        "title": "الصفحة الرئيسية"
       },
       "products": {
         "title": "المنتجات"

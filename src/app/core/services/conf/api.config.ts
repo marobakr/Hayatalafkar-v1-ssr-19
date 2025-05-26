@@ -64,6 +64,7 @@ export const API_CONFIG = {
     DELETE_USER: 'users/deleteuser/',
     LOCATION: 'menu/locations',
     UPDATE_USER_INFO: 'updateprofile',
+    SHOW_ORDERS: 'users/showOrders',
   },
 
   WISHLIST: {

@@ -16,47 +16,80 @@
           } @else {
           <div>
             <h2 class="text-title-size text-black font-bold mb-[20px]">
-              {{ "checkout.payment.title" | translate }}
+              {{ "checkout.payment.choices" | translate }}
             </h2>
 
-            <div class="cash-on-delivery-info mb-[41px]">
-              <div class="bg-white p-6 border border-[#CBAC8D] rounded-[15px]">
-                <h3 class="text-subtitle-size font-bold mb-[15px]">
-                  {{ "checkout.payment.methods.cash_on_delivery" | translate }}
-                </h3>
-                <p class="text-category-size text-[#333] mb-[15px]">
-                  {{
-                    "checkout.payment.cash_on_delivery_description" | translate
-                  }}
-                </p>
-
-                <div
-                  class="p-4 bg-[#FFF4E9] rounded-[10px] border border-[#CBAC8D] text-sm"
-                >
-                  <strong>{{ "checkout.payment.note" | translate }}:</strong>
-                  {{ "checkout.payment.cash_on_delivery_note" | translate }}
+            <!-- Payment Methods -->
+            <div class="payment-methods mb-8">
+              <!-- Cash Option -->
+              <div
+                class="payment-selection-box border border-dashed border-[#8D8D8D] rounded-lg p-4 mb-4 cursor-pointer flex justify-between items-center"
+                [class.active]="
+                  selectedPaymentMethod() === PaymentMethod.CASH_ON_DELIVERY
+                "
+                (click)="selectPaymentMethod(PaymentMethod.CASH_ON_DELIVERY)"
+              >
+                <div class="flex items-center gap-x-2">
+                  <figure
+                    class="w-[50px] h-[50px] bg-[#ECECEC] rounded-[15px] flex items-center justify-center"
+                  >
+                    <img
+                      src="/images/cart/cash.svg"
+                      alt="Cash"
+                      class="w-[40px] h-[40px]"
+                      onerror="this.src='/images/cart/cash.svg'"
+                    />
+                  </figure>
+                  <span class="text-[#0E0E0E] text-description-size">{{
+                    "checkout.payment.methods.cash_on_delivery" | translate
+                  }}</span>
+                </div>
+                <div class="checkbox-container">
+                  <div
+                    class="w-7 h-7 border border-[#8D8D8D] rounded-[5px] flex items-center justify-center bg-white"
+                  >
+                    @if(selectedPaymentMethod() ===
+                    PaymentMethod.CASH_ON_DELIVERY) {
+                    <div class="w-5 h-5 bg-[#CBAC8D] rounded-[5px]"></div>
+                    }
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Submit Button -->
-            <div class="flex justify-center mt-10">
-              <app-button
-                [routerLink]="[
-                  '/',
-                  currentLang$ | async,
-                  'checkout',
-                  'success-order'
-                ]"
-                [px]="'px-[40px] sm:px-[84px]'"
-                [py]="'py-[9px]'"
-                [title]="'checkout.payment.place_order' | translate"
-                [disabled]="isSubmitting()"
-                [isLoading]="isSubmitting()"
-                (click)="placeOrder()"
-                type="button"
+              <!-- Online Payment Option -->
+              <div
+                class="payment-selection-box border border-dashed border-[#CBAC8D] rounded-lg p-4 cursor-pointer flex justify-between items-center"
+                [class.active]="
+                  selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT
+                "
+                (click)="selectPaymentMethod(PaymentMethod.ONLINE_PAYMENT)"
               >
-              </app-button>
+                <div class="flex items-center gap-x-2">
+                  <figure
+                    class="w-[50px] h-[50px] bg-[#ECECEC] rounded-[15px] flex items-center justify-center"
+                  >
+                    <img
+                      src="/images/cart/payment.jpg"
+                      alt="Credit Card"
+                      class="w-[40px] h-[40px]"
+                      onerror="this.src='/images/cart/payment.jpg'"
+                    />
+                  </figure>
+                  <span class="text-[#0E0E0E] text-description-size">{{
+                    "checkout.payment.methods.credit_card" | translate
+                  }}</span>
+                </div>
+                <div class="checkbox-container">
+                  <div
+                    class="w-7 h-7 border border-[#8D8D8D] rounded-[5px] flex items-center justify-center bg-white"
+                  >
+                    @if(selectedPaymentMethod() ===
+                    PaymentMethod.ONLINE_PAYMENT) {
+                    <div class="w-5 h-5 bg-[#CBAC8D] rounded-[5px]"></div>
+                    }
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           }
@@ -65,10 +98,21 @@
 
       <!-- Order Summary Column -->
       <div class="col-span-12 lg:col-span-4">
-        <app-order-summary
-          [showDeliveryFee]="true"
-          [showActionButton]="false"
-        ></app-order-summary>
+        <app-order-summary [showDeliveryFee]="true" [showActionButton]="false">
+          <!-- Submit Button -->
+          <div class="flex justify-center mt-10">
+            <app-button
+              [px]="'px-[40px] sm:px-[84px]'"
+              [py]="'py-[9px]'"
+              [title]="'checkout.payment.place_order' | translate"
+              [disabled]="isSubmitting() || !selectedPaymentMethod()"
+              [isLoading]="isSubmitting()"
+              (click)="handleOrderPlacement()"
+              type="button"
+            >
+            </app-button>
+          </div>
+        </app-order-summary>
       </div>
     </div>
   </div>

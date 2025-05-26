@@ -5,7 +5,7 @@
 <!-- First section: All orders -->
 @if(orders() && orders().row && orders().row.confirmed_orders &&
 orders().row.confirmed_orders.length > 0){
-<div class="mb-[35px]">
+<div class="mb-[35px] max-h-[1062px] overflow-y-auto px-4">
   @for(allOrders of orders().row.confirmed_orders; track allOrders.id){
   <!-- ALL ORDERS -->
   <div class="my-8">
@@ -231,7 +231,7 @@ orders().row.confirmed_orders.length > 0){
 @if(lastOrder() && lastOrder().order && lastOrder().order.details &&
 lastOrder().order.details.length > 0){
 <!-- Have been Delivered -->
-<div>
+<div class="">
   <div
     class="bg-warm-tan text-white flex flex-col md:flex-row-reverse justify-between items-center rounded-t-[20px] pb-[17px] pt-[18px] px-[42px] text-description-size capitalize text-center"
   >
