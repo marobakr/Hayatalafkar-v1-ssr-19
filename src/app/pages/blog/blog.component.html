@@ -6,18 +6,29 @@
   <div class="container mx-auto">
     @if (blog) {
     <!-- Image container with fixed aspect ratio -->
-    <div
-      class="relative w-full mb-15 my-5 rounded-xl overflow-hidden aspect-[16/9]"
+    <figure
+      class="relative w-full mb-15 my-5 rounded-xl overflow-hidden max-h-[432px] aspect-[16/9]"
     >
       <img
         [appImageUrl]="blog.main_image"
-        [imageEndpoint]="'uploads/blogs'"
-        class="absolute inset-0 w-full h-full object-cover"
+        [imageEndpoint]="''"
+        class="w-full max-h-[432px] object-cover object-top"
         [alt]="blog | customTranslate : 'blog_title'"
         loading="eager"
         fetchpriority="high"
       />
-    </div>
+      <a
+        class="cursor-pointer"
+        href="#"
+        [routerLink]="['/', currentLanguage$ | async, 'blogs']"
+      >
+        <img
+          class="direction-aware-rotate w-[24px] h-[24px] absolute top-[30px] rtl:left-[30px] ltr:right-[30px]"
+          src="/images/common/back.webp"
+          alt=""
+        />
+      </a>
+    </figure>
 
     <!-- Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-11 items-start">
@@ -69,7 +80,7 @@
             [routerLink]="[
               '/',
               currentLanguage$ | async,
-              'blog',
+              'blogs',
               blog | customTranslate : 'slug'
             ]"
           >

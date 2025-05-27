@@ -1,4 +1,4 @@
-import { AsyncPipe, isPlatformBrowser, NgClass } from '@angular/common';
+import { isPlatformBrowser, NgClass } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -24,40 +24,32 @@ import { CommonService } from './../../core/services/common/common.service';
 @Component({
   selector: 'app-mega-menu',
   standalone: true,
-  imports: [
-    TranslateModule,
-    RouterLink,
-    CustomTranslatePipe,
-    AsyncPipe,
-    NgClass,
-  ],
+  imports: [TranslateModule, NgClass, RouterLink, CustomTranslatePipe],
   templateUrl: './mega-menu.component.html',
   styleUrl: './mega-menu.component.css',
 })
 export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Inject services
-  protected currentLang$ = inject(LanguageService).getLanguage();
-
-  private router = inject(Router);
-
   @ViewChild('menuContent') menuContent!: ElementRef;
-
   @Input() isMobile: boolean = false;
-
   @Output() closeMenu = new EventEmitter<void>();
 
-  private resizeSub?: Subscription;
-
-  private langSub?: Subscription;
-
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
   contentHeight = 0;
-
+  private resizeSub?: Subscription;
+  private langSub?: Subscription;
   isLoading = true;
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  currentLang = 'en';
+
+  // Inject services
+  protected languageService = inject(LanguageService);
+  private router = inject(Router);
+  categoryService = inject(CommonService);
+
+  categories: ICategory[] = [];
 
   ngOnInit() {
     this.getAllCategories();
+    this.setupLanguageSubscription();
 
     // Only add document click handler in browser environment
     if (this.isBrowser) {
@@ -66,6 +58,12 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         document.addEventListener('click', this.handleDocumentClick);
       }, 100);
     }
+  }
+
+  private setupLanguageSubscription() {
+    this.langSub = this.languageService.getLanguage().subscribe((lang) => {
+      this.currentLang = lang;
+    });
   }
 
   // Store the handler as a property so we can remove it later
@@ -114,10 +112,6 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  categoryService = inject(CommonService);
-
-  categories: ICategory[] = [];
-
   getAllCategories() {
     this.categoryService.getAllCategories().subscribe({
       next: (res: any) => {
@@ -129,5 +123,33 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  /**
+   * Navigate to shopping page filtered by category
+   * @param category The category to filter by
+   */
+  navigateToCategory(category: ICategory) {
+    this.closeMenu.emit();
+    this.router.navigate(['/', this.currentLang, 'shopping'], {
+      queryParams: {
+        categoryId: category.id,
+      },
+    });
+    this.closeMenu.emit();
+  }
+
+  /**
+   * Navigate to shopping page filtered by subcategory
+   * @param subcategoryId The subcategory ID to filter by
+   * @param subcategoryName The subcategory name for display
+   */
+  navigateToSubcategory(subcategoryId: string) {
+    this.router.navigate(['/', this.currentLang, 'shopping'], {
+      queryParams: {
+        subcategoryId,
+      },
+    });
+    this.closeMenu.emit();
   }
 }
