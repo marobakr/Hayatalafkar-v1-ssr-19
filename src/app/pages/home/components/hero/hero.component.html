@@ -27,7 +27,7 @@
             <!-- Slide Content Container -->
             <div class="slide-container w-full">
               <div
-                class="slide-content flex flex-col md:flex-row-reverse items-start justify-between w-full gap-8 overflow-y-hidden"
+                class="slide-content flex flex-col md:flex-row-reverse justify-between w-full gap-8 overflow-y-hidden items-center"
               >
                 <!-- Text Column  -->
                 <div
@@ -88,14 +88,14 @@
 
                 <!-- Image Column -->
                 <div
-                  class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 min-h-[497px] aspect-[4/5]"
+                  class="hidden lg:w-[40%] lg:flex justify-center items-center px-4"
                 >
                   <!-- Use eager loading and ensure the image is fully displayed -->
                   <img
                     [appImageUrl]="slide.main_image"
                     [imageEndpoint]="''"
                     [alt]="slide | customTranslate : 'title'"
-                    class="w-full object-cover h-[497px]"
+                    class="w-full max-h-[497px]"
                     rel="preload"
                   />
                 </div>
