@@ -3,8 +3,7 @@
   <div class="min-h-[497px] flex items-center justify-center">
     <app-loading></app-loading>
   </div>
-  } @else{
-
+  } @else{ @defer (on idle) {
   <div class="container mx-auto relative">
     <div class="relative bg-[#CBAC8D] [border-radius:23px] min-h-[497px]">
       <h1 class="sr-only">
@@ -32,7 +31,7 @@
               >
                 <!-- Text Column  -->
                 <div
-                  class="w-full lg:w-[60%] py-[20px] lg:py-[55px] px-[10px] md:px-[30px] ltr:lg:pl-[0px] rtl:lg:pr-[0px] ltr:lg:pr-[62px] rtl:lg:pl-[62px] min-h-[497px]"
+                  class="flex flex-col justify-evenly lg:block w-full lg:w-[60%] py-[20px] lg:py-[55px] px-[10px] md:px-[30px] ltr:lg:pl-[0px] rtl:lg:pr-[0px] ltr:lg:pr-[62px] rtl:lg:pl-[62px] min-h-[497px]"
                 >
                   <!-- Small Title -->
                   <app-slogan
@@ -61,7 +60,7 @@
 
                   <!-- CTA Button -->
                   <div
-                    class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+                    class="self-center lg:self-start flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
                   >
                     <a
                       [routerLink]="['/', currentLang$ | async, 'shopping']"
@@ -129,6 +128,112 @@
       <div class="bg-image absolute inset-0 w-full h-full"></div>
     </div>
   </div>
+  } @placeholder {
+  <div class="container mx-auto relative">
+    <div
+      class="relative bg-[#CBAC8D] [border-radius:23px] min-h-[497px] mt-[15px] mb-[40px]"
+    >
+      <!-- Owl Carousel with better overflow control -->
+      <div class="carousel-wrapper overflow-hidden relative h-[497px]">
+        <!-- Slide Content Container -->
+        <div class="slide-container w-full">
+          <div
+            class="slide-content flex flex-col md:flex-row-reverse items-start justify-between w-full gap-8 overflow-y-hidden"
+          >
+            <!-- Text Column  -->
+            <div
+              class="flex flex-col justify-between lg:block w-full lg:w-[60%] py-[20px] lg:py-[55px] px-[10px] md:px-[30px] ltr:lg:pl-[0px] rtl:lg:pr-[0px] ltr:lg:pr-[62px] rtl:lg:pl-[62px] min-h-[497px]"
+            >
+              <!-- Small Title -->
+              <app-slogan
+                class="mb-4"
+                [haveBg]="true"
+                [sloganImage]="'/images/navbar/8.webp'"
+                [sloganTitle]="heroSection[0] | customTranslate : 'small_title'"
+              >
+              </app-slogan>
 
-  }
+              <!-- Main Title -->
+              <h2
+                class="text-[30px] lg:text-[35px] font-semibold lg:font-bold text-white leading-snug mt-6 mb-4 line-clamp-2"
+              >
+                {{ heroSection[0] | customTranslate : "title" }}
+              </h2>
+
+              <!-- Description Text -->
+              <div
+                class="text-[#F5F5F5] leading-relaxed mb-8 font-normal text-[18px] line-clamp-3 text-wrap"
+              >
+                <app-safe-html
+                  [content]="heroSection[0] | customTranslate : 'text'"
+                ></app-safe-html>
+              </div>
+
+              <!-- CTA Button -->
+              <div
+                class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+              >
+                <a
+                  [routerLink]="['/', currentLang$ | async, 'shopping']"
+                  class="cursor-pointer text-black bg-[#d9d9d9] border border-none rounded-full flex items-center py-2 px-6 text-description-size gap-[5px]"
+                  aria-label="Call to action"
+                  [attr.title]="'hero.title-btn' | translate"
+                >
+                  <span>{{ "hero.title-btn" | translate }}</span>
+                  <figure
+                    class="direction-aware-rotate max-w-[24px] max-h-[24px]"
+                    aria-hidden="true"
+                  >
+                    <img
+                      class="w-full h-auto"
+                      width="24"
+                      height="24"
+                      loading="eager"
+                      [src]="'/images/navbar/9.webp'"
+                      alt="arrow icon"
+                    />
+                  </figure>
+                </a>
+              </div>
+            </div>
+
+            <!-- Image Column -->
+            <div
+              class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 min-h-[497px] aspect-[4/5]"
+            >
+              <!-- Use eager loading and ensure the image is fully displayed -->
+              <img
+                [appImageUrl]="heroSection[0].main_image"
+                [imageEndpoint]="''"
+                [alt]="heroSection[0] | customTranslate : 'title'"
+                class="w-full object-cover h-[497px]"
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rotating image -->
+      <div
+        class="hidden lg:block image-rotate absolute z-10 top-[14px] ltr:right-[14px] rtl:left-[14px]"
+        aria-hidden="true"
+      >
+        <figure>
+          <img
+            class="w-[73px]"
+            src="/images/common/rotate.gif"
+            alt=""
+            aria-label="Loading animation"
+            width="73"
+            height="73"
+            loading="lazy"
+          />
+        </figure>
+      </div>
+
+      <div class="bg-image absolute inset-0 w-full h-full"></div>
+    </div>
+  </div>
+  } }
 </section>
