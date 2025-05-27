@@ -76,7 +76,46 @@ export class CartComponent implements OnInit {
 
   isPromoCodeLoading = false;
 
+  /**
+   * Refreshes the cart data without a full page reload
+   */
+  refreshCart(): void {
+    this.isLoading = true;
+
+    // First check if user has confirmed orders
+    this._cartState.checkConfirmedOrders().subscribe({
+      next: () => {
+        // Then fetch the cart
+        this._cartState.fetchCart().subscribe({
+          next: () => {
+            this.isLoading = false;
+
+            // Initialize cart data with animation states
+            const cartDetails = this.orderDetails();
+
+            // Set all items to visible animation state
+            this._cartState.setOrderDetails(
+              cartDetails.map((item) => ({
+                ...item,
+                animationState: 'visible',
+              }))
+            );
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error('Error fetching cart during refresh', err);
+          },
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error checking confirmed orders during refresh', err);
+      },
+    });
+  }
+
   ngOnInit(): void {
+    /* need her makr refresh for page  */
     // Start with loading state
     this.isLoading = true;
 
