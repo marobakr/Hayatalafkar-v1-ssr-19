@@ -199,14 +199,14 @@
 
             <!-- Image Column -->
             <div
-              class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 min-h-[497px] aspect-[4/5]"
+              class="hidden lg:w-[40%] lg:flex justify-center items-center px-4"
             >
               <!-- Use eager loading and ensure the image is fully displayed -->
               <img
                 [appImageUrl]="heroSection[0].main_image"
                 [imageEndpoint]="''"
                 [alt]="heroSection[0] | customTranslate : 'title'"
-                class="w-full object-cover h-[497px]"
+                class="w-full max-h-[497px]"
                 rel="preload"
               />
             </div>
