@@ -739,7 +739,7 @@ export class ProductDetailsComponent
 
         // Show success notification alert (no buttons)
         this._alertService.showNotification({
-          imagePath: '/images/common/wishlist.png',
+          imagePath: '/images/common/wishlist.webp',
           translationKeys: {
             title: 'alerts.wishlist.add_success.title',
           },
@@ -758,7 +758,7 @@ export class ProductDetailsComponent
 
         // Show error notification
         this._alertService.showNotification({
-          imagePath: '/images/common/error.png',
+          imagePath: '/images/common/error.webp',
           translationKeys: {
             title: 'alerts.wishlist.add_error.title',
             message: 'alerts.wishlist.add_error.message',
@@ -778,7 +778,7 @@ export class ProductDetailsComponent
 
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/remove.gif',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.wishlist.remove_confirm.title',
         message: 'alerts.wishlist.remove_confirm.message',
@@ -804,7 +804,7 @@ export class ProductDetailsComponent
 
         // Show success notification (without buttons)
         this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
+          imagePath: '/images/common/after-remove.webp',
           translationKeys: {
             title: 'alerts.wishlist.remove_success.title',
           },
@@ -823,7 +823,7 @@ export class ProductDetailsComponent
 
         // Show error notification
         this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
+          imagePath: '/images/common/before-remove.webp',
           translationKeys: {
             title: 'alerts.wishlist.remove_error.title',
             message: 'alerts.wishlist.remove_error.message',
@@ -923,7 +923,7 @@ export class ProductDetailsComponent
 
         // Show success notification
         this._alertService.showNotification({
-          imagePath: '/images/common/addtocart.gif',
+          imagePath: '/images/common/addtocart.webp',
           translationKeys: {
             title: 'alerts.cart.add_success.title',
           },
@@ -979,7 +979,7 @@ export class ProductDetailsComponent
 
           // Show success notification
           this._alertService.showNotification({
-            imagePath: '/images/common/addtocart.gif',
+            imagePath: '/images/common/addtocart.webp',
             translationKeys: {
               title: 'alerts.cart.update_success.title',
             },
@@ -1005,7 +1005,7 @@ export class ProductDetailsComponent
 
         // Show success notification
         this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
+          imagePath: '/images/common/after-remove.webp',
           translationKeys: {
             title: 'alerts.cart.remove_success.title',
           },
@@ -1033,7 +1033,7 @@ export class ProductDetailsComponent
 
     // Show error notification
     this._alertService.showNotification({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.cart.error.title',
         message: 'alerts.cart.error.message',
@@ -1099,7 +1099,7 @@ export class ProductDetailsComponent
 
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.cart.remove_confirm.title',
         message: 'alerts.cart.remove_confirm.message',

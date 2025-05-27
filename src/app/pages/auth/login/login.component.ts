@@ -165,7 +165,7 @@ export class LoginComponent implements OnInit {
         this.currentLang$.subscribe((next) => (lang = next));
         if (response.access_token) {
           this._alertService.showNotification({
-            imagePath: '/images/common/settings.gif',
+            imagePath: '/images/common/settings.webp',
             translationKeys: {
               title: 'Login_successful',
             },
@@ -174,7 +174,7 @@ export class LoginComponent implements OnInit {
           this._router.navigate(['/', lang, 'home']);
         } else {
           this._alertService.showNotification({
-            imagePath: '/images/common/before-remove.png',
+            imagePath: '/images/common/before-remove.webp',
             translationKeys: {
               title: 'Login_failed',
             },
@@ -188,7 +188,7 @@ export class LoginComponent implements OnInit {
         const errorMessage =
           error?.error?.message || 'Login failed. Please try again.';
         this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
+          imagePath: '/images/common/before-remove.webp',
           translationKeys: {
             title: errorMessage,
           },

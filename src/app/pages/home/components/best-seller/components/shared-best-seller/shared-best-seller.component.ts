@@ -107,7 +107,7 @@ export class SharedBestSellerComponent implements OnInit {
 
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.cart.remove_confirm.title',
         message: 'alerts.cart.remove_confirm.message',
@@ -133,7 +133,7 @@ export class SharedBestSellerComponent implements OnInit {
         this._cartStateService.fetchCart();
 
         this.showSuccessAlert(
-          '/images/common/remove.gif',
+          '/images/common/after-remove.webp',
           'alerts.cart.remove_success.title'
         );
       },
@@ -173,7 +173,7 @@ export class SharedBestSellerComponent implements OnInit {
       next: () => {
         this.setCartLoading(false);
         this.showSuccessAlert(
-          '/images/common/addtocart.gif',
+          '/images/common/addtocart.webp',
           'alerts.cart.add_success.title'
         );
       },
@@ -276,7 +276,7 @@ export class SharedBestSellerComponent implements OnInit {
         this._wishlistService.loadWishlistCount();
 
         this.showSuccessAlert(
-          '/images/common/wishlist.png',
+          '/images/common/wishlist.webp',
           'alerts.wishlist.add_success.title'
         );
       },
@@ -301,7 +301,7 @@ export class SharedBestSellerComponent implements OnInit {
 
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.wishlist.remove_confirm.title',
         message: 'alerts.wishlist.remove_confirm.message',
@@ -334,7 +334,7 @@ export class SharedBestSellerComponent implements OnInit {
         this._wishlistService.loadWishlistCount();
 
         this.showSuccessAlert(
-          '/images/common/remove.gif',
+          '/images/common/after-remove.webp',
           'alerts.wishlist.remove_success.title'
         );
       },
@@ -363,7 +363,7 @@ export class SharedBestSellerComponent implements OnInit {
 
     // Show error notification
     this._alertService.showNotification({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: titleKey,
         message: messageKey,

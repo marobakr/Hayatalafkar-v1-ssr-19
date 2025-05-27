@@ -185,7 +185,7 @@ export class PersonalComponent implements OnInit {
           });
           if (response.user.message !== '') {
             this._alertService.showNotification({
-              imagePath: '/images/common/settings.gif',
+              imagePath: '/images/common/settings.webp',
               translationKeys: {
                 title: 'Registration_successful',
               },
@@ -193,7 +193,7 @@ export class PersonalComponent implements OnInit {
             this._router.navigate([`/${lang}/login`]);
           } else {
             this._alertService.showNotification({
-              imagePath: '/images/common/before-remove.png',
+              imagePath: '/images/common/before-remove.webp',
               translationKeys: {
                 title: 'Registration failed',
               },
@@ -210,7 +210,7 @@ export class PersonalComponent implements OnInit {
                 // Display each message for this key
                 messages.forEach((message) => {
                   this._alertService.showNotification({
-                    imagePath: '/images/common/before-remove.png',
+                    imagePath: '/images/common/before-remove.webp',
                     translationKeys: {
                       title: message,
                     },
@@ -220,7 +220,7 @@ export class PersonalComponent implements OnInit {
             });
           } else {
             this._alertService.showNotification({
-              imagePath: '/images/common/before-remove.png',
+              imagePath: '/images/common/before-remove.webp',
               translationKeys: {
                 title: 'Registration failed',
               },

@@ -111,7 +111,7 @@ export class ProfileDetailsComponent implements OnInit {
           next: (response) => {
             this.loading.set(false);
             this._alertService.showNotification({
-              imagePath: '/images/common/settings.gif',
+              imagePath: '/images/common/settings.webp',
               translationKeys: {
                 title: 'update_profile_success',
               },

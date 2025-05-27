@@ -17,7 +17,7 @@
 }
 
 .wrapper {
-  background-image: url("/images/common/alert-bg.png");
+  background-image: url("/images/common/alert-bg.webp");
   background-color: lightgray;
   background-size: cover;
 }
