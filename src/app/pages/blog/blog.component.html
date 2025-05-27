@@ -5,21 +5,24 @@
   ></div>
   <div class="container mx-auto">
     @if (blog) {
-    <figure
-      class="mb-15 my-5 rounded-xl overflow-hidden object-cover object-right-top"
+    <!-- Image container with fixed aspect ratio -->
+    <div
+      class="relative w-full mb-15 my-5 rounded-xl overflow-hidden aspect-[16/9]"
     >
-      <!--         class="w-full h-[200px] sm:h-full aspect-[16/9] max-h-[432px]"
- -->
       <img
         [appImageUrl]="blog.main_image"
         [imageEndpoint]="'uploads/blogs'"
-        class="w-full max-h-[432px]"
+        class="absolute inset-0 w-full h-full object-cover"
         [alt]="blog | customTranslate : 'blog_title'"
+        loading="eager"
+        fetchpriority="high"
       />
-    </figure>
+    </div>
+
     <!-- Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-11 items-start">
-      <div class="lg:col-span-8 xl:text-justify">
+      <!-- Main content column with min-height to prevent layout shift -->
+      <div class="lg:col-span-8 xl:text-justify min-h-[400px]">
         <!-- Date -->
         <div
           class="built ltr:left-[16px] rtl:right-[16px] text-[12px] sm:text-[14px] text-[#333] mb-[15px] sm:mb-[13px] relative"
@@ -33,12 +36,15 @@
         </div>
 
         <div class="mb-6 xl:text-justify">
-          <!-- Title -->
-          <h2 class="text-price-size font-bold pb-[23px] text-[#000]">
+          <!-- Title with min-height to prevent layout shift -->
+          <h2
+            class="text-price-size font-bold pb-[23px] text-[#000] min-h-[40px]"
+          >
             {{ blog | customTranslate : "blog_title" }}
           </h2>
 
-          <div class="mb-[35px] text-[#333]">
+          <!-- Content container with min-height -->
+          <div class="mb-[35px] text-[#333] min-h-[200px]">
             <app-safe-html
               [content]="blog | customTranslate : 'blog_text'"
             ></app-safe-html>
@@ -47,14 +53,14 @@
       </div>
 
       <div class="lg:col-span-1"></div>
-      <div class="lg:col-span-3">
+      <!-- Sidebar with min-height to prevent layout shift -->
+      <div class="lg:col-span-3 min-h-[300px]">
         <app-section-heading
           class="mb-3"
           [sectionName]="'articles.sidebar.popular-section' | translate"
         ></app-section-heading>
 
         <!-- Popular Section -->
-
         <div class="all-sections mb-9">
           @for (blog of relatedBlogs.slice(0, 4); track $index) {
           <a
@@ -78,43 +84,6 @@
           }
         </div>
 
-        <!-- <div class="newProducts mb-[60px]">
-          <app-section-heading
-            class="mb-3"
-            [sectionName]="'articles.sidebar.new-products' | translate"
-          ></app-section-heading>
-          First Card
-          <div class="card">
-            <div class="flex gap-2 items-center mb-3">
-              <figure>
-                <img
-                  loading="lazy"
-                  class="w-[99px]"
-                  src="/images/news/12.png"
-                  alt=""
-                />
-              </figure>
-              <div class="content">
-                <p class="mb-1 text-category-size text-[#333]">
-                  {{
-                    "articles.sidebar.newProducts.product-1.title" | translate
-                  }}
-                </p>
-                <p class="mb-1 text-description-size font-semibold text-black">
-                  {{
-                    "articles.sidebar.newProducts.product-1.description"
-                      | translate
-                  }}
-                </p>
-                <div class="date underline text-muted-rose font-semibold">
-                  {{
-                    "articles.sidebar.newProducts.product-1.dates" | translate
-                  }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <app-talent-image-card
           [imagePath]="'/images/news/13.webp'"
         ></app-talent-image-card>
