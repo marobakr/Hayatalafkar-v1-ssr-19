@@ -55,12 +55,9 @@
           (category.subcategories.length > 0) {
           <div class="category-card w-full pt-7 pb-12 xl:px-[34px]">
             <a
+              [routerLink]="['/', currentLang, 'shopping']"
+              [queryParams]="{ categoryId: category.id }"
               (click)="closeMenu.emit()"
-              class="font-bold capitalize mb-[9px] px-[15px] cursor-pointer hover:text-primary transition-colors group flex items-center justify-between"
-              [routerLink]="['/', currentLang$ | async, 'shopping']"
-              [queryParams]="{
-                categoryId: category.id,
-              }"
             >
               <span
                 class="group-hov er:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300 text-black font-bold capitalize underline text-[16px]"
@@ -82,10 +79,8 @@
                 @for (subCategory of category.subcategories; track
                 subCategory.id) {
                 <a
-                  [routerLink]="['/', currentLang$ | async, 'shopping']"
-                  [queryParams]="{
-                categoryId: category.id,
-              }"
+                  [routerLink]="['/', currentLang, 'shopping']"
+                  [queryParams]="{ subcategoryId: subCategory.id }"
                   class="mb-[15px] text-black hover:bg-gray-50 transition-colors cursor-pointer group flex justify-between items-center text-[15px] font-medium"
                   (click)="closeMenu.emit()"
                 >
