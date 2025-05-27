@@ -93,14 +93,14 @@ export class CartComponent implements OnInit {
         const cartDetails = this.orderDetails();
 
         // Set all items to visible animation state
-        if (cartDetails && cartDetails.length > 0) {
-          this._cartState.setOrderDetails(
-            cartDetails.map((item) => ({
-              ...item,
-              animationState: 'visible',
-            }))
-          );
-        }
+        // if (cartDetails && cartDetails.length > 0) {
+        this._cartState.setOrderDetails(
+          cartDetails.map((item) => ({
+            ...item,
+            animationState: 'visible',
+          }))
+        );
+        // }
       },
       error: (err) => {
         this.isLoading = false;
