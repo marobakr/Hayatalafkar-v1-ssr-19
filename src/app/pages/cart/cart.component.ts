@@ -77,11 +77,6 @@ export class CartComponent implements OnInit {
   isPromoCodeLoading = false;
 
   ngOnInit(): void {
-    // Reload the page after a short delay
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
-
     // Start with loading state
     this.isLoading = true;
 
