@@ -298,7 +298,7 @@ export class CartComponent implements OnInit {
             this.removingItemId = null;
 
             this._alertService.showNotification({
-              imagePath: '/images/common/remove.gif',
+              imagePath: '/images/common/after-remove.webp',
               translationKeys: {
                 title: 'alerts.cart.remove_success.title',
               },

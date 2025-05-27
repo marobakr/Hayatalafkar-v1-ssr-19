@@ -317,7 +317,7 @@ section::before {
   left: 10px !important;
 }
 .bg-image {
-  background-image: url(../../../../../../public/images/hero/hero_section.png);
+  background-image: url(../../../../../../public/images/hero/hero_section.webp);
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;

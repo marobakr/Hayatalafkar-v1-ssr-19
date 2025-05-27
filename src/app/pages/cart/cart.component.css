@@ -1,9 +1,5 @@
 .wrapper {
-  /* There an issue here */
-  /* background: url(../../../assets/images/cart/1.png) lightgray 50% / cover
-    no-repeat; */
-
-  background: url(/images/cart/1.png);
+  background: url(/images/cart/1.webp);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

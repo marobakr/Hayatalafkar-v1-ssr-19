@@ -166,7 +166,7 @@ export class WishlistComponent implements OnInit {
   removeItem(wishId: number, index: number): void {
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.wishlist.remove_confirm.title',
         message: 'alerts.wishlist.remove_confirm.message',
@@ -188,7 +188,7 @@ export class WishlistComponent implements OnInit {
 
         // Show success notification (without buttons)
         this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
+          imagePath: '/images/common/after-remove.webp',
           translationKeys: {
             title: 'alerts.wishlist.remove_success.title',
           },
@@ -199,7 +199,7 @@ export class WishlistComponent implements OnInit {
 
         // Show error notification
         this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
+          imagePath: '/images/common/before-remove.webp',
           translationKeys: {
             title: 'alerts.wishlist.remove_error.title',
             message: 'alerts.wishlist.remove_error.message',
@@ -219,7 +219,7 @@ export class WishlistComponent implements OnInit {
   removeAllItems(): void {
     // Show confirmation alert before removing all
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.wishlist.remove_all_confirm.title',
         message: 'alerts.wishlist.remove_all_confirm.message',
@@ -256,7 +256,7 @@ export class WishlistComponent implements OnInit {
 
           // Show success notification
           this._alertService.showNotification({
-            imagePath: '/images/common/remove.gif',
+            imagePath: '/images/common/after-remove.webp',
             translationKeys: {
               title: 'alerts.wishlist.remove_all_success.title',
             },
@@ -266,7 +266,7 @@ export class WishlistComponent implements OnInit {
       error: (error) => {
         // Show error notification
         this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
+          imagePath: '/images/common/before-remove.webp',
           translationKeys: {
             title: 'alerts.wishlist.remove_error.title',
             message: 'alerts.wishlist.remove_error.message',
@@ -374,7 +374,7 @@ export class WishlistComponent implements OnInit {
 
     // Show confirmation alert before removing
     this._alertService.showConfirmation({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.cart.remove_confirm.title',
         message: 'alerts.cart.remove_confirm.message',
@@ -404,7 +404,7 @@ export class WishlistComponent implements OnInit {
 
         // Show success notification (without buttons)
         this._alertService.showNotification({
-          imagePath: '/images/common/remove.gif',
+          imagePath: '/images/common/after-remove.webp',
           translationKeys: {
             title: 'alerts.cart.remove_success.title',
           },
@@ -423,7 +423,7 @@ export class WishlistComponent implements OnInit {
 
         // Show error notification
         this._alertService.showNotification({
-          imagePath: '/images/common/before-remove.png',
+          imagePath: '/images/common/before-remove.webp',
           translationKeys: {
             title: 'alerts.cart.remove_error.title',
             message: 'alerts.cart.remove_error.message',
@@ -449,7 +449,7 @@ export class WishlistComponent implements OnInit {
 
     // Show error notification
     this._alertService.showNotification({
-      imagePath: '/images/common/before-remove.png',
+      imagePath: '/images/common/before-remove.webp',
       translationKeys: {
         title: 'alerts.cart.error.title',
         message: 'alerts.cart.error.message',
@@ -465,7 +465,7 @@ export class WishlistComponent implements OnInit {
   private showAddToCartSuccessAlert(): void {
     // Show success notification for adding to cart
     this._alertService.showNotification({
-      imagePath: '/images/common/addtocart.gif',
+      imagePath: '/images/common/addtocart.webp',
       translationKeys: {
         title: 'alerts.cart.add_success.title',
       },

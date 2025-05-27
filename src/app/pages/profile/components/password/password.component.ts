@@ -106,7 +106,7 @@ export class PasswordComponent implements OnInit {
             if (response.success) {
               // Show success notification (without buttons)
               this._alertService.showNotification({
-                imagePath: '/images/common/password_success.gif',
+                imagePath: '/images/common/password_success.webp',
                 translationKeys: {
                   title: 'update_password_success',
                 },
