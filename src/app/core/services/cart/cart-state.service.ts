@@ -144,8 +144,9 @@ export class CartStateService {
         order: null as any,
         user: null as any,
       };
-
       this.cartState.set(emptyCart);
+      console.log(this.cartState());
+      console.log(emptyCart);
       return of(emptyCart);
     }
 

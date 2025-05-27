@@ -88,14 +88,14 @@
 
                 <!-- Image Column -->
                 <div
-                  class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 min-h-[497px] aspect-[4/5]"
+                  class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 max-h-[497px] aspect-[4/5]"
                 >
                   <!-- Use eager loading and ensure the image is fully displayed -->
                   <img
                     [appImageUrl]="slide.main_image"
                     [imageEndpoint]="''"
                     [alt]="slide | customTranslate : 'title'"
-                    class="w-full object-cover h-[497px]"
+                    class="w-full object-cover"
                     rel="preload"
                   />
                 </div>
@@ -125,7 +125,7 @@
         </figure>
       </div>
 
-      <div class="bg-image absolute inset-0 w-full h-full"></div>
+      <div class="bg-image absolute inset-0"></div>
     </div>
   </div>
   } @placeholder {
@@ -134,7 +134,7 @@
       class="relative bg-[#CBAC8D] [border-radius:23px] min-h-[497px] mt-[15px] mb-[40px]"
     >
       <!-- Owl Carousel with better overflow control -->
-      <div class="carousel-wrapper overflow-hidden relative h-[497px]">
+      <div class="carousel-wrapper overflow-hidden relative max-h-[497px]">
         <!-- Slide Content Container -->
         <div class="slide-container w-full">
           <div
@@ -142,7 +142,7 @@
           >
             <!-- Text Column  -->
             <div
-              class="flex flex-col justify-between lg:block w-full lg:w-[60%] py-[20px] lg:py-[55px] px-[10px] md:px-[30px] ltr:lg:pl-[0px] rtl:lg:pr-[0px] ltr:lg:pr-[62px] rtl:lg:pl-[62px] min-h-[497px]"
+              class="flex flex-col justify-evenly lg:block w-full lg:w-[60%] py-[20px] lg:py-[55px] px-[10px] md:px-[30px] ltr:lg:pl-[0px] rtl:lg:pr-[0px] ltr:lg:pr-[62px] rtl:lg:pl-[62px] min-h-[497px]"
             >
               <!-- Small Title -->
               <app-slogan
@@ -171,7 +171,7 @@
 
               <!-- CTA Button -->
               <div
-                class="flex flex-col md:flex-row gap-4 items-center md:justify-start justify-center"
+                class="flex flex-col md:flex-row gap-4 self-auto w-fit md:justify-start justify-center"
               >
                 <a
                   [routerLink]="['/', currentLang$ | async, 'shopping']"
@@ -199,14 +199,14 @@
 
             <!-- Image Column -->
             <div
-              class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 min-h-[497px] aspect-[4/5]"
+              class="hidden lg:w-[40%] lg:flex justify-center items-center px-4 max-h-[497px] aspect-[4/5]"
             >
               <!-- Use eager loading and ensure the image is fully displayed -->
               <img
                 [appImageUrl]="heroSection[0].main_image"
                 [imageEndpoint]="''"
                 [alt]="heroSection[0] | customTranslate : 'title'"
-                class="w-full object-cover h-[497px]"
+                class="w-full object-cover"
                 rel="preload"
               />
             </div>
@@ -232,7 +232,7 @@
         </figure>
       </div>
 
-      <div class="bg-image absolute inset-0 w-full h-full"></div>
+      <div class="bg-image absolute inset-0"></div>
     </div>
   </div>
   } }

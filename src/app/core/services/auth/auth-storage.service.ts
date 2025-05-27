@@ -52,6 +52,7 @@ export class AuthStorageService {
     if (!this.isBrowser) return null;
 
     const userDataStr = localStorage.getItem(this.USER_DATA_KEY);
+    console.log(userDataStr);
     if (!userDataStr) return null;
 
     try {
