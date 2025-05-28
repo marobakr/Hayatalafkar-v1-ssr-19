@@ -21,6 +21,7 @@ import { SearchService } from '@core/services/search/search.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DismissibleBadgesComponent } from '@shared/components/dismissible-badges/dismissible-badges.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { ShoppingSkeletonComponent } from '@shared/components/skeleton/shopping-skeleton/shopping-skeleton.component';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
@@ -45,6 +46,7 @@ export type StockFilterType = 'all' | 'available' | 'unavailable';
     CustomTranslatePipe,
     NavbarComponent,
     LoadingComponent,
+    ShoppingSkeletonComponent,
   ],
   templateUrl: './shopping.component.html',
   styleUrl: './shopping.component.css',

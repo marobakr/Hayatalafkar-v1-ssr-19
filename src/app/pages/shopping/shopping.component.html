@@ -1,3 +1,6 @@
+@if (isLoading()) {
+<app-shopping-skeleton />
+} @else {
 <app-articles-header
   [title]="
     selectedFilters().length > 0
@@ -12,8 +15,6 @@
 
 <section>
   <div class="container mx-auto">
-    @if (!isLoading()) {
-
     <div class="wrapper fade-in-section">
       <!-- Filter Options Header -->
       <div
@@ -336,21 +337,81 @@
         <div class="col-span-12 xl:col-span-9 mb-15">
           <!-- Category/Subcategory Information -->
           <!-- @if (categoryId() || subcategoryId()) {
-          <div class="container mx-auto my-4 md:my-6 px-3" @fadeIn>
-            <div
-              class="bg-warm-tan/10 rounded-lg p-3 md:p-5 border border-warm-tan/20 shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
+            <div class="container mx-auto my-4 md:my-6 px-3" @fadeIn>
               <div
-                class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4"
+                class="bg-warm-tan/10 rounded-lg p-3 md:p-5 border border-warm-tan/20 shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                <div class="flex items-center gap-2 md:gap-3">
-                  <div
-                    class="bg-warm-tan text-white p-2 md:p-3 rounded-full flex items-center justify-center"
+                <div
+                  class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4"
+                >
+                  <div class="flex items-center gap-2 md:gap-3">
+                    <div
+                      class="bg-warm-tan text-white p-2 md:p-3 rounded-full flex items-center justify-center"
+                    >
+                      @if (categoryId() || subcategoryId()) {
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 md:h-6 md:w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                        />
+                      </svg>
+                      }
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      @if (categoryId()) {
+                      <h2 class="text-lg md:text-xl font-semibold truncate">
+                        {{ "shopping.filter.category" | translate }}:
+                        <span class="text-warm-tan">{{ categoryName() }}</span>
+                      </h2>
+                      <p class="text-gray-500 text-xs md:text-sm">
+                        {{ filteredProducts().length }}
+                        {{ "shopping.filter.items" | translate }}
+                      </p>
+                      } @if (subcategoryId()) {
+                      <h2 class="text-lg md:text-xl font-semibold truncate">
+                        {{ "shopping.filter.subcategory" | translate }}:
+                        <span class="text-warm-tan">{{ subcategoryName() }}</span>
+                      </h2>
+                      <p class="text-gray-500 text-xs md:text-sm">
+                        {{ filteredProducts().length }}
+                        {{ "shopping.filter.items" | translate }}
+                      </p>
+                      }
+                    </div>
+                  </div>
+                  <button
+                    class="text-xs md:text-sm bg-warm-tan text-white px-3 md:px-5 py-1.5 md:py-2 rounded-full hover:bg-warm-tan/80 transition-colors flex items-center gap-1 md:gap-2 self-start md:self-auto mt-2 md:mt-0 badge-animation"
+                    (click)="clearAllFilters()"
                   >
-                    @if (categoryId() || subcategoryId()) {
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 md:h-6 md:w-6"
+                      class="h-3.5 w-3.5 md:h-4 md:w-4"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -359,75 +420,15 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                        d="M4 6h16M4 12h16M4 18h7"
                       />
                     </svg>
-                    }
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    @if (categoryId()) {
-                    <h2 class="text-lg md:text-xl font-semibold truncate">
-                      {{ "shopping.filter.category" | translate }}:
-                      <span class="text-warm-tan">{{ categoryName() }}</span>
-                    </h2>
-                    <p class="text-gray-500 text-xs md:text-sm">
-                      {{ filteredProducts().length }}
-                      {{ "shopping.filter.items" | translate }}
-                    </p>
-                    } @if (subcategoryId()) {
-                    <h2 class="text-lg md:text-xl font-semibold truncate">
-                      {{ "shopping.filter.subcategory" | translate }}:
-                      <span class="text-warm-tan">{{ subcategoryName() }}</span>
-                    </h2>
-                    <p class="text-gray-500 text-xs md:text-sm">
-                      {{ filteredProducts().length }}
-                      {{ "shopping.filter.items" | translate }}
-                    </p>
-                    }
-                  </div>
+                    {{ "shopping.filter.view-all-products" | translate }}
+                  </button>
                 </div>
-                <button
-                  class="text-xs md:text-sm bg-warm-tan text-white px-3 md:px-5 py-1.5 md:py-2 rounded-full hover:bg-warm-tan/80 transition-colors flex items-center gap-1 md:gap-2 self-start md:self-auto mt-2 md:mt-0 badge-animation"
-                  (click)="clearAllFilters()"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3.5 w-3.5 md:h-4 md:w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h7"
-                    />
-                  </svg>
-                  {{ "shopping.filter.view-all-products" | translate }}
-                </button>
               </div>
             </div>
-          </div>
-          } -->
+            } -->
           <div
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             @productGridAnimation
@@ -505,11 +506,6 @@
         </div>
       </div>
     </div>
-    }
   </div>
 </section>
-
-<!-- Loading Spinner -->
-@if (isLoading()) {
-<app-loading class="loading-spinner"></app-loading>
 }
