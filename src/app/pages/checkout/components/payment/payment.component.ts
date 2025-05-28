@@ -166,12 +166,32 @@ export class PaymentComponent implements OnInit {
     // and then redirect to the payment gateway URL
 
     // Simulate payment gateway redirect
-    setTimeout(() => {
-      this.isSubmitting.set(false);
-      // This is where you would redirect to an actual payment gateway
-      window.location.href = `https://payment-gateway.example.com/pay?order_id=${
-        this.order().id
-      }`;
-    }, 1000);
+    // setTimeout(() => {
+    //   this.isSubmitting.set(false);
+    //   // This is where you would redirect to an actual payment gateway
+    //   window.location.href = `https://payment-gateway.example.com/pay?order_id=${
+    //     this.order().id
+    //   }`;
+    // }, 1000);
+
+    /*
+    {
+name
+amount
+email
+mobile
+order_id
+}
+    */
+
+    // this._http.post(API_CONFIG.PAYMENT.CREATE_PAYMENT, {
+    //       name: this.order().name,
+    //       amount: this.order().total,
+    //       email: this.order().email,
+    //       mobile: this.order().phone,
+    //       order_id: this.order().order_id,
+    //     }).subscribe((res) => {
+    //       console.log(res);
+    //     });
   }
 }
