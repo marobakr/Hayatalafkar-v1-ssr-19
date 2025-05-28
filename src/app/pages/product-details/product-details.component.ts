@@ -40,6 +40,7 @@ import { WishlistService } from '@core/services/wishlist/wishlist.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@shared/alert/alert.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { ProductDetailsSkeletonComponent } from '@shared/components/skeleton/product-details-skeleton/product-details-skeleton.component';
 import {
   CarouselComponent,
   CarouselModule,
@@ -68,6 +69,7 @@ import { IProduct } from './res/productDetails.interface';
     SharedBestSellerComponent,
     NgClass,
     CustomTranslatePipe,
+    ProductDetailsSkeletonComponent,
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',

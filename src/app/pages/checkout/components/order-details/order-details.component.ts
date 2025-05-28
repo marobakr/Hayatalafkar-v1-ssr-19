@@ -6,14 +6,17 @@ import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { LanguageService } from '@core/services/lang/language.service';
 import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { OrderDetailsSkeletonComponent } from '@shared/components/skeleton/order-details-skeleton/order-details-skeleton.component';
 import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
 import { ArrowButtonComponent } from '../../../../shared/components/arrow-button/arrow-button.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ArticlesHeaderComponent } from '../../../articles/components/articles-header/articles-header.component';
 import { ILastOrderResponse } from '../../../profile/components/orders/res/order.interface';
+
 @Component({
   selector: 'app-order-details',
+  standalone: true,
   imports: [
     ArticlesHeaderComponent,
     TranslateModule,
@@ -27,6 +30,7 @@ import { ILastOrderResponse } from '../../../profile/components/orders/res/order
     ArrowButtonComponent,
     RouterLink,
     AsyncPipe,
+    OrderDetailsSkeletonComponent,
   ],
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.css',

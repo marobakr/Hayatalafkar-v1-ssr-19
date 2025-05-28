@@ -10,6 +10,7 @@ import { UserService } from '@core/services/user/user.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { TrackOrdersSkeletonComponent } from '@shared/components/skeleton/track-orders-skeleton/track-orders-skeleton.component';
 import { ILastOrderResponse } from 'src/app/pages/profile/components/orders/res/order.interface';
 
 @Component({
@@ -25,6 +26,7 @@ import { ILastOrderResponse } from 'src/app/pages/profile/components/orders/res/
     RouterLink,
     CustomTranslatePipe,
     SafeHtmlComponent,
+    TrackOrdersSkeletonComponent,
   ],
   templateUrl: './track-orders.component.html',
   styleUrls: ['./track-orders.component.css'],
@@ -54,9 +56,6 @@ export class TrackOrdersComponent implements OnInit {
         this.getLastOrder();
       });
   }
-
-
-
 
   formatDate(date: string | undefined): string {
     if (!date) return '';

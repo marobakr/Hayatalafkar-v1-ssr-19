@@ -1,3 +1,6 @@
+@if (!relatedBlogs?.length) {
+<app-related-blogs-skeleton [lightLabel]="lightLabel" />
+} @else {
 <section class="container mx-auto my-[60px]">
   <!-- Section Header -->
   @if (lightLabel) {
@@ -105,3 +108,4 @@
     } }
   </div>
 </section>
+}

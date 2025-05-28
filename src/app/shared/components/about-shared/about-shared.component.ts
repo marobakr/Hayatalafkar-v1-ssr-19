@@ -6,6 +6,7 @@ import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AboutUs, Counter } from 'src/app/pages/home/res/home.interfaces';
+import { AboutSkeletonComponent } from '../skeleton/about-skeleton/about-skeleton.component';
 import { SloganComponent } from '../slogan/slogan.component';
 @Component({
   selector: 'app-about-shared',
@@ -18,6 +19,7 @@ import { SloganComponent } from '../slogan/slogan.component';
     RouterLink,
     ImageUrlDirective,
     AsyncPipe,
+    AboutSkeletonComponent,
   ],
   templateUrl: './about-shared.component.html',
   styleUrl: './about-shared.component.css',

@@ -11,8 +11,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-12 gap-11 items-start">
       <div class="xl:col-span-9 xl:text-justify order-2 xl:order-1">
         @if (loading) {
-        <app-loading></app-loading>
-
+        <app-articles-skeleton />
         } @else if (blogs && blogs.length > 0) { @for (blog of blogs | paginate:
         { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems:
         totalItems }; track blog.id || $index) {

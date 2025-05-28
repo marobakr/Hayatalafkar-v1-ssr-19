@@ -21,6 +21,7 @@ import { API_CONFIG } from '@core/services/conf/api.config';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
+import { ContactUsSkeletonComponent } from '@shared/components/skeleton/contact-us-skeleton/contact-us-skeleton.component';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
@@ -44,6 +45,7 @@ import { ContactUsService } from './res/contact-us.service';
     ReactiveFormsModule,
     CommonModule,
     NgClass,
+    ContactUsSkeletonComponent,
   ],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css',

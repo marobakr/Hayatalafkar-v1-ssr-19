@@ -1,4 +1,3 @@
-@if (lastOrder()?.order) {
 <div class="container mx-auto mt-3 mb-6">
   <div class="header p-9 text-center rounded-2xl relative" role="banner">
     <img
@@ -18,7 +17,7 @@
   </div>
   <!-- Current order -->
   <div class="mt-[35px]">
-    @if(!loading()){
+    @if(!loading() || !lastOrder()?.order){
     <!-- Have been Delivered -->
     <div>
       <div
@@ -148,12 +147,7 @@
       </a>
     </div>
     }@else {
-    <app-loading></app-loading>
+    <app-order-details-skeleton />
     }
   </div>
 </div>
-} @else {
-<div class="container mx-auto mt-3 mb-6">
-  <app-loading></app-loading>
-</div>
-}

@@ -1,4 +1,4 @@
-import { AsyncPipe, isPlatformBrowser } from '@angular/common';
+import { AsyncPipe, CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -17,7 +17,7 @@ import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { HeroSkeletonComponent } from '@shared/components/skeleton/hero-skeleton/hero-skeleton.component';
 import { SloganComponent } from '@shared/components/slogan/slogan.component';
 import {
   CarouselComponent,
@@ -26,19 +26,21 @@ import {
 } from 'ngx-owl-carousel-o';
 import { Subscription } from 'rxjs';
 import { Slider } from '../../res/home.interfaces';
+import { HomeService } from '../../res/home.service';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
   imports: [
-    SloganComponent,
+    CommonModule,
+    RouterLink,
     TranslateModule,
+    CarouselModule,
     CustomTranslatePipe,
     SafeHtmlComponent,
+    SloganComponent,
     ImageUrlDirective,
-    LoadingComponent,
-    CarouselModule,
-    RouterLink,
+    HeroSkeletonComponent,
     AsyncPipe,
   ],
   templateUrl: './hero.component.html',
@@ -50,16 +52,13 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('owlCarousel') mainCarousel!: CarouselComponent;
 
   private platformId = inject(PLATFORM_ID);
-
   private languageService = inject(LanguageService);
-
+  private homeService = inject(HomeService);
   private subscription = new Subscription();
 
   // Signal to track carousel loading state
   isCarouselLoading = signal(true);
-
   currentLang$ = this.languageService.getLanguage();
-
   isRtlMode = signal(false);
 
   @HostBinding('class.rtl') get isRtl() {
@@ -76,7 +75,7 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
     navSpeed: 700,
     items: 1,
     autoplay: true,
-    autoplayTimeout: 10000, // 5 seconds
+    autoplayTimeout: 10000, // 10 seconds
     autoplaySpeed: 1000, // Smooth transition (1 second)
     autoplayHoverPause: false, // Don't pause on hover
     nav: true,
@@ -88,13 +87,13 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   ngOnInit(): void {
+    this.loadHeroSection();
     if (isPlatformBrowser(this.platformId)) {
       // Subscribe to language changes to update RTL mode
       this.subscription.add(
         this.languageService.getLanguage().subscribe((lang) => {
           const isRtl = lang === 'ar';
           this.isRtlMode.set(isRtl);
-
           // Update carousel options based on language
           this.updateCarouselRtlSetting();
         })
@@ -103,7 +102,7 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Apply RTL settings after view initialization to ensure they're applied
+    // Apply RTL settings after view initialization
     setTimeout(() => {
       this.updateCarouselRtlSetting();
     }, 0);
@@ -154,5 +153,18 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }, 100);
+  }
+
+  private loadHeroSection(): void {
+    this.subscription.add(
+      this.homeService.getHomeData().subscribe({
+        next: (data: any) => {
+          this.heroSection = data.slider;
+        },
+        error: (error: unknown) => {
+          console.error('Error loading hero section:', error);
+        },
+      })
+    );
   }
 }

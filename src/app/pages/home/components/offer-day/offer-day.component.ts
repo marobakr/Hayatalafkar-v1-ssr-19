@@ -7,6 +7,7 @@ import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ArrowButtonComponent } from '@shared/components/arrow-button/arrow-button.component';
+import { OfferDaySkeletonComponent } from '@shared/components/skeleton/offer-day-skeleton/offer-day-skeleton.component';
 import { Offer, RandomProduct } from '../../res/home.interfaces';
 
 @Component({
@@ -21,6 +22,7 @@ import { Offer, RandomProduct } from '../../res/home.interfaces';
     ImageUrlDirective,
     RouterLink,
     AsyncPipe,
+    OfferDaySkeletonComponent,
   ],
   templateUrl: './offer-day.component.html',
   styleUrl: './offer-day.component.css',
