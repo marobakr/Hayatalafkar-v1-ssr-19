@@ -47,7 +47,19 @@ import { HomeService } from '../../res/home.service';
   styleUrl: './hero.component.css',
 })
 export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() heroSection: Slider[] = [];
+  private _heroSection: Slider[] = [];
+
+  @Input()
+  set heroSection(value: Slider[]) {
+    this._heroSection = value;
+    // Update loading state when data arrives
+    if (value && value.length > 0) {
+      this.isLoading.set(false);
+    }
+  }
+  get heroSection(): Slider[] {
+    return this._heroSection;
+  }
 
   @ViewChild('owlCarousel') mainCarousel!: CarouselComponent;
 
@@ -55,6 +67,9 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   private languageService = inject(LanguageService);
   private homeService = inject(HomeService);
   private subscription = new Subscription();
+
+  // Signal to track loading state
+  isLoading = signal(true);
 
   // Signal to track carousel loading state
   isCarouselLoading = signal(true);
@@ -87,7 +102,6 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   ngOnInit(): void {
-    this.loadHeroSection();
     if (isPlatformBrowser(this.platformId)) {
       // Subscribe to language changes to update RTL mode
       this.subscription.add(

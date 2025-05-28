@@ -8,7 +8,7 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
   // Don't show spinner for about-us related requests
   if (!req.url.includes('/api/about-us') || !req.url.includes('/api/home')) {
-    // spinner.show();
+    spinner.show();
   }
 
   return next(req).pipe(
