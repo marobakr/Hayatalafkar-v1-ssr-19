@@ -1,24 +1,26 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { ApiService } from '@core/services/conf/api.service';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { RelatedBlogsSkeletonComponent } from '@shared/components/skeleton/related-blogs-skeleton/related-blogs-skeleton.component';
 import { SafeHtmlComponent } from '../../../../core/safe-html/safe-html.component';
 import { IRelatedBlogs } from '../../res/interfaces/singleBlog';
 
 @Component({
   selector: 'app-related-blogs',
+  standalone: true,
   imports: [
+    CommonModule,
+    RouterModule,
     TranslateModule,
-    AsyncPipe,
-    RouterLink,
-    CustomTranslatePipe,
     SafeHtmlComponent,
-    DatePipe,
     ImageUrlDirective,
+    CustomTranslatePipe,
+    RelatedBlogsSkeletonComponent,
   ],
   templateUrl: './related-blogs.component.html',
   styleUrl: './related-blogs.component.css',

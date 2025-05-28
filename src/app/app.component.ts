@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { filter, map, Subscription } from 'rxjs';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -20,6 +21,7 @@ import { NotificationComponent } from './shared/components/notification/notifica
     FooterComponent,
     AlertComponent,
     NotificationComponent,
+    NgxSpinnerModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

@@ -5,11 +5,13 @@ import { Router, RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { IGetWishlist } from '@core/interfaces/wishlist.interfaces';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { SafeHtmlComponent } from '@core/safe-html/safe-html.component';
 import { CartStateService } from '@core/services/cart/cart-state.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@shared/alert/alert.service';
 import { ButtonComponent } from '@shared/components/button/button.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { WishlistSkeletonComponent } from '@shared/components/skeleton/wishlist-skeleton/wishlist-skeleton.component';
 import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { take } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
@@ -33,6 +35,8 @@ const cartLoadingMap = new Map<number, boolean>();
     AsyncPipe,
     RouterLink,
     LoadingComponent,
+    WishlistSkeletonComponent,
+    SafeHtmlComponent,
   ],
   templateUrl: './wishlist.component.html',
   styleUrl: './wishlist.component.css',

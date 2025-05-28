@@ -1,3 +1,6 @@
+@if (!randomProducts?.length || !lastOffer) {
+<app-offer-day-skeleton />
+} @else {
 <section class="px-4">
   <div class="container mx-auto">
     @if (randomProducts.length > 0) {
@@ -195,3 +198,4 @@
     </div>
   </div>
 </section>
+}

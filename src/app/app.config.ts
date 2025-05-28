@@ -28,6 +28,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -48,8 +49,10 @@ export const appConfig: ApplicationConfig = {
       CarouselModule
     ),
     provideAnimations(),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authInterceptor, loadingInterceptor])
+    ),
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',

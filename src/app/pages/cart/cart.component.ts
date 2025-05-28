@@ -19,12 +19,14 @@ import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@shared/alert/alert.service';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
+import { CartSkeletonComponent } from '@shared/components/skeleton/cart-skeleton/cart-skeleton.component';
 import { SafeHtmlComponent } from '../../core/safe-html/safe-html.component';
 import { ArticlesHeaderComponent } from '../../pages/articles/components/articles-header/articles-header.component';
 import { ServiceCardComponent } from '../about-us/components/service-card/service-card.component';
 import { IAboutUsTwo } from '../about-us/res/about-us.interface';
 import { AboutUsService } from '../about-us/res/about-us.service';
 import { cartItemAnimations } from './cart.animations';
+
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -40,6 +42,7 @@ import { cartItemAnimations } from './cart.animations';
     ServiceCardComponent,
     SafeHtmlComponent,
     LoadingComponent,
+    CartSkeletonComponent,
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',

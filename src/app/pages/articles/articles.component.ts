@@ -11,6 +11,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ArticlesCardSharedComponent } from '@shared/components/articles-card-shared/articles-card-shared.component';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { SectionHeadingComponent } from '@shared/components/section-heading/section-heading.component';
+import { ArticlesSkeletonComponent } from '@shared/components/skeleton/articles-skeleton/articles-skeleton.component';
 import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LatestProduct } from '../home/res/home.interfaces';
@@ -34,6 +35,7 @@ import { BlogsService } from './res/service/blogs.service';
     SafeHtmlComponent,
     ImageUrlDirective,
     LoadingComponent,
+    ArticlesSkeletonComponent,
   ],
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css',

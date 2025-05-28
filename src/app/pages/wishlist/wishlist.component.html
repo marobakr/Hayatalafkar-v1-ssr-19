@@ -51,10 +51,8 @@
     </div>
   </div>
 </section>
-} @else {
-<!-- Loading spinner when authenticated user's data is loading -->
-@if (isLoading) {
-<app-loading></app-loading>
+} @else { @if (isLoading) {
+<app-wishlist-skeleton />
 } @else {
 <!-- Items  -->
 <section class="mb-[30px] overflow-hidden">

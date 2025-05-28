@@ -8,7 +8,9 @@
 
 <section @fadeIn>
   <div class="container mx-auto overflow-hidden">
-    @if (!isLoading()) {
+    @if (isLoading()) {
+    <app-product-details-skeleton />
+    } @else {
     <div
       class="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-10 rtl:flex-row-reverse"
     >
@@ -509,8 +511,6 @@
         }
       </div>
     </div>
-    } @else {
-    <app-loading class="loading-spinner"></app-loading>
     }
 
     <div class="mb-6 text-center">

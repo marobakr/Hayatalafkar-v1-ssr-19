@@ -8,7 +8,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AboutSharedComponent } from '@shared/components/about-shared/about-shared.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
 import { BigCardOfferComponent } from '@shared/components/big-card-offer/big-card-offer.component';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { AboutSkeletonComponent } from '@shared/components/skeleton/about-skeleton/about-skeleton.component';
+import { forkJoin } from 'rxjs';
 import { CardComponent } from './components/card/card.component';
 import { FAQComponent } from './components/faq/faq.component';
 import { ServiceCardComponent } from './components/service-card/service-card.component';
@@ -29,7 +30,7 @@ import { AboutUsService } from './res/about-us.service';
     CustomTranslatePipe,
     RouterLink,
     AsyncPipe,
-    LoadingComponent,
+    AboutSkeletonComponent,
   ],
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.css',
@@ -78,22 +79,23 @@ export class AboutUsComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.getAboutUs();
-    this.getAboutData();
-  }
-  /* counters ,offers ,breaks*/
-  getAboutUs() {
-    this.aboutUsService.getAboutUs().subscribe((res: IAboutUsOne) => {
-      this.aboutUsOne = res;
-      this.isLoading = false;
-    });
+    this.loadAllData();
   }
 
-  /* aboutdata ,features , FAQS  */
-  getAboutData() {
-    this.aboutUsService.getAboutData().subscribe((res: IAboutUsTwo) => {
-      this.aboutUsTwo = res;
-      this.isLoading = false;
+  private loadAllData() {
+    // Use forkJoin to load both requests in parallel
+    forkJoin({
+      aboutUs: this.aboutUsService.getAboutUs(),
+      aboutData: this.aboutUsService.getAboutData(),
+    }).subscribe({
+      next: (result) => {
+        this.aboutUsOne = result.aboutUs;
+        this.aboutUsTwo = result.aboutData;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
     });
   }
 }
