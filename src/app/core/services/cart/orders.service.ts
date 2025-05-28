@@ -12,14 +12,14 @@ export class OrdersService {
   private api = inject(ApiService);
   private authService = inject(AuthService);
 
-  userId = this.authService.getUserId();
-
   /**
    * Check cart status
    */
   checkCart(): Observable<IGetCartOrOrder> {
+    const userId = this.authService.getUserId();
+    console.log(userId);
     return this.api.get<IGetCartOrOrder>(
-      `${API_CONFIG.ORDERS.CHECK_CART}${this.userId}`
+      `${API_CONFIG.ORDERS.CHECK_CART}${userId}`
     );
   }
 
@@ -87,8 +87,9 @@ export class OrdersService {
   checkPromoCode(code: string): Observable<any> {
     const formData = new FormData();
     formData.append('code', code);
+    const userId = this.authService.getUserId();
     return this.api.post<any>(
-      `${API_CONFIG.ORDERS.PROMO_CODE}/${this.userId}`,
+      `${API_CONFIG.ORDERS.PROMO_CODE}/${userId}`,
       formData
     );
   }
