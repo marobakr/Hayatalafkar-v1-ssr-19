@@ -5,7 +5,8 @@ import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { AboutUs, Counter } from 'src/app/pages/home/res/home.interfaces';
+import { IAboutUsOne } from 'src/app/pages/about-us/res/about-us.interface';
+import { Counter } from 'src/app/pages/home/res/home.interfaces';
 import { AboutSkeletonComponent } from '../skeleton/about-skeleton/about-skeleton.component';
 import { SloganComponent } from '../slogan/slogan.component';
 @Component({
@@ -31,7 +32,7 @@ export class AboutSharedComponent implements OnInit {
   @Input({ required: true }) showSloganText: boolean = true;
 
   /* Dynamic Inputs Properties */
-  @Input({ required: true }) aboutUs!: AboutUs;
+  @Input({ required: true }) aboutUs!: IAboutUsOne['aboutUs'];
   @Input({ required: true }) counters!: Counter[];
 
   @Input() mainImage!: string;

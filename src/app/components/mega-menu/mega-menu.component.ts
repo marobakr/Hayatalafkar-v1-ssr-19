@@ -2,6 +2,8 @@ import { isPlatformBrowser, NgClass } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  computed,
+  effect,
   ElementRef,
   EventEmitter,
   inject,
@@ -10,6 +12,7 @@ import {
   OnInit,
   Output,
   PLATFORM_ID,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -17,9 +20,13 @@ import { ICategory } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { LanguageService } from '../../core/services/lang/language.service';
 import { CommonService } from './../../core/services/common/common.service';
+
+interface CategoryResponse {
+  categories: ICategory[];
+}
 
 @Component({
   selector: 'app-mega-menu',
@@ -36,19 +43,60 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   contentHeight = 0;
   private resizeSub?: Subscription;
   private langSub?: Subscription;
-  isLoading = true;
+  isLoading = signal(true);
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   currentLang = 'en';
 
   // Inject services
   protected languageService = inject(LanguageService);
   private router = inject(Router);
-  categoryService = inject(CommonService);
+  private commonService = inject(CommonService);
 
-  categories: ICategory[] = [];
+  // Access categories from the cache signal directly
+  private categoriesSignal = this.commonService.categories;
+
+  // Create a computed signal for categories without modifying isLoading inside
+  categories = computed(() => {
+    const categoryData = this.categoriesSignal() as CategoryResponse | null;
+    if (
+      categoryData &&
+      categoryData.categories &&
+      Array.isArray(categoryData.categories)
+    ) {
+      return categoryData.categories.map((category: ICategory) => {
+        // Ensure category has subcategories property
+        if (!category.subcategories) {
+          return {
+            ...category,
+            subcategories: [],
+          };
+        }
+        return category;
+      });
+    }
+    return [];
+  });
+
+  // Set up an effect to update loading state when categories change
+  constructor(private elementRef: ElementRef) {
+    effect(() => {
+      // This will run whenever categoriesSignal changes
+      const categoryData = this.categoriesSignal();
+      if (categoryData) {
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  // Helper function to generate placeholder arrays for loading state
+  generateArray(size: number): number[] {
+    return Array(size)
+      .fill(0)
+      .map((_, index) => index);
+  }
 
   ngOnInit() {
-    this.getAllCategories();
+    this.loadCategories();
     this.setupLanguageSubscription();
 
     // Only add document click handler in browser environment
@@ -72,8 +120,6 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
       this.closeMenu.emit();
     }
   };
-
-  constructor(private elementRef: ElementRef) {}
 
   ngAfterViewInit() {
     if (!this.isBrowser) return;
@@ -112,17 +158,26 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getAllCategories() {
-    this.categoryService.getAllCategories().subscribe({
-      next: (res: any) => {
-        this.categories = res.categories;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching categories:', err);
-        this.isLoading = false;
-      },
-    });
+  /**
+   * Load categories directly from category API
+   */
+  loadCategories() {
+    // If we already have categories cached, we don't need to do anything
+    if (this.categoriesSignal()) {
+      this.isLoading.set(false);
+      return;
+    }
+
+    // Fetch categories directly from the categories API
+    this.commonService
+      .getAllCategories()
+      .pipe(tap(() => this.isLoading.set(false)))
+      .subscribe({
+        error: (err) => {
+          console.error('Error fetching categories:', err);
+          this.isLoading.set(false);
+        },
+      });
   }
 
   /**

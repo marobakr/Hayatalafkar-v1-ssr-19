@@ -1,5 +1,12 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ImageUrlDirective } from '@core/directives/image-url.directive';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
@@ -14,10 +21,10 @@ import { SectionHeadingComponent } from '@shared/components/section-heading/sect
 import { ArticlesSkeletonComponent } from '@shared/components/skeleton/articles-skeleton/articles-skeleton.component';
 import { TalentImageCardComponent } from '@shared/components/talent-image-card/talent-image-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { LatestProduct } from '../home/res/home.interfaces';
 import { HomeService } from '../home/res/home.service';
 import { ArticlesHeaderComponent } from './components/articles-header/articles-header.component';
 import { BlogsService } from './res/service/blogs.service';
+
 @Component({
   selector: 'app-articles',
   standalone: true,
@@ -40,36 +47,35 @@ import { BlogsService } from './res/service/blogs.service';
   templateUrl: './articles.component.html',
   styleUrl: './articles.component.css',
 })
-export class ArticlesComponent {
+export class ArticlesComponent implements OnInit {
   _translate = inject(TranslateService);
-
   _languageService = inject(LanguageService);
-
   currentLanguage$ = inject(LanguageService).getLanguage();
-
   _API_CONFIG = API_CONFIG.BASE_URL_IMAGE;
-
   _homeService = inject(HomeService);
-
   _blogsService = inject(BlogsService);
-
   _commonService = inject(CommonService);
 
   // Pagination properties
   currentPage = 1;
-
   totalItems = 0;
-
   itemsPerPage = 9;
-
   loading = true;
-
   error = false;
 
-  latestProducts: LatestProduct[] = [];
+  // Access the home data signal directly
+  private homeDataSignal = this._commonService.homeData;
+
+  // Computed signal for latest products from home data
+  latestProducts = computed(() => {
+    const homeData = this.homeDataSignal();
+    return homeData?.latestProducts || [];
+  });
+
+  // Loading signal for latest products
+  latestProductsLoading = signal(true);
 
   titles: string[] = [];
-
   blogs: any[] = [];
 
   constructor() {
@@ -78,16 +84,22 @@ export class ArticlesComponent {
         this._translate
           .get('articles.sidebar.popular-articles')
           .subscribe((titles: string[]) => {
-            console.log(titles);
             this.titles = titles;
           });
       });
+    });
+
+    // Setup effect to track when home data is loaded
+    effect(() => {
+      if (this.homeDataSignal()) {
+        this.latestProductsLoading.set(false);
+      }
     });
   }
 
   ngOnInit() {
     this.loadBlogs();
-    this.getLatestProduct();
+    this.loadLatestProducts();
   }
 
   loadBlogs(pageUrl?: string) {
@@ -96,7 +108,6 @@ export class ArticlesComponent {
 
     this._blogsService.getAllBlogs(pageUrl).subscribe({
       next: (response: any) => {
-        console.log('response', response);
         if (response && response.rows) {
           this.blogs = response.rows.data || [];
           this.currentPage = response.rows.current_page;
@@ -165,19 +176,21 @@ export class ArticlesComponent {
     return pages;
   }
 
-  getLatestProduct() {
-    this._commonService.getLatestProduct().subscribe((res: any) => {
-      this.latestProducts = res.latestProducts;
-    });
-  }
+  /**
+   * Load latest products from cached home data
+   */
+  loadLatestProducts() {
+    // If we already have home data cached, we're done
+    if (this.homeDataSignal()) {
+      this.latestProductsLoading.set(false);
+      return;
+    }
 
-  getHomeData() {
-    this._homeService.getHomeData().subscribe({
-      next: (response: any) => {
-        this.latestProducts = response.latestProducts;
-      },
+    // Otherwise, fetch home data
+    this._commonService.getHomeData().subscribe({
       error: (err) => {
-        console.log(err);
+        console.error('Error fetching home data:', err);
+        this.latestProductsLoading.set(false);
       },
     });
   }

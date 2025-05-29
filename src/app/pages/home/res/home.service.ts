@@ -1,14 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { API_CONFIG } from '@core/services/conf/api.config';
-import { ApiService } from '@core/services/conf/api.service';
+import { CommonService } from '@core/services/common/common.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeService {
-  _apiService = inject(ApiService);
+  private commonService = inject(CommonService);
 
-  getHomeData() {
-    return this._apiService.get(API_CONFIG.HOME.GET);
+  getHomeData(): Observable<any> {
+    // Use the CommonService which now has caching
+    return this.commonService.getHomeData();
   }
 }

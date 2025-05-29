@@ -5,6 +5,13 @@ export interface IAboutUsOne {
   counters: Counter[];
   breaks: IQuotes[];
   offers: Offer[];
+  aboutUs: {
+    main_image: string;
+    en_main_title: string;
+    ar_main_title: string;
+    en_main_text: string;
+    ar_main_text: string;
+  };
 }
 
 export interface IAboutUsTwo {
