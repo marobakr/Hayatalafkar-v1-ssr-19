@@ -60,8 +60,9 @@
 
           <li class="cursor-pointer" role="menuitem">
             <button
-              class="cursor-pointer show-arrow relative block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left"
+              class="cursor-pointer show-arrow relative block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left mega-menu-trigger"
               (click)="toggleMegaMenu($event)"
+              (mouseenter)="showMegaMenu = true"
               (keydown)="handleMegaMenuKeydown($event)"
               [attr.aria-expanded]="showMegaMenu"
               [attr.aria-haspopup]="true"
@@ -69,10 +70,15 @@
               {{ "navbar.pages_Title.products.title" | translate }}
             </button>
             @if (showMegaMenu) {
-            <app-mega-menu
-              (closeMenu)="showMegaMenu = false"
-              (click)="$event.stopPropagation()"
-            ></app-mega-menu>
+            <div
+              class="mega-menu-container"
+              (mouseleave)="showMegaMenu = false"
+            >
+              <app-mega-menu
+                (closeMenu)="showMegaMenu = false"
+                (click)="$event.stopPropagation()"
+              ></app-mega-menu>
+            </div>
             }
           </li>
 

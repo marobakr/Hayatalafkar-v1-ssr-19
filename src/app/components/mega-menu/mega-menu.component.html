@@ -36,14 +36,14 @@
         <!-- Categories grid -->
         <div class="grid grid-cols-1 xl:grid-cols-6 flex-wrap">
           <!-- Skeleton loader when categories are loading -->
-          @if (isLoading) { @for (i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track i)
-          {
+          @if (isLoading()) { @for (i of generateArray(categories().length);
+          track i) {
           <div class="animate-pulse my-5 xl:m-5">
             <div
               class="bg-white min-w-[200px] h-[150px] md:h-[200px] shadow-sm border border-gray-100 rounded-xl p-4"
             >
               <div class="space-y-4">
-                @for (j of [1, 2, 3, 4]; track j) {
+                @for (j of generateArray(5); track j) {
                 <div class="h-4 bg-gray-200 rounded w-full"></div>
                 }
               </div>
@@ -51,8 +51,8 @@
           </div>
           } } @else {
           <!-- Categories -->
-          @for (category of categories; track category.id) { @if
-          (category.subcategories.length > 0) {
+          @for (category of categories(); track category.id) { @if (category &&
+          category.subcategories && category.subcategories.length > 0) {
           <div class="category-card w-full pt-7 pb-12 xl:px-[34px]">
             <a
               [routerLink]="['/', currentLang, 'shopping']"
@@ -60,7 +60,7 @@
               (click)="closeMenu.emit()"
             >
               <span
-                class="group-hov er:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300 text-black font-bold capitalize underline text-[16px]"
+                class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300 text-black font-bold capitalize underline text-[16px]"
               >
                 {{ category | customTranslate : "name" }}
               </span>
@@ -72,7 +72,8 @@
               [ngClass]="{
                 'h-[150px]': isMobile,
                 'h-[125px]': !isMobile,
-                'h-[110px]': category.subcategories.length > 3
+                'h-[110px]':
+                  category.subcategories && category.subcategories.length > 3
               }"
             >
               <div>

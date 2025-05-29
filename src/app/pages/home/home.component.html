@@ -1,11 +1,11 @@
 <!-- Sliders -->
-<app-hero [heroSection]="sliders"></app-hero>
+<app-hero [heroSection]="sliders()"></app-hero>
 
 <!-- About-us  -->
 <app-about-shared
   ut-shared
-  [aboutUs]="aboutUs"
-  [counters]="counters"
+  [aboutUs]="aboutUs()"
+  [counters]="counters()"
   [showSloganText]="false"
   [showBgImage]="true"
   [sloganText]="'hero.title' | translate"
@@ -13,7 +13,7 @@
 </app-about-shared>
 
 <!-- Categories -->
-<app-sections [categories]="categories"></app-sections>
+<app-sections [categories]="categories()"></app-sections>
 @defer (on idle) {
 <!-- Breacks -->
 <app-banner
@@ -25,10 +25,10 @@
 <!-- offers -->
 @defer (on idle) {
 
-<app-offer-card [offers]="offers"></app-offer-card>
+<app-offer-card [offers]="offers()"></app-offer-card>
 }
 <!-- Latest-Products -->
-<app-best-seller [LatestProducts]="latestProducts"></app-best-seller>
+<app-best-seller [LatestProducts]="latestProducts()"></app-best-seller>
 
 <!-- Static-Banners -->
 @defer (on idle) {
@@ -40,8 +40,8 @@
 }
 <!-- RandomProducts -->
 <app-offer-day
-  [randomProducts]="randomProducts"
-  [lastOffer]="offers[offers.length - 1]"
+  [randomProducts]="randomProducts()"
+  [lastOffer]="offers().length ? offers()[offers().length - 1] : null"
 ></app-offer-day>
 <!-- Static-Banners -->
 @defer (on idle) {
@@ -52,7 +52,7 @@
 ></app-banner>
 }
 <!-- bestProducts -->
-<app-new-products [bestProducts]="bestProducts"> </app-new-products>
+<app-new-products [bestProducts]="bestProducts()"> </app-new-products>
 <!-- Static-Banners -->
 @defer (on idle) {
 <app-banner
@@ -63,6 +63,6 @@
 }
 <!-- Blogs -->
 <app-related-blogs
-  [relatedBlogs]="latestBlogs"
+  [relatedBlogs]="latestBlogs()"
   [lightLabel]="true"
 ></app-related-blogs>

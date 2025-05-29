@@ -65,7 +65,8 @@
 
         <!-- Blogs Related -->
         <div class="all-sections mb-[60px]">
-          @for (blog of blogs.slice(0, 4); track $index) {
+          @if (blogs && blogs.length > 0) { @for (blog of blogs.slice(0, 4);
+          track $index) {
           <a
             class="cursor-pointer"
             href="#"
@@ -84,6 +85,10 @@
               </span>
             </div>
           </a>
+          } } @else {
+          <div class="text-center py-4">
+            <p class="text-gray-500">Loading popular articles...</p>
+          </div>
           }
         </div>
 
@@ -93,9 +98,21 @@
             class="mb-3"
             [sectionName]="'articles.sidebar.new-products' | translate"
           ></app-section-heading>
-          <!-- First Card  -->
+
+          <!-- Latest Products -->
           <div class="card md:flex flex-wrap justify-between block">
-            @for (latestProduct of latestProducts.slice(0,4); track $index) {
+            @if (latestProductsLoading()) {
+            <!-- Loading state for latest products -->
+            @for (i of [1, 2, 3, 4]; track i) {
+            <div class="flex gap-2 items-center mb-[23px] animate-pulse">
+              <div class="w-[99px] h-[99px] rounded-[15px] bg-gray-200"></div>
+              <div class="content w-full">
+                <div class="mb-[10px] h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="mb-[10px] h-4 bg-gray-200 rounded w-full"></div>
+              </div>
+            </div>
+            } } @else if (latestProducts().length > 0) { @for (product of
+            latestProducts().slice(0,4); track product.id) {
             <div class="flex gap-2 items-center mb-[23px]">
               <a
                 class="cursor-pointer"
@@ -103,7 +120,7 @@
                   '/',
                   currentLanguage$ | async,
                   'blog',
-                  latestProduct | customTranslate : 'slug'
+                  product | customTranslate : 'slug'
                 ]"
               >
                 <figure
@@ -112,9 +129,9 @@
                   <img
                     loading="lazy"
                     class="w-full h-full object-cover"
-                    [appImageUrl]="latestProduct.main_image"
+                    [appImageUrl]="product.main_image"
                     [imageEndpoint]="'uploads/blogs'"
-                    [alt]="latestProduct | customTranslate : 'name'"
+                    [alt]="product | customTranslate : 'name'"
                   />
                 </figure>
               </a>
@@ -125,20 +142,24 @@
                       '/',
                       currentLanguage$ | async,
                       'blog',
-                      latestProduct | customTranslate : 'slug'
+                      product | customTranslate : 'slug'
                     ]"
                   >
-                    {{ latestProduct | customTranslate : "name" }}
+                    {{ product | customTranslate : "name" }}
                   </a>
                 </p>
                 <div
                   class="mb-[10px] text-category-size font-semibold text-black line-clamp-1"
                 >
                   <app-safe-html
-                    [content]="latestProduct | customTranslate : 'description'"
+                    [content]="product | customTranslate : 'description'"
                   ></app-safe-html>
                 </div>
               </div>
+            </div>
+            } } @else {
+            <div class="text-center py-4">
+              <p class="text-gray-500">No latest products available.</p>
             </div>
             }
           </div>

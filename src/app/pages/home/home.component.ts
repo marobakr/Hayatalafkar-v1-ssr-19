@@ -6,29 +6,23 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, inject, OnInit } from '@angular/core';
-import { ICategory, IQuotes } from '@core/interfaces/common.model';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
+import { IQuotes } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CommonService } from '@core/services/common/common.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AboutSharedComponent } from '@shared/components/about-shared/about-shared.component';
 import { BannerComponent } from '@shared/components/banner/banner.component';
 import { RelatedBlogsComponent } from '../articles/components/related-blogs/related-blogs.component';
-import { IRelatedBlogs } from '../articles/res/interfaces/singleBlog';
 import { BestSellerComponent } from './components/best-seller/best-seller.component';
 import { HeroComponent } from './components/hero/hero.component';
 import { NewProductsComponent } from './components/new-products/new-products.component';
 import { OfferCardComponent } from './components/offer-card/offer-card.component';
 import { OfferDayComponent } from './components/offer-day/offer-day.component';
 import { SectionsComponent } from './components/sections/sections.component';
-import {
-  AboutUs,
-  BestProduct,
-  Counter,
-  LatestProduct,
-  Offer,
-  Slider,
-} from './res/home.interfaces';
+import { AboutUs } from './res/home.interfaces';
 import { HomeService } from './res/home.service';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -111,65 +105,47 @@ import { HomeService } from './res/home.service';
   host: { ngSkipHydration: 'true' },
 })
 export class HomeComponent implements OnInit {
-  _homeService = inject(HomeService);
+  private homeService = inject(HomeService);
+  private commonService = inject(CommonService);
 
-  sliders: Slider[] = [];
+  // Access cached data directly through signals
+  private homeDataSignal = this.commonService.homeData;
 
-  aboutUs: AboutUs = {} as AboutUs;
+  // Computed signals for derived data
+  sliders = computed(() => this.homeDataSignal()?.sliders || []);
+  aboutUs = computed(() => this.homeDataSignal()?.aboutUs || ({} as AboutUs));
+  counters = computed(() => this.homeDataSignal()?.counters || []);
+  categories = computed(() => this.homeDataSignal()?.categories || []);
+  offers = computed(() => this.homeDataSignal()?.offers || []);
+  latestProducts = computed(() => this.homeDataSignal()?.latestProducts || []);
+  randomProducts = computed(() => this.homeDataSignal()?.randomProducts || []);
+  quotes = computed(() => this.homeDataSignal()?.breaks || []);
+  bestProducts = computed(() => this.homeDataSignal()?.bestProducts || []);
+  latestBlogs = computed(() => this.homeDataSignal()?.latestBlogs || []);
 
-  counters: Counter[] = [];
-
-  categories: ICategory[] = [];
-
-  offers: Offer[] = [];
-
-  latestProducts: LatestProduct[] = [];
-
-  randomProducts: LatestProduct[] = [];
-
-  quotes: IQuotes[] = [];
-
-  bestProducts: BestProduct[] = [];
-
-  latestBlogs: IRelatedBlogs[] = [];
+  // Setup logger effect to monitor data changes
+  constructor() {
+    effect(() => {
+      const data = this.homeDataSignal();
+      if (data) {
+        console.log('Home data updated in signal');
+      }
+    });
+  }
 
   getQuoteById(id: number): IQuotes | undefined {
-    return this.quotes?.find((quote) => quote.id === id);
+    return this.quotes()?.find((quote: IQuotes) => quote.id === id);
   }
 
   ngOnInit(): void {
-    this.getHomeData();
+    this.loadHomeData();
   }
 
-  getHomeData() {
-    this._homeService.getHomeData().subscribe({
-      next: (response: any) => {
-        const {
-          sliders,
-          aboutUs,
-          counters,
-          categories,
-          offers,
-          latestProducts,
-          randomProducts,
-          breaks,
-          bestProducts,
-          latestBlogs,
-        } = response;
-
-        this.sliders = sliders;
-        this.aboutUs = aboutUs;
-        this.counters = counters;
-        this.categories = categories;
-        this.offers = offers;
-        this.latestProducts = latestProducts;
-        this.randomProducts = randomProducts;
-        this.quotes = breaks;
-        this.bestProducts = bestProducts;
-        this.latestBlogs = latestBlogs;
-      },
+  loadHomeData(): void {
+    // This will either return cached data or fetch new data
+    this.homeService.getHomeData().subscribe({
       error: (err) => {
-        console.log(err);
+        console.error('Failed to load home data:', err);
       },
     });
   }

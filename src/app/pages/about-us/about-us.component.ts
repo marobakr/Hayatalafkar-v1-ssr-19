@@ -1,7 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
+import { CommonService } from '@core/services/common/common.service';
 import { API_CONFIG } from '@core/services/conf/api.config';
 import { LanguageService } from '@core/services/lang/language.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,11 +10,11 @@ import { AboutSharedComponent } from '@shared/components/about-shared/about-shar
 import { BannerComponent } from '@shared/components/banner/banner.component';
 import { BigCardOfferComponent } from '@shared/components/big-card-offer/big-card-offer.component';
 import { AboutSkeletonComponent } from '@shared/components/skeleton/about-skeleton/about-skeleton.component';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { CardComponent } from './components/card/card.component';
 import { FAQComponent } from './components/faq/faq.component';
 import { ServiceCardComponent } from './components/service-card/service-card.component';
-import { IAboutUsOne, IAboutUsTwo } from './res/about-us.interface';
+import { IAboutData, IAboutUsOne, IAboutUsTwo } from './res/about-us.interface';
 import { AboutUsService } from './res/about-us.service';
 
 @Component({
@@ -36,23 +37,38 @@ import { AboutUsService } from './res/about-us.service';
   styleUrl: './about-us.component.css',
 })
 export class AboutUsComponent implements OnInit {
-  aboutUsService = inject(AboutUsService);
-  languageService = inject(LanguageService);
+  private aboutUsService = inject(AboutUsService);
+  private languageService = inject(LanguageService);
+  private commonService = inject(CommonService);
 
   currentLang$ = this.languageService.getLanguage();
-
   API_CONFIG = API_CONFIG.BASE_URL_IMAGE;
+  isLoading = signal(true);
 
-  isLoading = true;
+  // Access cached home data
+  private homeDataSignal = this.commonService.homeData;
 
-  aboutUsOne: IAboutUsOne = {
-    counters: [],
-    breaks: [],
-    offers: [],
-  };
+  // Use computed signals to extract what we need from home data
+  aboutUsOne = computed(() => {
+    const homeData = this.homeDataSignal();
+    if (homeData) {
+      return {
+        counters: homeData.counters || [],
+        breaks: homeData.breaks || [],
+        offers: homeData.offers || [],
+        aboutUs: homeData.aboutUs || {},
+      } as IAboutUsOne;
+    }
+    return {
+      counters: [],
+      breaks: [],
+      offers: [],
+      aboutUs: {} as IAboutData,
+    } as IAboutUsOne;
+  });
 
   // Initialize with default values to prevent undefined errors
-  aboutUsTwo: IAboutUsTwo = {
+  aboutUsTwo = signal<IAboutUsTwo>({
     faqs: [],
     features: [],
     aboutdata: {
@@ -76,26 +92,49 @@ export class AboutUsComponent implements OnInit {
       created_at: '',
       updated_at: '',
     },
-  };
+  });
 
   ngOnInit(): void {
-    this.loadAllData();
+    this.loadData();
   }
 
-  private loadAllData() {
-    // Use forkJoin to load both requests in parallel
+  /**
+   * Main method to load all required data
+   * This ensures we only make the necessary API calls once
+   */
+  private loadData(): void {
+    // Prepare observables for both data sources
+    const homeData$ = this.getHomeData();
+    const aboutData$ = this.aboutUsService.getAboutData();
+
+    // Use forkJoin to load both in parallel
     forkJoin({
-      aboutUs: this.aboutUsService.getAboutUs(),
-      aboutData: this.aboutUsService.getAboutData(),
+      homeData: homeData$,
+      aboutData: aboutData$,
     }).subscribe({
       next: (result) => {
-        this.aboutUsOne = result.aboutUs;
-        this.aboutUsTwo = result.aboutData;
-        this.isLoading = false;
+        // aboutUsOne is handled by the computed signal
+        // We just need to set aboutUsTwo
+        this.aboutUsTwo.set(result.aboutData);
+        this.isLoading.set(false);
       },
       error: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
       },
     });
+  }
+
+  /**
+   * Get home data from cache or API
+   * This leverages the caching mechanism in CommonService
+   */
+  private getHomeData() {
+    // If home data is already cached, return it as an observable
+    if (this.homeDataSignal()) {
+      return of(this.homeDataSignal());
+    }
+
+    // Otherwise get it from the API (this will cache it in CommonService)
+    return this.commonService.getHomeData();
   }
 }
