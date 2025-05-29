@@ -6,16 +6,18 @@
     <h1 class="sr-only">{{ "contact-us.heading" | translate }}</h1>
 
     <!-- Header Map -->
+    <!-- Header Map -->
     <figure class="mb-[60px]" @fadeIn>
-      <img
-        class="w-full h-auto"
+      <iframe
+        width="100%"
+        height="300"
         loading="lazy"
-        width="1200"
-        height="600"
-        src="/images/contact-us/map.webp"
-        alt="{{ 'contact-us.map-alt' | translate }}"
-        rel="preload"
-      />
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3624.674357774357!2d46.67272082425695!3d24.71355168409343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQyJzQ4LjgiTiA0NsKwNDAnMzEuMSJF!5e0!3m2!1sen!2sus!4v1717140000000!5m2!1sen!2sus"
+        title="{{ 'contact-us.map-alt' | translate }}"
+        allowfullscreen=""
+        @defer
+      ></iframe>
     </figure>
 
     <!-- Contact Us Form -->

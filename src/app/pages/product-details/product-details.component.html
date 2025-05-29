@@ -91,7 +91,7 @@
           @if (productDetails.choices && productDetails.choices.length > 0) {
           <span class="text-lg font-bold">
             {{ activeChoicePrice() }}
-            {{ "shared.currency" | translate }}
+            <span class="icon-saudi_riyal"></span>
           </span>
           } @else if (productDetails.sale_price) {
           <div
@@ -99,17 +99,17 @@
           >
             <span class="text-[#A48374] font-medium">
               {{ productDetails.price_after_sale }}
-              {{ "shared.currency" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </span>
             <span class="text-[#333] line-through">
               {{ productDetails.price }}
-              {{ "shared.currency" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </span>
           </div>
           }@else {
           <span class="text-[#A48374] text-price-size font-medium">
             {{ productDetails.price }}
-            {{ "shared.currency" | translate }}
+            <span class="icon-saudi_riyal"></span>
           </span>
           }
         </div>

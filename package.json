@@ -25,6 +25,7 @@
     "@angular/router": "^19.1.0",
     "@angular/ssr": "^19.2.8",
     "@colsen1991/ngx-translate-extract-marker": "^3.0.1",
+    "@emran-alhaddad/saudi-riyal-font": "^1.0.3",
     "@netlify/angular-runtime": "^2.3.1",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",

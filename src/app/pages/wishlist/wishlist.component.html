@@ -157,14 +157,13 @@
               +item.product.price_after_sale !== 0) {
               <!-- Price After Sale -->
               <div class="text-[#333] text-category-size font-bold flex-grow-1">
-                {{ "wishlist.productsItem.item-1.price" | translate }}
+                <span class="icon-saudi_riyal"></span>
                 {{ item.product.price_after_sale }}
               </div>
               } @else {
               <!-- Regular Price -->
               <div class="text-[#333] text-category-size font-bold flex-grow-1">
-                {{ "wishlist.productsItem.item-1.price" | translate }}
-                {{ item.product.price }}
+                <span class="icon-saudi_riyal"></span> {{ item.product.price }}
               </div>
               }
             </div>

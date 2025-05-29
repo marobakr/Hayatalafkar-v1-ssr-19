@@ -426,7 +426,7 @@
             </div>
             <p class="text-lg font-semibold">
               {{ deliveredOrder.subtotal }}
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </p>
           </div>
 
@@ -440,14 +440,14 @@
             <p>{{ "shipping.costs.s" | translate }}</p>
             <p class="text-lg font-semibold">
               {{ lastOrder()?.order?.shipping }}
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </p>
           </div>
           <div class="tax mb-8 flex justify-between items-center">
             <p>{{ "total-price.total-price" | translate }}</p>
             <p class="text-lg font-semibold">
               {{ lastOrder()?.order?.total }}
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </p>
           </div>
 
@@ -455,7 +455,7 @@
             <p>{{ "shipping.costs.copon" | translate }}</p>
             <p class="text-lg font-semibold">
               -{{ lastOrder()?.order?.promo_code_value }}
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </p>
           </div>
 
@@ -466,7 +466,7 @@
 
             <p class="text-lg font-semibold">
               {{ lastOrder()?.order?.total }}
-              {{ "wishlist.productsItem.item-1.price" | translate }}
+              <span class="icon-saudi_riyal"></span>
             </p>
           </div>
         </div>

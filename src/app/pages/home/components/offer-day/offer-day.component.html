@@ -1,35 +1,28 @@
-@if (randomProducts.length > 0) {
-<app-offer-day-skeleton />
-} @else {
+@if (randomProducts.length > 0 || lastOffer?.id) {
 <section class="px-4">
   <div class="container mx-auto">
+    <!-- Product Section - only show if randomProducts exist -->
     @if (randomProducts.length > 0) {
-
     <p class="text-black text-subtitle-size mb-6 text-center">
       {{ "offer-day.title" | translate }}
     </p>
     <h2 class="text-title-size font-bold mb-9 text-center">
       @if (!isArabic) {
-
       <span class="text-muted-rose">
         {{ "offer-day.subtitle" | translate }}
       </span>
       {{ "offer-day.altTitle" | translate }}
-
       } @else {
       {{ "offer-day.altTitle" | translate }}
-
       <span class="text-muted-rose">
         {{ "offer-day.subtitle" | translate }}
       </span>
-
       }
     </h2>
 
     <!-- Cards Container -->
     <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mb-[45px]">
       @for (randomProduct of randomProducts; track $index) {
-
       <!-- Card 1 -->
       <div
         class="flex flex-col md:flex-row bg-white rounded-2xl shadow-md overflow-hidden p-4 gap-4"
@@ -58,7 +51,6 @@
             />
           </a>
           @if(randomProduct.sale_price) {
-
           <span
             class="absolute top-[7px] right-[7px] bg-[#434645] text-white py-4 px-8 rounded-full text-category-size"
           >
@@ -81,23 +73,19 @@
             <!-- Price -->
             <div class="flex items-center text-subtitle-size gap-7 mb-[20px]">
               @if (randomProduct.sale_price !== null) {
-
               <span class="text-muted-rose">
                 {{ randomProduct.price_after_sale }}
-
-                {{ "shared.currency" | translate }}</span
-              >
+                <span class="icon-saudi_riyal"></span
+              ></span>
               <span class="line-through text-black">
                 {{ randomProduct.price }}
-
-                {{ "shared.currency" | translate }}</span
-              >
+                <span class="icon-saudi_riyal"></span
+              ></span>
               } @else {
               <span class="text-muted-rose">
                 {{ randomProduct.price }}
-
-                {{ "shared.currency" | translate }}</span
-              >
+                <span class="icon-saudi_riyal"></span
+              ></span>
               }
             </div>
             <!-- Description -->
@@ -120,7 +108,7 @@
             <figure>
               <img
                 loading="lazy"
-                class="ltr:rotate-180 rtl:rotate-0"
+                class="w-[24px] h-[24px] ltr:rotate-180 rtl:rotate-0"
                 src="/images/offer-day/4.webp"
                 alt="{{ 'shared.arrow_icon' | translate }}"
               />
@@ -132,7 +120,8 @@
     </div>
     }
 
-    <!-- offer-day Container -->
+    <!-- offer-day Container - only show if lastOffer exists -->
+    @if (lastOffer?.id) {
     <div
       class="relative h-full bg-warm-tan rounded-xl z-10 overflow-hidden flex flex-col-reverse lg:flex-row-reverse items-stretch justify-between gap-8"
     >
@@ -196,6 +185,11 @@
         class="banner-container absolute top-0 left-0 w-full h-full bg-white"
       ></div>
     </div>
+    }
   </div>
 </section>
-}
+} @else {
+<!-- Show skeleton only while loading and hide when no data is found -->
+@if (isLoading) {
+<app-offer-day-skeleton />
+} }
