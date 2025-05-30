@@ -98,7 +98,10 @@ export class AuthStorageService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    if (!this.isBrowser) return false;
+
+    const token = this.getToken();
+    return token !== null;
   }
 
   logout(): void {
