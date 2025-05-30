@@ -75,7 +75,7 @@
             <div class="flex justify-between items-center">
               <button
                 (click)="toggleAddressForm()"
-                class="text-warm-tan font-medium hover:underline cursor-pointer"
+                class="text-white font-medium hover:underline cursor-pointer py-3 px-10 rounded-[50px] capitalize description-size bg-dark-brown border border-[rgba(164,131,116,0.0)]"
               >
                 {{ "checkout.add_another_address" | translate }}
               </button>
@@ -379,16 +379,16 @@
                 class="flex flex-col sm:flex-row justify-between items-center gap-4"
               >
                 <button
-                  type="button"
                   (click)="submitNewAddress()"
-                  class="cursor-pointer text-warm-tan text-description-size underline font-light capitalize"
+                  class="text-white font-medium cursor-pointer py-3 px-10 rounded-[50px] capitalize description-size bg-dark-brown border border-[rgba(164,131,116,0.0)]"
                 >
                   {{ "checkout.add_new_address" | translate }}
                 </button>
+
                 <button
                   type="button"
                   (click)="resetForm()"
-                  class="cursor-pointer text-rose-600 text-description-size underline font-light capitalize"
+                  class="cursor-pointer text-white text-description-size hover:underline font-medium capitalize py-3 px-10 rounded-[50px] description-size bg-muted-rose border border-[rgba(164,131,116,0.0)]"
                 >
                   {{ "reset.form" | translate }}
                 </button>

@@ -43,10 +43,7 @@
 
 <!-- Card Service  -->
 @if (aboutUsTwo().features.length > 0) {
-<section
-  class="text-center lg:ltr:text-left lg:rtl:text-right"
-  aria-label="Our services"
->
+<section aria-label="Our services">
   <div class="container mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
       @for (feature of aboutUsTwo().features | customTranslate; track

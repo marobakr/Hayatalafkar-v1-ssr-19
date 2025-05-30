@@ -5,6 +5,7 @@ import { cartCheckResolver } from '@core/resolvers/cart-check.resolver';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 import { checkoutAddressResolver } from './pages/checkout/res/resolvers/checkout-address.resolver';
 import { checkoutLocationsResolver } from './pages/checkout/res/resolvers/checkout-locations.resolver';
+import { HomeComponent } from './pages/home/home.component';
 import { productDetailsResolver } from './pages/product-details/res/product-details.resolver';
 
 export const routes: Routes = [
@@ -92,8 +93,7 @@ export const routes: Routes = [
       /* Home */
       {
         path: 'home',
-        loadComponent: () =>
-          import('./pages/home/home.component').then((c) => c.HomeComponent),
+        component: HomeComponent,
         data: {
           title: 'pages.home.title',
           description: 'pages.home.description',

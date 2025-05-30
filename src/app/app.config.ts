@@ -21,6 +21,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideTranslation } from '@core/i18n/i18n.config';
+import { loadingInterceptor } from '@core/interceptors/loading.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { initFlowbite } from 'flowbite-angular/core';
@@ -48,7 +49,10 @@ export const appConfig: ApplicationConfig = {
       CarouselModule
     ),
     provideAnimations(),
-    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([authInterceptor, loadingInterceptor])
+    ),
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',

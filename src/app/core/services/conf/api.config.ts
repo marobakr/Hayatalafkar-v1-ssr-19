@@ -41,7 +41,7 @@ export const API_CONFIG = {
     /* REMOVE FROM CART */
     REMOVE_FROM_CART: 'orders/removeFromCart/',
     REMOVE_ALL: 'orders/removeAllCart/',
-    PROMO_CODE: 'orders/checkPromoCode',
+    PROMO_CODE: 'checkPromoCode',
 
     /* CHECKOUT */
     CHECKOUT: 'orders/checkout/',
