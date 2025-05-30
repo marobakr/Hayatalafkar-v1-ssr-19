@@ -18,10 +18,10 @@
       class="w-full overflow-hidden bg-white text-sm/6 rounded-b-xl"
       [ngClass]="{ 'ring-1 ring-gray-200': !isMobile }"
     >
-      <div class="py-5 px-[20px] xl:px-[30px]">
+      <div class="py-5">
         <!-- Title and close button (only show on desktop) -->
         @if(!isMobile){
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center">
           <button
             class="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
             (click)="closeMenu.emit()"
@@ -73,7 +73,7 @@
           <!-- Categories -->
           @for (category of categories(); track category.id) { @if (category &&
           category.subcategories && category.subcategories.length > 0) {
-          <div class="category-card w-full py-4 px-2">
+          <div class="category-card w-full pt-7 pb-12 xl:px-[34px]">
             <a
               [routerLink]="['/', currentLang, 'shopping']"
               [queryParams]="{ categoryId: category.id }"
@@ -81,7 +81,7 @@
               class="block mb-3 font-medium"
             >
               <span
-                class="group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-300 text-black font-bold capitalize underline text-[16px]"
+                class="text-black font-bold capitalize underline text-[16px] px-[15px]"
               >
                 {{ category | customTranslate : "name" }}
               </span>
@@ -89,7 +89,7 @@
 
             <div
               #menuContent
-              class="mb-[15px] subcategory-card bg-white w-full overflow-y-auto rounded-[15px] text-[15px] font-medium"
+              class="p-[15px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] subcategory-card bg-white w-full overflow-y-auto rounded-[15px] h-full"
               [ngClass]="{
                 'max-h-[200px]': isMobile,
                 'max-h-[150px]': !isMobile

@@ -216,14 +216,14 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Set minimum width based on category count
-    const baseWidth = Math.max(300, categoryCount * 200);
+    const baseWidth = Math.max(300, categoryCount * 280);
 
     // Get window width
     const windowWidth = window.innerWidth;
 
     // Ensure menu doesn't exceed 80% of window width
     const maxWidth = Math.min(baseWidth, windowWidth * 0.8);
-
+    console.log(maxWidth);
     return `${maxWidth}px`;
   }
 
