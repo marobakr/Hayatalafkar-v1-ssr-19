@@ -54,6 +54,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
   showMegaMenu = false;
   isMenuOpen = false;
   isRtl = false;
+  isLoading = true;
 
   // Custom events for search state
   @Output() searchToggle = new EventEmitter<boolean>();
@@ -93,8 +94,32 @@ export class NavbarComponent implements OnDestroy, OnInit {
       this.isRtl = lang === 'ar';
     });
 
-    // Add resize listener to close mobile menu when screen size changes
+    // Initialize skeleton loader - hide after styles are loaded
     if (isPlatformBrowser(this.platformId)) {
+      // Try to hide skeleton after DOM content is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        // Add a small delay to ensure styles are applied
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500);
+      });
+
+      // Fallback: If DOMContentLoaded already fired, hide skeleton after a short delay
+      if (
+        document.readyState === 'complete' ||
+        document.readyState === 'interactive'
+      ) {
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 500);
+      }
+
+      // Final fallback: Hide skeleton after 2 seconds regardless
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 2000);
+
+      // Add resize listener to close mobile menu when screen size changes
       this.resizeSubscription = fromEvent(window, 'resize')
         .pipe(debounceTime(150))
         .subscribe(() => {

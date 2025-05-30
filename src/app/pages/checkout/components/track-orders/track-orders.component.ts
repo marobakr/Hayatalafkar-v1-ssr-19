@@ -156,8 +156,8 @@ export class TrackOrdersComponent implements OnInit {
     const progressMap: Record<string, number> = {
       pending: 0, // Initial stage (0%)
       confirmed: 30, // Order confirmed (25%)
-      processing: 25, // Same as confirmed (25%)
-      preparation: 50, // In preparation (50%)
+      // processing: 25, // Same as confirmed (25%)
+      // preparation: 50, // In preparation (50%)
       'on the way': 75, // On the way (75%)
       shipping: 75, // Same as on the way (75%)
       delivered: 100, // Delivered (100%)
