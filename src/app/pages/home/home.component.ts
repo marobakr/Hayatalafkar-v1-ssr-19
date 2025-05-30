@@ -6,7 +6,14 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, computed, effect, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { IQuotes } from '@core/interfaces/common.model';
 import { CustomTranslatePipe } from '@core/pipes/translate.pipe';
 import { CommonService } from '@core/services/common/common.service';
@@ -108,6 +115,9 @@ export class HomeComponent implements OnInit {
   private homeService = inject(HomeService);
   private commonService = inject(CommonService);
 
+  // Track loading state
+  isLoading = signal(true);
+
   // Access cached data directly through signals
   private homeDataSignal = this.commonService.homeData;
 
@@ -129,6 +139,8 @@ export class HomeComponent implements OnInit {
       const data = this.homeDataSignal();
       if (data) {
         console.log('Home data updated in signal');
+        // Once we have data, we're no longer loading
+        this.isLoading.set(false);
       }
     });
   }
@@ -144,8 +156,13 @@ export class HomeComponent implements OnInit {
   loadHomeData(): void {
     // This will either return cached data or fetch new data
     this.homeService.getHomeData().subscribe({
+      next: () => {
+        // Data is loaded and cached via the commonService
+        this.isLoading.set(false);
+      },
       error: (err) => {
         console.error('Failed to load home data:', err);
+        this.isLoading.set(false);
       },
     });
   }

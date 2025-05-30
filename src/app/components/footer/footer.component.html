@@ -96,6 +96,8 @@
           {{ "footer.contact.title" | translate }}
         </h3>
         <ul class="space-y-2 text-sm text-footer-color">
+          @if (contactUs() && contactUs().phone && contactUs().phone.length > 2)
+          {
           <li class="flex items-center">
             <a
               [href]="
@@ -110,7 +112,8 @@
               <span class="mx-1">{{ contactUs()?.phone }} </span>
             </a>
           </li>
-          <li class="flex items-center">
+          } @if (contactUs()) {
+          <li class="flex items-center gap-2">
             <a
               [href]="
                 'https://www.google.com/maps?q=' + contactUs()
@@ -122,9 +125,12 @@
               [attr.aria-label]="contactUs() | customTranslate : 'address'"
             >
               <span>{{ "footer.contact.address" | translate }}</span>
-              {{ contactUs() | customTranslate : "address" }}
+              <span class="line-clamp-1">
+                {{ contactUs() | customTranslate : "address" }}
+              </span>
             </a>
           </li>
+          }
           <!-- Social Media Links -->
           <ul class="flex items-center gap-4 py-5">
             <li>

@@ -190,19 +190,19 @@
     @if (productData.price_after_sale && +productData.price_after_sale !== 0) {
     <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
       {{ productData.price_after_sale }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
     } @else if (+productData.price === 0) {
     <!-- Price is 0, show message about product with choices -->
     <span class="text-muted-rose font-medium">
       {{ productData.first_choice?.cuurent_value }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
     } @else {
     <!-- Show regular price when no sale and price not zero -->
     <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
       {{ productData.price }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
     }
 
@@ -210,7 +210,7 @@
     @if (productData.price_after_sale && +productData.price !== 0) {
     <span class="line-through text-black">
       {{ productData.price }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
     }
   </div>

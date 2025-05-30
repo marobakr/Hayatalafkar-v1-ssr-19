@@ -105,7 +105,7 @@
       },
       "remove_confirm": {
         "cancel": "cancel",
-        "message": "make sure want to remove this product from your cart",
+        "message": "remove this product?",
         "title": "remove product from cart",
         "yes": "yes"
       },
@@ -133,7 +133,7 @@
       },
       "remove_confirm": {
         "cancel": "cancel",
-        "message": "make sure want to remove this product from your wishlist",
+        "message": "remove this product from your wishlist",
         "title": "remove product from wishlist",
         "yes": "yes"
       },
@@ -1224,5 +1224,6 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
-  }
+  },
+  "unauth": "You need to be logged in"
 }

@@ -1,3 +1,4 @@
+@import "@emran-alhaddad/saudi-riyal-font/index.css";
 @import "tailwindcss";
 @plugin 'tailwind-scrollbar';
 @theme {

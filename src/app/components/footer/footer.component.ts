@@ -43,7 +43,22 @@ export class FooterComponent implements OnInit {
   private aboutService = inject(AboutUsService);
   private contactUsService = inject(ContactUsService);
 
-  contactUs = signal<IContactUs>({} as IContactUs);
+  // Initialize with safe default values
+  contactUs = signal<IContactUs>({
+    id: 0,
+    en_address: '',
+    ar_address: '',
+    phone: '',
+    email: '',
+    facebook: '',
+    twitter: '',
+    instagram: '',
+    linkedin: '',
+    active_status: 0,
+    created_at: '',
+    updated_at: '',
+  });
+
   footerTitle: string = '';
 
   // Access the cached categories from CommonService
@@ -74,9 +89,12 @@ export class FooterComponent implements OnInit {
   getContactUs(): void {
     this.contactUsService.getContactUs().subscribe({
       next: (response: any) => {
-        if (response) {
+        if (response && response.contact) {
           this.contactUs.set(response.contact);
         }
+      },
+      error: (error) => {
+        console.error('Error fetching contact information:', error);
       },
     });
   }
@@ -89,9 +107,15 @@ export class FooterComponent implements OnInit {
   }
 
   getFooterTitle() {
-    this.aboutService.getAboutData().subscribe((res: any) => {
-      console.log(res);
-      this.footerTitle = res.aboutdata;
+    this.aboutService.getAboutData().subscribe({
+      next: (res: any) => {
+        if (res && res.aboutdata) {
+          this.footerTitle = res.aboutdata;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching footer title:', error);
+      },
     });
   }
 }

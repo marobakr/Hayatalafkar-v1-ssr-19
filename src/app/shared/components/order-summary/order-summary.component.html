@@ -20,42 +20,40 @@
     <span> {{ "summary.subtotal" | translate }} </span>
     <span>
       {{ formatPrice(order()?.subtotal) }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
   </div>
 
   <!-- Delivery fee comes from backend -->
-  @if(showDeliveryFee) {
   <div
     class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
   >
     <span> {{ "summary.delivery" | translate }} </span>
     <span>
       {{ formatPrice(order()?.shipping) }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
   </div>
-  }
-
+  @if(order()?.tax > 0){
   <div
     class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
   >
     <span> {{ "summary.tax" | translate }} </span>
     <span>
       {{ formatPrice(order()?.tax) }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
   </div>
-
+  }
   <!-- Check if promo code exists and is not zero -->
-  @if (order()?.promo_code_value && order()?.promo_code_value !== 0) {
+  @if (order().promo_code_id && order()?.promo_code_value !== 0) {
   <div
     class="flex items-center justify-between pb-[44px] text-[#333] text-category-size font-medium border-b border-[#8D8D8D]"
   >
     <span> {{ "summary.discount-coupon" | translate }} </span>
     <span class="text-[#C00000]">
       -{{ formatPrice(order()?.promo_code_value) }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
   </div>
   }
@@ -68,7 +66,7 @@
     </span>
     <span class="text-black text-category-size font-medium">
       {{ formatPrice(order()?.total) }}
-      {{ "shared.currency" | translate }}
+      <span class="icon-saudi_riyal"></span>
     </span>
   </div>
   <ng-content></ng-content>

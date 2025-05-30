@@ -155,7 +155,8 @@ export class SharedBestSellerComponent implements OnInit {
     }
 
     if (!this._authService.isAuthenticated()) {
-      this.navigateToLogin();
+      this.navigateToLogin('cart');
+
       return;
     }
 
@@ -262,7 +263,7 @@ export class SharedBestSellerComponent implements OnInit {
 
     if (!this.productData?.id || !this.userId) {
       if (!this.userId) {
-        this.navigateToLogin();
+        this.navigateToLogin('wishlist');
       }
       return;
     }
@@ -358,7 +359,7 @@ export class SharedBestSellerComponent implements OnInit {
     messageKey: string
   ): void {
     if (error.status === 401) {
-      this.navigateToLogin();
+      this.navigateToLogin('login');
     }
 
     // Show error notification
@@ -375,12 +376,12 @@ export class SharedBestSellerComponent implements OnInit {
   /**
    * Navigate to login page with current language
    */
-  private navigateToLogin(): void {
+  private navigateToLogin(path: string): void {
     this._languageService
       .getLanguage()
       .pipe(take(1))
       .subscribe((lang: string) => {
-        this._router.navigate(['/', lang, 'login']);
+        this._router.navigate(['/', lang, path]);
       });
   }
 

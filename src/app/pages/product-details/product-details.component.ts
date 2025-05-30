@@ -902,7 +902,7 @@ export class ProductDetailsComponent
         .getLanguage()
         .pipe(take(1))
         .subscribe((lang) => {
-          this._router.navigate(['/', lang, 'login']);
+          this._router.navigate(['/', lang, 'cart']);
         });
       return;
     }
@@ -1122,6 +1122,17 @@ export class ProductDetailsComponent
    * Adds the product to cart and navigates to the cart page
    */
   buyNow(): void {
+    // Check if user is authenticated
+    if (!this._authService.isAuthenticated()) {
+      this._languageService
+        .getLanguage()
+        .pipe(take(1))
+        .subscribe((lang) => {
+          this._router.navigate(['/', lang, 'cart']);
+        });
+      return;
+    }
+
     // If product is already in cart, just navigate to cart
     if (this.isInCart()) {
       this._languageService

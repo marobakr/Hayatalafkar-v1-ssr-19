@@ -34,6 +34,9 @@ export class OfferDayComponent {
 
   isArabic = false;
 
+  // Track loading state - default to true until data is loaded
+  @Input() isLoading = true;
+
   lang = this._languageService.getIsArabic().subscribe((isArabic) => {
     this.isArabic = isArabic;
   });

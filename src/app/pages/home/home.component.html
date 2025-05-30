@@ -13,8 +13,9 @@
 </app-about-shared>
 
 <!-- Categories -->
-<app-sections [categories]="categories()"></app-sections>
 @defer (on idle) {
+<app-sections [categories]="categories()"></app-sections>
+} @defer (on idle) {
 <!-- Breacks -->
 <app-banner
   [showLeftSideImage]="true"
@@ -42,6 +43,7 @@
 <app-offer-day
   [randomProducts]="randomProducts()"
   [lastOffer]="offers().length ? offers()[offers().length - 1] : null"
+  [isLoading]="isLoading()"
 ></app-offer-day>
 <!-- Static-Banners -->
 @defer (on idle) {

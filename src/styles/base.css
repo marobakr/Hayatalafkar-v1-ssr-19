@@ -364,3 +364,6 @@ section::before {
   right: auto !important;
   left: 10px !important;
 }
+.icon-saudi_riyal::before {
+  font-size: 25px;
+}

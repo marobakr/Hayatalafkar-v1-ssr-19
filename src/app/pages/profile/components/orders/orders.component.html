@@ -124,8 +124,7 @@ orders().row.confirmed_orders.length > 0){
           </div>
         </div>
         <p class="text-[18px] font-semibold">
-          ${{ order.subtotal }}
-          {{ "wishlist.productsItem.item-1.price" | translate }}
+          ${{ order.subtotal }} <span class="icon-saudi_riyal"></span>
         </p>
       </div>
       } @if (allOrders.order_status) { @let config =
@@ -341,8 +340,7 @@ lastOrder().order.details.length > 0){ -->
       </div>
       <p class="text-lg font-semibold">
         ${{ deliveredOrder.subtotal }}
-        {{ "wishlist.productsItem.item-1.price" | translate }}
-      </p>
+        <span class="icon-saudi_riyal"></span>      </p>
     </div> -->
 <!-- <div>
     </div> -->
