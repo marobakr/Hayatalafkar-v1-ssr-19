@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/guards/auth.guard';
-import { unauthGuard } from '@core/guards/unauth.guard';
+import { publicGuard } from '@core/guards/public.guard';
 import { cartCheckResolver } from '@core/resolvers/cart-check.resolver';
 import { blogDetailsResolver } from './pages/articles/res/resolver/blog-details.resolver';
 import { checkoutAddressResolver } from './pages/checkout/res/resolvers/checkout-address.resolver';
@@ -27,7 +27,7 @@ export const routes: Routes = [
         },
       },
     ],
-    canActivate: [unauthGuard],
+    canActivate: [publicGuard],
   },
 
   {
@@ -79,6 +79,7 @@ export const routes: Routes = [
         ],
       },
     ],
+    canActivate: [publicGuard],
   },
 
   /* Main layout */

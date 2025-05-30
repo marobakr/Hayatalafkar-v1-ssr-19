@@ -2,19 +2,23 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AlertService } from '@shared/alert/alert.service';
 import { map } from 'rxjs';
-import { AuthStorageService } from '../services/auth/auth-storage.service';
 import { LanguageService } from '../services/lang/language.service';
 
 export const authGuard: CanActivateFn = () => {
-  const authStorageService = inject(AuthStorageService);
   const router = inject(Router);
   const languageService = inject(LanguageService);
   const alertService = inject(AlertService);
+
+  // Fast path - just check if token exists
+  if (localStorage.getItem('auth_token') != null) {
+    // Token exists, let the user through immediately
+    // Later components can do proper validation if needed
+    return true;
+  }
+
+  // Slow path - user not logged in, handle redirect
   return languageService.getLanguage().pipe(
     map((lang) => {
-      if (authStorageService.isAuthenticated()) {
-        return true;
-      }
       alertService.showNotification({
         imagePath: '/images/common/unauth.webp',
         translationKeys: {
