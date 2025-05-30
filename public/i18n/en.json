@@ -1224,5 +1224,6 @@
       "add-new": "do you want to put all in cart !?",
       "delete-all": "delete all items"
     }
-  }
+  },
+  "unauth": "You need to be logged in"
 }

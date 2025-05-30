@@ -20,6 +20,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { AlertService } from '@shared/alert/alert.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, filter, take } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth/auth.service';
@@ -69,6 +70,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
   private _cartStateService = inject(CartStateService);
   private platformId = inject(PLATFORM_ID);
   private destroyRef = inject(DestroyRef);
+  private _alertService = inject(AlertService);
 
   // Get wishlist count as a signal
   wishlistCount = this._wishlistService.getWishlistCountSignal();
@@ -518,9 +520,20 @@ export class NavbarComponent implements OnDestroy, OnInit {
       // User is authenticated, navigate to profile page
       this._router.navigate(['/', lang, 'profile']);
     } else {
+      this.showSuccessAlert('/images/common/unauth.webp', 'unauth');
+
       // User is not authenticated, redirect to login page with updated path
       this._router.navigate(['/', lang, 'login']);
     }
+  }
+
+  private showSuccessAlert(imagePath: string, titleKey: string): void {
+    this._alertService.showNotification({
+      imagePath: imagePath,
+      translationKeys: {
+        title: titleKey,
+      },
+    });
   }
 
   /**
