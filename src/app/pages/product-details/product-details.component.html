@@ -148,7 +148,9 @@
         }
 
         <!-- Quantity Selector and Add to Cart -->
-        <div class="flex flex-wrap gap-x-4 items-center mb-[30px]">
+        <div
+          class="flex flex-wrap gap-x-4 items-center mb-[30px] gap-y-5 sm:gap-y-2"
+        >
           <!-- Quantity Selector -->
           <div
             class="quantity-selector flex items-center gap-x-[12px] border border-[#8D8D8D] rounded-full"
@@ -199,7 +201,7 @@
           <button
             (click)="isInCart() ? updateCartQuantity() : addToCart()"
             [disabled]="isAddingToCart() || !productDetails.stock_status"
-            class="cursor-pointer bg-[#CBAC8D] text-white px-[23px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            class="flex-grow-1 sm:flex-grow-0 cursor-pointer bg-[#CBAC8D] text-white px-[23px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             [class.opacity-70]="
               isAddingToCart() || !productDetails.stock_status
             "
@@ -229,7 +231,7 @@
           <button
             (click)="buyNow()"
             [disabled]="isAddingToCart() || !productDetails.stock_status"
-            class="cursor-pointer bg-[#111111] text-white px-[47px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            class="w-[80%] sm:w-fit cursor-pointer bg-[#111111] text-white px-[47px] py-[10px] rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             [class.opacity-70]="
               isAddingToCart() || !productDetails.stock_status
             "
@@ -360,7 +362,9 @@
     <!-- Product Description NavTaps -->
     <div class="my-16">
       <div>
-        <nav class="flex justify-center gap-x-[112px] flex-rows-reverce">
+        <nav
+          class="flex flex-wrap justify-center sm:flex-nowrap gap-4 sm:gap-6 md:gap-x-10 lg:gap-x-[112px]"
+        >
           @for (tab of productTabs; track tab.id; let i = $index) {
           <button
             (click)="setActiveTab(i)"
@@ -373,7 +377,7 @@
               'hover:text-gray-700': activeTab() !== i,
               'hover:border-gray-300': activeTab() !== i,
             }"
-            class="text-price-size font-medium cursor-pointer"
+            class="text-sm sm:text-price-size font-medium cursor-pointer whitespace-nowrap px-2 py-1"
           >
             {{ tab.title | translate }}
           </button>
@@ -384,7 +388,10 @@
       <div class="mt-8 overflow-hidden mb-15">
         <!-- description -->
         @if (activeTab() === 0) {
-        <div @fadeSlideInOut class="max-w-none text-[#171717] leading-relaxed">
+        <div
+          @fadeSlideInOut
+          class="max-w-none text-[#171717] leading-relaxed px-2 sm:px-4"
+        >
           <app-safe-html
             [content]="productDetails | customTranslate : 'description'"
           ></app-safe-html>
@@ -393,7 +400,7 @@
 
         <!-- how_to_use -->
         @if (activeTab() === 1) {
-        <div @fadeSlideInOut class="prose max-w-none">
+        <div @fadeSlideInOut class="prose max-w-none px-2 sm:px-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- <div class="bg-gray-50 p-6 rounded-lg shadow-sm"> -->
             <div class="text-[#171717] mb-4">
@@ -401,99 +408,18 @@
                 [content]="productDetails | customTranslate : 'how_to_use'"
               ></app-safe-html>
             </div>
-            <!-- <ul class="space-y-3">
-                  @if (productDetails.brand) {
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.brand" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      productDetails.brand
-                    }}</span>
-                  </li>
-                  } @if (productDetails.sku) {
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.sku" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      productDetails.sku
-                    }}</span>
-                  </li>
-                  } @if (productDetails.weight) {
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.weight" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      productDetails.weight
-                    }}</span>
-                  </li>
-                  } @if (productDetails.dimensions) {
-                  <li class="flex">
-                    <span class="font-medium text-gray-700 w-40">{{
-                      "product_details.dimensions" | translate
-                    }}</span>
-                    <span class="text-gray-600">{{
-                      productDetails.dimensions
-                    }}</span>
-                  </li>
-                  }
-                </ul> -->
-            <!-- </div> -->
           </div>
         </div>
         }
 
         <!-- ingredient -->
         @if (activeTab() === 2) {
-        <div @fadeSlideInOut class="prose max-w-none">
+        <div @fadeSlideInOut class="prose max-w-none px-2 sm:px-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- <div class="bg-gray-50 p-6 rounded-lg shadow-sm"> -->
             <div class="text-[#171717] mb-4">
               <app-safe-html
                 [content]="productDetails | customTranslate : 'ingredient'"
               ></app-safe-html>
-              <!-- </div> -->
-              <!-- <ul class="space-y-3">
-                    @if (productDetails.brand) {
-                    <li class="flex">
-                      <span class="font-medium text-gray-700 w-40">{{
-                        "product_details.brand" | translate
-                      }}</span>
-                      <span class="text-gray-600">{{
-                        productDetails.brand
-                      }}</span>
-                    </li>
-                    } @if (productDetails.sku) {
-                    <li class="flex">
-                      <span class="font-medium text-gray-700 w-40">{{
-                        "product_details.sku" | translate
-                      }}</span>
-                      <span class="text-gray-600">{{
-                        productDetails.sku
-                      }}</span>
-                    </li>
-                    } @if (productDetails.weight) {
-                    <li class="flex">
-                      <span class="font-medium text-gray-700 w-40">{{
-                        "product_details.weight" | translate
-                      }}</span>
-                      <span class="text-gray-600">{{
-                        productDetails.weight
-                      }}</span>
-                    </li>
-                    } @if (productDetails.dimensions) {
-                    <li class="flex">
-                      <span class="font-medium text-gray-700 w-40">{{
-                        "product_details.dimensions" | translate
-                      }}</span>
-                      <span class="text-gray-600">{{
-                        productDetails.dimensions
-                      }}</span>
-                    </li>
-                    }
-                  </ul> -->
             </div>
           </div>
         </div>
@@ -501,8 +427,8 @@
 
         <!-- more information -->
         @if (activeTab() === 3) {
-        <div @fadeSlideInOut class="prose max-w-none">
-          <div class="text-gray-600">
+        <div @fadeSlideInOut class="prose max-w-none px-2 sm:px-4">
+          <div class="text-[#171717]">
             <app-safe-html
               [content]="productDetails | customTranslate : 'more_information'"
             ></app-safe-html>

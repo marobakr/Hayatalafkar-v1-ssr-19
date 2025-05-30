@@ -159,7 +159,7 @@
 
             <!-- Item Total -->
             <div
-              class="flex justify-between items-center text-description-size text-[#333] font-semibold"
+              class="flex justify-end items-center text-description-size text-[#333] font-semibold"
             >
               <p><span class="icon-saudi_riyal"></span></p>
               <p>{{ formatPrice(item.subtotal) }}</p>
@@ -168,7 +168,7 @@
           }
         </div>
         <!-- Cart Footer -->
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-y-4 mb-5">
           <div
             class="btns flex items-center justify-between border border-[#8D8D8D] rounded-[50px] px-[10px] py-[5px] flex-grow-1 capitalize"
           >
@@ -196,60 +196,6 @@
                 {{ "cart.cart-footer.active-the-code" | translate }}
                 }
               </button>
-              <div class="w-full">
-                @if (promoCodeError) {
-                <div class="flex items-center text-muted-rose text-sm">
-                  <svg
-                    class="w-4 h-4 mr-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                  <span>{{ promoCodeError }}</span>
-                </div>
-                } @if (promoCodeSuccess) {
-                <div class="flex items-center text-green-600 text-sm">
-                  <svg
-                    class="w-4 h-4 mr-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                  <span>{{ promoCodeSuccess }}</span>
-                </div>
-                } @if (promoCodeForm.get('code')?.invalid &&
-                promoCodeForm.get('code')?.touched) {
-                <div class="flex items-center text-muted-rose text-sm">
-                  <svg
-                    class="w-4 h-4 mr-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                  <span>{{
-                    "cart.promo-code.enter-valid-code" | translate
-                  }}</span>
-                </div>
-                }
-              </div>
             </form>
           </div>
 
@@ -259,12 +205,64 @@
           >
             @if(isClearingCart) {
             <div
-              class="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"
+              class="border-2 border-gray-400 border-t-transparent rounded-full"
             ></div>
             } @else {
             {{ "wishlist.wishlist-footer.delete-all" | translate }}
             }
           </span>
+        </div>
+        <div class="w-full">
+          @if (promoCodeError) {
+          <div class="flex items-center text-muted-rose text-sm">
+            <svg
+              class="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ promoCodeError }}</span>
+          </div>
+          } @if (promoCodeSuccess) {
+          <div class="flex items-center text-green-600 text-sm">
+            <svg
+              class="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ promoCodeSuccess }}</span>
+          </div>
+          } @if (promoCodeForm.get('code')?.invalid &&
+          promoCodeForm.get('code')?.touched) {
+          <div class="flex items-center text-muted-rose text-sm">
+            <svg
+              class="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span>{{ "cart.promo-code.enter-valid-code" | translate }}</span>
+          </div>
+          }
         </div>
 
         <!-- Cart Status Messages -->
@@ -357,7 +355,9 @@
       </div>
 
       @if (!isEmpty()) {
-      <div class="col-span-12 xl:col-span-4 my-8 lg:my-0 rtl:pr-15 ltr:pl-15">
+      <div
+        class="col-span-12 xl:col-span-4 my-8 lg:my-0 lg:rtl:pr-15 lg:ltr:pl-15"
+      >
         <div
           class="wrapper py-[19px] px-[45px] border border-[#202020] rounded-[15px] capitalize"
         >

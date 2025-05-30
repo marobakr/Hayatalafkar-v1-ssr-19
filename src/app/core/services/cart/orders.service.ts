@@ -85,13 +85,11 @@ export class OrdersService {
    */
 
   checkPromoCode(code: string): Observable<any> {
-    const formData = new FormData();
-    formData.append('code', code);
     const userId = this.authService.getUserId();
-    return this.api.post<any>(
-      `${API_CONFIG.ORDERS.PROMO_CODE}/${userId}`,
-      formData
-    );
+    const formData = new FormData();
+    formData.append('promo_code', code.toString());
+    formData.append('user_id', userId.toString());
+    return this.api.post<any>(`${API_CONFIG.ORDERS.PROMO_CODE}`, formData);
   }
 
   /* Checkout  */

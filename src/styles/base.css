@@ -367,3 +367,9 @@ section::before {
 .icon-saudi_riyal::before {
   font-size: 25px;
 }
+
+@media (max-width: 600px) {
+  .icon-saudi_riyal::before {
+    font-size: 15px;
+  }
+}
