@@ -44,7 +44,6 @@
 .progress-line-fill {
   position: absolute;
   top: 50%;
-  left: 0;
   height: 2px;
   background-color: #cbac8d;
   transform: translateY(-50%);

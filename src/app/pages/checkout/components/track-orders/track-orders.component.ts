@@ -155,7 +155,7 @@ export class TrackOrdersComponent implements OnInit {
     // Define order stages and their progress percentage based on the specified statuses
     const progressMap: Record<string, number> = {
       pending: 0, // Initial stage (0%)
-      confirmed: 25, // Order confirmed (25%)
+      confirmed: 30, // Order confirmed (25%)
       processing: 25, // Same as confirmed (25%)
       preparation: 50, // In preparation (50%)
       'on the way': 75, // On the way (75%)
