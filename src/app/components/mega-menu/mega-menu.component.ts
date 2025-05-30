@@ -46,6 +46,7 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal(true);
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   currentLang = 'en';
+  width!: number | string;
 
   // Inject services
   protected languageService = inject(LanguageService);
@@ -96,11 +97,19 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.isBrowser) {
+      this.updateWidth();
+      // Use fromEvent with debounce to handle resize efficiently
+      this.resizeSub = fromEvent(window, 'resize')
+        .pipe(debounceTime(100))
+        .subscribe(() => this.updateWidth());
+    }
+
     this.loadCategories();
     this.setupLanguageSubscription();
 
-    // Only add document click handler in browser environment
-    if (this.isBrowser) {
+    // Only add document click handler in browser environment and only for desktop
+    if (this.isBrowser && !this.isMobile) {
       // Add document click handler with a small delay
       setTimeout(() => {
         document.addEventListener('click', this.handleDocumentClick);
@@ -123,13 +132,6 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (!this.isBrowser) return;
-
-    // Setup resize handler for adjusting menu height
-    this.resizeSub = fromEvent(window, 'resize')
-      .pipe(debounceTime(100))
-      .subscribe(() => {
-        this.adjustMenuHeight();
-      });
 
     // Initial height adjustment
     setTimeout(() => {
@@ -191,13 +193,11 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         categoryId: category.id,
       },
     });
-    this.closeMenu.emit();
   }
 
   /**
    * Navigate to shopping page filtered by subcategory
    * @param subcategoryId The subcategory ID to filter by
-   * @param subcategoryName The subcategory name for display
    */
   navigateToSubcategory(subcategoryId: string) {
     this.router.navigate(['/', this.currentLang, 'shopping'], {
@@ -206,5 +206,37 @@ export class MegaMenuComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
     this.closeMenu.emit();
+  }
+
+  calculateMenuWidth() {
+    // Calculate width based on categories length, but with some constraints
+    const categoryCount = this.categories().length;
+    if (categoryCount === 0) {
+      return '300px'; // Minimum width
+    }
+
+    // Set minimum width based on category count
+    const baseWidth = Math.max(300, categoryCount * 280);
+
+    // Get window width
+    const windowWidth = window.innerWidth;
+
+    // Ensure menu doesn't exceed 80% of window width
+    const maxWidth = Math.min(baseWidth, windowWidth * 0.8);
+    console.log(maxWidth);
+    return `${maxWidth}px`;
+  }
+
+  updateWidth() {
+    if (!this.isBrowser) return;
+
+    if (this.isMobile) {
+      this.width = '100%'; // Mobile view always gets full width
+    } else {
+      this.width = this.calculateMenuWidth();
+    }
+
+    // Always adjust height when width changes
+    setTimeout(() => this.adjustMenuHeight(), 0);
   }
 }
