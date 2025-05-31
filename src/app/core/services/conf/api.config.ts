@@ -74,7 +74,8 @@ export const API_CONFIG = {
   },
 
   PAYMENT: {
-    CREATE_PAYMENT: 'create-payment',
+    CREATE_PAYMENT_SESSION: 'create-payment',
+    // GET_PAYMENTs_STATUS: 'verifyPayment',
   },
 };
 

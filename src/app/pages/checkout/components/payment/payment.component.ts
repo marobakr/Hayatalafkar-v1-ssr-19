@@ -1,8 +1,7 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IAddress } from '@core/interfaces/user.interface';
 import { CartStateService } from '@core/services/cart/cart-state.service';
 import { OrdersService } from '@core/services/cart/orders.service';
@@ -18,7 +17,9 @@ import { ArticlesHeaderComponent } from '../../../articles/components/articles-h
 
 export enum PaymentMethod {
   CASH_ON_DELIVERY = 1,
-  ONLINE_PAYMENT = 2,
+  ONLINE_PAYMENT_VISA = 6,
+  ONLINE_PAYMENT_MADA = 10,
+  ONLINE_PAYMENT_KNET = 2,
 }
 
 @Component({
@@ -42,11 +43,10 @@ export class PaymentComponent implements OnInit {
   private _ordersService = inject(OrdersService);
   private _notificationService = inject(NotificationService);
   private _destroyRef = inject(DestroyRef);
-  private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   private _languageService = inject(LanguageService);
   private _userService = inject(UserService);
-  private _http = inject(HttpClient);
+  private _userInfo = inject(UserService);
 
   // State management
   isSubmitting = signal(false);
@@ -118,7 +118,11 @@ export class PaymentComponent implements OnInit {
 
     if (this.selectedPaymentMethod() === PaymentMethod.CASH_ON_DELIVERY) {
       this.placeOrder();
-    } else if (this.selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT) {
+    } else if (
+      this.selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_VISA ||
+      this.selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_MADA ||
+      this.selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_KNET
+    ) {
       this.redirectToPaymentGateway();
     }
   }
@@ -161,11 +165,11 @@ export class PaymentComponent implements OnInit {
    */
   redirectToPaymentGateway(): void {
     this.isSubmitting.set(true);
-
+    this.getUserInfo();
     // In a real implementation, you would likely call an API to create a payment session
     // and then redirect to the payment gateway URL
 
-    // Simulate payment gateway redirect
+    // // Simulate payment gateway redirect
     // setTimeout(() => {
     //   this.isSubmitting.set(false);
     //   // This is where you would redirect to an actual payment gateway
@@ -173,25 +177,33 @@ export class PaymentComponent implements OnInit {
     //     this.order().id
     //   }`;
     // }, 1000);
+  }
 
-    /*
-    {
-name
-amount
-email
-mobile
-order_id
-}
-    */
+  getUserInfo(): void {
+    this._userInfo.getUserInfo().subscribe((next) => {
+      if (next.row) {
+        console.log(this.selectedPaymentMethod());
+        this.createPaymentSession(next.row);
+      }
+    });
+  }
 
-    // this._http.post(API_CONFIG.PAYMENT.CREATE_PAYMENT, {
-    //       name: this.order().name,
-    //       amount: this.order().total,
-    //       email: this.order().email,
-    //       mobile: this.order().phone,
-    //       order_id: this.order().order_id,
-    //     }).subscribe((res) => {
-    //       console.log(res);
-    //     });
+  createPaymentSession(userData: {
+    name: string;
+    email: string;
+    mobile: string;
+  }): void {
+    this._ordersService
+      .createPaymentSession({
+        name: userData.name,
+        amount: this.order().total,
+        email: userData.email,
+        mobile: userData.mobile,
+        order_id: this.order().id,
+        payment_id: this.selectedPaymentMethod() || 1,
+      })
+      .subscribe((response) => {
+        console.log(response);
+      });
   }
 }

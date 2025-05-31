@@ -89,28 +89,34 @@
         <!-- Product Price -->
         <div class="price-container flex items-center gap-4 mb-6">
           @if (productDetails.choices && productDetails.choices.length > 0) {
-          <span class="text-lg font-bold">
-            {{ activeChoicePrice() }}
+          <p class="flex items-center justify-between text-lg font-bold">
+            <span> {{ activeChoicePrice() }} </span>
             <span class="icon-saudi_riyal"></span>
-          </span>
+          </p>
           } @else if (productDetails.sale_price) {
           <div
             class="flex items-cetner justify-center gap-x-[26px] mb-[30px] text-price-size"
           >
-            <span class="text-[#A48374] font-medium">
-              {{ productDetails.price_after_sale }}
+            <p
+              class="flex items-center justify-between text-[#A48374] font-medium"
+            >
+              <span> {{ productDetails.price_after_sale }} </span>
               <span class="icon-saudi_riyal"></span>
-            </span>
-            <span class="text-[#333] line-through">
-              {{ productDetails.price }}
+            </p>
+            <p
+              class="flex items-center justify-between text-[#333] line-through"
+            >
+              <span> {{ productDetails.price }} </span>
               <span class="icon-saudi_riyal"></span>
-            </span>
+            </p>
           </div>
           }@else {
-          <span class="text-[#A48374] text-price-size font-medium">
-            {{ productDetails.price }}
+          <p
+            class="flex items-center justify-between text-[#A48374] text-price-size font-medium"
+          >
+            <span>{{ productDetails.price }}</span>
             <span class="icon-saudi_riyal"></span>
-          </span>
+          </p>
           }
         </div>
 

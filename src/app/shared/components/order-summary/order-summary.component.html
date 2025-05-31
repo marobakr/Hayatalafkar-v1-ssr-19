@@ -18,8 +18,10 @@
     class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
   >
     <span> {{ "summary.subtotal" | translate }} </span>
-    <span>
-      {{ formatPrice(order()?.subtotal) }}
+    <span class="flex items-center justify-between gap-x-2">
+      <span>
+        {{ formatPrice(order()?.subtotal) }}
+      </span>
       <span class="icon-saudi_riyal"></span>
     </span>
   </div>
@@ -29,8 +31,10 @@
     class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
   >
     <span> {{ "summary.delivery" | translate }} </span>
-    <span>
-      {{ formatPrice(order()?.shipping) }}
+    <span class="flex items-center justify-between gap-x-2">
+      <span>
+        {{ formatPrice(order()?.shipping) }}
+      </span>
       <span class="icon-saudi_riyal"></span>
     </span>
   </div>
@@ -39,8 +43,10 @@
     class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
   >
     <span> {{ "summary.tax" | translate }} </span>
-    <span>
-      {{ formatPrice(order()?.tax) }}
+    <span class="flex items-center justify-between gap-x-2">
+      <span>
+        {{ formatPrice(order()?.tax) }}
+      </span>
       <span class="icon-saudi_riyal"></span>
     </span>
   </div>
@@ -51,8 +57,8 @@
     class="flex items-center justify-between pb-[44px] text-[#333] text-category-size font-medium border-b border-[#8D8D8D]"
   >
     <span> {{ "summary.discount-coupon" | translate }} </span>
-    <span class="text-[#C00000]">
-      -{{ formatPrice(order()?.promo_code_value) }}
+    <span class="flex items-center justify-between gap-x-2 text-[#C00000]">
+      <span> -{{ formatPrice(order()?.promo_code_value) }} </span>
       <span class="icon-saudi_riyal"></span>
     </span>
   </div>
@@ -64,8 +70,12 @@
     <span class="text-[#333] text-category-size font-medium">
       {{ "summary.total" | translate }}
     </span>
-    <span class="text-black text-category-size font-medium">
-      {{ formatPrice(order()?.total) }}
+    <span
+      class="flex items-center justify-between gap-x-2 text-black text-category-size font-medium"
+    >
+      <span>
+        {{ formatPrice(order()?.total) }}
+      </span>
       <span class="icon-saudi_riyal"></span>
     </span>
   </div>

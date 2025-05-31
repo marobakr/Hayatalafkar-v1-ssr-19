@@ -105,6 +105,7 @@
 
           <li class="cursor-pointer" role="menuitem">
             <button
+              #megaMenuTrigger
               class="cursor-pointer show-arrow relative block py-2 px-3 text-black font-bold rounded-sm xl:p-0 w-full text-left mega-menu-trigger"
               (click)="toggleMegaMenu($event)"
               (mouseenter)="showMegaMenu = true"
@@ -171,6 +172,7 @@
           <li class="relative cursor-pointer">
             <button
               id="langDropdownButton"
+              #langDropdownButton
               class="cursor-pointer block py-2 px-3 text-black font-bold rounded-sm xl:p-0 focus:outline-none"
               (click)="toggleMenu()"
               [attr.aria-expanded]="showMenu"
@@ -500,6 +502,7 @@
 
         <li class="relative show-arrow cursor-pointer">
           <button
+            #mobileProductsTrigger
             class="cursor-pointer flex justify-between items-center w-full py-2 text-black font-bold"
             (click)="toggleMobileProductsMenu($event)"
             (keydown)="handleMobileMenuKeydown($event)"

@@ -116,7 +116,7 @@ input[type="range"]:nth-child(2)::-moz-range-thumb {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: #ffffff;
 }
 
@@ -202,5 +202,17 @@ a {
   /* Ensure proper z-index */
   :host-context(.mega-menu-container) {
     z-index: 50;
+  }
+
+  /* Ensure that mega menu in the mobile view doesn't break layout */
+  :host-context(.mobile-menu-container) > div:first-child {
+    position: static;
+    margin-top: 0;
+    transform: none;
+    left: auto;
+  }
+
+  :host-context(.mobile-menu-container) .subcategory-card {
+    max-height: 120px !important;
   }
 }

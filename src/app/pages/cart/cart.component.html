@@ -111,10 +111,12 @@
               class="flex justify-between items-center flex-row-reverse md:flex-row mb-5 md:mb-0"
             >
               <!-- Price -->
-              <div class="text-[#333] text-category-size font-bold">
-                {{ formatPrice(item.unit_price) }}
+              <p
+                class="flex items-center justify-between text-[#333] text-category-size font-bold"
+              >
+                <span> {{ formatPrice(item.unit_price) }} </span>
                 <span class="icon-saudi_riyal"></span>
-              </div>
+              </p>
             </div>
             <!-- Quantity -->
 
@@ -161,8 +163,10 @@
             <div
               class="flex justify-end items-center text-description-size text-[#333] font-semibold"
             >
-              <p><span class="icon-saudi_riyal"></span></p>
-              <p>{{ formatPrice(item.subtotal) }}</p>
+              <p class="flex items-center justify-between">
+                <span class="icon-saudi_riyal"></span>
+                <span> {{ formatPrice(item.subtotal) }} </span>
+              </p>
             </div>
           </div>
           }
@@ -332,10 +336,10 @@
             class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
           >
             <span> {{ "summary.subtotal" | translate }} </span>
-            <span>
-              {{ formatPrice(order()?.subtotal) }}
+            <p class="flex items-center justify-between">
+              <span> {{ formatPrice(order()?.subtotal) }} </span>
               <span class="icon-saudi_riyal"></span>
-            </span>
+            </p>
           </div>
 
           @if(order().shipping > 0){
@@ -343,10 +347,10 @@
             class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
           >
             <span> {{ "summary.delivery" | translate }} </span>
-            <span>
-              {{ formatPrice(order()?.shipping) }}
+            <p class="flex items-center justify-between">
+              <span> {{ formatPrice(order()?.shipping) }} </span>
               <span class="icon-saudi_riyal"></span>
-            </span>
+            </p>
           </div>
           } @if(order()?.tax > 0){
 
@@ -354,20 +358,20 @@
             class="flex items-center justify-between pb-[38px] text-[#333] text-category-size font-medium"
           >
             <span> {{ "summary.tax" | translate }} </span>
-            <span>
-              {{ formatPrice(order()?.tax) }}
+            <p class="flex items-center justify-between">
+              <span> {{ formatPrice(order()?.tax) }}</span>
               <span class="icon-saudi_riyal"></span>
-            </span>
+            </p>
           </div>
           } @if (order().promo_code_id) {
           <div
             class="flex items-center justify-between pb-[44px] text-[#333] text-category-size font-medium border-b border-[#8D8D8D]"
           >
             <span> {{ "summary.discount-coupon" | translate }} </span>
-            <span class="text-[#C00000]">
-              -{{ formatPrice(order()?.promo_code_value) }}
+            <p class="text-[#C00000] flex items-center justify-between">
+              <span> -{{ formatPrice(order()?.promo_code_value) }}</span>
               <span class="icon-saudi_riyal"></span>
-            </span>
+            </p>
           </div>
           }
 
@@ -377,9 +381,15 @@
             <span class="text-[#333] text-category-size font-medium">{{
               "summary.total" | translate
             }}</span>
-            <span class="text-black text-category-size font-medium"
-              >{{ order().total }} <span class="icon-saudi_riyal"></span
-            ></span>
+            <p
+              class="flex items-center justify-between text-black text-category-size font-medium"
+            >
+              <span>
+                {{ order().total }}
+              </span>
+
+              <span class="icon-saudi_riyal"></span>
+            </p>
           </div>
 
           <button

@@ -403,6 +403,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
               ) as HTMLInputElement;
 
               if (checkbox) {
+                console.log(checkbox);
+
                 checkbox.checked = true;
               }
             }, 100);
@@ -430,6 +432,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
                 const checkbox = document.querySelector(
                   `input[type="checkbox"][data-slug="${categorySlug}"]`
                 ) as HTMLInputElement;
+                console.log(checkbox);
 
                 if (checkbox) {
                   checkbox.checked = true;
@@ -516,7 +519,7 @@ export class ShoppingComponent implements OnInit, OnDestroy {
               const checkbox = document.querySelector(
                 `input[type="checkbox"][data-slug="${categorySlug}"]`
               ) as HTMLInputElement;
-
+              console.log(checkbox);
               if (checkbox) {
                 checkbox.checked = true;
               }
@@ -612,6 +615,8 @@ export class ShoppingComponent implements OnInit, OnDestroy {
    * Maintains language-aware category slugs
    */
   toggleFilter(category: ICategory, event: any): void {
+    console.log(category);
+    console.log(event);
     const isChecked = event.checked;
     const currentFilters = this.selectedFilters();
     const currentLang = this._translate.currentLang;
