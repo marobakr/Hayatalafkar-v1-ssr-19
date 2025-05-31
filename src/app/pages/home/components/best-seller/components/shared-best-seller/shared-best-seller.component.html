@@ -187,28 +187,26 @@
   </div>
 
   <div class="text-description-size md:text-subtitle-size mb-[13px]">
-    @if (productData.price_after_sale && +productData.price_after_sale !== 0) {
-    <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
-      {{ productData.price_after_sale }}
-      <span class="icon-saudi_riyal"></span>
-    </span>
-    } @else if (+productData.price === 0) {
-    <!-- Price is 0, show message about product with choices -->
+    @if (+productData.price === 0) {
+    <!-- Price is zero, show choice price -->
     <span class="text-muted-rose font-medium">
       {{ productData.first_choice?.cuurent_value }}
       <span class="icon-saudi_riyal"></span>
     </span>
-    } @else {
-    <!-- Show regular price when no sale and price not zero -->
+    } @else if (productData.price_after_sale && +productData.price_after_sale
+    !== 0) {
+    <!-- There is a sale, show sale price and crossed-out price -->
     <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
+      <span class="icon-saudi_riyal"></span>
+      {{ productData.price_after_sale }}
+    </span>
+    <span class="line-through text-black">
       {{ productData.price }}
       <span class="icon-saudi_riyal"></span>
     </span>
-    }
-
-    <!-- Only show the crossed-out price if there is a sale and original price isn't 0 -->
-    @if (productData.price_after_sale && +productData.price !== 0) {
-    <span class="line-through text-black">
+    } @else {
+    <!-- Regular price, no sale -->
+    <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
       {{ productData.price }}
       <span class="icon-saudi_riyal"></span>
     </span>
