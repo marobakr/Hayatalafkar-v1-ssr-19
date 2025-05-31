@@ -424,8 +424,12 @@
                 </div>
               </div>
             </div>
-            <p class="text-lg font-semibold">
-              {{ deliveredOrder.subtotal }}
+            <p
+              class="flex items-center justify-between gap-x-2 text-lg font-semibold"
+            >
+              <span>
+                {{ deliveredOrder.subtotal }}
+              </span>
               <span class="icon-saudi_riyal"></span>
             </p>
           </div>
@@ -438,23 +442,33 @@
         <div class="details">
           <div class="price my-8 flex justify-between items-center">
             <p>{{ "shipping.costs.s" | translate }}</p>
-            <p class="text-lg font-semibold">
-              {{ lastOrder()?.order?.shipping }}
+            <p
+              class="flex items-center justify-between gap-x-2 text-lg font-semibold"
+            >
+              <span>
+                {{ lastOrder()?.order?.shipping }}
+              </span>
               <span class="icon-saudi_riyal"></span>
             </p>
           </div>
           <div class="tax mb-8 flex justify-between items-center">
             <p>{{ "total-price.total-price" | translate }}</p>
-            <p class="text-lg font-semibold">
-              {{ lastOrder()?.order?.total }}
+            <p
+              class="flex items-center justify-between gap-x-2 text-lg font-semibold"
+            >
+              <span>
+                {{ lastOrder()?.order?.total }}
+              </span>
               <span class="icon-saudi_riyal"></span>
             </p>
           </div>
 
           <div class="copon mb-8 flex justify-between items-center">
             <p>{{ "shipping.costs.copon" | translate }}</p>
-            <p class="text-lg font-semibold">
-              -{{ lastOrder()?.order?.promo_code_value }}
+            <p
+              class="flex items-center justify-between gap-x-2 text-lg font-semibold"
+            >
+              <span> -{{ lastOrder()?.order?.promo_code_value }} </span>
               <span class="icon-saudi_riyal"></span>
             </p>
           </div>
@@ -464,8 +478,12 @@
           >
             <p>{{ "total-price.total-price" | translate }}</p>
 
-            <p class="text-lg font-semibold">
-              {{ lastOrder()?.order?.total }}
+            <p
+              class="flex items-center justify-between gap-x-2 text-lg font-semibold"
+            >
+              <span>
+                {{ lastOrder()?.order?.total }}
+              </span>
               <span class="icon-saudi_riyal"></span>
             </p>
           </div>

@@ -189,27 +189,29 @@
   <div class="text-description-size md:text-subtitle-size mb-[13px]">
     @if (+productData.price === 0) {
     <!-- Price is zero, show choice price -->
-    <span class="text-muted-rose font-medium">
-      {{ productData.first_choice?.cuurent_value }}
+    <p class="flex items-center gap-x-2 text-muted-rose font-medium">
+      <span> {{ productData.first_choice?.cuurent_value }} </span>
       <span class="icon-saudi_riyal"></span>
-    </span>
+    </p>
     } @else if (productData.price_after_sale && +productData.price_after_sale
     !== 0) {
     <!-- There is a sale, show sale price and crossed-out price -->
-    <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
-      <span class="icon-saudi_riyal"></span>
-      {{ productData.price_after_sale }}
-    </span>
-    <span class="line-through text-black">
-      {{ productData.price }}
-      <span class="icon-saudi_riyal"></span>
-    </span>
+    <div class="flex items-center justify-between">
+      <p class="flex items-center gap-x-2 text-warm-tan font-semibold">
+        <span> {{ productData.price_after_sale }} </span>
+        <span class="icon-saudi_riyal"></span>
+      </p>
+      <span class="line-through text-black">
+        {{ productData.price }}
+        <span class="icon-saudi_riyal"></span>
+      </span>
+    </div>
     } @else {
     <!-- Regular price, no sale -->
-    <span class="text-warm-tan font-semibold rtl:mr-[28px] ltr:mr-[28px]">
-      {{ productData.price }}
+    <p class="flex items-center gap-x-2 text-warm-tan font-semibold">
+      <span> {{ productData.price }} </span>
       <span class="icon-saudi_riyal"></span>
-    </span>
+    </p>
     }
   </div>
 </div>

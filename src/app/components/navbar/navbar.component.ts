@@ -16,6 +16,7 @@ import {
   Output,
   PLATFORM_ID,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
@@ -83,8 +84,12 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
   // Add these properties to track clicked elements and dropdown triggers
   private lastClickedElement: HTMLElement | null = null;
-  private languageDropdownTrigger: HTMLElement | null = null;
-  private megaMenuTrigger: HTMLElement | null = null;
+  @ViewChild('langDropdownButton', { static: false })
+  languageDropdownTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('megaMenuTrigger', { static: false })
+  megaMenuTrigger!: ElementRef<HTMLElement>;
+  @ViewChild('mobileProductsTrigger', { static: false })
+  mobileProductsTrigger!: ElementRef<HTMLElement>;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
@@ -128,14 +133,6 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
       // Initial screen width check
       this.checkScreenWidth();
-
-      // Store references to dropdown triggers
-      setTimeout(() => {
-        this.languageDropdownTrigger =
-          document.getElementById('langDropdownButton');
-        this.megaMenuTrigger =
-          this.elementRef.nativeElement.querySelector('.show-arrow button');
-      }, 100);
     }
 
     // Load wishlist count
@@ -179,10 +176,10 @@ export class NavbarComponent implements OnDestroy, OnInit {
             this._cartStateService.checkConfirmedOrders();
             this._cartStateService.fetchCart();
           }
-          // For other pages, just update cart count for the navbar
-          else {
-            this._cartStateService.updateCartCount();
-          }
+          // // For other pages, just update cart count for the navbar
+          // else {
+          //   // this._cartStateService.updateCartCount();
+          // }
         }
       });
   }
@@ -262,7 +259,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
     // Close all other dropdowns
     if (this.showMenu) {
       this.closeAllDropdownsExcept('menu');
-      this.lastClickedElement = this.languageDropdownTrigger;
+      this.lastClickedElement =
+        this.languageDropdownTrigger?.nativeElement || null;
 
       setTimeout(() => {
         this.addGlobalClickListener((event: MouseEvent) => {
@@ -345,6 +343,24 @@ export class NavbarComponent implements OnDestroy, OnInit {
     // Close all other dropdowns if opening mobile products menu
     if (this.showMobileProductsMenu) {
       this.closeAllDropdownsExcept('mobileProducts');
+
+      // Add global click handler for outside clicks
+      this.addGlobalClickListener((event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        const mobileProductsMenu =
+          this.elementRef.nativeElement.querySelector('.show-arrow .mt-2');
+        const mobileProductsButton = this.mobileProductsTrigger?.nativeElement;
+
+        if (
+          mobileProductsMenu &&
+          mobileProductsButton &&
+          !mobileProductsMenu.contains(target) &&
+          !mobileProductsButton.contains(target)
+        ) {
+          this.showMobileProductsMenu = false;
+          this.removeGlobalClickListener();
+        }
+      });
     }
   }
 
@@ -371,7 +387,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     if (type === 'all' || type === 'language') {
       const langDropdown =
         this.elementRef.nativeElement.querySelector('#langDropdown');
-      const langButton = this.languageDropdownTrigger;
+      const langButton = this.languageDropdownTrigger?.nativeElement;
 
       if (
         this.showMenu &&
@@ -388,7 +404,7 @@ export class NavbarComponent implements OnDestroy, OnInit {
     if (type === 'all' || type === 'megamenu') {
       const megaMenu =
         this.elementRef.nativeElement.querySelector('app-mega-menu');
-      const megaMenuButton = this.megaMenuTrigger;
+      const megaMenuButton = this.megaMenuTrigger?.nativeElement;
 
       if (
         this.showMegaMenu &&
@@ -403,11 +419,16 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
     // Handle mobile products menu
     if (this.showMobileProductsMenu) {
-      const mobileProductsMenuContainer = target.closest('.show-arrow');
       const mobileProductsMenu =
         this.elementRef.nativeElement.querySelector('.show-arrow .mt-2');
+      const mobileProductsButton = this.mobileProductsTrigger?.nativeElement;
 
-      if (mobileProductsMenu && !mobileProductsMenuContainer) {
+      if (
+        mobileProductsMenu &&
+        mobileProductsButton &&
+        !mobileProductsMenu.contains(target) &&
+        !mobileProductsButton.contains(target)
+      ) {
         this.showMobileProductsMenu = false;
       }
     }
@@ -648,9 +669,8 @@ export class NavbarComponent implements OnDestroy, OnInit {
 
       // Return focus to the dropdown button
       setTimeout(() => {
-        const dropdownButton = document.getElementById('langDropdownButton');
-        if (dropdownButton) {
-          dropdownButton.focus();
+        if (this.languageDropdownTrigger?.nativeElement) {
+          this.languageDropdownTrigger.nativeElement.focus();
         }
       }, 0);
     }

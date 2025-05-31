@@ -123,8 +123,13 @@ orders().row.confirmed_orders.length > 0){
             }
           </div>
         </div>
-        <p class="text-[18px] font-semibold">
-          ${{ order.subtotal }} <span class="icon-saudi_riyal"></span>
+        <p
+          class="flex items-center justify-between gap-x-2 text-[18px] font-semibold"
+        >
+          <span>
+            {{ order.subtotal }}
+          </span>
+          <span class="icon-saudi_riyal"></span>
         </p>
       </div>
       } @if (allOrders.order_status) { @let config =

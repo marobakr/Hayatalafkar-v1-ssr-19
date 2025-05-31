@@ -72,4 +72,9 @@ export const API_CONFIG = {
     GET_USER_WISH: 'wish',
     REMOVE_WISH: 'wish/delete/',
   },
+
+  PAYMENT: {
+    CREATE_PAYMENT_SESSION: 'create-payment',
+    // GET_PAYMENTs_STATUS: 'verifyPayment',
+  },
 };

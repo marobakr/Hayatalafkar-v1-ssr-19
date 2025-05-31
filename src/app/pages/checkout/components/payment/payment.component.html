@@ -56,13 +56,13 @@
                 </div>
               </div>
 
-              <!-- Online Payment Option -->
+              <!-- Online Payment VISA -->
               <div
-                class="payment-selection-box border border-dashed border-[#CBAC8D] rounded-lg p-4 cursor-pointer flex justify-between items-center"
+                class="payment-selection-box border border-dashed border-[#8D8D8D] rounded-lg p-4 mb-4 cursor-pointer flex justify-between items-center"
                 [class.active]="
-                  selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT
+                  selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_VISA
                 "
-                (click)="selectPaymentMethod(PaymentMethod.ONLINE_PAYMENT)"
+                (click)="selectPaymentMethod(PaymentMethod.ONLINE_PAYMENT_VISA)"
               >
                 <div class="flex items-center gap-x-2">
                   <figure
@@ -84,7 +84,77 @@
                     class="w-7 h-7 border border-[#8D8D8D] rounded-[5px] flex items-center justify-center bg-white"
                   >
                     @if(selectedPaymentMethod() ===
-                    PaymentMethod.ONLINE_PAYMENT) {
+                    PaymentMethod.ONLINE_PAYMENT_VISA) {
+                    <div class="w-5 h-5 bg-[#CBAC8D] rounded-[5px]"></div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Online Payment KNET -->
+              <div
+                class="payment-selection-box border border-dashed border-[#8D8D8D] rounded-lg p-4 mb-4 cursor-pointer flex justify-between items-center"
+                [class.active]="
+                  selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_KNET
+                "
+                (click)="selectPaymentMethod(PaymentMethod.ONLINE_PAYMENT_KNET)"
+              >
+                <div class="flex items-center gap-x-2">
+                  <figure
+                    class="w-[50px] h-[50px] bg-[#ECECEC] rounded-[15px] flex items-center justify-center"
+                  >
+                    <img
+                      src="/images/cart/payment.webp"
+                      alt="Credit Card"
+                      class="w-[40px] h-[40px]"
+                      onerror="this.src='/images/cart/payment.webp'"
+                    />
+                  </figure>
+                  <span class="text-[#0E0E0E] text-description-size">{{
+                    "checkout.payment.methods.credit_card" | translate
+                  }}</span>
+                </div>
+                <div class="checkbox-container">
+                  <div
+                    class="w-7 h-7 border border-[#8D8D8D] rounded-[5px] flex items-center justify-center bg-white"
+                  >
+                    @if(selectedPaymentMethod() ===
+                    PaymentMethod.ONLINE_PAYMENT_KNET) {
+                    <div class="w-5 h-5 bg-[#CBAC8D] rounded-[5px]"></div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Online Payment MADA -->
+              <div
+                class="payment-selection-box border border-dashed border-[#8D8D8D] rounded-lg p-4 mb-4 cursor-pointer flex justify-between items-center"
+                [class.active]="
+                  selectedPaymentMethod() === PaymentMethod.ONLINE_PAYMENT_MADA
+                "
+                (click)="selectPaymentMethod(PaymentMethod.ONLINE_PAYMENT_MADA)"
+              >
+                <div class="flex items-center gap-x-2">
+                  <figure
+                    class="w-[50px] h-[50px] bg-[#ECECEC] rounded-[15px] flex items-center justify-center"
+                  >
+                    <img
+                      src="/images/cart/payment.webp"
+                      alt="Credit Card"
+                      class="w-[40px] h-[40px]"
+                      onerror="this.src='/images/cart/payment.webp'"
+                    />
+                  </figure>
+                  <span class="text-[#0E0E0E] text-description-size">{{
+                    "checkout.payment.methods.credit_card" | translate
+                  }}</span>
+                </div>
+                <div class="checkbox-container">
+                  <div
+                    class="w-7 h-7 border border-[#8D8D8D] rounded-[5px] flex items-center justify-center bg-white"
+                  >
+                    @if(selectedPaymentMethod() ===
+                    PaymentMethod.ONLINE_PAYMENT_MADA) {
                     <div class="w-5 h-5 bg-[#CBAC8D] rounded-[5px]"></div>
                     }
                   </div>

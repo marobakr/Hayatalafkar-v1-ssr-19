@@ -111,4 +111,26 @@ export class OrdersService {
       {}
     );
   }
+
+  /* Create Payment Session */
+  createPaymentSession(userData: {
+    name: string;
+    amount: number;
+    email: string;
+    mobile: string;
+    order_id: number;
+    payment_id: number;
+  }): Observable<any> {
+    const formData = new FormData();
+    formData.append('name', userData.name);
+    formData.append('amount', userData.amount.toString());
+    formData.append('email', userData.email);
+    formData.append('mobile', userData.mobile);
+    formData.append('order_id', userData.order_id.toString());
+    formData.append('payment_id', userData.payment_id.toString());
+    return this.api.post<any>(
+      `${API_CONFIG.PAYMENT.CREATE_PAYMENT_SESSION}`,
+      formData
+    );
+  }
 }
